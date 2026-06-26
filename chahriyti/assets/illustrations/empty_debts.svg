@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Circle background -->
+  <circle cx="100" cy="100" r="70" fill="#94A3B8" opacity="0.2"/>
+  <circle cx="100" cy="100" r="60" fill="#0D6E6E" opacity="0.15"/>
+  <!-- Checkmark -->
+  <polyline points="55,100 85,130 145,70" fill="none" stroke="#0D6E6E" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Small stars / sparkles -->
+  <circle cx="38" cy="60" r="5" fill="#94A3B8"/>
+  <circle cx="162" cy="145" r="4" fill="#94A3B8"/>
+  <circle cx="155" cy="50" r="3" fill="#0D6E6E"/>
+  <circle cx="45" cy="155" r="3" fill="#0D6E6E"/>
+</svg>

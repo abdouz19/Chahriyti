@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Wallet body -->
+  <rect x="30" y="70" width="140" height="90" rx="10" ry="10" fill="#0D6E6E"/>
+  <!-- Wallet flap -->
+  <rect x="30" y="60" width="140" height="30" rx="8" ry="8" fill="#094F4F"/>
+  <!-- Card slot -->
+  <rect x="110" y="85" width="50" height="35" rx="6" ry="6" fill="#94A3B8"/>
+  <!-- Dollar sign circle -->
+  <circle cx="72" cy="115" r="22" fill="#0A5A5A"/>
+  <text x="72" y="122" font-family="sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#FFFFFF">$</text>
+  <!-- Coin -->
+  <circle cx="155" cy="55" r="16" fill="#94A3B8"/>
+  <circle cx="155" cy="55" r="11" fill="#CBD5E1"/>
+</svg>

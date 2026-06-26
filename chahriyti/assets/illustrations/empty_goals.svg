@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Bullseye rings -->
+  <circle cx="100" cy="105" r="70" fill="none" stroke="#94A3B8" stroke-width="2"/>
+  <circle cx="100" cy="105" r="55" fill="none" stroke="#94A3B8" stroke-width="2"/>
+  <circle cx="100" cy="105" r="40" fill="#0D6E6E" opacity="0.2"/>
+  <circle cx="100" cy="105" r="25" fill="#0D6E6E" opacity="0.5"/>
+  <circle cx="100" cy="105" r="12" fill="#0D6E6E"/>
+  <!-- Arrow shaft -->
+  <line x1="145" y1="55" x2="106" y2="100" stroke="#094F4F" stroke-width="5" stroke-linecap="round"/>
+  <!-- Arrow head -->
+  <polygon points="145,55 130,58 142,70" fill="#094F4F"/>
+</svg>

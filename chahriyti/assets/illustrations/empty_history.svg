@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Calendar body -->
+  <rect x="30" y="50" width="140" height="120" rx="10" ry="10" fill="#0D6E6E"/>
+  <!-- Calendar header -->
+  <rect x="30" y="50" width="140" height="35" rx="10" ry="10" fill="#094F4F"/>
+  <rect x="30" y="70" width="140" height="15" fill="#094F4F"/>
+  <!-- Ring pegs -->
+  <rect x="65" y="38" width="10" height="26" rx="5" ry="5" fill="#94A3B8"/>
+  <rect x="125" y="38" width="10" height="26" rx="5" ry="5" fill="#94A3B8"/>
+  <!-- List lines -->
+  <rect x="48" y="105" width="50" height="8" rx="4" fill="#FFFFFF" opacity="0.8"/>
+  <rect x="48" y="122" width="70" height="8" rx="4" fill="#FFFFFF" opacity="0.6"/>
+  <rect x="48" y="139" width="60" height="8" rx="4" fill="#FFFFFF" opacity="0.4"/>
+  <!-- Dot bullets -->
+  <circle cx="40" cy="109" r="4" fill="#94A3B8"/>
+  <circle cx="40" cy="126" r="4" fill="#94A3B8"/>
+  <circle cx="40" cy="143" r="4" fill="#94A3B8"/>
+</svg>

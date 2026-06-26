@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Axes -->
+  <line x1="35" y1="155" x2="170" y2="155" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="35" y1="40" x2="35" y2="155" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+  <!-- Bars -->
+  <rect x="52" y="115" width="22" height="40" rx="4" fill="#94A3B8"/>
+  <rect x="87" y="85" width="22" height="70" rx="4" fill="#0D6E6E"/>
+  <rect x="122" y="65" width="22" height="90" rx="4" fill="#0D6E6E" opacity="0.7"/>
+  <rect x="157" y="95" width="22" height="60" rx="4" fill="#94A3B8"/>
+  <!-- Trend line -->
+  <polyline points="63,110 98,78 133,60 168,90" fill="none" stroke="#094F4F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5,3"/>
+  <!-- Trend dot -->
+  <circle cx="133" cy="60" r="5" fill="#094F4F"/>
+</svg>
