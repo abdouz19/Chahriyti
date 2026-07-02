@@ -12,6 +12,7 @@ abstract class FinancialCycleEntity with _$FinancialCycleEntity {
     required DateTime startDate,
     required DateTime endDate,
     required int salaryAmount,
+    @Default(0) int salarySplitAmount,
     required bool isActive,
   }) = _FinancialCycleEntity;
 
@@ -19,12 +20,17 @@ abstract class FinancialCycleEntity with _$FinancialCycleEntity {
       _$FinancialCycleEntityFromJson(json);
 
   int daysRemaining(DateTime now) {
-    final diff = endDate.difference(now).inDays;
+    final today = DateTime(now.year, now.month, now.day);
+    final end = DateTime(endDate.year, endDate.month, endDate.day);
+    // endDate = day before salary day, so +1 gives days until actual salary arrival
+    final diff = end.difference(today).inDays + 1;
     return diff < 0 ? 0 : diff;
   }
 
   int daysElapsed(DateTime now) {
-    final diff = now.difference(startDate).inDays;
+    final today = DateTime(now.year, now.month, now.day);
+    final start = DateTime(startDate.year, startDate.month, startDate.day);
+    final diff = today.difference(start).inDays;
     return diff < 0 ? 0 : diff;
   }
 }

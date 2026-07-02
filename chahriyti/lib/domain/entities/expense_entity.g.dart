@@ -17,6 +17,8 @@ _ExpenseEntity _$ExpenseEntityFromJson(Map<String, dynamic> json) =>
       notes: json['notes'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
+      fromSavings: json['fromSavings'] as bool? ?? false,
+      savingsAmount: (json['savingsAmount'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$ExpenseEntityToJson(_ExpenseEntity instance) =>
@@ -30,4 +32,6 @@ Map<String, dynamic> _$ExpenseEntityToJson(_ExpenseEntity instance) =>
       'notes': instance.notes,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
+      'fromSavings': instance.fromSavings,
+      'savingsAmount': instance.savingsAmount,
     };

@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../domain/entities/goal_entity.dart';
 import '../cubits/goal_cubit.dart';
 import '../cubits/goal_state.dart';
 
 class AddGoalPage extends StatefulWidget {
-  const AddGoalPage({super.key});
+  final GoalEntity? initialGoal;
+
+  const AddGoalPage({this.initialGoal, super.key});
 
   @override
   State<AddGoalPage> createState() => _AddGoalPageState();
@@ -27,6 +30,12 @@ class _AddGoalPageState extends State<AddGoalPage> {
     _amountController = TextEditingController();
     _descriptionController = TextEditingController();
     _formKey = GlobalKey<FormState>();
+
+    if (widget.initialGoal != null) {
+      _nameController.text = widget.initialGoal!.name;
+      _amountController.text = widget.initialGoal!.targetAmount.toString();
+      _descriptionController.text = widget.initialGoal!.description ?? '';
+    }
   }
 
   @override
@@ -48,13 +57,24 @@ class _AddGoalPageState extends State<AddGoalPage> {
       return;
     }
 
-    cubit.createGoal(
-      name: _nameController.text,
-      targetAmount: amount * 100, // Convert to centimes
-      description: _descriptionController.text.isEmpty
-          ? null
-          : _descriptionController.text,
-    );
+    if (widget.initialGoal != null) {
+      cubit.updateGoal(
+        id: widget.initialGoal!.id,
+        name: _nameController.text,
+        targetAmount: amount,
+        description: _descriptionController.text.isEmpty
+            ? null
+            : _descriptionController.text,
+      );
+    } else {
+      cubit.createGoal(
+        name: _nameController.text,
+        targetAmount: amount,
+        description: _descriptionController.text.isEmpty
+            ? null
+            : _descriptionController.text,
+      );
+    }
   }
 
   @override
@@ -65,6 +85,8 @@ class _AddGoalPageState extends State<AddGoalPage> {
         Injection.getGoalsUseCase,
         Injection.updateGoalUseCase,
         Injection.deleteGoalUseCase,
+        withdrawSavingsUseCase: Injection.withdrawSavingsUseCase,
+        goalRepository: Injection.goalRepository,
         notificationService: Injection.notificationService,
       ),
       child: BlocListener<GoalCubit, GoalState>(
@@ -74,6 +96,15 @@ class _AddGoalPageState extends State<AddGoalPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('تم إنشاء الهدف بنجاح'),
+                  backgroundColor: AppColors.positive,
+                ),
+              );
+              Navigator.pop(context);
+            },
+            goalUpdated: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('تم تعديل الهدف بنجاح'),
                   backgroundColor: AppColors.positive,
                 ),
               );
@@ -92,7 +123,7 @@ class _AddGoalPageState extends State<AddGoalPage> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              'هدف جديد',
+              widget.initialGoal != null ? 'تعديل الهدف' : 'هدف جديد',
               style: AppTypography.headlineSmall,
             ),
           ),
@@ -171,7 +202,11 @@ class _AddGoalPageState extends State<AddGoalPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () => _submit(context, cubit),
-                          child: const Text('حفظ الهدف'),
+                          child: Text(
+                            widget.initialGoal != null
+                                ? 'حفظ التعديل'
+                                : 'حفظ الهدف',
+                          ),
                         ),
                       ),
                     ],

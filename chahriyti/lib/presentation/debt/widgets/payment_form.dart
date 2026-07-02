@@ -57,7 +57,7 @@ class _PaymentFormWidgetState extends State<PaymentFormWidget> {
       return;
     }
 
-    widget.onSubmit(amount * 100); // Convert to centimes
+    widget.onSubmit(amount);
     _amountController.clear();
   }
 

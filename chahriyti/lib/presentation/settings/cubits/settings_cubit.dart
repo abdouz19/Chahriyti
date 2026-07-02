@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../../application/use_cases/cycle/reset_cycle_use_case.dart';
+import '../../../application/use_cases/cycle/reset_app_data_use_case.dart';
 import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/user_repository.dart';
 
@@ -39,8 +39,8 @@ class SettingsResetting extends SettingsState {
   const SettingsResetting();
 }
 
-class SettingsResetComplete extends SettingsState {
-  const SettingsResetComplete();
+class SettingsDataResetComplete extends SettingsState {
+  const SettingsDataResetComplete();
 }
 
 class SettingsError extends SettingsState {
@@ -54,15 +54,15 @@ class SettingsError extends SettingsState {
 class SettingsCubit extends Cubit<SettingsState> {
   final UserRepository _userRepository;
   final CycleRepository _cycleRepository;
-  final ResetCycleUseCase _resetCycle;
+  final ResetAppDataUseCase _resetAppData;
 
   SettingsCubit({
     required UserRepository userRepository,
     required CycleRepository cycleRepository,
-    required ResetCycleUseCase resetCycle,
+    required ResetAppDataUseCase resetAppData,
   })  : _userRepository = userRepository,
         _cycleRepository = cycleRepository,
-        _resetCycle = resetCycle,
+        _resetAppData = resetAppData,
         super(const SettingsLoading());
 
   Future<void> loadSettings() async {
@@ -113,6 +113,8 @@ class SettingsCubit extends Cubit<SettingsState> {
     }
   }
 
+  /// Updates the user's salary day. Never modifies the active cycle's dates —
+  /// the change takes effect when the next cycle is auto-created on salary day.
   Future<void> updateSalaryDay(int newDay) async {
     emit(const SettingsUpdating());
     try {
@@ -126,11 +128,6 @@ class SettingsCubit extends Cubit<SettingsState> {
       final updatedUser = user.copyWith(salaryDay: newDay);
       await _userRepository.updateUser(updatedUser);
 
-      final cycle = await _cycleRepository.getActiveCycle();
-      if (cycle != null) {
-        await _cycleRepository.updateCycleSalaryDay(cycle.id, newDay);
-      }
-
       debugPrint('✅ SETTINGS: Salary day updated successfully');
       await loadSettings();
     } catch (e) {
@@ -139,16 +136,13 @@ class SettingsCubit extends Cubit<SettingsState> {
     }
   }
 
-  Future<void> resetCycle() async {
+  Future<void> resetAllData() async {
     emit(const SettingsResetting());
     try {
-      await _resetCycle();
-      emit(const SettingsResetComplete());
-      await loadSettings();
-    } on StateError catch (e) {
-      emit(SettingsError(e.message));
+      await _resetAppData();
+      emit(const SettingsDataResetComplete());
     } catch (e) {
-      emit(const SettingsError('حدث خطأ غير متوقع'));
+      emit(SettingsError('فشل إعادة تعيين البيانات: ${e.toString()}'));
     }
   }
 

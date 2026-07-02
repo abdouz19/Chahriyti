@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +12,7 @@ import '../../../core/di/injection.dart';
 import '../../../domain/entities/expense_entity.dart';
 import '../../activation/cubits/activation_cubit.dart';
 import '../../activation/pages/activation_page.dart';
+import '../../challenge/pages/challenge_detail_page.dart';
 import '../../cycle_history/pages/cycle_history_page.dart';
 import '../../debt/pages/add_debt_page.dart';
 import '../../debt/pages/debt_detail_page.dart';
@@ -28,6 +31,11 @@ import '../../onboarding/pages/value_proposition_page.dart';
 import '../../home/pages/home_page.dart';
 import '../../income/pages/add_income_page.dart';
 import '../../onboarding/pages/additional_income_page.dart';
+import '../../salary_split/pages/salary_split_page.dart';
+import '../../lending/pages/add_lending_page.dart';
+import '../../lending/pages/lending_detail_page.dart';
+import '../../lending/pages/lendings_list_page.dart';
+import '../../savings/pages/savings_page.dart';
 import '../../settings/pages/settings_page.dart';
 import '../../statistics/pages/statistics_page.dart';
 
@@ -44,10 +52,12 @@ abstract final class AppRouter {
       if (user == null) {
         const onboardingPaths = [
           '/',
+          '/onboarding/value',
           '/onboarding/salary',
           '/onboarding/income',
-          '/onboarding/value',
+          '/salary-split',
         ];
+
         return onboardingPaths.contains(path) ? null : '/';
       }
 
@@ -56,10 +66,20 @@ abstract final class AppRouter {
         return path == '/activation' ? null : '/activation';
       }
 
-      // User is activated: go to home if on splash
-      if (path == '/') {
+      // User is activated: go to home if on splash or onboarding
+      if (path == '/' || path.startsWith('/onboarding')) {
         return '/home';
       }
+
+      // Auto-cycle gate: check if a new cycle should start on this app launch
+      if (path != '/salary-split') {
+        final newCycle = await Injection.checkAndStartCycleUseCase();
+        if (newCycle != null) {
+          Injection.pendingCycleForSplit = newCycle;
+          return '/salary-split';
+        }
+      }
+
       return null;
     },
     routes: [
@@ -82,6 +102,8 @@ abstract final class AppRouter {
               Injection.cycleRepository,
               Injection.incomeRepository,
             ),
+            depositSalarySplitUseCase: Injection.depositSalarySplitUseCase,
+            cycleRepository: Injection.cycleRepository,
           )..start(),
           child: const SalarySetupPage(),
         ),
@@ -98,6 +120,8 @@ abstract final class AppRouter {
               Injection.cycleRepository,
               Injection.incomeRepository,
             ),
+            depositSalarySplitUseCase: Injection.depositSalarySplitUseCase,
+            cycleRepository: Injection.cycleRepository,
           ),
           child: const AdditionalIncomePage(),
         ),
@@ -179,6 +203,26 @@ abstract final class AppRouter {
         },
       ),
 
+      // ── Lending ──────────────────────────────────────────────────────
+      GoRoute(
+        path: '/lendings',
+        builder: (context, state) => const LendingsListPage(),
+      ),
+      GoRoute(
+        path: '/lending/add',
+        builder: (context, state) {
+          final cycleId = state.extra as int? ?? 0;
+          return AddLendingPage(cycleId: cycleId);
+        },
+      ),
+      GoRoute(
+        path: '/lending/:id',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return LendingDetailPage(lendingId: id);
+        },
+      ),
+
       // ── Goal ────────────────────────────────────────────────────────
       GoRoute(
         path: '/goals',
@@ -196,6 +240,15 @@ abstract final class AppRouter {
         },
       ),
 
+      // ── Challenge ───────────────────────────────────────────────────
+      GoRoute(
+        path: '/challenge/:id',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return ChallengeDetailPage(challengeId: id);
+        },
+      ),
+
       // ── Insights ────────────────────────────────────────────────────
       GoRoute(
         path: '/insights',
@@ -206,6 +259,38 @@ abstract final class AppRouter {
       GoRoute(
         path: '/history',
         builder: (context, state) => const ExpenseHistoryPage(),
+      ),
+
+      // ── Salary Split ──────────────────────────────────────────────────
+      GoRoute(
+        path: '/salary-split',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+
+          // Auto-cycle path: consume the pending cycle set by the router redirect
+          final pending = Injection.pendingCycleForSplit;
+          Injection.pendingCycleForSplit = null;
+
+          final cycleId = extra?['cycleId'] as int? ?? pending?.id ?? 0;
+          final salaryAmount =
+              extra?['salaryAmount'] as int? ?? pending?.salaryAmount ?? 0;
+          final onComplete =
+              extra?['onComplete'] as VoidCallback? ?? () => context.go('/home');
+          final isAutoEntry = extra == null && pending != null;
+
+          return SalarySplitPage(
+            cycleId: cycleId,
+            salaryAmount: salaryAmount,
+            onComplete: onComplete,
+            isAutoEntry: isAutoEntry,
+          );
+        },
+      ),
+
+      // ── Savings ─────────────────────────────────────────────────────
+      GoRoute(
+        path: '/savings',
+        builder: (context, state) => const SavingsPage(),
       ),
 
       // ── Settings ────────────────────────────────────────────────────

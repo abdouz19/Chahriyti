@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FinancialCycleEntity {
 
- int get id; DateTime get startDate; DateTime get endDate; int get salaryAmount; bool get isActive;
+ int get id; DateTime get startDate; DateTime get endDate; int get salaryAmount; int get salarySplitAmount; bool get isActive;
 /// Create a copy of FinancialCycleEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $FinancialCycleEntityCopyWith<FinancialCycleEntity> get copyWith => _$FinancialC
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FinancialCycleEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.salaryAmount, salaryAmount) || other.salaryAmount == salaryAmount)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FinancialCycleEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.salaryAmount, salaryAmount) || other.salaryAmount == salaryAmount)&&(identical(other.salarySplitAmount, salarySplitAmount) || other.salarySplitAmount == salarySplitAmount)&&(identical(other.isActive, isActive) || other.isActive == isActive));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,startDate,endDate,salaryAmount,isActive);
+int get hashCode => Object.hash(runtimeType,id,startDate,endDate,salaryAmount,salarySplitAmount,isActive);
 
 @override
 String toString() {
-  return 'FinancialCycleEntity(id: $id, startDate: $startDate, endDate: $endDate, salaryAmount: $salaryAmount, isActive: $isActive)';
+  return 'FinancialCycleEntity(id: $id, startDate: $startDate, endDate: $endDate, salaryAmount: $salaryAmount, salarySplitAmount: $salarySplitAmount, isActive: $isActive)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $FinancialCycleEntityCopyWith<$Res>  {
   factory $FinancialCycleEntityCopyWith(FinancialCycleEntity value, $Res Function(FinancialCycleEntity) _then) = _$FinancialCycleEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, DateTime startDate, DateTime endDate, int salaryAmount, bool isActive
+ int id, DateTime startDate, DateTime endDate, int salaryAmount, int salarySplitAmount, bool isActive
 });
 
 
@@ -65,12 +65,13 @@ class _$FinancialCycleEntityCopyWithImpl<$Res>
 
 /// Create a copy of FinancialCycleEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? startDate = null,Object? endDate = null,Object? salaryAmount = null,Object? isActive = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? startDate = null,Object? endDate = null,Object? salaryAmount = null,Object? salarySplitAmount = null,Object? isActive = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,startDate: null == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as DateTime,endDate: null == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as DateTime,salaryAmount: null == salaryAmount ? _self.salaryAmount : salaryAmount // ignore: cast_nullable_to_non_nullable
+as int,salarySplitAmount: null == salarySplitAmount ? _self.salarySplitAmount : salarySplitAmount // ignore: cast_nullable_to_non_nullable
 as int,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  DateTime startDate,  DateTime endDate,  int salaryAmount,  bool isActive)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  DateTime startDate,  DateTime endDate,  int salaryAmount,  int salarySplitAmount,  bool isActive)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FinancialCycleEntity() when $default != null:
-return $default(_that.id,_that.startDate,_that.endDate,_that.salaryAmount,_that.isActive);case _:
+return $default(_that.id,_that.startDate,_that.endDate,_that.salaryAmount,_that.salarySplitAmount,_that.isActive);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.id,_that.startDate,_that.endDate,_that.salaryAmount,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  DateTime startDate,  DateTime endDate,  int salaryAmount,  bool isActive)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  DateTime startDate,  DateTime endDate,  int salaryAmount,  int salarySplitAmount,  bool isActive)  $default,) {final _that = this;
 switch (_that) {
 case _FinancialCycleEntity():
-return $default(_that.id,_that.startDate,_that.endDate,_that.salaryAmount,_that.isActive);case _:
+return $default(_that.id,_that.startDate,_that.endDate,_that.salaryAmount,_that.salarySplitAmount,_that.isActive);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.id,_that.startDate,_that.endDate,_that.salaryAmount,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  DateTime startDate,  DateTime endDate,  int salaryAmount,  bool isActive)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  DateTime startDate,  DateTime endDate,  int salaryAmount,  int salarySplitAmount,  bool isActive)?  $default,) {final _that = this;
 switch (_that) {
 case _FinancialCycleEntity() when $default != null:
-return $default(_that.id,_that.startDate,_that.endDate,_that.salaryAmount,_that.isActive);case _:
+return $default(_that.id,_that.startDate,_that.endDate,_that.salaryAmount,_that.salarySplitAmount,_that.isActive);case _:
   return null;
 
 }
@@ -213,13 +214,14 @@ return $default(_that.id,_that.startDate,_that.endDate,_that.salaryAmount,_that.
 @JsonSerializable()
 
 class _FinancialCycleEntity extends FinancialCycleEntity {
-  const _FinancialCycleEntity({required this.id, required this.startDate, required this.endDate, required this.salaryAmount, required this.isActive}): super._();
+  const _FinancialCycleEntity({required this.id, required this.startDate, required this.endDate, required this.salaryAmount, this.salarySplitAmount = 0, required this.isActive}): super._();
   factory _FinancialCycleEntity.fromJson(Map<String, dynamic> json) => _$FinancialCycleEntityFromJson(json);
 
 @override final  int id;
 @override final  DateTime startDate;
 @override final  DateTime endDate;
 @override final  int salaryAmount;
+@override@JsonKey() final  int salarySplitAmount;
 @override final  bool isActive;
 
 /// Create a copy of FinancialCycleEntity
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FinancialCycleEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.salaryAmount, salaryAmount) || other.salaryAmount == salaryAmount)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FinancialCycleEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.salaryAmount, salaryAmount) || other.salaryAmount == salaryAmount)&&(identical(other.salarySplitAmount, salarySplitAmount) || other.salarySplitAmount == salarySplitAmount)&&(identical(other.isActive, isActive) || other.isActive == isActive));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,startDate,endDate,salaryAmount,isActive);
+int get hashCode => Object.hash(runtimeType,id,startDate,endDate,salaryAmount,salarySplitAmount,isActive);
 
 @override
 String toString() {
-  return 'FinancialCycleEntity(id: $id, startDate: $startDate, endDate: $endDate, salaryAmount: $salaryAmount, isActive: $isActive)';
+  return 'FinancialCycleEntity(id: $id, startDate: $startDate, endDate: $endDate, salaryAmount: $salaryAmount, salarySplitAmount: $salarySplitAmount, isActive: $isActive)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$FinancialCycleEntityCopyWith<$Res> implements $FinancialC
   factory _$FinancialCycleEntityCopyWith(_FinancialCycleEntity value, $Res Function(_FinancialCycleEntity) _then) = __$FinancialCycleEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, DateTime startDate, DateTime endDate, int salaryAmount, bool isActive
+ int id, DateTime startDate, DateTime endDate, int salaryAmount, int salarySplitAmount, bool isActive
 });
 
 
@@ -272,12 +274,13 @@ class __$FinancialCycleEntityCopyWithImpl<$Res>
 
 /// Create a copy of FinancialCycleEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? startDate = null,Object? endDate = null,Object? salaryAmount = null,Object? isActive = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? startDate = null,Object? endDate = null,Object? salaryAmount = null,Object? salarySplitAmount = null,Object? isActive = null,}) {
   return _then(_FinancialCycleEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,startDate: null == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as DateTime,endDate: null == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as DateTime,salaryAmount: null == salaryAmount ? _self.salaryAmount : salaryAmount // ignore: cast_nullable_to_non_nullable
+as int,salarySplitAmount: null == salarySplitAmount ? _self.salarySplitAmount : salarySplitAmount // ignore: cast_nullable_to_non_nullable
 as int,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

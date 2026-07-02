@@ -9,10 +9,12 @@ import 'progress_bar.dart';
 
 class GoalCard extends StatelessWidget {
   final GoalEntity goal;
+  final int savingsBalance;
   final VoidCallback? onTap;
 
   const GoalCard({
     required this.goal,
+    this.savingsBalance = 0,
     this.onTap,
     super.key,
   });
@@ -96,6 +98,11 @@ class GoalCard extends StatelessWidget {
             const SizedBox(height: 8),
             GoalProgressBar(
               targetAmount: goal.targetAmount,
+              progressPercent: goal.targetAmount > 0
+                  ? (savingsBalance.clamp(0, goal.targetAmount) /
+                          goal.targetAmount *
+                          100)
+                  : 0,
             ),
           ],
         ),

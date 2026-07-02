@@ -55,13 +55,14 @@ extension DebtStatePatterns on DebtState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DebtInitial value)?  initial,TResult Function( DebtLoading value)?  loading,TResult Function( DebtsLoaded value)?  debtsLoaded,TResult Function( DebtCreated value)?  debtCreated,TResult Function( DebtUpdated value)?  debtUpdated,TResult Function( DebtDeleted value)?  debtDeleted,TResult Function( PaymentAdded value)?  paymentAdded,TResult Function( DebtError value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DebtInitial value)?  initial,TResult Function( DebtLoading value)?  loading,TResult Function( DebtsLoaded value)?  debtsLoaded,TResult Function( DebtLoaded value)?  debtLoaded,TResult Function( DebtCreated value)?  debtCreated,TResult Function( DebtUpdated value)?  debtUpdated,TResult Function( DebtDeleted value)?  debtDeleted,TResult Function( PaymentAdded value)?  paymentAdded,TResult Function( DebtError value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case DebtInitial() when initial != null:
 return initial(_that);case DebtLoading() when loading != null:
 return loading(_that);case DebtsLoaded() when debtsLoaded != null:
-return debtsLoaded(_that);case DebtCreated() when debtCreated != null:
+return debtsLoaded(_that);case DebtLoaded() when debtLoaded != null:
+return debtLoaded(_that);case DebtCreated() when debtCreated != null:
 return debtCreated(_that);case DebtUpdated() when debtUpdated != null:
 return debtUpdated(_that);case DebtDeleted() when debtDeleted != null:
 return debtDeleted(_that);case PaymentAdded() when paymentAdded != null:
@@ -84,13 +85,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DebtInitial value)  initial,required TResult Function( DebtLoading value)  loading,required TResult Function( DebtsLoaded value)  debtsLoaded,required TResult Function( DebtCreated value)  debtCreated,required TResult Function( DebtUpdated value)  debtUpdated,required TResult Function( DebtDeleted value)  debtDeleted,required TResult Function( PaymentAdded value)  paymentAdded,required TResult Function( DebtError value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DebtInitial value)  initial,required TResult Function( DebtLoading value)  loading,required TResult Function( DebtsLoaded value)  debtsLoaded,required TResult Function( DebtLoaded value)  debtLoaded,required TResult Function( DebtCreated value)  debtCreated,required TResult Function( DebtUpdated value)  debtUpdated,required TResult Function( DebtDeleted value)  debtDeleted,required TResult Function( PaymentAdded value)  paymentAdded,required TResult Function( DebtError value)  error,}){
 final _that = this;
 switch (_that) {
 case DebtInitial():
 return initial(_that);case DebtLoading():
 return loading(_that);case DebtsLoaded():
-return debtsLoaded(_that);case DebtCreated():
+return debtsLoaded(_that);case DebtLoaded():
+return debtLoaded(_that);case DebtCreated():
 return debtCreated(_that);case DebtUpdated():
 return debtUpdated(_that);case DebtDeleted():
 return debtDeleted(_that);case PaymentAdded():
@@ -112,13 +114,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DebtInitial value)?  initial,TResult? Function( DebtLoading value)?  loading,TResult? Function( DebtsLoaded value)?  debtsLoaded,TResult? Function( DebtCreated value)?  debtCreated,TResult? Function( DebtUpdated value)?  debtUpdated,TResult? Function( DebtDeleted value)?  debtDeleted,TResult? Function( PaymentAdded value)?  paymentAdded,TResult? Function( DebtError value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DebtInitial value)?  initial,TResult? Function( DebtLoading value)?  loading,TResult? Function( DebtsLoaded value)?  debtsLoaded,TResult? Function( DebtLoaded value)?  debtLoaded,TResult? Function( DebtCreated value)?  debtCreated,TResult? Function( DebtUpdated value)?  debtUpdated,TResult? Function( DebtDeleted value)?  debtDeleted,TResult? Function( PaymentAdded value)?  paymentAdded,TResult? Function( DebtError value)?  error,}){
 final _that = this;
 switch (_that) {
 case DebtInitial() when initial != null:
 return initial(_that);case DebtLoading() when loading != null:
 return loading(_that);case DebtsLoaded() when debtsLoaded != null:
-return debtsLoaded(_that);case DebtCreated() when debtCreated != null:
+return debtsLoaded(_that);case DebtLoaded() when debtLoaded != null:
+return debtLoaded(_that);case DebtCreated() when debtCreated != null:
 return debtCreated(_that);case DebtUpdated() when debtUpdated != null:
 return debtUpdated(_that);case DebtDeleted() when debtDeleted != null:
 return debtDeleted(_that);case PaymentAdded() when paymentAdded != null:
@@ -140,12 +143,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DebtEntity> debts,  bool hasMore,  int offset)?  debtsLoaded,TResult Function( int debtId)?  debtCreated,TResult Function()?  debtUpdated,TResult Function()?  debtDeleted,TResult Function()?  paymentAdded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DebtEntity> debts,  bool hasMore,  int offset,  bool isCompletedTab)?  debtsLoaded,TResult Function( DebtEntity debt)?  debtLoaded,TResult Function( int debtId)?  debtCreated,TResult Function()?  debtUpdated,TResult Function()?  debtDeleted,TResult Function()?  paymentAdded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case DebtInitial() when initial != null:
 return initial();case DebtLoading() when loading != null:
 return loading();case DebtsLoaded() when debtsLoaded != null:
-return debtsLoaded(_that.debts,_that.hasMore,_that.offset);case DebtCreated() when debtCreated != null:
+return debtsLoaded(_that.debts,_that.hasMore,_that.offset,_that.isCompletedTab);case DebtLoaded() when debtLoaded != null:
+return debtLoaded(_that.debt);case DebtCreated() when debtCreated != null:
 return debtCreated(_that.debtId);case DebtUpdated() when debtUpdated != null:
 return debtUpdated();case DebtDeleted() when debtDeleted != null:
 return debtDeleted();case PaymentAdded() when paymentAdded != null:
@@ -168,12 +172,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DebtEntity> debts,  bool hasMore,  int offset)  debtsLoaded,required TResult Function( int debtId)  debtCreated,required TResult Function()  debtUpdated,required TResult Function()  debtDeleted,required TResult Function()  paymentAdded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DebtEntity> debts,  bool hasMore,  int offset,  bool isCompletedTab)  debtsLoaded,required TResult Function( DebtEntity debt)  debtLoaded,required TResult Function( int debtId)  debtCreated,required TResult Function()  debtUpdated,required TResult Function()  debtDeleted,required TResult Function()  paymentAdded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case DebtInitial():
 return initial();case DebtLoading():
 return loading();case DebtsLoaded():
-return debtsLoaded(_that.debts,_that.hasMore,_that.offset);case DebtCreated():
+return debtsLoaded(_that.debts,_that.hasMore,_that.offset,_that.isCompletedTab);case DebtLoaded():
+return debtLoaded(_that.debt);case DebtCreated():
 return debtCreated(_that.debtId);case DebtUpdated():
 return debtUpdated();case DebtDeleted():
 return debtDeleted();case PaymentAdded():
@@ -195,12 +200,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DebtEntity> debts,  bool hasMore,  int offset)?  debtsLoaded,TResult? Function( int debtId)?  debtCreated,TResult? Function()?  debtUpdated,TResult? Function()?  debtDeleted,TResult? Function()?  paymentAdded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DebtEntity> debts,  bool hasMore,  int offset,  bool isCompletedTab)?  debtsLoaded,TResult? Function( DebtEntity debt)?  debtLoaded,TResult? Function( int debtId)?  debtCreated,TResult? Function()?  debtUpdated,TResult? Function()?  debtDeleted,TResult? Function()?  paymentAdded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case DebtInitial() when initial != null:
 return initial();case DebtLoading() when loading != null:
 return loading();case DebtsLoaded() when debtsLoaded != null:
-return debtsLoaded(_that.debts,_that.hasMore,_that.offset);case DebtCreated() when debtCreated != null:
+return debtsLoaded(_that.debts,_that.hasMore,_that.offset,_that.isCompletedTab);case DebtLoaded() when debtLoaded != null:
+return debtLoaded(_that.debt);case DebtCreated() when debtCreated != null:
 return debtCreated(_that.debtId);case DebtUpdated() when debtUpdated != null:
 return debtUpdated();case DebtDeleted() when debtDeleted != null:
 return debtDeleted();case PaymentAdded() when paymentAdded != null:
@@ -281,7 +287,7 @@ String toString() {
 
 
 class DebtsLoaded implements DebtState {
-  const DebtsLoaded(final  List<DebtEntity> debts, {this.hasMore = false, this.offset = 0}): _debts = debts;
+  const DebtsLoaded(final  List<DebtEntity> debts, {this.hasMore = false, this.offset = 0, this.isCompletedTab = false}): _debts = debts;
   
 
  final  List<DebtEntity> _debts;
@@ -293,6 +299,7 @@ class DebtsLoaded implements DebtState {
 
 @JsonKey() final  bool hasMore;
 @JsonKey() final  int offset;
+@JsonKey() final  bool isCompletedTab;
 
 /// Create a copy of DebtState
 /// with the given fields replaced by the non-null parameter values.
@@ -304,16 +311,16 @@ $DebtsLoadedCopyWith<DebtsLoaded> get copyWith => _$DebtsLoadedCopyWithImpl<Debt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DebtsLoaded&&const DeepCollectionEquality().equals(other._debts, _debts)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.offset, offset) || other.offset == offset));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DebtsLoaded&&const DeepCollectionEquality().equals(other._debts, _debts)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.isCompletedTab, isCompletedTab) || other.isCompletedTab == isCompletedTab));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_debts),hasMore,offset);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_debts),hasMore,offset,isCompletedTab);
 
 @override
 String toString() {
-  return 'DebtState.debtsLoaded(debts: $debts, hasMore: $hasMore, offset: $offset)';
+  return 'DebtState.debtsLoaded(debts: $debts, hasMore: $hasMore, offset: $offset, isCompletedTab: $isCompletedTab)';
 }
 
 
@@ -324,7 +331,7 @@ abstract mixin class $DebtsLoadedCopyWith<$Res> implements $DebtStateCopyWith<$R
   factory $DebtsLoadedCopyWith(DebtsLoaded value, $Res Function(DebtsLoaded) _then) = _$DebtsLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<DebtEntity> debts, bool hasMore, int offset
+ List<DebtEntity> debts, bool hasMore, int offset, bool isCompletedTab
 });
 
 
@@ -341,16 +348,92 @@ class _$DebtsLoadedCopyWithImpl<$Res>
 
 /// Create a copy of DebtState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? debts = null,Object? hasMore = null,Object? offset = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? debts = null,Object? hasMore = null,Object? offset = null,Object? isCompletedTab = null,}) {
   return _then(DebtsLoaded(
 null == debts ? _self._debts : debts // ignore: cast_nullable_to_non_nullable
 as List<DebtEntity>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
 as bool,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as int,
+as int,isCompletedTab: null == isCompletedTab ? _self.isCompletedTab : isCompletedTab // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
 
+}
+
+/// @nodoc
+
+
+class DebtLoaded implements DebtState {
+  const DebtLoaded(this.debt);
+  
+
+ final  DebtEntity debt;
+
+/// Create a copy of DebtState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DebtLoadedCopyWith<DebtLoaded> get copyWith => _$DebtLoadedCopyWithImpl<DebtLoaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DebtLoaded&&(identical(other.debt, debt) || other.debt == debt));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,debt);
+
+@override
+String toString() {
+  return 'DebtState.debtLoaded(debt: $debt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DebtLoadedCopyWith<$Res> implements $DebtStateCopyWith<$Res> {
+  factory $DebtLoadedCopyWith(DebtLoaded value, $Res Function(DebtLoaded) _then) = _$DebtLoadedCopyWithImpl;
+@useResult
+$Res call({
+ DebtEntity debt
+});
+
+
+$DebtEntityCopyWith<$Res> get debt;
+
+}
+/// @nodoc
+class _$DebtLoadedCopyWithImpl<$Res>
+    implements $DebtLoadedCopyWith<$Res> {
+  _$DebtLoadedCopyWithImpl(this._self, this._then);
+
+  final DebtLoaded _self;
+  final $Res Function(DebtLoaded) _then;
+
+/// Create a copy of DebtState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? debt = null,}) {
+  return _then(DebtLoaded(
+null == debt ? _self.debt : debt // ignore: cast_nullable_to_non_nullable
+as DebtEntity,
+  ));
+}
+
+/// Create a copy of DebtState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DebtEntityCopyWith<$Res> get debt {
+  
+  return $DebtEntityCopyWith<$Res>(_self.debt, (value) {
+    return _then(_self.copyWith(debt: value));
+  });
+}
 }
 
 /// @nodoc

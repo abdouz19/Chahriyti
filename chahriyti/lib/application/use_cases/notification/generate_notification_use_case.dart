@@ -89,7 +89,7 @@ class GenerateNotificationUseCase {
   }
 
   static NotificationContent cycleCompleteNotification(int savedAmount) {
-    final saved = (savedAmount / 100).round();
+    final saved = savedAmount;
     return NotificationContent(
       type: NotificationType.cycleComplete,
       title: 'انتهت الدورة المالية',

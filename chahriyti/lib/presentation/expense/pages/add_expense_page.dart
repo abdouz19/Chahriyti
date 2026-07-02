@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../application/use_cases/expense/add_expense_use_case.dart';
 import '../../../core/constants/categories.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
@@ -9,7 +8,8 @@ import '../../../core/theme/app_typography.dart';
 import '../cubits/expense_cubit.dart';
 import '../widgets/category_grid.dart';
 import '../widgets/expense_form.dart';
-import '../widgets/subcategory_chips.dart';
+import '../../shared/widgets/payment_source_toggle.dart';
+import '../../shared/widgets/funding_source_sheet.dart';
 
 class AddExpensePage extends StatelessWidget {
   final int cycleId;
@@ -21,7 +21,8 @@ class AddExpensePage extends StatelessWidget {
     return BlocProvider(
       create: (_) => ExpenseCubit(
         cycleId: cycleId,
-        addExpense: AddExpenseUseCase(Injection.expenseRepository),
+        addExpense: Injection.addExpenseUseCase,
+        getSavingsBalance: Injection.getSavingsBalanceUseCase,
       ),
       child: const _AddExpenseView(),
     );
@@ -32,20 +33,11 @@ class _AddExpenseView extends StatelessWidget {
   const _AddExpenseView();
 
   String _titleForState(ExpenseState state) {
-    if (state is ExpenseSubcategorySelection) {
-      // Show the Arabic label of the chosen category
-      final cat = ExpenseCategory.values.firstWhere(
-        (c) => c.name == state.category,
-        orElse: () => ExpenseCategory.other,
-      );
-      return cat.arabicLabel;
-    }
     if (state is ExpenseFormInput) return 'تفاصيل المصروف';
     return 'صرف';
   }
 
-  bool _canGoBack(ExpenseState state) =>
-      state is ExpenseSubcategorySelection || state is ExpenseFormInput;
+  bool _canGoBack(ExpenseState state) => state is ExpenseFormInput;
 
   @override
   Widget build(BuildContext context) {
@@ -106,27 +98,19 @@ class _AddExpenseView extends StatelessWidget {
       );
     }
 
-    if (state is ExpenseSubcategorySelection) {
-      final cat = ExpenseCategory.values.firstWhere(
-        (c) => c.name == state.category,
-        orElse: () => ExpenseCategory.other,
-      );
-      return _SubcategoryStep(
-        key: ValueKey('subcategory-${state.category}'),
-        category: cat,
-        onSubcategorySelected: (sub) => cubit.selectSubcategory(sub.name),
-      );
-    }
-
     if (state is ExpenseFormInput) {
       return _FormStep(
-        key: ValueKey('form-${state.subcategory}'),
+        key: const ValueKey('form'),
         isSaving: false,
-        onSave: ({required String itemName, required int amount, String? notes}) {
+        savingsBalance: state.savingsBalance,
+        fromSavings: state.fromSavings,
+        onFromSavingsChanged: cubit.setFromSavings,
+        onSave: ({required String itemName, required int amount, String? notes, int savingsAmount = 0}) {
           cubit.saveExpense(
             itemName: itemName,
             amount: amount,
             notes: notes,
+            savingsAmount: savingsAmount,
           );
         },
       );
@@ -136,7 +120,7 @@ class _AddExpenseView extends StatelessWidget {
       return _FormStep(
         key: const ValueKey('form-saving'),
         isSaving: true,
-        onSave: ({required String itemName, required int amount, String? notes}) {},
+        onSave: ({required String itemName, required int amount, String? notes, int savingsAmount = 0}) {},
       );
     }
 
@@ -176,14 +160,25 @@ class _CategoryStep extends StatelessWidget {
   }
 }
 
-class _SubcategoryStep extends StatelessWidget {
-  final ExpenseCategory category;
-  final ValueChanged<ExpenseSubcategory> onSubcategorySelected;
+class _FormStep extends StatelessWidget {
+  final bool isSaving;
+  final int savingsBalance;
+  final bool fromSavings;
+  final ValueChanged<bool>? onFromSavingsChanged;
+  final void Function({
+    required String itemName,
+    required int amount,
+    String? notes,
+    int savingsAmount,
+  }) onSave;
 
-  const _SubcategoryStep({
+  const _FormStep({
     super.key,
-    required this.category,
-    required this.onSubcategorySelected,
+    required this.isSaving,
+    required this.onSave,
+    this.savingsBalance = 0,
+    this.fromSavings = false,
+    this.onFromSavingsChanged,
   });
 
   @override
@@ -193,46 +188,113 @@ class _SubcategoryStep extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'اختر التصنيف الفرعي',
-            style: AppTypography.bodyLarge.copyWith(
-              color: AppColors.textSecondary,
+          if (savingsBalance > 0 && onFromSavingsChanged != null) ...[
+            FutureBuilder<int>(
+              future: Injection.cycleRepository.getActiveCycle().then(
+                    (cycle) => cycle != null
+                        ? _getCurrentBalance(cycle.id)
+                        : 0,
+                  ),
+              initialData: 0,
+              builder: (ctx, snapshot) {
+                return PaymentSourceToggle(
+                  currentBalance: snapshot.data ?? 0,
+                  savingsBalance: savingsBalance,
+                  fromSavings: fromSavings,
+                  onChanged: onFromSavingsChanged!,
+                );
+              },
             ),
-            textAlign: TextAlign.start,
-          ),
-          const SizedBox(height: 16),
-          SubcategoryChips(
-            category: category,
-            onSubcategorySelected: onSubcategorySelected,
+            const SizedBox(height: 16),
+          ],
+          ExpenseForm(
+            isSaving: isSaving,
+            onSave: ({required String itemName, required int amount, String? notes}) async {
+              await _handleSave(
+                context: context,
+                itemName: itemName,
+                amount: amount,
+                notes: notes,
+              );
+            },
           ),
         ],
       ),
     );
   }
-}
 
-class _FormStep extends StatelessWidget {
-  final bool isSaving;
-  final void Function({
+  Future<void> _handleSave({
+    required BuildContext context,
     required String itemName,
     required int amount,
     String? notes,
-  }) onSave;
+  }) async {
+    // All-from-savings toggle selected
+    if (fromSavings) {
+      if (amount > savingsBalance) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('رصيد المدخرات غير كافٍ')),
+          );
+        }
+        return;
+      }
+      onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: 0);
+      return;
+    }
 
-  const _FormStep({
-    super.key,
-    required this.isSaving,
-    required this.onSave,
-  });
+    // Get current spendable balance
+    final cycle = await Injection.cycleRepository.getActiveCycle();
+    final balance = cycle != null ? await _getCurrentBalance(cycle.id) : 0;
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: ExpenseForm(
-        isSaving: isSaving,
-        onSave: onSave,
-      ),
-    );
+    if (amount > balance + savingsBalance) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('الرصيد والمدخرات غير كافية')),
+        );
+      }
+      return;
+    }
+
+    if (amount > balance) {
+      if (!context.mounted) return;
+      final result = await showFundingSourceSheet(
+        context,
+        amount: amount,
+        availableBalance: balance,
+        availableSavings: savingsBalance,
+      );
+      if (result == null || !context.mounted) return;
+      onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: result.savingsAmount);
+      return;
+    }
+
+    // Balance is sufficient
+    onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: 0);
+  }
+
+  Future<int> _getCurrentBalance(int cycleId) async {
+    final totalExpenses =
+        await Injection.expenseRepository.getTotalExpenses(cycleId);
+    final totalIncome =
+        await Injection.incomeRepository.getTotalIncomeForCycle(cycleId);
+    final totalDebtPayments =
+        await Injection.debtRepository.getTotalDebtPaymentsForCycle(cycleId);
+    final totalDebtsCreated =
+        await Injection.debtRepository.getTotalDebtsCreatedForCycle(cycleId);
+    final totalLendings =
+        await Injection.lendingRepository.getTotalLendingsFromBalanceForCycle(cycleId);
+    final totalCollections =
+        await Injection.lendingRepository.getTotalCollectionsToBalanceForCycle(cycleId);
+    final cycle = await Injection.cycleRepository.getCycleById(cycleId);
+    if (cycle == null) return 0;
+    return cycle.salaryAmount -
+        cycle.salarySplitAmount +
+        totalIncome +
+        totalDebtsCreated -
+        totalExpenses -
+        totalDebtPayments -
+        totalLendings +
+        totalCollections;
   }
 }

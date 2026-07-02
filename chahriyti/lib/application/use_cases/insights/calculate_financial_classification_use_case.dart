@@ -1,6 +1,5 @@
 import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/expense_repository.dart';
-import '../../../domain/repositories/income_repository.dart';
 
 enum FinancialClassification {
   legendarySaver,
@@ -67,12 +66,10 @@ extension ClassificationDisplay on FinancialClassification {
 class CalculateFinancialClassificationUseCase {
   final CycleRepository _cycleRepository;
   final ExpenseRepository _expenseRepository;
-  final IncomeRepository _incomeRepository;
 
   CalculateFinancialClassificationUseCase(
     this._cycleRepository,
     this._expenseRepository,
-    this._incomeRepository,
   );
 
   Future<FinancialClassification> call(int cycleId) async {
@@ -86,16 +83,11 @@ class CalculateFinancialClassificationUseCase {
       cycle.endDate,
     );
 
-    final incomes = await _incomeRepository.getIncomesByDateRange(
-      cycle.startDate,
-      cycle.endDate,
-    );
-
     final totalExpenses = expenses.fold<int>(0, (sum, e) => sum + e.amount);
-    final totalIncome = incomes.fold<int>(0, (sum, i) => sum + i.amount);
+    final totalIncome = cycle.salaryAmount;
 
     // Calculate savings rate
-    if (totalIncome == 0) {
+    if (totalIncome <= 0) {
       return FinancialClassification.earlyBankruptcy;
     }
 
@@ -127,15 +119,10 @@ class CalculateFinancialClassificationUseCase {
       cycle.endDate,
     );
 
-    final incomes = await _incomeRepository.getIncomesByDateRange(
-      cycle.startDate,
-      cycle.endDate,
-    );
-
     final totalExpenses = expenses.fold<int>(0, (sum, e) => sum + e.amount);
-    final totalIncome = incomes.fold<int>(0, (sum, i) => sum + i.amount);
+    final totalIncome = cycle.salaryAmount;
 
-    if (totalIncome == 0) return -100;
+    if (totalIncome <= 0) return -100;
 
     return ((totalIncome - totalExpenses) / totalIncome) * 100;
   }

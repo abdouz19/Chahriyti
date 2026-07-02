@@ -13,6 +13,7 @@ _DebtEntity _$DebtEntityFromJson(Map<String, dynamic> json) => _DebtEntity(
   paidAmount: (json['paidAmount'] as num).toInt(),
   isFullyPaid: json['isFullyPaid'] as bool,
   createdAt: DateTime.parse(json['createdAt'] as String),
+  notes: json['notes'] as String?,
 );
 
 Map<String, dynamic> _$DebtEntityToJson(_DebtEntity instance) =>
@@ -23,4 +24,5 @@ Map<String, dynamic> _$DebtEntityToJson(_DebtEntity instance) =>
       'paidAmount': instance.paidAmount,
       'isFullyPaid': instance.isFullyPaid,
       'createdAt': instance.createdAt.toIso8601String(),
+      'notes': instance.notes,
     };

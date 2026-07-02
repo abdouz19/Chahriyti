@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../application/use_cases/cycle/reset_cycle_use_case.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
-import '../../shared/widgets/confirmation_dialog.dart';
 import '../../shared/widgets/money_text.dart';
 import '../cubits/settings_cubit.dart';
 
@@ -20,7 +18,7 @@ class SettingsPage extends StatelessWidget {
       create: (_) => SettingsCubit(
         userRepository: Injection.userRepository,
         cycleRepository: Injection.cycleRepository,
-        resetCycle: ResetCycleUseCase(Injection.cycleRepository),
+        resetAppData: Injection.resetAppDataUseCase,
       )..loadSettings(),
       child: const _SettingsView(),
     );
@@ -41,13 +39,14 @@ class _SettingsView extends StatelessWidget {
       ),
       body: BlocConsumer<SettingsCubit, SettingsState>(
         listener: (context, state) {
-          if (state is SettingsResetComplete) {
+          if (state is SettingsDataResetComplete) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('تم بدء دورة مالية جديدة بنجاح!'),
+                content: Text('تم مسح جميع البيانات بنجاح'),
                 backgroundColor: AppColors.positive,
               ),
             );
+            context.go('/home');
           } else if (state is SettingsError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -193,7 +192,7 @@ class _SettingsView extends StatelessWidget {
                   Row(
                     children: [
                       MoneyText(
-                        amount: Money.fromDZD(state.salary),
+                        amount: Money(state.salary),
                         style: AppTypography.amountSmall,
                         color: AppColors.primary,
                       ),
@@ -306,40 +305,22 @@ class _SettingsView extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          // ── Challenges section ──
-          _SectionCard(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'التحديات الأسبوعية',
-                        style: AppTypography.labelLarge,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'تحديات ادخار أسبوعية اختيارية',
-                        style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: OutlinedButton.icon(
+                  onPressed: () => context.push('/savings'),
+                  icon: const Icon(Icons.savings_rounded),
+                  label: const Text('المدخرات'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.primary),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
-                  Switch(
-                    value: state.challengesEnabled,
-                    onChanged: (value) {
-                      context.read<SettingsCubit>().toggleChallenges(value);
-                    },
-                    activeThumbColor: AppColors.primary,
-                  ),
-                ],
+                ),
               ),
             ],
           ),
@@ -354,7 +335,7 @@ class _SettingsView extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'يمكنك بدء دورة مالية جديدة مع الاحتفاظ بسجلك الحالي',
+                'تبدأ الدورة تلقائياً في يوم استلام راتبك كل شهر',
                 style: AppTypography.bodySmall,
               ),
               const SizedBox(height: 16),
@@ -374,24 +355,59 @@ class _SettingsView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton.icon(
-                  onPressed: () => _onResetCycle(context),
-                  icon: const Icon(Icons.refresh_rounded),
-                  label: const Text('إعادة تعيين الدورة'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.warning,
-                    side: const BorderSide(color: AppColors.warning),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // ── Danger zone ──
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppColors.negative.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.negative.withValues(alpha: 0.3)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.warning_rounded, color: AppColors.negative, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'منطقة الخطر',
+                      style: AppTypography.labelLarge.copyWith(
+                        color: AppColors.negative,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'هذه الإجراءات لا يمكن التراجع عنها. تأكد تماماً قبل المتابعة.',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.negative.withValues(alpha: 0.8),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
+                    onPressed: () => _onResetAllData(context),
+                    icon: const Icon(Icons.delete_forever_rounded),
+                    label: const Text('مسح كل البيانات'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.negative,
+                      side: const BorderSide(color: AppColors.negative),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 40),
 
@@ -410,18 +426,75 @@ class _SettingsView extends StatelessWidget {
     );
   }
 
-  Future<void> _onResetCycle(BuildContext context) async {
-    final confirmed = await ConfirmationDialog.show(
-      context,
-      title: 'بداية جديدة!',
-      message: 'هل تريد بدء دورة مالية جديدة؟ سيتم حفظ السجل الحالي.',
-      confirmLabel: 'ابدأ من جديد',
-      cancelLabel: 'إلغاء',
-      confirmColor: AppColors.warning,
+  Future<void> _onResetAllData(BuildContext context) async {
+    // First confirmation
+    final firstConfirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Icons.warning_rounded, color: AppColors.negative, size: 24),
+            const SizedBox(width: 8),
+            Text('تحذير مهم', style: AppTypography.headlineSmall),
+          ],
+        ),
+        content: Text(
+          'ستقوم بمسح جميع بياناتك المالية بما فيها:\n\n'
+          '• جميع المصاريف\n'
+          '• جميع الديون والمدفوعات\n'
+          '• جميع الإقراضات\n'
+          '• جميع الأهداف والمدخرات\n'
+          '• سجل الدورات المالية\n\n'
+          'سيتم الاحتفاظ فقط براتبك ويوم استلامه.\n\n'
+          'هذا الإجراء لا يمكن التراجع عنه نهائياً.',
+          style: AppTypography.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('إلغاء', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text('متابعة', style: TextStyle(color: AppColors.negative)),
+          ),
+        ],
+      ),
     );
 
-    if (confirmed && context.mounted) {
-      context.read<SettingsCubit>().resetCycle();
+    if (firstConfirmed != true || !context.mounted) return;
+
+    // Second confirmation — final gate
+    final finalConfirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text('هل أنت متأكد تماماً؟', style: AppTypography.headlineSmall),
+        content: Text(
+          'لن تتمكن من استرجاع أي بيانات بعد هذه الخطوة.\n\nهل تريد المتابعة؟',
+          style: AppTypography.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('لا، إلغاء', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.negative,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('نعم، امسح كل شيء'),
+          ),
+        ],
+      ),
+    );
+
+    if (finalConfirmed == true && context.mounted) {
+      context.read<SettingsCubit>().resetAllData();
     }
   }
 

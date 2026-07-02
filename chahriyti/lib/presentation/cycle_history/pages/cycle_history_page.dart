@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -100,12 +98,33 @@ class _CycleHistoryView extends StatelessWidget {
               );
             }
 
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: state.cycles.length,
-              itemBuilder: (context, index) {
-                return _CycleCard(cycle: state.cycles[index]);
+            return NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (notification is ScrollEndNotification &&
+                    notification.metrics.extentAfter < 200 &&
+                    state.hasMore) {
+                  context.read<CycleHistoryCubit>().loadMore();
+                }
+                return false;
               },
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: state.cycles.length + (state.hasMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == state.cycles.length) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    );
+                  }
+                  return _CycleCard(cycle: state.cycles[index]);
+                },
+              ),
             );
           }
 
@@ -186,7 +205,7 @@ class _CycleCard extends StatelessWidget {
                   style: AppTypography.bodyMedium,
                 ),
                 MoneyText(
-                  amount: Money.fromDZD(cycle.cycle.salaryAmount),
+                  amount: Money(cycle.cycle.salaryAmount),
                   style: AppTypography.labelMedium,
                   color: AppColors.primary,
                 ),
@@ -203,7 +222,7 @@ class _CycleCard extends StatelessWidget {
                   style: AppTypography.bodyMedium,
                 ),
                 MoneyText(
-                  amount: Money.fromDZD(cycle.totalExpenses),
+                  amount: Money(cycle.totalExpenses),
                   style: AppTypography.labelMedium,
                   color: AppColors.negative,
                 ),
@@ -229,7 +248,7 @@ class _CycleCard extends StatelessWidget {
                     style: AppTypography.labelMedium,
                   ),
                   MoneyText(
-                    amount: Money.fromDZD(cycle.balance),
+                    amount: Money(cycle.balance),
                     style: AppTypography.amountSmall.copyWith(
                       fontWeight: FontWeight.w700,
                     ),

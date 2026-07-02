@@ -21,6 +21,8 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
         notes: row.notes,
         createdAt: row.createdAt,
         updatedAt: row.updatedAt,
+        fromSavings: row.fromSavings,
+        savingsAmount: row.savingsAmount,
       );
 
   @override
@@ -31,11 +33,13 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
     required String itemName,
     required int amount,
     String? notes,
+    bool fromSavings = false,
+    int savingsAmount = 0,
   }) async {
     debugPrint('💾 REPO: Adding expense...');
     debugPrint('   - Category: $category / $subcategory');
     debugPrint('   - Item: $itemName');
-    debugPrint('   - Amount: $amount');
+    debugPrint('   - Amount: $amount (savingsAmount: $savingsAmount)');
 
     final now = DateTime.now();
     final id = await _dao.insertExpense(
@@ -48,6 +52,8 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
         notes: Value(notes),
         createdAt: Value(now),
         updatedAt: Value(now),
+        fromSavings: Value(fromSavings),
+        savingsAmount: Value(savingsAmount),
       ),
     );
 
@@ -71,6 +77,8 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
         notes: expense.notes,
         createdAt: expense.createdAt,
         updatedAt: DateTime.now(),
+        fromSavings: expense.fromSavings,
+        savingsAmount: expense.savingsAmount,
       ),
     );
   }

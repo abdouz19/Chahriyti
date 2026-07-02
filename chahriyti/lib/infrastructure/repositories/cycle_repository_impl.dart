@@ -15,6 +15,7 @@ class CycleRepositoryImpl implements CycleRepository {
         startDate: row.startDate,
         endDate: row.endDate,
         salaryAmount: row.salaryAmount,
+        salarySplitAmount: row.salarySplitAmount,
         isActive: row.isActive,
       );
 
@@ -50,12 +51,14 @@ class CycleRepositoryImpl implements CycleRepository {
     required DateTime startDate,
     required DateTime endDate,
     required int salaryAmount,
+    int salarySplitAmount = 0,
   }) async {
     await _dao.insertCycle(
       FinancialCyclesCompanion(
         startDate: Value(startDate),
         endDate: Value(endDate),
         salaryAmount: Value(salaryAmount),
+        salarySplitAmount: Value(salarySplitAmount),
         isActive: const Value(true),
       ),
     );
@@ -67,8 +70,8 @@ class CycleRepositoryImpl implements CycleRepository {
   Future<void> closeCycle(int id) => _dao.closeCycle(id);
 
   @override
-  Future<List<FinancialCycleEntity>> getCycleHistory({int limit = 6}) async {
-    final rows = await _dao.getCycleHistory(limit: limit);
+  Future<List<FinancialCycleEntity>> getCycleHistory({int limit = 6, int offset = 0}) async {
+    final rows = await _dao.getCycleHistory(limit: limit, offset: offset);
     return rows.map(_toEntity).toList();
   }
 
@@ -77,21 +80,19 @@ class CycleRepositoryImpl implements CycleRepository {
       _dao.updateCycleSalary(cycleId, salaryAmount);
 
   @override
+  Future<void> updateCycleSalarySplit(int cycleId, int salarySplitAmount) =>
+      _dao.updateCycleSalarySplit(cycleId, salarySplitAmount);
+
+  @override
+  Future<FinancialCycleEntity?> getCycleForMonth(int year, int month) async {
+    final row = await _dao.getCycleForMonth(year, month);
+    return row != null ? _toEntity(row) : null;
+  }
+
+  @override
   Future<void> updateCycleSalaryDay(int cycleId, int salaryDay) async {
-    final row = await _dao.getActiveCycle();
-    if (row == null) return;
-
-    final now = DateTime.now();
-    final startDate = DateTime(now.year, now.month, salaryDay);
-    final cycleStart = startDate.isAfter(now)
-        ? DateTime(now.year, now.month - 1, salaryDay)
-        : startDate;
-    final cycleEnd = DateTime(
-      cycleStart.year,
-      cycleStart.month + 1,
-      salaryDay,
-    ).subtract(const Duration(days: 1));
-
-    await _dao.updateCycleDates(cycleId, cycleStart, cycleEnd);
+    // No-op: active cycle dates are never retroactively modified.
+    // The new salary day is stored on the user record and takes effect
+    // when the next cycle is auto-created by CheckAndStartCycleUseCase.
   }
 }

@@ -215,7 +215,7 @@ class _EditExpenseView extends StatelessWidget {
             required String itemName,
             required int amount,
             String? notes,
-          }) {
+          }) async {
             cubit.saveExpense(
               itemName: itemName,
               amount: amount,

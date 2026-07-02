@@ -14,7 +14,10 @@ class DebtState with _$DebtState {
     List<DebtEntity> debts, {
     @Default(false) bool hasMore,
     @Default(0) int offset,
+    @Default(false) bool isCompletedTab,
   }) = DebtsLoaded;
+
+  const factory DebtState.debtLoaded(DebtEntity debt) = DebtLoaded;
 
   const factory DebtState.debtCreated(int debtId) = DebtCreated;
 

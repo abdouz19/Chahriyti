@@ -58,7 +58,7 @@ class PredictionCard extends StatelessWidget {
                 ),
               ),
               MoneyText(
-                amount: Money.fromDZD(prediction.currentDailyRate),
+                amount: Money(prediction.currentDailyRate),
                 style: AppTypography.labelMedium,
               ),
             ],
@@ -74,7 +74,7 @@ class PredictionCard extends StatelessWidget {
                 ),
               ),
               MoneyText(
-                amount: Money.fromDZD(prediction.predictedEndBalance),
+                amount: Money(prediction.predictedEndBalance),
                 style: AppTypography.labelMedium,
                 color: isSurplus ? AppColors.positive : AppColors.negative,
               ),
@@ -123,7 +123,7 @@ class PredictionCard extends StatelessWidget {
       return 'تحذير: قد ينفد رصيدك في $formatted';
     }
 
-    final surplus = Money.fromDZD(prediction.predictedEndBalance);
+    final surplus = Money(prediction.predictedEndBalance);
     return 'مسارك ممتاز! ستتبقى لك ${surplus.formatDZD()}';
   }
 }

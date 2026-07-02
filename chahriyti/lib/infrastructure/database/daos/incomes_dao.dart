@@ -32,8 +32,25 @@ class IncomesDao extends DatabaseAccessor<AppDatabase> with _$IncomesDaoMixin {
     final sum = additionalIncomes.amount.sum();
     final query = selectOnly(additionalIncomes)
       ..addColumns([sum])
-      ..where(additionalIncomes.cycleId.equals(cycleId));
+      ..where(additionalIncomes.cycleId.equals(cycleId))
+      ..where(additionalIncomes.toSavings.equals(false));
     final result = await query.getSingle();
     return result.read(sum) ?? 0;
+  }
+
+  Future<void> updateIncome({required int id, required String description}) async {
+    await (update(additionalIncomes)..where((t) => t.id.equals(id))).write(
+      AdditionalIncomesCompanion(description: Value(description)),
+    );
+  }
+
+  Future<void> deleteIncome(int id) async {
+    final rows = await (select(additionalIncomes)..where((t) => t.id.equals(id))).get();
+    if (rows.isEmpty) return;
+    final row = rows.first;
+    if (row.toSavings) {
+      throw ArgumentError('لا يمكن حذف دخل محوّل للمدخرات');
+    }
+    await (delete(additionalIncomes)..where((t) => t.id.equals(id))).go();
   }
 }

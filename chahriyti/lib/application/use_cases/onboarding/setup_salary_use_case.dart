@@ -29,15 +29,18 @@ class SetupSalaryUseCase {
     );
 
     final now = DateTime.now();
-    final startDate = DateTime(now.year, now.month, salaryDay);
+    final thisMonthLastDay = DateTime(now.year, now.month + 1, 0).day;
+    final effectiveDay = salaryDay > thisMonthLastDay ? thisMonthLastDay : salaryDay;
+    final startDate = DateTime(now.year, now.month, effectiveDay);
     final cycleStart = startDate.isAfter(now)
-        ? DateTime(now.year, now.month - 1, salaryDay)
+        ? DateTime(now.year, now.month - 1, effectiveDay)
         : startDate;
-    final cycleEnd = DateTime(
-      cycleStart.year,
-      cycleStart.month + 1,
-      salaryDay,
-    ).subtract(const Duration(days: 1));
+    final nextMonth = cycleStart.month == 12 ? 1 : cycleStart.month + 1;
+    final nextYear = cycleStart.month == 12 ? cycleStart.year + 1 : cycleStart.year;
+    final nextMonthLastDay = DateTime(nextYear, nextMonth + 1, 0).day;
+    final nextEffectiveDay = salaryDay > nextMonthLastDay ? nextMonthLastDay : salaryDay;
+    final cycleEnd = DateTime(nextYear, nextMonth, nextEffectiveDay)
+        .subtract(const Duration(days: 1));
 
     await _cycleRepo.createCycle(
       startDate: cycleStart,

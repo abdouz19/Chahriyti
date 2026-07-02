@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WeeklyChallengeEntity {
 
- int get id; int get cycleId; DateTime get weekStart; int get targetReduction; int get previousWeekSpending; bool get isCompleted;
+ int get id; int get cycleId; DateTime get weekStart; int get targetAmount; String get description; bool get isCompleted; DateTime get createdAt;
 /// Create a copy of WeeklyChallengeEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $WeeklyChallengeEntityCopyWith<WeeklyChallengeEntity> get copyWith => _$WeeklyCh
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WeeklyChallengeEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&(identical(other.targetReduction, targetReduction) || other.targetReduction == targetReduction)&&(identical(other.previousWeekSpending, previousWeekSpending) || other.previousWeekSpending == previousWeekSpending)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WeeklyChallengeEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&(identical(other.targetAmount, targetAmount) || other.targetAmount == targetAmount)&&(identical(other.description, description) || other.description == description)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,cycleId,weekStart,targetReduction,previousWeekSpending,isCompleted);
+int get hashCode => Object.hash(runtimeType,id,cycleId,weekStart,targetAmount,description,isCompleted,createdAt);
 
 @override
 String toString() {
-  return 'WeeklyChallengeEntity(id: $id, cycleId: $cycleId, weekStart: $weekStart, targetReduction: $targetReduction, previousWeekSpending: $previousWeekSpending, isCompleted: $isCompleted)';
+  return 'WeeklyChallengeEntity(id: $id, cycleId: $cycleId, weekStart: $weekStart, targetAmount: $targetAmount, description: $description, isCompleted: $isCompleted, createdAt: $createdAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $WeeklyChallengeEntityCopyWith<$Res>  {
   factory $WeeklyChallengeEntityCopyWith(WeeklyChallengeEntity value, $Res Function(WeeklyChallengeEntity) _then) = _$WeeklyChallengeEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, int cycleId, DateTime weekStart, int targetReduction, int previousWeekSpending, bool isCompleted
+ int id, int cycleId, DateTime weekStart, int targetAmount, String description, bool isCompleted, DateTime createdAt
 });
 
 
@@ -65,15 +65,16 @@ class _$WeeklyChallengeEntityCopyWithImpl<$Res>
 
 /// Create a copy of WeeklyChallengeEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? cycleId = null,Object? weekStart = null,Object? targetReduction = null,Object? previousWeekSpending = null,Object? isCompleted = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? cycleId = null,Object? weekStart = null,Object? targetAmount = null,Object? description = null,Object? isCompleted = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,cycleId: null == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
 as int,weekStart: null == weekStart ? _self.weekStart : weekStart // ignore: cast_nullable_to_non_nullable
-as DateTime,targetReduction: null == targetReduction ? _self.targetReduction : targetReduction // ignore: cast_nullable_to_non_nullable
-as int,previousWeekSpending: null == previousWeekSpending ? _self.previousWeekSpending : previousWeekSpending // ignore: cast_nullable_to_non_nullable
-as int,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
-as bool,
+as DateTime,targetAmount: null == targetAmount ? _self.targetAmount : targetAmount // ignore: cast_nullable_to_non_nullable
+as int,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int cycleId,  DateTime weekStart,  int targetReduction,  int previousWeekSpending,  bool isCompleted)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int cycleId,  DateTime weekStart,  int targetAmount,  String description,  bool isCompleted,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WeeklyChallengeEntity() when $default != null:
-return $default(_that.id,_that.cycleId,_that.weekStart,_that.targetReduction,_that.previousWeekSpending,_that.isCompleted);case _:
+return $default(_that.id,_that.cycleId,_that.weekStart,_that.targetAmount,_that.description,_that.isCompleted,_that.createdAt);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.cycleId,_that.weekStart,_that.targetReduction,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int cycleId,  DateTime weekStart,  int targetReduction,  int previousWeekSpending,  bool isCompleted)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int cycleId,  DateTime weekStart,  int targetAmount,  String description,  bool isCompleted,  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _WeeklyChallengeEntity():
-return $default(_that.id,_that.cycleId,_that.weekStart,_that.targetReduction,_that.previousWeekSpending,_that.isCompleted);case _:
+return $default(_that.id,_that.cycleId,_that.weekStart,_that.targetAmount,_that.description,_that.isCompleted,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.cycleId,_that.weekStart,_that.targetReduction,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int cycleId,  DateTime weekStart,  int targetReduction,  int previousWeekSpending,  bool isCompleted)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int cycleId,  DateTime weekStart,  int targetAmount,  String description,  bool isCompleted,  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _WeeklyChallengeEntity() when $default != null:
-return $default(_that.id,_that.cycleId,_that.weekStart,_that.targetReduction,_that.previousWeekSpending,_that.isCompleted);case _:
+return $default(_that.id,_that.cycleId,_that.weekStart,_that.targetAmount,_that.description,_that.isCompleted,_that.createdAt);case _:
   return null;
 
 }
@@ -214,15 +215,16 @@ return $default(_that.id,_that.cycleId,_that.weekStart,_that.targetReduction,_th
 @JsonSerializable()
 
 class _WeeklyChallengeEntity extends WeeklyChallengeEntity {
-  const _WeeklyChallengeEntity({required this.id, required this.cycleId, required this.weekStart, required this.targetReduction, required this.previousWeekSpending, required this.isCompleted}): super._();
+  const _WeeklyChallengeEntity({required this.id, required this.cycleId, required this.weekStart, required this.targetAmount, required this.description, required this.isCompleted, required this.createdAt}): super._();
   factory _WeeklyChallengeEntity.fromJson(Map<String, dynamic> json) => _$WeeklyChallengeEntityFromJson(json);
 
 @override final  int id;
 @override final  int cycleId;
 @override final  DateTime weekStart;
-@override final  int targetReduction;
-@override final  int previousWeekSpending;
+@override final  int targetAmount;
+@override final  String description;
 @override final  bool isCompleted;
+@override final  DateTime createdAt;
 
 /// Create a copy of WeeklyChallengeEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WeeklyChallengeEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&(identical(other.targetReduction, targetReduction) || other.targetReduction == targetReduction)&&(identical(other.previousWeekSpending, previousWeekSpending) || other.previousWeekSpending == previousWeekSpending)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WeeklyChallengeEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&(identical(other.targetAmount, targetAmount) || other.targetAmount == targetAmount)&&(identical(other.description, description) || other.description == description)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,cycleId,weekStart,targetReduction,previousWeekSpending,isCompleted);
+int get hashCode => Object.hash(runtimeType,id,cycleId,weekStart,targetAmount,description,isCompleted,createdAt);
 
 @override
 String toString() {
-  return 'WeeklyChallengeEntity(id: $id, cycleId: $cycleId, weekStart: $weekStart, targetReduction: $targetReduction, previousWeekSpending: $previousWeekSpending, isCompleted: $isCompleted)';
+  return 'WeeklyChallengeEntity(id: $id, cycleId: $cycleId, weekStart: $weekStart, targetAmount: $targetAmount, description: $description, isCompleted: $isCompleted, createdAt: $createdAt)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$WeeklyChallengeEntityCopyWith<$Res> implements $WeeklyCha
   factory _$WeeklyChallengeEntityCopyWith(_WeeklyChallengeEntity value, $Res Function(_WeeklyChallengeEntity) _then) = __$WeeklyChallengeEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int cycleId, DateTime weekStart, int targetReduction, int previousWeekSpending, bool isCompleted
+ int id, int cycleId, DateTime weekStart, int targetAmount, String description, bool isCompleted, DateTime createdAt
 });
 
 
@@ -274,15 +276,16 @@ class __$WeeklyChallengeEntityCopyWithImpl<$Res>
 
 /// Create a copy of WeeklyChallengeEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? cycleId = null,Object? weekStart = null,Object? targetReduction = null,Object? previousWeekSpending = null,Object? isCompleted = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? cycleId = null,Object? weekStart = null,Object? targetAmount = null,Object? description = null,Object? isCompleted = null,Object? createdAt = null,}) {
   return _then(_WeeklyChallengeEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,cycleId: null == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
 as int,weekStart: null == weekStart ? _self.weekStart : weekStart // ignore: cast_nullable_to_non_nullable
-as DateTime,targetReduction: null == targetReduction ? _self.targetReduction : targetReduction // ignore: cast_nullable_to_non_nullable
-as int,previousWeekSpending: null == previousWeekSpending ? _self.previousWeekSpending : previousWeekSpending // ignore: cast_nullable_to_non_nullable
-as int,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
-as bool,
+as DateTime,targetAmount: null == targetAmount ? _self.targetAmount : targetAmount // ignore: cast_nullable_to_non_nullable
+as int,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

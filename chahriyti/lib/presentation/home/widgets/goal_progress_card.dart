@@ -8,67 +8,53 @@ import '../../shared/widgets/money_text.dart';
 
 class GoalProgressCard extends StatelessWidget {
   final List<SavingsGoalEntity> goals;
+  final int savingsBalance;
+  final VoidCallback? onViewAll;
 
-  const GoalProgressCard({super.key, required this.goals});
+  const GoalProgressCard({
+    super.key,
+    required this.goals,
+    required this.savingsBalance,
+    this.onViewAll,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: AppColors.card,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: AppColors.border),
-      ),
-      elevation: 0,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.flag_rounded,
-                  color: AppColors.primary,
-                  size: 18,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'أهداف الادخار',
-                  style: AppTypography.labelMedium.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ...goals
+            .take(3)
+            .map((goal) => _GoalItem(goal: goal, savingsBalance: savingsBalance)),
+        Divider(height: 16, color: AppColors.divider),
+        GestureDetector(
+          onTap: onViewAll,
+          child: Center(
+            child: Text(
+              'عرض الكل',
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
             ),
-            const SizedBox(height: 12),
-            if (goals.isEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(
-                  'لا توجد أهداف ادخارية',
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              )
-            else
-              ...goals.take(3).map((goal) => _GoalItem(goal: goal)),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
 
 class _GoalItem extends StatelessWidget {
   final SavingsGoalEntity goal;
+  final int savingsBalance;
 
-  const _GoalItem({required this.goal});
+  const _GoalItem({required this.goal, required this.savingsBalance});
 
   @override
   Widget build(BuildContext context) {
-    final percent = goal.progressPercentage;
+    final saved = savingsBalance.clamp(0, goal.targetAmount);
+    final percent = goal.targetAmount > 0
+        ? (saved / goal.targetAmount * 100)
+        : 0.0;
     final fraction = (percent / 100).clamp(0.0, 1.0);
 
     return Padding(
@@ -125,7 +111,7 @@ class _GoalItem extends StatelessWidget {
           Align(
             alignment: AlignmentDirectional.centerEnd,
             child: MoneyText(
-              amount: Money.fromDZD(goal.targetAmount),
+              amount: Money(goal.targetAmount),
               style: AppTypography.bodySmall,
               color: AppColors.textSecondary,
             ),

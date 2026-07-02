@@ -13,12 +13,17 @@ class GetDebtsUseCase {
     return _repository.getUserDebts(limit: limit, offset: offset);
   }
 
-  /// Get active (non-completed) debts only
   Future<List<DebtEntity>> getActiveDebts({
-    int limit = 20,
-    int offset = 0,
+    int? limit,
+    int? offset,
   }) async {
-    final allDebts = await _repository.getUserDebts(limit: limit, offset: offset);
-    return allDebts.where((debt) => !debt.isCompleted).toList();
+    return _repository.getActiveDebts(limit: limit, offset: offset);
+  }
+
+  Future<List<DebtEntity>> getCompletedDebts({
+    int? limit,
+    int? offset,
+  }) async {
+    return _repository.getCompletedDebts(limit: limit, offset: offset);
   }
 }

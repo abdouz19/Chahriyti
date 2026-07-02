@@ -11,8 +11,15 @@ import '../../shared/widgets/money_text.dart';
 
 class RecentExpensesList extends StatelessWidget {
   final List<ExpenseEntity> expenses;
+  final void Function(ExpenseEntity expense)? onEditExpense;
+  final void Function(ExpenseEntity expense)? onDeleteExpense;
 
-  const RecentExpensesList({super.key, required this.expenses});
+  const RecentExpensesList({
+    super.key,
+    required this.expenses,
+    this.onEditExpense,
+    this.onDeleteExpense,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +61,11 @@ class RecentExpensesList extends StatelessWidget {
                   indent: 56,
                 ),
                 itemBuilder: (context, index) {
-                  return _ExpenseRow(expense: expenses[index]);
+                  return _ExpenseRow(
+                    expense: expenses[index],
+                    onEdit: onEditExpense,
+                    onDelete: onDeleteExpense,
+                  );
                 },
               ),
               Divider(height: 1, color: AppColors.divider),
@@ -85,53 +96,95 @@ class RecentExpensesList extends StatelessWidget {
 
 class _ExpenseRow extends StatelessWidget {
   final ExpenseEntity expense;
+  final void Function(ExpenseEntity expense)? onEdit;
+  final void Function(ExpenseEntity expense)? onDelete;
 
-  const _ExpenseRow({required this.expense});
+  const _ExpenseRow({
+    required this.expense,
+    this.onEdit,
+    this.onDelete,
+  });
+
+  void _showActionsSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (onEdit != null)
+              ListTile(
+                leading: const Icon(Icons.edit_outlined),
+                title: const Text('تعديل'),
+                onTap: () {
+                  Navigator.pop(context);
+                  onEdit!(expense);
+                },
+              ),
+            if (onDelete != null)
+              ListTile(
+                leading: Icon(Icons.delete_outline, color: AppColors.negative),
+                title: Text('حذف', style: TextStyle(color: AppColors.negative)),
+                onTap: () {
+                  Navigator.pop(context);
+                  onDelete!(expense);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final category = _categoryFromString(expense.category);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+    return GestureDetector(
+      onLongPress: (onEdit != null || onDelete != null)
+          ? () => _showActionsSheet(context)
+          : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                _categoryIcon(category),
+                color: AppColors.primary,
+                size: 20,
+              ),
             ),
-            child: Icon(
-              _categoryIcon(category),
-              color: AppColors.primary,
-              size: 20,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    expense.itemName,
+                    style: AppTypography.bodyMedium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    _relativeDate(expense.createdAt),
+                    style: AppTypography.bodySmall,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  expense.itemName,
-                  style: AppTypography.bodyMedium,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  _relativeDate(expense.createdAt),
-                  style: AppTypography.bodySmall,
-                ),
-              ],
+            MoneyText(
+              amount: Money(expense.amount),
+              style: AppTypography.amountSmall,
+              color: AppColors.negative,
             ),
-          ),
-          MoneyText(
-            amount: Money.fromDZD(expense.amount),
-            style: AppTypography.amountSmall,
-            color: AppColors.negative,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -160,7 +213,6 @@ class _ExpenseRow extends StatelessWidget {
     final now = DateTime.now();
     final diff = now.difference(date);
     const lfm = '\u202A'; // Left-to-Right embedding
-    const ltr = '\u200E'; // Left-to-Right mark
     const pdf = '\u202C'; // Pop Directional Formatting
 
     if (diff.inMinutes < 1) return 'الآن';

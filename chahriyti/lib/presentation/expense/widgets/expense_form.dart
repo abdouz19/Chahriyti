@@ -6,7 +6,7 @@ import '../../../core/theme/app_typography.dart';
 
 class ExpenseForm extends StatefulWidget {
   /// Called when the form is valid and the user taps save.
-  final void Function({
+  final Future<void> Function({
     required String itemName,
     required int amount,
     String? notes,
@@ -65,10 +65,10 @@ class _ExpenseFormState extends State<ExpenseForm> {
     super.dispose();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final amount = int.tryParse(_amountController.text.trim()) ?? 0;
-    widget.onSave(
+    await widget.onSave(
       itemName: _itemController.text.trim(),
       amount: amount,
       notes: _notesController.text.trim().isEmpty
@@ -84,29 +84,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Item name
-          _SectionLabel(label: 'ماذا اشتريت؟'),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: _itemController,
-            textAlign: TextAlign.start,
-            textDirection: TextDirection.rtl,
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            style: AppTypography.bodyLarge,
-            decoration: const InputDecoration(
-              hintText: 'مثال: خبز، دجاج، شراب...',
-            ),
-            validator: (v) {
-              if (v == null || v.trim().isEmpty) {
-                return 'يرجى إدخال اسم المنتج';
-              }
-              return null;
-            },
-          ),
-
-          const SizedBox(height: 20),
-
           // Amount
           _SectionLabel(label: 'السعر'),
           const SizedBox(height: 8),
@@ -128,6 +105,29 @@ class _ExpenseFormState extends State<ExpenseForm> {
               final n = int.tryParse(v.trim());
               if (n == null || n <= 0) {
                 return 'يجب أن يكون السعر أكبر من الصفر';
+              }
+              return null;
+            },
+          ),
+
+          const SizedBox(height: 20),
+
+          // Item name
+          _SectionLabel(label: 'ماذا اشتريت؟'),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _itemController,
+            textAlign: TextAlign.start,
+            textDirection: TextDirection.rtl,
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+            style: AppTypography.bodyLarge,
+            decoration: const InputDecoration(
+              hintText: 'مثال: خبز، دجاج، شراب...',
+            ),
+            validator: (v) {
+              if (v == null || v.trim().isEmpty) {
+                return 'يرجى إدخال اسم المنتج';
               }
               return null;
             },

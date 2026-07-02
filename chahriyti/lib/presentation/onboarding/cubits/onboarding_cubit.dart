@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../application/use_cases/onboarding/setup_salary_use_case.dart';
 import '../../../application/use_cases/onboarding/add_initial_income_use_case.dart';
+import '../../../application/use_cases/savings/deposit_salary_split_use_case.dart';
+import '../../../domain/repositories/cycle_repository.dart';
 
 // ---------------------------------------------------------------------------
 // States
@@ -31,6 +33,16 @@ final class OnboardingCompleted extends OnboardingState {
   const OnboardingCompleted();
 }
 
+final class OnboardingSalarySplit extends OnboardingState {
+  final int cycleId;
+  final int salaryAmount;
+
+  const OnboardingSalarySplit({
+    required this.cycleId,
+    required this.salaryAmount,
+  });
+}
+
 final class OnboardingLoading extends OnboardingState {
   const OnboardingLoading();
 }
@@ -47,12 +59,18 @@ final class OnboardingError extends OnboardingState {
 class OnboardingCubit extends Cubit<OnboardingState> {
   final SetupSalaryUseCase _setupSalaryUseCase;
   final AddInitialIncomeUseCase _addInitialIncomeUseCase;
+  final DepositSalarySplitUseCase _depositSalarySplitUseCase;
+  final CycleRepository _cycleRepository;
 
   OnboardingCubit({
     required SetupSalaryUseCase setupSalaryUseCase,
     required AddInitialIncomeUseCase addInitialIncomeUseCase,
+    required DepositSalarySplitUseCase depositSalarySplitUseCase,
+    required CycleRepository cycleRepository,
   })  : _setupSalaryUseCase = setupSalaryUseCase,
         _addInitialIncomeUseCase = addInitialIncomeUseCase,
+        _depositSalarySplitUseCase = depositSalarySplitUseCase,
+        _cycleRepository = cycleRepository,
         super(const OnboardingInitial());
 
   void start() => emit(const OnboardingSalaryInput());
@@ -73,7 +91,15 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         phoneNumber: phoneNumber,
         wilayaCode: wilayaCode,
       );
-      emit(const OnboardingIncomeInput());
+      final cycle = await _cycleRepository.getActiveCycle();
+      if (cycle != null) {
+        emit(OnboardingSalarySplit(
+          cycleId: cycle.id,
+          salaryAmount: cycle.salaryAmount,
+        ));
+      } else {
+        emit(const OnboardingIncomeInput());
+      }
     } on ArgumentError catch (e) {
       emit(OnboardingError(e.message.toString()));
     } catch (_) {
@@ -98,6 +124,23 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       emit(const OnboardingError('فشل في إضافة المداخيل الإضافية'));
     }
   }
+
+  Future<void> applySalarySplit(int amount) async {
+    if (state is! OnboardingSalarySplit) return;
+    final splitState = state as OnboardingSalarySplit;
+    emit(const OnboardingLoading());
+    try {
+      await _depositSalarySplitUseCase(
+        cycleId: splitState.cycleId,
+        amount: amount,
+      );
+      emit(const OnboardingIncomeInput());
+    } catch (_) {
+      emit(const OnboardingError('حدث خطأ في تقسيم الراتب'));
+    }
+  }
+
+  void skipSalarySplit() => emit(const OnboardingIncomeInput());
 
   void skipIncome() => emit(const OnboardingValueProposition());
 

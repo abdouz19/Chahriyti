@@ -19,10 +19,9 @@ class DebtCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Calculate remaining balance and progress
-    final totalPaid = debt.payments.fold<int>(0, (sum, p) => sum + p.amount);
-    final remaining = debt.totalAmount - totalPaid;
+    final remaining = debt.remainingAmount;
     final percentagePaid = debt.totalAmount > 0
-        ? (totalPaid / debt.totalAmount.toDouble()) * 100
+        ? (debt.paidAmount / debt.totalAmount.toDouble()) * 100
         : 0.0;
 
     return GestureDetector(

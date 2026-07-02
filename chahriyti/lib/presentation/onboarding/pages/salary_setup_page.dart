@@ -70,8 +70,17 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
   Widget build(BuildContext context) {
     return BlocListener<OnboardingCubit, OnboardingState>(
       listener: (context, state) {
-        if (state is OnboardingIncomeInput) {
-          context.go('/onboarding/value');
+        if (state is OnboardingSalarySplit) {
+          final cubit = context.read<OnboardingCubit>();
+          context.push('/salary-split', extra: {
+            'cycleId': state.cycleId,
+            'salaryAmount': state.salaryAmount,
+            'onComplete': () {
+              cubit.skipSalarySplit();
+            },
+          });
+        } else if (state is OnboardingIncomeInput) {
+          context.go('/onboarding/income');
         } else if (state is OnboardingError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -86,7 +95,7 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
           title: const Text('إعداد الحساب'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () => context.go('/'),
+            onPressed: () => context.go('/onboarding/value'),
           ),
         ),
         body: SafeArea(

@@ -1,27 +1,24 @@
 import 'package:equatable/equatable.dart';
 
 class Money extends Equatable {
-  final int centimes;
+  final int amount;
 
-  const Money(this.centimes);
-  const Money.zero() : centimes = 0;
-  const Money.fromDZD(int dzd) : centimes = dzd * 100;
+  const Money(this.amount);
+  const Money.zero() : amount = 0;
 
-  double get toDZD => centimes / 100;
-  bool get isZero => centimes == 0;
-  bool get isPositive => centimes > 0;
-  bool get isNegative => centimes < 0;
+  bool get isZero => amount == 0;
+  bool get isPositive => amount > 0;
+  bool get isNegative => amount < 0;
 
-  Money operator +(Money other) => Money(centimes + other.centimes);
-  Money operator -(Money other) => Money(centimes - other.centimes);
-  bool operator >(Money other) => centimes > other.centimes;
-  bool operator <(Money other) => centimes < other.centimes;
-  bool operator >=(Money other) => centimes >= other.centimes;
-  bool operator <=(Money other) => centimes <= other.centimes;
+  Money operator +(Money other) => Money(amount + other.amount);
+  Money operator -(Money other) => Money(amount - other.amount);
+  bool operator >(Money other) => amount > other.amount;
+  bool operator <(Money other) => amount < other.amount;
+  bool operator >=(Money other) => amount >= other.amount;
+  bool operator <=(Money other) => amount <= other.amount;
 
   String formatDZD() {
-    final dzd = centimes ~/ 100;
-    final formatted = _formatWithThousands(dzd);
+    final formatted = _formatWithThousands(amount);
     return '$formatted دج';
   }
 
@@ -39,7 +36,7 @@ class Money extends Equatable {
   }
 
   @override
-  List<Object?> get props => [centimes];
+  List<Object?> get props => [amount];
 
   @override
   String toString() => formatDZD();

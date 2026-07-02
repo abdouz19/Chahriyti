@@ -43,7 +43,7 @@ class DailyAverageWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             MoneyText(
-              amount: Money.fromDZD(dailyAverage),
+              amount: Money(dailyAverage),
               style: AppTypography.amountLarge,
               color: AppColors.textPrimary,
             ),

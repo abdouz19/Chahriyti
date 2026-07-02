@@ -14,7 +14,10 @@ class GoalState with _$GoalState {
     List<GoalEntity> goals, {
     @Default(false) bool hasMore,
     @Default(0) int offset,
+    @Default(false) bool isCompletedTab,
   }) = GoalsLoaded;
+
+  const factory GoalState.goalLoaded(GoalEntity goal) = GoalLoaded;
 
   const factory GoalState.goalCreated(int goalId) = GoalCreated;
 

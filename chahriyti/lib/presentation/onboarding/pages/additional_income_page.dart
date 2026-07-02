@@ -74,7 +74,7 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
     return BlocListener<OnboardingCubit, OnboardingState>(
       listener: (context, state) {
         if (state is OnboardingValueProposition) {
-          context.go('/onboarding/value');
+          context.go('/activation');
         } else if (state is OnboardingError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

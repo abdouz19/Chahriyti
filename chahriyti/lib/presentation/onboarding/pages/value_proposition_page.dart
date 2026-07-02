@@ -49,7 +49,7 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
         title: const Text('مزايا شهريتي'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => context.go('/onboarding/salary'),
+          onPressed: () => context.go('/'),
         ),
       ),
       body: SafeArea(
@@ -143,7 +143,7 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.go('/activation'),
+                  onPressed: () => context.go('/onboarding/salary'),
                   child: const Text('متابعة'),
                 ),
               ),

@@ -11,13 +11,18 @@ abstract class CycleRepository {
     required DateTime startDate,
     required DateTime endDate,
     required int salaryAmount,
+    int salarySplitAmount = 0,
   });
 
   Future<void> closeCycle(int id);
 
   Future<void> updateCycleSalary(int cycleId, int salaryAmount);
 
+  Future<void> updateCycleSalarySplit(int cycleId, int salarySplitAmount);
+
   Future<void> updateCycleSalaryDay(int cycleId, int salaryDay);
 
-  Future<List<FinancialCycleEntity>> getCycleHistory({int limit = 6});
+  Future<List<FinancialCycleEntity>> getCycleHistory({int limit = 6, int offset = 0});
+
+  Future<FinancialCycleEntity?> getCycleForMonth(int year, int month);
 }

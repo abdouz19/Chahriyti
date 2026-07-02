@@ -11,9 +11,10 @@ abstract class WeeklyChallengeEntity with _$WeeklyChallengeEntity {
     required int id,
     required int cycleId,
     required DateTime weekStart,
-    required int targetReduction,
-    required int previousWeekSpending,
+    required int targetAmount,
+    required String description,
     required bool isCompleted,
+    required DateTime createdAt,
   }) = _WeeklyChallengeEntity;
 
   factory WeeklyChallengeEntity.fromJson(Map<String, dynamic> json) =>

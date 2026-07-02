@@ -5,9 +5,12 @@ import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dar
 import '../../../domain/repositories/expense_repository.dart';
 import '../../../domain/repositories/debt_repository.dart';
 import '../../../domain/repositories/goal_repository.dart';
+import '../../../domain/repositories/lending_repository.dart';
+import '../../../domain/repositories/savings_repository.dart';
 import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/entities/expense_entity.dart';
 import '../../../domain/entities/debt_entity.dart';
+import '../../../domain/entities/lending_entity.dart';
 import '../../../domain/entities/savings_goal_entity.dart';
 
 // ─── States ────────────────────────────────────────────────────────────────
@@ -20,13 +23,17 @@ class DashboardLoaded extends DashboardState {
   final DashboardData data;
   final List<ExpenseEntity> recentExpenses;
   final List<DebtEntity> activeDebts;
+  final List<LendingEntity> activeLendings;
   final List<SavingsGoalEntity> activeGoals;
+  final int savingsBalance;
 
   DashboardLoaded({
     required this.data,
     required this.recentExpenses,
     required this.activeDebts,
+    this.activeLendings = const [],
     required this.activeGoals,
+    this.savingsBalance = 0,
   });
 }
 
@@ -44,6 +51,8 @@ class DashboardCubit extends Cubit<DashboardState> {
   final ExpenseRepository _expenseRepository;
   final DebtRepository _debtRepository;
   final GoalRepository _goalRepository;
+  final LendingRepository? _lendingRepository;
+  final SavingsRepository? _savingsRepository;
 
   DashboardCubit({
     required GetDashboardDataUseCase getDashboardData,
@@ -51,11 +60,15 @@ class DashboardCubit extends Cubit<DashboardState> {
     required ExpenseRepository expenseRepository,
     required DebtRepository debtRepository,
     required GoalRepository goalRepository,
+    LendingRepository? lendingRepository,
+    SavingsRepository? savingsRepository,
   })  : _getDashboardData = getDashboardData,
         _cycleRepository = cycleRepository,
         _expenseRepository = expenseRepository,
         _debtRepository = debtRepository,
         _goalRepository = goalRepository,
+        _lendingRepository = lendingRepository,
+        _savingsRepository = savingsRepository,
         super(DashboardLoading());
 
   Future<void> loadDashboard() async {
@@ -83,6 +96,16 @@ class DashboardCubit extends Cubit<DashboardState> {
       final activeDebts = results[1] as List<DebtEntity>;
       final activeGoals = results[2] as List<SavingsGoalEntity>;
 
+      List<LendingEntity> activeLendings = [];
+      if (_lendingRepository != null) {
+        activeLendings = await _lendingRepository.getActiveLendings();
+      }
+
+      int savingsBalance = 0;
+      if (_savingsRepository != null) {
+        savingsBalance = await _savingsRepository.getSavingsBalance();
+      }
+
       debugPrint('📊 DASHBOARD: Total Expenses = ${dashboardData.totalExpenses}');
       debugPrint('📊 DASHBOARD: Current Balance = ${dashboardData.currentBalance}');
       debugPrint('📊 DASHBOARD: Total Income = ${dashboardData.totalIncome}');
@@ -103,7 +126,9 @@ class DashboardCubit extends Cubit<DashboardState> {
         data: dashboardData,
         recentExpenses: recentExpenses,
         activeDebts: activeDebts,
+        activeLendings: activeLendings,
         activeGoals: activeGoals,
+        savingsBalance: savingsBalance,
       ));
       debugPrint('📊 DASHBOARD: Data fetch completed successfully');
     } catch (e) {

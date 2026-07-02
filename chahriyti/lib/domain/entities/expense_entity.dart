@@ -17,6 +17,8 @@ abstract class ExpenseEntity with _$ExpenseEntity {
     String? notes,
     required DateTime createdAt,
     required DateTime updatedAt,
+    @Default(false) bool fromSavings,
+    @Default(0) int savingsAmount,
   }) = _ExpenseEntity;
 
   factory ExpenseEntity.fromJson(Map<String, dynamic> json) =>

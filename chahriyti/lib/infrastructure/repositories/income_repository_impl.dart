@@ -24,6 +24,7 @@ class IncomeRepositoryImpl implements IncomeRepository {
     required int cycleId,
     required String description,
     required int amount,
+    bool toSavings = false,
   }) async {
     final now = DateTime.now();
     final id = await _dao.insertIncome(
@@ -31,6 +32,7 @@ class IncomeRepositoryImpl implements IncomeRepository {
         cycleId: Value(cycleId),
         description: Value(description),
         amount: Value(amount),
+        toSavings: Value(toSavings),
         createdAt: Value(now),
       ),
     );
@@ -57,4 +59,14 @@ class IncomeRepositoryImpl implements IncomeRepository {
   @override
   Future<int> getTotalIncomeForCycle(int cycleId) =>
       _dao.getTotalIncomeForCycle(cycleId);
+
+  @override
+  Future<void> updateIncome({required int id, required String description}) async {
+    await _dao.updateIncome(id: id, description: description);
+  }
+
+  @override
+  Future<void> deleteIncome(int id) async {
+    await _dao.deleteIncome(id);
+  }
 }

@@ -25,8 +25,8 @@ class DetectFinancialLeaksUseCase {
   /// Threshold: 5+ transactions
   static const int _minTransactionCount = 5;
 
-  /// Threshold: 2,000 DZD = 200,000 centimes
-  static const int _minTotalCentimes = 200000;
+  /// Threshold: 2,000 DZD
+  static const int _minTotalAmount = 2000;
 
   const DetectFinancialLeaksUseCase({
     required CycleRepository cycleRepository,
@@ -66,7 +66,7 @@ class DetectFinancialLeaksUseCase {
       final count = data.count;
 
       // Apply thresholds
-      if (count < _minTransactionCount || totalSpent < _minTotalCentimes) {
+      if (count < _minTransactionCount || totalSpent < _minTotalAmount) {
         continue;
       }
 

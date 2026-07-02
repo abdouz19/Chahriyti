@@ -21,9 +21,8 @@ class SpendingTrend {
   String get amountText =>
       '${_formatAmount(previousAmount)} → ${_formatAmount(currentAmount)}';
 
-  String _formatAmount(int centimes) {
-    final dzd = centimes / 100;
-    return '${dzd.toStringAsFixed(0)} دج';
+  String _formatAmount(int amount) {
+    return '$amount دج';
   }
 }
 

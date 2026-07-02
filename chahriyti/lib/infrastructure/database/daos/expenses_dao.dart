@@ -50,12 +50,11 @@ class ExpensesDao extends DatabaseAccessor<AppDatabase> with _$ExpensesDaoMixin 
           .get();
 
   Future<int> getTotalExpenses(int cycleId) async {
-    final sum = expenses.amount.sum();
-    final query = selectOnly(expenses)
-      ..addColumns([sum])
-      ..where(expenses.cycleId.equals(cycleId));
-    final result = await query.getSingle();
-    return result.read(sum) ?? 0;
+    // Sum only the balance portion: amount - savingsAmount (split expenses count partially)
+    final rows = await (select(expenses)
+          ..where((t) => t.cycleId.equals(cycleId) & t.fromSavings.equals(false)))
+        .get();
+    return rows.fold<int>(0, (sum, row) => sum + row.amount - row.savingsAmount);
   }
 
   Future<Map<String, int>> getExpensesByCategory(int cycleId) async {

@@ -13,6 +13,7 @@ _FinancialCycleEntity _$FinancialCycleEntityFromJson(
   startDate: DateTime.parse(json['startDate'] as String),
   endDate: DateTime.parse(json['endDate'] as String),
   salaryAmount: (json['salaryAmount'] as num).toInt(),
+  salarySplitAmount: (json['salarySplitAmount'] as num?)?.toInt() ?? 0,
   isActive: json['isActive'] as bool,
 );
 
@@ -23,5 +24,6 @@ Map<String, dynamic> _$FinancialCycleEntityToJson(
   'startDate': instance.startDate.toIso8601String(),
   'endDate': instance.endDate.toIso8601String(),
   'salaryAmount': instance.salaryAmount,
+  'salarySplitAmount': instance.salarySplitAmount,
   'isActive': instance.isActive,
 };

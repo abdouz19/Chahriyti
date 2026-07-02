@@ -12,9 +12,10 @@ _WeeklyChallengeEntity _$WeeklyChallengeEntityFromJson(
   id: (json['id'] as num).toInt(),
   cycleId: (json['cycleId'] as num).toInt(),
   weekStart: DateTime.parse(json['weekStart'] as String),
-  targetReduction: (json['targetReduction'] as num).toInt(),
-  previousWeekSpending: (json['previousWeekSpending'] as num).toInt(),
+  targetAmount: (json['targetAmount'] as num).toInt(),
+  description: json['description'] as String,
   isCompleted: json['isCompleted'] as bool,
+  createdAt: DateTime.parse(json['createdAt'] as String),
 );
 
 Map<String, dynamic> _$WeeklyChallengeEntityToJson(
@@ -23,7 +24,8 @@ Map<String, dynamic> _$WeeklyChallengeEntityToJson(
   'id': instance.id,
   'cycleId': instance.cycleId,
   'weekStart': instance.weekStart.toIso8601String(),
-  'targetReduction': instance.targetReduction,
-  'previousWeekSpending': instance.previousWeekSpending,
+  'targetAmount': instance.targetAmount,
+  'description': instance.description,
   'isCompleted': instance.isCompleted,
+  'createdAt': instance.createdAt.toIso8601String(),
 };

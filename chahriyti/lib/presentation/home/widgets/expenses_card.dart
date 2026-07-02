@@ -6,9 +6,12 @@ import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
 
 class ExpensesCard extends StatelessWidget {
-  final int amount;
+  final int expenses;
 
-  const ExpensesCard({super.key, required this.amount});
+  const ExpensesCard({
+    super.key,
+    required this.expenses,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class ExpensesCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'إجمالي الصرف',
+                  'المصاريف',
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.negative,
                   ),
@@ -45,7 +48,7 @@ class ExpensesCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             MoneyText(
-              amount: Money.fromDZD(amount),
+              amount: Money(expenses),
               style: AppTypography.amountLarge,
               color: AppColors.negative,
             ),

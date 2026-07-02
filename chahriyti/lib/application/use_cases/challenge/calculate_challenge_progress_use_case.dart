@@ -34,22 +34,23 @@ class CalculateChallengeProgressUseCase {
 
     // Get spending since challenge started
     final expenses = await _expenseRepository.getExpensesByDateRange(
-      challenge.weekStartDate,
-      challenge.weekStartDate.add(const Duration(days: 7)),
+      challenge.weekStart,
+      challenge.weekStart.add(const Duration(days: 7)),
     );
 
     final currentSpending = expenses.fold<int>(0, (sum, exp) => sum + exp.amount);
-    final remainingBudget = challenge.targetAmount - currentSpending;
-    final percentageOfBudget = challenge.targetAmount > 0
-        ? (currentSpending / challenge.targetAmount.toDouble()) * 100
+    final targetAmount = challenge.targetAmount;
+    final remainingBudget = targetAmount - currentSpending;
+    final percentageOfBudget = targetAmount > 0
+        ? (currentSpending / targetAmount.toDouble()) * 100
         : 0.0;
 
     return ChallengeProgress(
       currentSpending: currentSpending,
-      targetAmount: challenge.targetAmount,
-      remainingBudget: remainingBudget.clamp(0, challenge.targetAmount),
+      targetAmount: targetAmount,
+      remainingBudget: remainingBudget.clamp(0, targetAmount),
       percentageOfBudget: percentageOfBudget.clamp(0, 100),
-      isCompleted: currentSpending <= challenge.targetAmount,
+      isCompleted: currentSpending <= targetAmount,
     );
   }
 }

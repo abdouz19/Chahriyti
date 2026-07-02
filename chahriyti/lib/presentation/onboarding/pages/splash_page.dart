@@ -127,7 +127,7 @@ class _SplashPageState extends State<SplashPage>
               FadeTransition(
                 opacity: _buttonOpacity,
                 child: ElevatedButton(
-                  onPressed: () => context.go('/onboarding/salary'),
+                  onPressed: () => context.go('/onboarding/value'),
                   child: const Text('ابدأ الآن'),
                 ),
               ),

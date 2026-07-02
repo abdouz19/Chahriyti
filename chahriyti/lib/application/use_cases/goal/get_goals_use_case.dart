@@ -13,12 +13,17 @@ class GetGoalsUseCase {
     return _repository.getUserGoals(limit: limit, offset: offset);
   }
 
-  /// Get incomplete goals only
-  Future<List<GoalEntity>> getIncompleteGoals({
-    int limit = 20,
-    int offset = 0,
+  Future<List<GoalEntity>> getActiveGoals({
+    int? limit,
+    int? offset,
   }) async {
-    final allGoals = await _repository.getUserGoals(limit: limit, offset: offset);
-    return allGoals.where((goal) => !goal.isCompleted).toList();
+    return _repository.getActiveGoalsPaginated(limit: limit, offset: offset);
+  }
+
+  Future<List<GoalEntity>> getCompletedGoals({
+    int? limit,
+    int? offset,
+  }) async {
+    return _repository.getCompletedGoals(limit: limit, offset: offset);
   }
 }

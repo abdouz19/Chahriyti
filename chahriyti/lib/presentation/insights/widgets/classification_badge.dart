@@ -20,15 +20,15 @@ class ClassificationBadge extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            _getColor().withOpacity(0.1),
-            _getColor().withOpacity(0.05),
+            _getColor().withValues(alpha: 0.1),
+            _getColor().withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _getColor().withOpacity(0.3),
+          color: _getColor().withValues(alpha: 0.3),
           width: 2,
         ),
       ),
@@ -40,7 +40,7 @@ class ClassificationBadge extends StatelessWidget {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: _getColor().withOpacity(0.2),
+              color: _getColor().withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(32),
             ),
             child: Center(
@@ -82,7 +82,7 @@ class ClassificationBadge extends StatelessWidget {
           // Suggestion
           Container(
             decoration: BoxDecoration(
-              color: _getColor().withOpacity(0.1),
+              color: _getColor().withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             padding: const EdgeInsets.all(12),

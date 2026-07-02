@@ -14,10 +14,13 @@ abstract class DebtEntity with _$DebtEntity {
     required int paidAmount,
     required bool isFullyPaid,
     required DateTime createdAt,
+    String? notes,
   }) = _DebtEntity;
 
   factory DebtEntity.fromJson(Map<String, dynamic> json) =>
       _$DebtEntityFromJson(json);
 
   int get remainingAmount => totalAmount - paidAmount;
+
+  bool get isCompleted => isFullyPaid;
 }

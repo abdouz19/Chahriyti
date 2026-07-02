@@ -1,4 +1,3 @@
-import '../../../domain/entities/debt_entity.dart';
 import '../../../domain/repositories/debt_repository.dart';
 
 class RemainingBalance {
@@ -24,13 +23,10 @@ class CalculateRemainingBalanceUseCase {
       throw ArgumentError('Debt not found');
     }
 
-    // Calculate total paid
-    final totalPaid = debt.payments.fold<int>(0, (sum, p) => sum + p.amount);
-    
     // Calculate remaining
-    final remaining = debt.totalAmount - totalPaid;
+    final remaining = debt.totalAmount - debt.paidAmount;
     final percentagePaid = debt.totalAmount > 0
-        ? (totalPaid / debt.totalAmount.toDouble()) * 100
+        ? (debt.paidAmount / debt.totalAmount.toDouble()) * 100
         : 0.0;
 
     return RemainingBalance(

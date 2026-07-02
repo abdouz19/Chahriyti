@@ -5,6 +5,7 @@ abstract class IncomeRepository {
     required int cycleId,
     required String description,
     required int amount,
+    bool toSavings = false,
   });
 
   Future<List<AdditionalIncomeEntity>> getIncomesForCycle(int cycleId);
@@ -15,4 +16,7 @@ abstract class IncomeRepository {
   );
 
   Future<int> getTotalIncomeForCycle(int cycleId);
+
+  Future<void> updateIncome({required int id, required String description});
+  Future<void> deleteIncome(int id);
 }

@@ -15,8 +15,19 @@ class GoalsDao extends DatabaseAccessor<AppDatabase> with _$GoalsDaoMixin {
 
   Future<List<SavingsGoalRow>> getGoals() => select(savingsGoals).get();
 
-  Future<List<SavingsGoalRow>> getActiveGoals() =>
-      (select(savingsGoals)..where((t) => t.isAchieved.equals(false))).get();
+  Future<List<SavingsGoalRow>> getActiveGoals({int? limit, int? offset}) =>
+      (select(savingsGoals)
+            ..where((t) => t.isAchieved.equals(false))
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+            ..limit(limit ?? 100, offset: offset ?? 0))
+          .get();
+
+  Future<List<SavingsGoalRow>> getCompletedGoals({int? limit, int? offset}) =>
+      (select(savingsGoals)
+            ..where((t) => t.isAchieved.equals(true))
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+            ..limit(limit ?? 100, offset: offset ?? 0))
+          .get();
 
   Future<void> insertContribution({
     required int goalId,
@@ -47,6 +58,30 @@ class GoalsDao extends DatabaseAccessor<AppDatabase> with _$GoalsDaoMixin {
         ),
       );
     });
+  }
+
+  Future<void> updateGoal({
+    required int id,
+    String? name,
+    int? targetAmount,
+  }) async {
+    await (update(savingsGoals)..where((t) => t.id.equals(id))).write(
+      SavingsGoalsCompanion(
+        name: name != null ? Value(name) : const Value.absent(),
+        targetAmount:
+            targetAmount != null ? Value(targetAmount) : const Value.absent(),
+      ),
+    );
+  }
+
+  Future<void> deleteGoal(int id) async {
+    await (delete(savingsGoals)..where((t) => t.id.equals(id))).go();
+  }
+
+  Future<void> markGoalAchieved(int id) async {
+    await (update(savingsGoals)..where((t) => t.id.equals(id))).write(
+      const SavingsGoalsCompanion(isAchieved: Value(true)),
+    );
   }
 
   Future<int> getTotalContributionsForCycle(int cycleId) async {

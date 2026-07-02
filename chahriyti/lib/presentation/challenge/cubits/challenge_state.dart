@@ -20,6 +20,12 @@ class ChallengeLoaded extends ChallengeState {
   const ChallengeLoaded(this.challenges, {this.hasMore = false, this.offset = 0});
 }
 
+class ChallengeDetailLoaded extends ChallengeState {
+  final dynamic challenge;
+
+  const ChallengeDetailLoaded(this.challenge);
+}
+
 class ChallengeCreated extends ChallengeState {
   final int challengeId;
 

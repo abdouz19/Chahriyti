@@ -1,4 +1,4 @@
-import '../../../domain/entities/challenge_entity.dart';
+import '../../../domain/entities/weekly_challenge_entity.dart';
 import '../../../domain/repositories/challenge_repository.dart';
 
 class GetActiveChallengeUseCase {
@@ -7,7 +7,7 @@ class GetActiveChallengeUseCase {
   GetActiveChallengeUseCase(this._repository);
 
   /// Get current week's active challenge if it exists
-  Future<ChallengeEntity?> call() async {
+  Future<WeeklyChallengeEntity?> call() async {
     final now = DateTime.now();
     // Get week start (Monday)
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
@@ -17,7 +17,7 @@ class GetActiveChallengeUseCase {
   }
 
   /// Get all active (non-completed) challenges
-  Future<List<ChallengeEntity>> getAll() async {
+  Future<List<WeeklyChallengeEntity>> getAll() async {
     return _repository.getActiveChallenges();
   }
 }

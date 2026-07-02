@@ -14,9 +14,14 @@ import '../widgets/daily_average_widget.dart';
 import '../widgets/days_remaining_widget.dart';
 import '../widgets/debt_summary_card.dart';
 import '../widgets/expenses_card.dart';
+import '../widgets/lending_summary_card.dart';
 import '../widgets/goal_progress_card.dart';
 import '../widgets/recent_expenses_list.dart';
 import '../widgets/safe_balance_card.dart';
+import '../../../core/extensions/money_extensions.dart';
+import '../../../domain/entities/expense_entity.dart';
+import '../../expense/cubits/expense_cubit.dart';
+import '../../shared/widgets/confirmation_dialog.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -30,11 +35,14 @@ class HomePage extends StatelessWidget {
           expenseRepository: Injection.expenseRepository,
           incomeRepository: Injection.incomeRepository,
           debtRepository: Injection.debtRepository,
+          lendingRepository: Injection.lendingRepository,
         ),
         cycleRepository: Injection.cycleRepository,
         expenseRepository: Injection.expenseRepository,
         debtRepository: Injection.debtRepository,
         goalRepository: Injection.goalRepository,
+        lendingRepository: Injection.lendingRepository,
+        savingsRepository: Injection.savingsRepository,
       )..loadDashboard(),
       child: const _HomeView(),
     );
@@ -55,24 +63,45 @@ class _HomeView extends StatelessWidget {
     }
   }
 
+  Future<void> _editExpense(
+      BuildContext context, ExpenseEntity expense) async {
+    await context.push('/expense/edit', extra: expense);
+    if (context.mounted) {
+      context.read<DashboardCubit>().refresh();
+    }
+  }
+
+  Future<void> _deleteExpense(
+      BuildContext context, ExpenseEntity expense) async {
+    final confirmed = await ConfirmationDialog.show(
+      context,
+      title: 'حذف المصروف',
+      message: 'هل تريد حذف هذا المصروف؟',
+      confirmColor: AppColors.negative,
+    );
+    if (!confirmed || !context.mounted) return;
+
+    final error = await HomeExpenseActions.deleteExpense(
+      expenseId: expense.id,
+      cycleId: expense.cycleId,
+    );
+
+    if (!context.mounted) return;
+
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(error), backgroundColor: AppColors.negative),
+      );
+    } else {
+      context.read<DashboardCubit>().refresh();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final cycle = await Injection.cycleRepository.getActiveCycle();
-          if (context.mounted && cycle != null) {
-            _navigateAndRefresh(context, '/expense/add', extra: cycle.id);
-          }
-        },
-        backgroundColor: AppColors.positive,
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: Text(
-          'صرف',
-          style: AppTypography.labelLarge.copyWith(color: Colors.white),
-        ),
-      ),
       body: RefreshIndicator(
         onRefresh: () async {
           context.read<DashboardCubit>().loadDashboard();
@@ -214,16 +243,93 @@ class _HomeView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Balance + Expenses row
-                Row(
-                  children: [
-                    Expanded(
-                      child: BalanceCard(amount: data.currentBalance),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: BalanceCard(
+                          amount: data.currentBalance,
+                          cycleTotal: data.totalIn,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ExpensesCard(
+                          expenses: data.totalExpenses,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Debt + Lending cards row (only when amounts exist)
+                if (state.activeDebts.isNotEmpty || data.totalDebtPayments > 0 || state.activeLendings.isNotEmpty || data.totalLendingsFromBalance > 0) ...[
+                  const SizedBox(height: 12),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (state.activeDebts.isNotEmpty || data.totalDebtPayments > 0)
+                          Expanded(
+                            child: _CycleAmountCard(
+                              label: 'الديون',
+                              amount: state.activeDebts.fold(0, (sum, d) => sum + d.remainingAmount),
+                              icon: Icons.paid_rounded,
+                              color: AppColors.warning,
+                              subtitleLabel: 'مدفوعات هذه الدورة',
+                              subtitleAmount: data.totalDebtPayments > 0 ? data.totalDebtPayments : null,
+                            ),
+                          ),
+                        if ((state.activeDebts.isNotEmpty || data.totalDebtPayments > 0) && (state.activeLendings.isNotEmpty || data.totalLendingsFromBalance > 0))
+                          const SizedBox(width: 12),
+                        if (state.activeLendings.isNotEmpty || data.totalLendingsFromBalance > 0)
+                          Expanded(
+                            child: _CycleAmountCard(
+                              label: 'السلف',
+                              amount: state.activeLendings.fold(0, (sum, l) => sum + l.remainingAmount),
+                              icon: Icons.handshake_rounded,
+                              color: AppColors.primary,
+                              subtitleLabel: 'سلف هذه الدورة',
+                              subtitleAmount: data.totalLendingsFromBalance > 0 ? data.totalLendingsFromBalance : null,
+                            ),
+                          ),
+                      ],
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ExpensesCard(amount: data.totalExpenses),
+                  ),
+                ],
+                const SizedBox(height: 12),
+
+                // Add expense button
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      final cycle =
+                          await Injection.cycleRepository.getActiveCycle();
+                      if (context.mounted && cycle != null) {
+                        _navigateAndRefresh(
+                          context,
+                          '/expense/add',
+                          extra: cycle.id,
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.add, size: 24),
+                    label: Text(
+                      'تسجيل مصروف',
+                      style: AppTypography.labelLarge
+                          .copyWith(color: Colors.white),
                     ),
-                  ],
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.positive,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 12),
 
@@ -255,21 +361,9 @@ class _HomeView extends StatelessWidget {
                 SafeBalanceCard(safeDaily: data.safeDaily),
                 const SizedBox(height: 12),
 
-                // Goals (if any)
-                if (state.activeGoals.isNotEmpty) ...[
-                  GoalProgressCard(goals: state.activeGoals),
-                  const SizedBox(height: 12),
-                ],
-
-                // Debts (if any)
-                if (state.activeDebts.isNotEmpty) ...[
-                  DebtSummaryCard(debts: state.activeDebts),
-                  const SizedBox(height: 12),
-                ],
-
-                // Goals summary section
+                // Goals section
                 GestureDetector(
-                  onTap: () => context.push('/goals'),
+                  onTap: () => _navigateAndRefresh(context, '/goals'),
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -305,21 +399,28 @@ class _HomeView extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          'لم تضع أهدافاً بعد',
-                          style: AppTypography.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
+                        if (state.activeGoals.isEmpty)
+                          Text(
+                            'لم تضع أهدافاً بعد',
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          )
+                        else
+                          GoalProgressCard(
+                            goals: state.activeGoals,
+                            savingsBalance: state.savingsBalance,
+                            onViewAll: () => _navigateAndRefresh(context, '/goals'),
                           ),
-                        ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
 
-                // Debts summary section
+                // Debts section
                 GestureDetector(
-                  onTap: () => context.push('/debts'),
+                  onTap: () => _navigateAndRefresh(context, '/debts'),
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -355,12 +456,74 @@ class _HomeView extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          'لا توجد ديون حالياً',
-                          style: AppTypography.bodySmall.copyWith(
-                            color: AppColors.positive,
+                        if (state.activeDebts.isEmpty)
+                          Text(
+                            'لا توجد ديون حالياً',
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.positive,
+                            ),
+                          )
+                        else
+                          DebtSummaryCard(
+                            debts: state.activeDebts,
+                            onViewAll: () => _navigateAndRefresh(context, '/debts'),
                           ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Lendings section
+                GestureDetector(
+                  onTap: () => _navigateAndRefresh(context, '/lendings'),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.card,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.handshake_rounded,
+                                  color: AppColors.primary,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'السلف',
+                                  style: AppTypography.labelLarge,
+                                ),
+                              ],
+                            ),
+                            Icon(
+                              Icons.arrow_forward_rounded,
+                              color: AppColors.textSecondary,
+                              size: 18,
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 8),
+                        if (state.activeLendings.isEmpty)
+                          Text(
+                            'لا توجد سلف حالياً',
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.positive,
+                            ),
+                          )
+                        else
+                          LendingSummaryCard(
+                            lendings: state.activeLendings,
+                            onViewAll: () => _navigateAndRefresh(context, '/lendings'),
+                          ),
                       ],
                     ),
                   ),
@@ -368,64 +531,133 @@ class _HomeView extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Recent expenses
-                RecentExpensesList(expenses: state.recentExpenses),
+                RecentExpensesList(
+                  expenses: state.recentExpenses,
+                  onEditExpense: (expense) => _editExpense(context, expense),
+                  onDeleteExpense: (expense) =>
+                      _deleteExpense(context, expense),
+                ),
                 const SizedBox(height: 16),
 
                 // Quick actions row
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => context.push('/statistics'),
-                        icon: Icon(
-                          Icons.bar_chart_rounded,
-                          color: AppColors.primary,
-                        ),
-                        label: Text(
-                          'الإحصائيات',
-                          style: AppTypography.labelSmall.copyWith(
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => context.push('/statistics'),
+                          icon: Icon(
+                            Icons.bar_chart_rounded,
                             color: AppColors.primary,
                           ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: AppColors.primary),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                          label: Text(
+                            'الإحصائيات',
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.primary),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: FilledButton.icon(
-                        onPressed: () => context.push('/insights'),
-                        icon: const Icon(Icons.lightbulb_rounded),
-                        label: Text(
-                          'الذكاء المالي',
-                          style: AppTypography.labelSmall.copyWith(
-                            color: Colors.white,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: () => context.push('/insights'),
+                          icon: const Icon(Icons.lightbulb_rounded),
+                          label: Text(
+                            'الذكاء المالي',
+                            style: AppTypography.labelSmall.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
 
-                // Bottom spacing for FAB
-                const SizedBox(height: 80),
+                const SizedBox(height: 24),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CycleAmountCard extends StatelessWidget {
+  final String label;
+  final int amount;
+  final IconData icon;
+  final Color color;
+  final String? subtitleLabel;
+  final int? subtitleAmount;
+
+  const _CycleAmountCard({
+    required this.label,
+    required this.amount,
+    required this.icon,
+    required this.color,
+    this.subtitleLabel,
+    this.subtitleAmount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: color.withValues(alpha: 0.08),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: color.withValues(alpha: 0.3)),
+      ),
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: color, size: 18),
+                const SizedBox(width: 6),
+                Text(
+                  label,
+                  style: AppTypography.labelSmall.copyWith(color: color),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              amount.toDZDString(),
+              style: AppTypography.amountLarge.copyWith(color: color),
+            ),
+            if (subtitleLabel != null && subtitleAmount != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                '$subtitleLabel: ${subtitleAmount!.toDZDString()}',
+                style: AppTypography.bodySmall.copyWith(
+                  color: color.withValues(alpha: 0.65),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

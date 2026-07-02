@@ -11,4 +11,6 @@ class Expenses extends Table {
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+  BoolColumn get fromSavings => boolean().withDefault(const Constant(false))();
+  IntColumn get savingsAmount => integer().withDefault(const Constant(0))();
 }

@@ -26,9 +26,21 @@ class _ActivationPageState extends State<ActivationPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ActivationCubit, ActivationState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is ActivationSuccess) {
-          context.go('/home');
+          final cycle =
+              await Injection.cycleRepository.getActiveCycle();
+          if (cycle != null && context.mounted) {
+            context.go('/salary-split', extra: {
+              'cycleId': cycle.id,
+              'salaryAmount': cycle.salaryAmount,
+              'onComplete': () {
+                if (context.mounted) context.go('/home');
+              },
+            });
+          } else if (context.mounted) {
+            context.go('/home');
+          }
         } else if (state is ActivationError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -41,10 +53,7 @@ class _ActivationPageState extends State<ActivationPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('تفعيل التطبيق'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () => context.go('/onboarding/value'),
-          ),
+          automaticallyImplyLeading: false,
         ),
         body: SafeArea(
           child: Column(

@@ -44,9 +44,8 @@ class GenerateWeeklyChallengeUseCase {
       (sum, expense) => sum + expense.amount,
     );
 
-    // Challenge: spend 1000 DZD (100,000 centimes) less than previous week
-    // Or 10% less, whichever is reasonable
-    final targetReduction = (previousWeekSpending * 0.1).toInt().clamp(50000, 100000);
+    // Challenge: spend 10% less than previous week, clamped between 500-1000 DZD
+    final targetReduction = (previousWeekSpending * 0.1).toInt().clamp(500, 1000);
     final targetAmount = (previousWeekSpending - targetReduction).clamp(0, previousWeekSpending);
 
     // Create challenge
@@ -54,7 +53,7 @@ class GenerateWeeklyChallengeUseCase {
       weekStartDate: weekStart,
       targetAmount: targetAmount,
       description:
-          'حاول أن تصرف أقل من ${(previousWeekSpending / 100).toStringAsFixed(0)} دج في هذا الأسبوع',
+          'حاول أن تصرف أقل من $previousWeekSpending دج في هذا الأسبوع',
     );
 
     return challengeId;

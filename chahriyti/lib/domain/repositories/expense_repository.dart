@@ -8,6 +8,8 @@ abstract class ExpenseRepository {
     required String itemName,
     required int amount,
     String? notes,
+    bool fromSavings = false,
+    int savingsAmount = 0,
   });
 
   Future<void> editExpense(ExpenseEntity expense);

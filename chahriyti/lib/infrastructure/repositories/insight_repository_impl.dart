@@ -8,9 +8,8 @@ import '../mappers/insight_mapper.dart';
 
 class InsightRepositoryImpl implements InsightRepository {
   final InsightsDao _dao;
-  final AppDatabase _db;
 
-  InsightRepositoryImpl(this._dao, this._db);
+  InsightRepositoryImpl(this._dao);
 
   @override
   Future<List<InsightEntity>> getInsightsByCycle(int cycleId) async {

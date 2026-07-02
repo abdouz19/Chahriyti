@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -304,10 +302,28 @@ class _ExpenseRow extends StatelessWidget {
               ),
             ),
             MoneyText(
-              amount: Money.fromDZD(expense.amount),
+              amount: Money(expense.amount),
               style: AppTypography.amountSmall,
               color: AppColors.negative,
             ),
+            if (canDelete) ...[
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: onDelete,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.negative.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.delete_outline_rounded,
+                    color: AppColors.negative,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

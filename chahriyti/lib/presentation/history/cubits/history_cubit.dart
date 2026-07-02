@@ -48,7 +48,7 @@ class HistoryCubit extends Cubit<HistoryState> {
   final ExpenseRepository _expenseRepository;
   final CycleRepository _cycleRepository;
 
-  static const int _pageSize = 20;
+  static const int _pageSize = 10;
   int _currentOffset = 0;
   int? _cycleId;
   int? _activeCycleId;

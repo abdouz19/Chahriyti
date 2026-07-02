@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../application/use_cases/expense/add_expense_use_case.dart';
+import '../../../application/use_cases/savings/get_savings_balance_use_case.dart';
+import '../../../core/di/injection.dart';
 
 // ---------------------------------------------------------------------------
 // States
@@ -15,15 +17,17 @@ class ExpenseCategorySelection extends ExpenseState {
   const ExpenseCategorySelection();
 }
 
-class ExpenseSubcategorySelection extends ExpenseState {
-  final String category;
-  const ExpenseSubcategorySelection(this.category);
-}
-
 class ExpenseFormInput extends ExpenseState {
   final String category;
   final String subcategory;
-  const ExpenseFormInput(this.category, this.subcategory);
+  final int savingsBalance;
+  final bool fromSavings;
+  const ExpenseFormInput(
+    this.category,
+    this.subcategory, {
+    this.savingsBalance = 0,
+    this.fromSavings = false,
+  });
 }
 
 class ExpenseSaving extends ExpenseState {
@@ -45,36 +49,49 @@ class ExpenseError extends ExpenseState {
 
 class ExpenseCubit extends Cubit<ExpenseState> {
   final AddExpenseUseCase _addExpense;
+  final GetSavingsBalanceUseCase _getSavingsBalance;
   final int cycleId;
+  int _savingsBalance = 0;
+  bool _fromSavings = false;
 
   ExpenseCubit({
     required this.cycleId,
     required AddExpenseUseCase addExpense,
+    required GetSavingsBalanceUseCase getSavingsBalance,
   })  : _addExpense = addExpense,
+        _getSavingsBalance = getSavingsBalance,
         super(const ExpenseCategorySelection());
 
-  void selectCategory(String category) {
+  Future<void> selectCategory(String category) async {
     debugPrint('📝 EXPENSE: Category selected: $category');
-    emit(ExpenseSubcategorySelection(category));
+    _savingsBalance = await _getSavingsBalance();
+    _fromSavings = false;
+    emit(ExpenseFormInput(
+      category,
+      '',
+      savingsBalance: _savingsBalance,
+    ));
   }
 
-  void selectSubcategory(String subcategory) {
+  void setFromSavings(bool value) {
     final current = state;
-    if (current is ExpenseSubcategorySelection) {
-      debugPrint('📝 EXPENSE: Subcategory selected: $subcategory');
-      emit(ExpenseFormInput(current.category, subcategory));
+    if (current is ExpenseFormInput) {
+      _fromSavings = value;
+      emit(ExpenseFormInput(
+        current.category,
+        current.subcategory,
+        savingsBalance: _savingsBalance,
+        fromSavings: value,
+      ));
     }
   }
 
   /// Navigate back one step in the flow.
   void goBack() {
     final current = state;
-    if (current is ExpenseSubcategorySelection) {
+    if (current is ExpenseFormInput) {
       emit(const ExpenseCategorySelection());
-    } else if (current is ExpenseFormInput) {
-      emit(ExpenseSubcategorySelection(current.category));
     } else if (current is ExpenseError) {
-      // Try to go back to category selection on error
       emit(const ExpenseCategorySelection());
     }
   }
@@ -83,6 +100,7 @@ class ExpenseCubit extends Cubit<ExpenseState> {
     required String itemName,
     required int amount,
     String? notes,
+    int savingsAmount = 0,
   }) async {
     final current = state;
     if (current is! ExpenseFormInput) {
@@ -107,6 +125,8 @@ class ExpenseCubit extends Cubit<ExpenseState> {
         itemName: itemName,
         amount: amount,
         notes: notes,
+        fromSavings: _fromSavings,
+        savingsAmount: savingsAmount,
       );
       debugPrint('✅ EXPENSE: Saved successfully');
       emit(const ExpenseSaved());
@@ -116,6 +136,27 @@ class ExpenseCubit extends Cubit<ExpenseState> {
     } catch (e) {
       debugPrint('❌ EXPENSE: Unexpected error - $e');
       emit(ExpenseError('حدث خطأ غير متوقع'));
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Helper for home page expense actions (not cubit state-based)
+// ---------------------------------------------------------------------------
+
+class HomeExpenseActions {
+  static Future<String?> deleteExpense({
+    required int expenseId,
+    required int cycleId,
+  }) async {
+    try {
+      await Injection.deleteExpenseUseCase(
+          expenseId: expenseId, cycleId: cycleId);
+      return null; // success
+    } on ArgumentError catch (e) {
+      return e.message.toString();
+    } catch (e) {
+      return 'حدث خطأ أثناء الحذف';
     }
   }
 }

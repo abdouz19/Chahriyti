@@ -23,6 +23,5 @@ extension MoneyFormatting on int {
 }
 
 extension CentimesToDZD on int {
-  int get toDZD => this ~/ 100;
-  String toDZDFormatted() => toDZD.toDZDString();
+  String toDZDFormatted() => toDZDString();
 }

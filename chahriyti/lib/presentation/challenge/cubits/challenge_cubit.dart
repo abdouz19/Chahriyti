@@ -2,18 +2,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../application/use_cases/challenge/generate_weekly_challenge_use_case.dart';
+import '../../../domain/repositories/challenge_repository.dart';
 import '../../../infrastructure/services/notification_service.dart';
 
 part 'challenge_state.dart';
 
 class ChallengeCubit extends Cubit<ChallengeState> {
   final GenerateWeeklyChallengeUseCase _generateWeeklyChallengeUseCase;
+  final ChallengeRepository? _challengeRepository;
   final NotificationService? _notificationService;
 
   ChallengeCubit(
     this._generateWeeklyChallengeUseCase, {
+    ChallengeRepository? challengeRepository,
     NotificationService? notificationService,
-  })  : _notificationService = notificationService,
+  })  : _challengeRepository = challengeRepository,
+        _notificationService = notificationService,
         super(const ChallengeInitial());
 
   Future<void> generateWeeklyChallenge() async {
@@ -50,6 +54,21 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     } catch (e) {
       debugPrint('❌ CHALLENGE ERROR: $e');
       emit(ChallengeError('فشل إكمال التحدي: ${e.toString()}'));
+    }
+  }
+
+  Future<void> loadChallengeById(int challengeId) async {
+    emit(const ChallengeLoading());
+    try {
+      final challenge = await _challengeRepository?.getChallengeById(challengeId);
+      if (challenge != null) {
+        emit(ChallengeDetailLoaded(challenge));
+      } else {
+        emit(const ChallengeError('التحدي غير موجود'));
+      }
+    } catch (e) {
+      debugPrint('❌ CHALLENGE ERROR: $e');
+      emit(ChallengeError('فشل تحميل تفاصيل التحدي: ${e.toString()}'));
     }
   }
 }

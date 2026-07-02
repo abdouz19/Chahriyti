@@ -6,5 +6,7 @@ class FinancialCycles extends Table {
   DateTimeColumn get startDate => dateTime()();
   DateTimeColumn get endDate => dateTime()();
   IntColumn get salaryAmount => integer()();
+  IntColumn get salarySplitAmount =>
+      integer().withDefault(const Constant(0))();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
 }

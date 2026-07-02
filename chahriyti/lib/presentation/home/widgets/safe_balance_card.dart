@@ -54,7 +54,7 @@ class SafeBalanceCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 MoneyText(
-                  amount: Money.fromDZD(safeDaily),
+                  amount: Money(safeDaily),
                   style: AppTypography.amountMedium,
                   color: AppColors.primary,
                 ),

@@ -25,15 +25,33 @@ class CyclesDao extends DatabaseAccessor<AppDatabase> with _$CyclesDaoMixin {
         .write(const FinancialCyclesCompanion(isActive: Value(false)));
   }
 
-  Future<List<FinancialCycleRow>> getCycleHistory({int limit = 6}) =>
+  Future<List<FinancialCycleRow>> getCycleHistory({int limit = 6, int offset = 0}) =>
       (select(financialCycles)
             ..orderBy([(t) => OrderingTerm.desc(t.startDate)])
-            ..limit(limit))
+            ..limit(limit, offset: offset))
           .get();
 
   Future<void> updateCycleSalary(int cycleId, int salaryAmount) async {
     await (update(financialCycles)..where((t) => t.id.equals(cycleId)))
         .write(FinancialCyclesCompanion(salaryAmount: Value(salaryAmount)));
+  }
+
+  Future<void> updateCycleSalarySplit(
+      int cycleId, int salarySplitAmount) async {
+    await (update(financialCycles)..where((t) => t.id.equals(cycleId))).write(
+        FinancialCyclesCompanion(
+            salarySplitAmount: Value(salarySplitAmount)));
+  }
+
+  Future<FinancialCycleRow?> getCycleForMonth(int year, int month) {
+    final startOfMonth = DateTime(year, month, 1);
+    final endOfMonth = DateTime(year, month + 1, 1);
+    return (select(financialCycles)
+          ..where((t) =>
+              t.startDate.isBiggerOrEqualValue(startOfMonth) &
+              t.startDate.isSmallerThanValue(endOfMonth))
+          ..limit(1))
+        .getSingleOrNull();
   }
 
   Future<void> updateCycleDates(

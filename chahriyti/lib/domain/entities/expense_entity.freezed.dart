@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExpenseEntity {
 
- int get id; int get cycleId; String get category; String get subcategory; String get itemName; int get amount; String? get notes; DateTime get createdAt; DateTime get updatedAt;
+ int get id; int get cycleId; String get category; String get subcategory; String get itemName; int get amount; String? get notes; DateTime get createdAt; DateTime get updatedAt; bool get fromSavings; int get savingsAmount;
 /// Create a copy of ExpenseEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ExpenseEntityCopyWith<ExpenseEntity> get copyWith => _$ExpenseEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.category, category) || other.category == category)&&(identical(other.subcategory, subcategory) || other.subcategory == subcategory)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.category, category) || other.category == category)&&(identical(other.subcategory, subcategory) || other.subcategory == subcategory)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.fromSavings, fromSavings) || other.fromSavings == fromSavings)&&(identical(other.savingsAmount, savingsAmount) || other.savingsAmount == savingsAmount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,cycleId,category,subcategory,itemName,amount,notes,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,cycleId,category,subcategory,itemName,amount,notes,createdAt,updatedAt,fromSavings,savingsAmount);
 
 @override
 String toString() {
-  return 'ExpenseEntity(id: $id, cycleId: $cycleId, category: $category, subcategory: $subcategory, itemName: $itemName, amount: $amount, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ExpenseEntity(id: $id, cycleId: $cycleId, category: $category, subcategory: $subcategory, itemName: $itemName, amount: $amount, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt, fromSavings: $fromSavings, savingsAmount: $savingsAmount)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ExpenseEntityCopyWith<$Res>  {
   factory $ExpenseEntityCopyWith(ExpenseEntity value, $Res Function(ExpenseEntity) _then) = _$ExpenseEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, int cycleId, String category, String subcategory, String itemName, int amount, String? notes, DateTime createdAt, DateTime updatedAt
+ int id, int cycleId, String category, String subcategory, String itemName, int amount, String? notes, DateTime createdAt, DateTime updatedAt, bool fromSavings, int savingsAmount
 });
 
 
@@ -65,7 +65,7 @@ class _$ExpenseEntityCopyWithImpl<$Res>
 
 /// Create a copy of ExpenseEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? cycleId = null,Object? category = null,Object? subcategory = null,Object? itemName = null,Object? amount = null,Object? notes = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? cycleId = null,Object? category = null,Object? subcategory = null,Object? itemName = null,Object? amount = null,Object? notes = freezed,Object? createdAt = null,Object? updatedAt = null,Object? fromSavings = null,Object? savingsAmount = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,cycleId: null == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,9 @@ as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullabl
 as int,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,fromSavings: null == fromSavings ? _self.fromSavings : fromSavings // ignore: cast_nullable_to_non_nullable
+as bool,savingsAmount: null == savingsAmount ? _self.savingsAmount : savingsAmount // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -161,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int cycleId,  String category,  String subcategory,  String itemName,  int amount,  String? notes,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int cycleId,  String category,  String subcategory,  String itemName,  int amount,  String? notes,  DateTime createdAt,  DateTime updatedAt,  bool fromSavings,  int savingsAmount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExpenseEntity() when $default != null:
-return $default(_that.id,_that.cycleId,_that.category,_that.subcategory,_that.itemName,_that.amount,_that.notes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.cycleId,_that.category,_that.subcategory,_that.itemName,_that.amount,_that.notes,_that.createdAt,_that.updatedAt,_that.fromSavings,_that.savingsAmount);case _:
   return orElse();
 
 }
@@ -182,10 +184,10 @@ return $default(_that.id,_that.cycleId,_that.category,_that.subcategory,_that.it
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int cycleId,  String category,  String subcategory,  String itemName,  int amount,  String? notes,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int cycleId,  String category,  String subcategory,  String itemName,  int amount,  String? notes,  DateTime createdAt,  DateTime updatedAt,  bool fromSavings,  int savingsAmount)  $default,) {final _that = this;
 switch (_that) {
 case _ExpenseEntity():
-return $default(_that.id,_that.cycleId,_that.category,_that.subcategory,_that.itemName,_that.amount,_that.notes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.cycleId,_that.category,_that.subcategory,_that.itemName,_that.amount,_that.notes,_that.createdAt,_that.updatedAt,_that.fromSavings,_that.savingsAmount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +204,10 @@ return $default(_that.id,_that.cycleId,_that.category,_that.subcategory,_that.it
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int cycleId,  String category,  String subcategory,  String itemName,  int amount,  String? notes,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int cycleId,  String category,  String subcategory,  String itemName,  int amount,  String? notes,  DateTime createdAt,  DateTime updatedAt,  bool fromSavings,  int savingsAmount)?  $default,) {final _that = this;
 switch (_that) {
 case _ExpenseEntity() when $default != null:
-return $default(_that.id,_that.cycleId,_that.category,_that.subcategory,_that.itemName,_that.amount,_that.notes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.cycleId,_that.category,_that.subcategory,_that.itemName,_that.amount,_that.notes,_that.createdAt,_that.updatedAt,_that.fromSavings,_that.savingsAmount);case _:
   return null;
 
 }
@@ -217,7 +219,7 @@ return $default(_that.id,_that.cycleId,_that.category,_that.subcategory,_that.it
 @JsonSerializable()
 
 class _ExpenseEntity extends ExpenseEntity {
-  const _ExpenseEntity({required this.id, required this.cycleId, required this.category, required this.subcategory, required this.itemName, required this.amount, this.notes, required this.createdAt, required this.updatedAt}): super._();
+  const _ExpenseEntity({required this.id, required this.cycleId, required this.category, required this.subcategory, required this.itemName, required this.amount, this.notes, required this.createdAt, required this.updatedAt, this.fromSavings = false, this.savingsAmount = 0}): super._();
   factory _ExpenseEntity.fromJson(Map<String, dynamic> json) => _$ExpenseEntityFromJson(json);
 
 @override final  int id;
@@ -229,6 +231,8 @@ class _ExpenseEntity extends ExpenseEntity {
 @override final  String? notes;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
+@override@JsonKey() final  bool fromSavings;
+@override@JsonKey() final  int savingsAmount;
 
 /// Create a copy of ExpenseEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.category, category) || other.category == category)&&(identical(other.subcategory, subcategory) || other.subcategory == subcategory)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.category, category) || other.category == category)&&(identical(other.subcategory, subcategory) || other.subcategory == subcategory)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.fromSavings, fromSavings) || other.fromSavings == fromSavings)&&(identical(other.savingsAmount, savingsAmount) || other.savingsAmount == savingsAmount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,cycleId,category,subcategory,itemName,amount,notes,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,cycleId,category,subcategory,itemName,amount,notes,createdAt,updatedAt,fromSavings,savingsAmount);
 
 @override
 String toString() {
-  return 'ExpenseEntity(id: $id, cycleId: $cycleId, category: $category, subcategory: $subcategory, itemName: $itemName, amount: $amount, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ExpenseEntity(id: $id, cycleId: $cycleId, category: $category, subcategory: $subcategory, itemName: $itemName, amount: $amount, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt, fromSavings: $fromSavings, savingsAmount: $savingsAmount)';
 }
 
 
@@ -263,7 +267,7 @@ abstract mixin class _$ExpenseEntityCopyWith<$Res> implements $ExpenseEntityCopy
   factory _$ExpenseEntityCopyWith(_ExpenseEntity value, $Res Function(_ExpenseEntity) _then) = __$ExpenseEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int cycleId, String category, String subcategory, String itemName, int amount, String? notes, DateTime createdAt, DateTime updatedAt
+ int id, int cycleId, String category, String subcategory, String itemName, int amount, String? notes, DateTime createdAt, DateTime updatedAt, bool fromSavings, int savingsAmount
 });
 
 
@@ -280,7 +284,7 @@ class __$ExpenseEntityCopyWithImpl<$Res>
 
 /// Create a copy of ExpenseEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? cycleId = null,Object? category = null,Object? subcategory = null,Object? itemName = null,Object? amount = null,Object? notes = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? cycleId = null,Object? category = null,Object? subcategory = null,Object? itemName = null,Object? amount = null,Object? notes = freezed,Object? createdAt = null,Object? updatedAt = null,Object? fromSavings = null,Object? savingsAmount = null,}) {
   return _then(_ExpenseEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,cycleId: null == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
@@ -291,7 +295,9 @@ as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullabl
 as int,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,fromSavings: null == fromSavings ? _self.fromSavings : fromSavings // ignore: cast_nullable_to_non_nullable
+as bool,savingsAmount: null == savingsAmount ? _self.savingsAmount : savingsAmount // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

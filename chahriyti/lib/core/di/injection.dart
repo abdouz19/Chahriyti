@@ -6,6 +6,20 @@ import '../../infrastructure/database/daos/debts_dao.dart';
 import '../../infrastructure/database/daos/goals_dao.dart';
 import '../../infrastructure/database/daos/incomes_dao.dart';
 import '../../infrastructure/database/daos/insights_dao.dart';
+import '../../infrastructure/database/daos/challenges_dao.dart';
+import '../../infrastructure/database/daos/lendings_dao.dart';
+import '../../infrastructure/database/daos/savings_dao.dart';
+import '../../infrastructure/repositories/lending_repository_impl.dart';
+import '../../infrastructure/repositories/savings_repository_impl.dart';
+import '../../domain/repositories/lending_repository.dart';
+import '../../domain/repositories/savings_repository.dart';
+import '../../application/use_cases/savings/get_savings_balance_use_case.dart';
+import '../../application/use_cases/savings/get_savings_history_use_case.dart';
+import '../../application/use_cases/savings/deposit_cycle_savings_use_case.dart';
+import '../../application/use_cases/savings/withdraw_savings_use_case.dart';
+import '../../application/use_cases/savings/deposit_salary_split_use_case.dart';
+import '../../application/use_cases/savings/deposit_from_balance_use_case.dart';
+import '../../application/use_cases/savings/withdraw_to_balance_use_case.dart';
 import '../../infrastructure/repositories/user_repository_impl.dart';
 import '../../infrastructure/repositories/cycle_repository_impl.dart';
 import '../../infrastructure/repositories/expense_repository_impl.dart';
@@ -13,6 +27,7 @@ import '../../infrastructure/repositories/debt_repository_impl.dart';
 import '../../infrastructure/repositories/goal_repository_impl.dart';
 import '../../infrastructure/repositories/income_repository_impl.dart';
 import '../../infrastructure/repositories/insight_repository_impl.dart';
+import '../../infrastructure/repositories/challenge_repository_impl.dart';
 import '../../infrastructure/services/device_info_service.dart';
 import '../../infrastructure/services/secure_storage_service.dart';
 import '../../infrastructure/services/license_service.dart';
@@ -24,6 +39,7 @@ import '../../domain/repositories/debt_repository.dart';
 import '../../domain/repositories/goal_repository.dart';
 import '../../domain/repositories/income_repository.dart';
 import '../../domain/repositories/insight_repository.dart';
+import '../../domain/repositories/challenge_repository.dart';
 import '../../application/use_cases/onboarding/setup_salary_use_case.dart';
 import '../../application/use_cases/onboarding/add_initial_income_use_case.dart';
 import '../../application/use_cases/activation/get_device_id_use_case.dart';
@@ -56,10 +72,19 @@ import '../../application/use_cases/statistics/detect_financial_leaks_use_case.d
 import '../../application/use_cases/insights/calculate_financial_classification_use_case.dart' as insight_classification;
 import '../../application/use_cases/insights/detect_financial_leaks_use_case.dart' as insight_leaks;
 import '../../application/use_cases/insights/generate_spending_trends_use_case.dart';
-import '../../application/use_cases/cycle/reset_cycle_use_case.dart';
+import '../../application/use_cases/cycle/reset_app_data_use_case.dart';
+import '../../application/use_cases/cycle/check_and_start_cycle_use_case.dart';
+import '../../domain/entities/financial_cycle_entity.dart';
 import '../../application/use_cases/challenge/generate_weekly_challenge_use_case.dart';
 import '../../application/use_cases/challenge/get_active_challenge_use_case.dart';
 import '../../application/use_cases/challenge/calculate_challenge_progress_use_case.dart';
+import '../../application/use_cases/lending/create_lending_use_case.dart';
+import '../../application/use_cases/lending/get_lendings_use_case.dart';
+import '../../application/use_cases/lending/add_lending_collection_use_case.dart';
+import '../../application/use_cases/lending/delete_lending_use_case.dart';
+import '../../application/use_cases/lending/update_lending_use_case.dart';
+import '../../application/use_cases/income/update_income_use_case.dart';
+import '../../application/use_cases/income/delete_income_use_case.dart';
 import '../../application/use_cases/notification/generate_notification_use_case.dart';
 
 abstract final class Injection {
@@ -76,6 +101,9 @@ abstract final class Injection {
   static late final GoalsDao _goalsDao;
   static late final IncomesDao _incomesDao;
   static late final InsightsDao _insightsDao;
+  static late final ChallengesDao _challengesDao;
+  static late final SavingsDao _savingsDao;
+  static late final LendingsDao _lendingsDao;
 
   // Repositories
   static late final UserRepository userRepository;
@@ -85,6 +113,9 @@ abstract final class Injection {
   static late final GoalRepository goalRepository;
   static late final IncomeRepository incomeRepository;
   static late final InsightRepository insightRepository;
+  static late final ChallengeRepository challengeRepository;
+  static late final SavingsRepository savingsRepository;
+  static late final LendingRepository lendingRepository;
 
   // Services
   static DeviceInfoService get deviceInfoService => _deviceInfoService;
@@ -114,6 +145,8 @@ abstract final class Injection {
 
   // Use Cases — Income
   static late final AddIncomeUseCase addIncomeUseCase;
+  static late final UpdateIncomeUseCase updateIncomeUseCase;
+  static late final DeleteIncomeUseCase deleteIncomeUseCase;
 
   // Use Cases — Debt
   static late final CreateDebtUseCase createDebtUseCase;
@@ -148,7 +181,11 @@ abstract final class Injection {
   static GenerateSpendingTrendsUseCase get trendsUseCase => generateTrendsUseCase;
 
   // Use Cases — Cycle
-  static late final ResetCycleUseCase resetCycleUseCase;
+  static late final ResetAppDataUseCase resetAppDataUseCase;
+  static late final CheckAndStartCycleUseCase checkAndStartCycleUseCase;
+
+  // Pending cycle for salary split (set by auto-cycle detection in router)
+  static FinancialCycleEntity? pendingCycleForSplit;
 
   // Use Cases — Challenge
   static late final GenerateWeeklyChallengeUseCase generateWeeklyChallengeUseCase;
@@ -157,6 +194,22 @@ abstract final class Injection {
 
   // Use Cases — Notification
   static late final GenerateNotificationUseCase generateNotificationUseCase;
+
+  // Use Cases — Savings
+  static late final GetSavingsBalanceUseCase getSavingsBalanceUseCase;
+  static late final GetSavingsHistoryUseCase getSavingsHistoryUseCase;
+  static late final DepositCycleSavingsUseCase depositCycleSavingsUseCase;
+  static late final WithdrawSavingsUseCase withdrawSavingsUseCase;
+  static late final DepositFromBalanceUseCase depositFromBalanceUseCase;
+  static late final WithdrawToBalanceUseCase withdrawToBalanceUseCase;
+  static late final DepositSalarySplitUseCase depositSalarySplitUseCase;
+
+  // Use Cases — Lending
+  static late final CreateLendingUseCase createLendingUseCase;
+  static late final GetLendingsUseCase getLendingsUseCase;
+  static late final AddLendingCollectionUseCase addLendingCollectionUseCase;
+  static late final DeleteLendingUseCase deleteLendingUseCase;
+  static late final UpdateLendingUseCase updateLendingUseCase;
 
   static Future<void> init() async {
     // Database
@@ -170,6 +223,9 @@ abstract final class Injection {
     _goalsDao = GoalsDao(_database);
     _incomesDao = IncomesDao(_database);
     _insightsDao = InsightsDao(_database);
+    _challengesDao = ChallengesDao(_database);
+    _savingsDao = SavingsDao(_database);
+    _lendingsDao = LendingsDao(_database);
 
     // Services
     _deviceInfoService = DeviceInfoService();
@@ -180,10 +236,13 @@ abstract final class Injection {
     userRepository = UserRepositoryImpl(_usersDao);
     cycleRepository = CycleRepositoryImpl(_cyclesDao);
     expenseRepository = ExpenseRepositoryImpl(_expensesDao);
-    debtRepository = DebtRepositoryImpl(_debtsDao);
+    debtRepository = DebtRepositoryImpl(_debtsDao, cycleRepository);
     goalRepository = GoalRepositoryImpl(_goalsDao);
     incomeRepository = IncomeRepositoryImpl(_incomesDao);
-    insightRepository = InsightRepositoryImpl(_insightsDao, _database);
+    insightRepository = InsightRepositoryImpl(_insightsDao);
+    challengeRepository = ChallengeRepositoryImpl(_challengesDao);
+    savingsRepository = SavingsRepositoryImpl(_savingsDao);
+    lendingRepository = LendingRepositoryImpl(_lendingsDao);
 
     // Use Cases — Onboarding
     setupSalaryUseCase = SetupSalaryUseCase(userRepository, cycleRepository);
@@ -200,24 +259,72 @@ abstract final class Injection {
       expenseRepository: expenseRepository,
       incomeRepository: incomeRepository,
       debtRepository: debtRepository,
+      lendingRepository: lendingRepository,
     );
     getSafeBalanceUseCase = const GetSafeBalanceUseCase();
 
+    // Use Cases — Savings (must be before Expense/Debt which depend on withdraw)
+    getSavingsBalanceUseCase = GetSavingsBalanceUseCase(savingsRepository);
+    getSavingsHistoryUseCase = GetSavingsHistoryUseCase(savingsRepository);
+    depositCycleSavingsUseCase = DepositCycleSavingsUseCase(
+      cycleRepository: cycleRepository,
+      expenseRepository: expenseRepository,
+      incomeRepository: incomeRepository,
+      debtRepository: debtRepository,
+      savingsRepository: savingsRepository,
+      lendingRepository: lendingRepository,
+    );
+    withdrawSavingsUseCase = WithdrawSavingsUseCase(savingsRepository);
+    depositSalarySplitUseCase = DepositSalarySplitUseCase(
+      cycleRepository: cycleRepository,
+      savingsRepository: savingsRepository,
+    );
+    depositFromBalanceUseCase = DepositFromBalanceUseCase(
+      savingsRepository,
+      cycleRepository,
+    );
+    withdrawToBalanceUseCase = WithdrawToBalanceUseCase(
+      savingsRepository,
+      cycleRepository,
+    );
+
+    // Use Cases — Lending
+    createLendingUseCase = CreateLendingUseCase(
+      lendingRepository,
+      cycleRepository,
+      withdrawSavingsUseCase,
+      savingsRepository,
+    );
+    getLendingsUseCase = GetLendingsUseCase(lendingRepository);
+    addLendingCollectionUseCase = AddLendingCollectionUseCase(lendingRepository, savingsRepository);
+    deleteLendingUseCase = DeleteLendingUseCase(lendingRepository);
+    updateLendingUseCase = UpdateLendingUseCase(lendingRepository);
+
     // Use Cases — Expense
-    addExpenseUseCase = AddExpenseUseCase(expenseRepository);
-    editExpenseUseCase = EditExpenseUseCase(expenseRepository, cycleRepository);
-    deleteExpenseUseCase = DeleteExpenseUseCase(expenseRepository, cycleRepository);
+    addExpenseUseCase = AddExpenseUseCase(
+      expenseRepository,
+      withdrawSavingsUseCase,
+      savingsRepository,
+    );
+    editExpenseUseCase = EditExpenseUseCase(expenseRepository, cycleRepository, savingsRepository);
+    deleteExpenseUseCase = DeleteExpenseUseCase(expenseRepository, cycleRepository, savingsRepository);
     getExpensesUseCase = GetExpensesUseCase(expenseRepository);
 
     // Use Cases — Income
-    addIncomeUseCase = AddIncomeUseCase(incomeRepository);
+    addIncomeUseCase = AddIncomeUseCase(incomeRepository, savingsRepository);
+    updateIncomeUseCase = UpdateIncomeUseCase(incomeRepository);
+    deleteIncomeUseCase = DeleteIncomeUseCase(incomeRepository);
 
     // Use Cases — Debt
-    createDebtUseCase = CreateDebtUseCase(debtRepository);
+    createDebtUseCase = CreateDebtUseCase(debtRepository, cycleRepository);
     getDebtsUseCase = GetDebtsUseCase(debtRepository);
     updateDebtUseCase = UpdateDebtUseCase(debtRepository);
-    deleteDebtUseCase = DeleteDebtUseCase(debtRepository);
-    addPaymentUseCase = AddDebtPaymentUseCase(debtRepository);
+    deleteDebtUseCase = DeleteDebtUseCase(debtRepository, savingsRepository);
+    addPaymentUseCase = AddDebtPaymentUseCase(
+      debtRepository,
+      withdrawSavingsUseCase,
+      savingsRepository,
+    );
     calculateRemainingBalanceUseCase = CalculateRemainingBalanceUseCase(debtRepository);
 
     // Use Cases — Goal
@@ -257,7 +364,6 @@ abstract final class Injection {
         insight_classification.CalculateFinancialClassificationUseCase(
           cycleRepository,
           expenseRepository,
-          incomeRepository,
         );
     detectLeaksUseCase = insight_leaks.DetectLeaksUseCase(
       cycleRepository,
@@ -269,17 +375,27 @@ abstract final class Injection {
     );
 
     // Use Cases — Cycle
-    resetCycleUseCase = ResetCycleUseCase(cycleRepository);
+    checkAndStartCycleUseCase = CheckAndStartCycleUseCase(
+      userRepository,
+      cycleRepository,
+      depositCycleSavingsUseCase,
+    );
+    resetAppDataUseCase = ResetAppDataUseCase(
+      _database,
+      userRepository,
+      cycleRepository,
+    );
 
     // Use Cases — Challenge
     generateWeeklyChallengeUseCase = GenerateWeeklyChallengeUseCase(
-      cycleRepository: cycleRepository,
-      expenseRepository: expenseRepository,
+      challengeRepository,
+      cycleRepository,
+      expenseRepository,
     );
-    getActiveChallengeUseCase = GetActiveChallengeUseCase();
+    getActiveChallengeUseCase = GetActiveChallengeUseCase(challengeRepository);
     calculateChallengeProgressUseCase = CalculateChallengeProgressUseCase(
-      cycleRepository: cycleRepository,
-      expenseRepository: expenseRepository,
+      challengeRepository,
+      expenseRepository,
     );
 
     // Use Cases — Notification

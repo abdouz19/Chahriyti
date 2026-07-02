@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
@@ -19,6 +18,9 @@ class InsightsPage extends StatelessWidget {
       create: (_) => InsightsCubit(
         calculateFinancialClassificationUseCase:
             Injection.calculateFinancialClassificationUseCase,
+        detectLeaksUseCase: Injection.leaksUseCase,
+        generateTrendsUseCase: Injection.trendsUseCase,
+        cycleRepository: Injection.cycleRepository,
       )..loadInsights(),
       child: const _InsightsView(),
     );

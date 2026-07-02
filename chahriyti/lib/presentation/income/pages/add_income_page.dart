@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../application/use_cases/income/add_income_use_case.dart';
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../domain/entities/additional_income_entity.dart';
+import '../../shared/widgets/confirmation_dialog.dart';
 import '../cubits/income_cubit.dart';
 
 class AddIncomePage extends StatelessWidget {
@@ -16,9 +18,12 @@ class AddIncomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => IncomeCubit(
-        addIncome: AddIncomeUseCase(Injection.incomeRepository),
+        addIncome: Injection.addIncomeUseCase,
+        updateIncome: Injection.updateIncomeUseCase,
+        deleteIncome: Injection.deleteIncomeUseCase,
         cycleRepository: Injection.cycleRepository,
-      ),
+        incomeRepository: Injection.incomeRepository,
+      )..loadIncomes(),
       child: const _AddIncomeView(),
     );
   }
@@ -35,6 +40,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
+  bool _toSavings = false;
 
   @override
   void dispose() {
@@ -52,7 +58,71 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
     context.read<IncomeCubit>().addIncome(
           description: description,
           amount: amount,
+          toSavings: _toSavings,
         );
+  }
+
+  Future<void> _showEditDialog(AdditionalIncomeEntity income) async {
+    final controller = TextEditingController(text: income.description);
+    final cubit = context.read<IncomeCubit>();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.card,
+        title: Text('تعديل المدخول', style: AppTypography.headlineSmall),
+        content: TextField(
+          controller: controller,
+          textDirection: TextDirection.rtl,
+          autofocus: true,
+          style: AppTypography.bodyLarge,
+          decoration: InputDecoration(
+            hintText: 'مصدر المدخول',
+            hintStyle:
+                AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.primary, width: 2),
+            ),
+            filled: true,
+            fillColor: AppColors.background,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text('إلغاء',
+                style:
+                    AppTypography.labelMedium.copyWith(color: AppColors.textSecondary)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text('حفظ',
+                style: AppTypography.labelMedium.copyWith(color: AppColors.primary)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && controller.text.trim().isNotEmpty) {
+      cubit.updateIncome(income.id, controller.text.trim());
+    }
+    controller.dispose();
+  }
+
+  Future<void> _showDeleteConfirmation(AdditionalIncomeEntity income) async {
+    final cubit = context.read<IncomeCubit>();
+    final confirmed = await ConfirmationDialog.show(
+      context,
+      title: 'حذف المدخول',
+      message: 'هل تريد حذف "${income.description}"؟',
+      confirmColor: AppColors.negative,
+    );
+    if (confirmed) {
+      cubit.deleteIncome(income.id);
+    }
   }
 
   @override
@@ -70,6 +140,28 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
             ),
           );
           context.pop();
+        } else if (state is IncomeUpdated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'تم تعديل المدخول بنجاح',
+                style: AppTypography.bodyMedium.copyWith(color: Colors.white),
+              ),
+              backgroundColor: AppColors.positive,
+            ),
+          );
+          context.read<IncomeCubit>().loadIncomes();
+        } else if (state is IncomeDeleted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'تم حذف المدخول',
+                style: AppTypography.bodyMedium.copyWith(color: Colors.white),
+              ),
+              backgroundColor: AppColors.positive,
+            ),
+          );
+          context.read<IncomeCubit>().loadIncomes();
         } else if (state is IncomeError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -196,7 +288,112 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
+
+                // Destination toggle
+                Text(
+                  'الوجهة',
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _toSavings = false),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: !_toSavings
+                                ? AppColors.primary.withValues(alpha: 0.1)
+                                : AppColors.card,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: !_toSavings
+                                  ? AppColors.primary
+                                  : AppColors.border,
+                              width: !_toSavings ? 2 : 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.account_balance_wallet_rounded,
+                                size: 18,
+                                color: !_toSavings
+                                    ? AppColors.primary
+                                    : AppColors.textSecondary,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                'الرصيد',
+                                style: AppTypography.labelMedium.copyWith(
+                                  color: !_toSavings
+                                      ? AppColors.primary
+                                      : AppColors.textSecondary,
+                                  fontWeight: !_toSavings
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _toSavings = true),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: _toSavings
+                                ? AppColors.primary.withValues(alpha: 0.1)
+                                : AppColors.card,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: _toSavings
+                                  ? AppColors.primary
+                                  : AppColors.border,
+                              width: _toSavings ? 2 : 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.savings_rounded,
+                                size: 18,
+                                color: _toSavings
+                                    ? AppColors.primary
+                                    : AppColors.textSecondary,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                'المدخرات',
+                                style: AppTypography.labelMedium.copyWith(
+                                  color: _toSavings
+                                      ? AppColors.primary
+                                      : AppColors.textSecondary,
+                                  fontWeight: _toSavings
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
 
                 // Save button
                 BlocBuilder<IncomeCubit, IncomeState>(
@@ -235,9 +432,126 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                     );
                   },
                 ),
+
+                const SizedBox(height: 32),
+
+                // Existing incomes list
+                BlocBuilder<IncomeCubit, IncomeState>(
+                  builder: (context, state) {
+                    if (state is IncomeLoading) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    if (state is IncomeLoaded && state.incomes.isNotEmpty) {
+                      return _IncomeList(
+                        incomes: state.incomes,
+                        onEdit: _showEditDialog,
+                        onDelete: _showDeleteConfirmation,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Income List Widget ─────────────────────────────────────────────────────
+
+class _IncomeList extends StatelessWidget {
+  final List<AdditionalIncomeEntity> incomes;
+  final void Function(AdditionalIncomeEntity) onEdit;
+  final void Function(AdditionalIncomeEntity) onDelete;
+
+  const _IncomeList({
+    required this.incomes,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          'المدخولات الإضافية',
+          style: AppTypography.labelMedium.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...incomes.map((income) => _IncomeItem(
+              income: income,
+              onEdit: onEdit,
+              onDelete: onDelete,
+            )),
+      ],
+    );
+  }
+}
+
+class _IncomeItem extends StatelessWidget {
+  final AdditionalIncomeEntity income;
+  final void Function(AdditionalIncomeEntity) onEdit;
+  final void Function(AdditionalIncomeEntity) onDelete;
+
+  const _IncomeItem({
+    required this.income,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: ListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        title: Text(
+          income.description,
+          style: AppTypography.bodyMedium,
+          textDirection: TextDirection.rtl,
+        ),
+        subtitle: Text(
+          income.amount.toDZDString(),
+          style: AppTypography.labelMedium.copyWith(
+            color: AppColors.positive,
+            fontWeight: FontWeight.w600,
+          ),
+          textDirection: TextDirection.rtl,
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(Icons.edit_outlined,
+                  size: 20, color: AppColors.textSecondary),
+              onPressed: () => onEdit(income),
+              tooltip: 'تعديل',
+            ),
+            IconButton(
+              icon: Icon(Icons.delete_outline,
+                  size: 20, color: AppColors.negative),
+              onPressed: () => onDelete(income),
+              tooltip: 'حذف',
+            ),
+          ],
         ),
       ),
     );

@@ -27,7 +27,7 @@ class DetectLeaksUseCase {
 
   // Constants for leak detection
   static const int minTransactionCount = 3;
-  static const int minCategoryTotal = 50000; // 500 DZD in centimes
+  static const int minCategoryTotal = 500;
   static const double minPercentageOfWeekly = 5.0;
 
   DetectLeaksUseCase(
@@ -112,8 +112,7 @@ class DetectLeaksUseCase {
         'لو خفضت هذا للنصف ستتوفر ${_formatAmount(savings)}.';
   }
 
-  String _formatAmount(int centimes) {
-    final dzd = centimes / 100;
-    return '${dzd.toStringAsFixed(0)} دج';
+  String _formatAmount(int amount) {
+    return '$amount دج';
   }
 }

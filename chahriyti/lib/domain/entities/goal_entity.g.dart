@@ -10,6 +10,7 @@ _GoalEntity _$GoalEntityFromJson(Map<String, dynamic> json) => _GoalEntity(
   id: (json['id'] as num).toInt(),
   name: json['name'] as String,
   targetAmount: (json['targetAmount'] as num).toInt(),
+  savedAmount: (json['savedAmount'] as num?)?.toInt() ?? 0,
   description: json['description'] as String?,
   createdAt: DateTime.parse(json['createdAt'] as String),
   completedAt: json['completedAt'] == null
@@ -22,6 +23,7 @@ Map<String, dynamic> _$GoalEntityToJson(_GoalEntity instance) =>
       'id': instance.id,
       'name': instance.name,
       'targetAmount': instance.targetAmount,
+      'savedAmount': instance.savedAmount,
       'description': instance.description,
       'createdAt': instance.createdAt.toIso8601String(),
       'completedAt': instance.completedAt?.toIso8601String(),

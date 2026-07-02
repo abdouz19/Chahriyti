@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
@@ -7,8 +8,13 @@ import '../../shared/widgets/money_text.dart';
 
 class BalanceCard extends StatelessWidget {
   final int amount;
+  final int cycleTotal;
 
-  const BalanceCard({super.key, required this.amount});
+  const BalanceCard({
+    super.key,
+    required this.amount,
+    required this.cycleTotal,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +51,19 @@ class BalanceCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             MoneyText(
-              amount: Money.fromDZD(amount),
+              amount: Money(amount),
               style: AppTypography.amountLarge,
               color: AppColors.positive,
             ),
+            if (cycleTotal > 0) ...[
+              const SizedBox(height: 6),
+              Text(
+                'رصيد الدورة: ${cycleTotal.toDZDString()}',
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.positive.withValues(alpha: 0.65),
+                ),
+              ),
+            ],
           ],
         ),
       ),

@@ -620,6 +620,18 @@ class $FinancialCyclesTable extends FinancialCycles
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _salarySplitAmountMeta = const VerificationMeta(
+    'salarySplitAmount',
+  );
+  @override
+  late final GeneratedColumn<int> salarySplitAmount = GeneratedColumn<int>(
+    'salary_split_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _isActiveMeta = const VerificationMeta(
     'isActive',
   );
@@ -641,6 +653,7 @@ class $FinancialCyclesTable extends FinancialCycles
     startDate,
     endDate,
     salaryAmount,
+    salarySplitAmount,
     isActive,
   ];
   @override
@@ -685,6 +698,15 @@ class $FinancialCyclesTable extends FinancialCycles
     } else if (isInserting) {
       context.missing(_salaryAmountMeta);
     }
+    if (data.containsKey('salary_split_amount')) {
+      context.handle(
+        _salarySplitAmountMeta,
+        salarySplitAmount.isAcceptableOrUnknown(
+          data['salary_split_amount']!,
+          _salarySplitAmountMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_active')) {
       context.handle(
         _isActiveMeta,
@@ -716,6 +738,10 @@ class $FinancialCyclesTable extends FinancialCycles
         DriftSqlType.int,
         data['${effectivePrefix}salary_amount'],
       )!,
+      salarySplitAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}salary_split_amount'],
+      )!,
       isActive: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
@@ -735,12 +761,14 @@ class FinancialCycleRow extends DataClass
   final DateTime startDate;
   final DateTime endDate;
   final int salaryAmount;
+  final int salarySplitAmount;
   final bool isActive;
   const FinancialCycleRow({
     required this.id,
     required this.startDate,
     required this.endDate,
     required this.salaryAmount,
+    required this.salarySplitAmount,
     required this.isActive,
   });
   @override
@@ -750,6 +778,7 @@ class FinancialCycleRow extends DataClass
     map['start_date'] = Variable<DateTime>(startDate);
     map['end_date'] = Variable<DateTime>(endDate);
     map['salary_amount'] = Variable<int>(salaryAmount);
+    map['salary_split_amount'] = Variable<int>(salarySplitAmount);
     map['is_active'] = Variable<bool>(isActive);
     return map;
   }
@@ -760,6 +789,7 @@ class FinancialCycleRow extends DataClass
       startDate: Value(startDate),
       endDate: Value(endDate),
       salaryAmount: Value(salaryAmount),
+      salarySplitAmount: Value(salarySplitAmount),
       isActive: Value(isActive),
     );
   }
@@ -774,6 +804,7 @@ class FinancialCycleRow extends DataClass
       startDate: serializer.fromJson<DateTime>(json['startDate']),
       endDate: serializer.fromJson<DateTime>(json['endDate']),
       salaryAmount: serializer.fromJson<int>(json['salaryAmount']),
+      salarySplitAmount: serializer.fromJson<int>(json['salarySplitAmount']),
       isActive: serializer.fromJson<bool>(json['isActive']),
     );
   }
@@ -785,6 +816,7 @@ class FinancialCycleRow extends DataClass
       'startDate': serializer.toJson<DateTime>(startDate),
       'endDate': serializer.toJson<DateTime>(endDate),
       'salaryAmount': serializer.toJson<int>(salaryAmount),
+      'salarySplitAmount': serializer.toJson<int>(salarySplitAmount),
       'isActive': serializer.toJson<bool>(isActive),
     };
   }
@@ -794,12 +826,14 @@ class FinancialCycleRow extends DataClass
     DateTime? startDate,
     DateTime? endDate,
     int? salaryAmount,
+    int? salarySplitAmount,
     bool? isActive,
   }) => FinancialCycleRow(
     id: id ?? this.id,
     startDate: startDate ?? this.startDate,
     endDate: endDate ?? this.endDate,
     salaryAmount: salaryAmount ?? this.salaryAmount,
+    salarySplitAmount: salarySplitAmount ?? this.salarySplitAmount,
     isActive: isActive ?? this.isActive,
   );
   FinancialCycleRow copyWithCompanion(FinancialCyclesCompanion data) {
@@ -810,6 +844,9 @@ class FinancialCycleRow extends DataClass
       salaryAmount: data.salaryAmount.present
           ? data.salaryAmount.value
           : this.salaryAmount,
+      salarySplitAmount: data.salarySplitAmount.present
+          ? data.salarySplitAmount.value
+          : this.salarySplitAmount,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
     );
   }
@@ -821,14 +858,21 @@ class FinancialCycleRow extends DataClass
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('salaryAmount: $salaryAmount, ')
+          ..write('salarySplitAmount: $salarySplitAmount, ')
           ..write('isActive: $isActive')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, startDate, endDate, salaryAmount, isActive);
+  int get hashCode => Object.hash(
+    id,
+    startDate,
+    endDate,
+    salaryAmount,
+    salarySplitAmount,
+    isActive,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -837,6 +881,7 @@ class FinancialCycleRow extends DataClass
           other.startDate == this.startDate &&
           other.endDate == this.endDate &&
           other.salaryAmount == this.salaryAmount &&
+          other.salarySplitAmount == this.salarySplitAmount &&
           other.isActive == this.isActive);
 }
 
@@ -845,12 +890,14 @@ class FinancialCyclesCompanion extends UpdateCompanion<FinancialCycleRow> {
   final Value<DateTime> startDate;
   final Value<DateTime> endDate;
   final Value<int> salaryAmount;
+  final Value<int> salarySplitAmount;
   final Value<bool> isActive;
   const FinancialCyclesCompanion({
     this.id = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
     this.salaryAmount = const Value.absent(),
+    this.salarySplitAmount = const Value.absent(),
     this.isActive = const Value.absent(),
   });
   FinancialCyclesCompanion.insert({
@@ -858,6 +905,7 @@ class FinancialCyclesCompanion extends UpdateCompanion<FinancialCycleRow> {
     required DateTime startDate,
     required DateTime endDate,
     required int salaryAmount,
+    this.salarySplitAmount = const Value.absent(),
     this.isActive = const Value.absent(),
   }) : startDate = Value(startDate),
        endDate = Value(endDate),
@@ -867,6 +915,7 @@ class FinancialCyclesCompanion extends UpdateCompanion<FinancialCycleRow> {
     Expression<DateTime>? startDate,
     Expression<DateTime>? endDate,
     Expression<int>? salaryAmount,
+    Expression<int>? salarySplitAmount,
     Expression<bool>? isActive,
   }) {
     return RawValuesInsertable({
@@ -874,6 +923,7 @@ class FinancialCyclesCompanion extends UpdateCompanion<FinancialCycleRow> {
       if (startDate != null) 'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
       if (salaryAmount != null) 'salary_amount': salaryAmount,
+      if (salarySplitAmount != null) 'salary_split_amount': salarySplitAmount,
       if (isActive != null) 'is_active': isActive,
     });
   }
@@ -883,6 +933,7 @@ class FinancialCyclesCompanion extends UpdateCompanion<FinancialCycleRow> {
     Value<DateTime>? startDate,
     Value<DateTime>? endDate,
     Value<int>? salaryAmount,
+    Value<int>? salarySplitAmount,
     Value<bool>? isActive,
   }) {
     return FinancialCyclesCompanion(
@@ -890,6 +941,7 @@ class FinancialCyclesCompanion extends UpdateCompanion<FinancialCycleRow> {
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       salaryAmount: salaryAmount ?? this.salaryAmount,
+      salarySplitAmount: salarySplitAmount ?? this.salarySplitAmount,
       isActive: isActive ?? this.isActive,
     );
   }
@@ -909,6 +961,9 @@ class FinancialCyclesCompanion extends UpdateCompanion<FinancialCycleRow> {
     if (salaryAmount.present) {
       map['salary_amount'] = Variable<int>(salaryAmount.value);
     }
+    if (salarySplitAmount.present) {
+      map['salary_split_amount'] = Variable<int>(salarySplitAmount.value);
+    }
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
@@ -922,6 +977,7 @@ class FinancialCyclesCompanion extends UpdateCompanion<FinancialCycleRow> {
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('salaryAmount: $salaryAmount, ')
+          ..write('salarySplitAmount: $salarySplitAmount, ')
           ..write('isActive: $isActive')
           ..write(')'))
         .toString();
@@ -1033,6 +1089,33 @@ class $ExpensesTable extends Expenses
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _fromSavingsMeta = const VerificationMeta(
+    'fromSavings',
+  );
+  @override
+  late final GeneratedColumn<bool> fromSavings = GeneratedColumn<bool>(
+    'from_savings',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("from_savings" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _savingsAmountMeta = const VerificationMeta(
+    'savingsAmount',
+  );
+  @override
+  late final GeneratedColumn<int> savingsAmount = GeneratedColumn<int>(
+    'savings_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1044,6 +1127,8 @@ class $ExpensesTable extends Expenses
     notes,
     createdAt,
     updatedAt,
+    fromSavings,
+    savingsAmount,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1121,6 +1206,24 @@ class $ExpensesTable extends Expenses
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
+    if (data.containsKey('from_savings')) {
+      context.handle(
+        _fromSavingsMeta,
+        fromSavings.isAcceptableOrUnknown(
+          data['from_savings']!,
+          _fromSavingsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('savings_amount')) {
+      context.handle(
+        _savingsAmountMeta,
+        savingsAmount.isAcceptableOrUnknown(
+          data['savings_amount']!,
+          _savingsAmountMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1166,6 +1269,14 @@ class $ExpensesTable extends Expenses
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      fromSavings: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}from_savings'],
+      )!,
+      savingsAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}savings_amount'],
+      )!,
     );
   }
 
@@ -1185,6 +1296,8 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
   final String? notes;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final bool fromSavings;
+  final int savingsAmount;
   const ExpenseRow({
     required this.id,
     required this.cycleId,
@@ -1195,6 +1308,8 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
     this.notes,
     required this.createdAt,
     required this.updatedAt,
+    required this.fromSavings,
+    required this.savingsAmount,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1210,6 +1325,8 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['from_savings'] = Variable<bool>(fromSavings);
+    map['savings_amount'] = Variable<int>(savingsAmount);
     return map;
   }
 
@@ -1226,6 +1343,8 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
           : Value(notes),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      fromSavings: Value(fromSavings),
+      savingsAmount: Value(savingsAmount),
     );
   }
 
@@ -1244,6 +1363,8 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
       notes: serializer.fromJson<String?>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      fromSavings: serializer.fromJson<bool>(json['fromSavings']),
+      savingsAmount: serializer.fromJson<int>(json['savingsAmount']),
     );
   }
   @override
@@ -1259,6 +1380,8 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
       'notes': serializer.toJson<String?>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'fromSavings': serializer.toJson<bool>(fromSavings),
+      'savingsAmount': serializer.toJson<int>(savingsAmount),
     };
   }
 
@@ -1272,6 +1395,8 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
     Value<String?> notes = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
+    bool? fromSavings,
+    int? savingsAmount,
   }) => ExpenseRow(
     id: id ?? this.id,
     cycleId: cycleId ?? this.cycleId,
@@ -1282,6 +1407,8 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
     notes: notes.present ? notes.value : this.notes,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    fromSavings: fromSavings ?? this.fromSavings,
+    savingsAmount: savingsAmount ?? this.savingsAmount,
   );
   ExpenseRow copyWithCompanion(ExpensesCompanion data) {
     return ExpenseRow(
@@ -1296,6 +1423,12 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
       notes: data.notes.present ? data.notes.value : this.notes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      fromSavings: data.fromSavings.present
+          ? data.fromSavings.value
+          : this.fromSavings,
+      savingsAmount: data.savingsAmount.present
+          ? data.savingsAmount.value
+          : this.savingsAmount,
     );
   }
 
@@ -1310,7 +1443,9 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
           ..write('amount: $amount, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('fromSavings: $fromSavings, ')
+          ..write('savingsAmount: $savingsAmount')
           ..write(')'))
         .toString();
   }
@@ -1326,6 +1461,8 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
     notes,
     createdAt,
     updatedAt,
+    fromSavings,
+    savingsAmount,
   );
   @override
   bool operator ==(Object other) =>
@@ -1339,7 +1476,9 @@ class ExpenseRow extends DataClass implements Insertable<ExpenseRow> {
           other.amount == this.amount &&
           other.notes == this.notes &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.fromSavings == this.fromSavings &&
+          other.savingsAmount == this.savingsAmount);
 }
 
 class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
@@ -1352,6 +1491,8 @@ class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
   final Value<String?> notes;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<bool> fromSavings;
+  final Value<int> savingsAmount;
   const ExpensesCompanion({
     this.id = const Value.absent(),
     this.cycleId = const Value.absent(),
@@ -1362,6 +1503,8 @@ class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.fromSavings = const Value.absent(),
+    this.savingsAmount = const Value.absent(),
   });
   ExpensesCompanion.insert({
     this.id = const Value.absent(),
@@ -1373,6 +1516,8 @@ class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.fromSavings = const Value.absent(),
+    this.savingsAmount = const Value.absent(),
   }) : cycleId = Value(cycleId),
        category = Value(category),
        subcategory = Value(subcategory),
@@ -1388,6 +1533,8 @@ class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
     Expression<String>? notes,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<bool>? fromSavings,
+    Expression<int>? savingsAmount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1399,6 +1546,8 @@ class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
       if (notes != null) 'notes': notes,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (fromSavings != null) 'from_savings': fromSavings,
+      if (savingsAmount != null) 'savings_amount': savingsAmount,
     });
   }
 
@@ -1412,6 +1561,8 @@ class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
     Value<String?>? notes,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<bool>? fromSavings,
+    Value<int>? savingsAmount,
   }) {
     return ExpensesCompanion(
       id: id ?? this.id,
@@ -1423,6 +1574,8 @@ class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      fromSavings: fromSavings ?? this.fromSavings,
+      savingsAmount: savingsAmount ?? this.savingsAmount,
     );
   }
 
@@ -1456,6 +1609,12 @@ class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (fromSavings.present) {
+      map['from_savings'] = Variable<bool>(fromSavings.value);
+    }
+    if (savingsAmount.present) {
+      map['savings_amount'] = Variable<int>(savingsAmount.value);
+    }
     return map;
   }
 
@@ -1470,7 +1629,9 @@ class ExpensesCompanion extends UpdateCompanion<ExpenseRow> {
           ..write('amount: $amount, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('fromSavings: $fromSavings, ')
+          ..write('savingsAmount: $savingsAmount')
           ..write(')'))
         .toString();
   }
@@ -1526,6 +1687,21 @@ class $AdditionalIncomesTable extends AdditionalIncomes
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _toSavingsMeta = const VerificationMeta(
+    'toSavings',
+  );
+  @override
+  late final GeneratedColumn<bool> toSavings = GeneratedColumn<bool>(
+    'to_savings',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("to_savings" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1544,6 +1720,7 @@ class $AdditionalIncomesTable extends AdditionalIncomes
     cycleId,
     description,
     amount,
+    toSavings,
     createdAt,
   ];
   @override
@@ -1588,6 +1765,12 @@ class $AdditionalIncomesTable extends AdditionalIncomes
     } else if (isInserting) {
       context.missing(_amountMeta);
     }
+    if (data.containsKey('to_savings')) {
+      context.handle(
+        _toSavingsMeta,
+        toSavings.isAcceptableOrUnknown(data['to_savings']!, _toSavingsMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1619,6 +1802,10 @@ class $AdditionalIncomesTable extends AdditionalIncomes
         DriftSqlType.int,
         data['${effectivePrefix}amount'],
       )!,
+      toSavings: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}to_savings'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1638,12 +1825,14 @@ class AdditionalIncomeRow extends DataClass
   final int cycleId;
   final String description;
   final int amount;
+  final bool toSavings;
   final DateTime createdAt;
   const AdditionalIncomeRow({
     required this.id,
     required this.cycleId,
     required this.description,
     required this.amount,
+    required this.toSavings,
     required this.createdAt,
   });
   @override
@@ -1653,6 +1842,7 @@ class AdditionalIncomeRow extends DataClass
     map['cycle_id'] = Variable<int>(cycleId);
     map['description'] = Variable<String>(description);
     map['amount'] = Variable<int>(amount);
+    map['to_savings'] = Variable<bool>(toSavings);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -1663,6 +1853,7 @@ class AdditionalIncomeRow extends DataClass
       cycleId: Value(cycleId),
       description: Value(description),
       amount: Value(amount),
+      toSavings: Value(toSavings),
       createdAt: Value(createdAt),
     );
   }
@@ -1677,6 +1868,7 @@ class AdditionalIncomeRow extends DataClass
       cycleId: serializer.fromJson<int>(json['cycleId']),
       description: serializer.fromJson<String>(json['description']),
       amount: serializer.fromJson<int>(json['amount']),
+      toSavings: serializer.fromJson<bool>(json['toSavings']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -1688,6 +1880,7 @@ class AdditionalIncomeRow extends DataClass
       'cycleId': serializer.toJson<int>(cycleId),
       'description': serializer.toJson<String>(description),
       'amount': serializer.toJson<int>(amount),
+      'toSavings': serializer.toJson<bool>(toSavings),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -1697,12 +1890,14 @@ class AdditionalIncomeRow extends DataClass
     int? cycleId,
     String? description,
     int? amount,
+    bool? toSavings,
     DateTime? createdAt,
   }) => AdditionalIncomeRow(
     id: id ?? this.id,
     cycleId: cycleId ?? this.cycleId,
     description: description ?? this.description,
     amount: amount ?? this.amount,
+    toSavings: toSavings ?? this.toSavings,
     createdAt: createdAt ?? this.createdAt,
   );
   AdditionalIncomeRow copyWithCompanion(AdditionalIncomesCompanion data) {
@@ -1713,6 +1908,7 @@ class AdditionalIncomeRow extends DataClass
           ? data.description.value
           : this.description,
       amount: data.amount.present ? data.amount.value : this.amount,
+      toSavings: data.toSavings.present ? data.toSavings.value : this.toSavings,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -1724,13 +1920,15 @@ class AdditionalIncomeRow extends DataClass
           ..write('cycleId: $cycleId, ')
           ..write('description: $description, ')
           ..write('amount: $amount, ')
+          ..write('toSavings: $toSavings, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, cycleId, description, amount, createdAt);
+  int get hashCode =>
+      Object.hash(id, cycleId, description, amount, toSavings, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1739,6 +1937,7 @@ class AdditionalIncomeRow extends DataClass
           other.cycleId == this.cycleId &&
           other.description == this.description &&
           other.amount == this.amount &&
+          other.toSavings == this.toSavings &&
           other.createdAt == this.createdAt);
 }
 
@@ -1747,12 +1946,14 @@ class AdditionalIncomesCompanion extends UpdateCompanion<AdditionalIncomeRow> {
   final Value<int> cycleId;
   final Value<String> description;
   final Value<int> amount;
+  final Value<bool> toSavings;
   final Value<DateTime> createdAt;
   const AdditionalIncomesCompanion({
     this.id = const Value.absent(),
     this.cycleId = const Value.absent(),
     this.description = const Value.absent(),
     this.amount = const Value.absent(),
+    this.toSavings = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   AdditionalIncomesCompanion.insert({
@@ -1760,6 +1961,7 @@ class AdditionalIncomesCompanion extends UpdateCompanion<AdditionalIncomeRow> {
     required int cycleId,
     required String description,
     required int amount,
+    this.toSavings = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : cycleId = Value(cycleId),
        description = Value(description),
@@ -1769,6 +1971,7 @@ class AdditionalIncomesCompanion extends UpdateCompanion<AdditionalIncomeRow> {
     Expression<int>? cycleId,
     Expression<String>? description,
     Expression<int>? amount,
+    Expression<bool>? toSavings,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -1776,6 +1979,7 @@ class AdditionalIncomesCompanion extends UpdateCompanion<AdditionalIncomeRow> {
       if (cycleId != null) 'cycle_id': cycleId,
       if (description != null) 'description': description,
       if (amount != null) 'amount': amount,
+      if (toSavings != null) 'to_savings': toSavings,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -1785,6 +1989,7 @@ class AdditionalIncomesCompanion extends UpdateCompanion<AdditionalIncomeRow> {
     Value<int>? cycleId,
     Value<String>? description,
     Value<int>? amount,
+    Value<bool>? toSavings,
     Value<DateTime>? createdAt,
   }) {
     return AdditionalIncomesCompanion(
@@ -1792,6 +1997,7 @@ class AdditionalIncomesCompanion extends UpdateCompanion<AdditionalIncomeRow> {
       cycleId: cycleId ?? this.cycleId,
       description: description ?? this.description,
       amount: amount ?? this.amount,
+      toSavings: toSavings ?? this.toSavings,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -1811,6 +2017,9 @@ class AdditionalIncomesCompanion extends UpdateCompanion<AdditionalIncomeRow> {
     if (amount.present) {
       map['amount'] = Variable<int>(amount.value);
     }
+    if (toSavings.present) {
+      map['to_savings'] = Variable<bool>(toSavings.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1824,6 +2033,7 @@ class AdditionalIncomesCompanion extends UpdateCompanion<AdditionalIncomeRow> {
           ..write('cycleId: $cycleId, ')
           ..write('description: $description, ')
           ..write('amount: $amount, ')
+          ..write('toSavings: $toSavings, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -1897,6 +2107,15 @@ class $DebtsTable extends Debts with TableInfo<$DebtsTable, DebtRow> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1909,6 +2128,17 @@ class $DebtsTable extends Debts with TableInfo<$DebtsTable, DebtRow> {
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _cycleIdMeta = const VerificationMeta(
+    'cycleId',
+  );
+  @override
+  late final GeneratedColumn<int> cycleId = GeneratedColumn<int>(
+    'cycle_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1916,7 +2146,9 @@ class $DebtsTable extends Debts with TableInfo<$DebtsTable, DebtRow> {
     totalAmount,
     paidAmount,
     isFullyPaid,
+    notes,
     createdAt,
+    cycleId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1970,10 +2202,22 @@ class $DebtsTable extends Debts with TableInfo<$DebtsTable, DebtRow> {
         ),
       );
     }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('cycle_id')) {
+      context.handle(
+        _cycleIdMeta,
+        cycleId.isAcceptableOrUnknown(data['cycle_id']!, _cycleIdMeta),
       );
     }
     return context;
@@ -2005,10 +2249,18 @@ class $DebtsTable extends Debts with TableInfo<$DebtsTable, DebtRow> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_fully_paid'],
       )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      cycleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cycle_id'],
+      ),
     );
   }
 
@@ -2024,14 +2276,18 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
   final int totalAmount;
   final int paidAmount;
   final bool isFullyPaid;
+  final String? notes;
   final DateTime createdAt;
+  final int? cycleId;
   const DebtRow({
     required this.id,
     required this.creditorName,
     required this.totalAmount,
     required this.paidAmount,
     required this.isFullyPaid,
+    this.notes,
     required this.createdAt,
+    this.cycleId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2041,7 +2297,13 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
     map['total_amount'] = Variable<int>(totalAmount);
     map['paid_amount'] = Variable<int>(paidAmount);
     map['is_fully_paid'] = Variable<bool>(isFullyPaid);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || cycleId != null) {
+      map['cycle_id'] = Variable<int>(cycleId);
+    }
     return map;
   }
 
@@ -2052,7 +2314,13 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
       totalAmount: Value(totalAmount),
       paidAmount: Value(paidAmount),
       isFullyPaid: Value(isFullyPaid),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
       createdAt: Value(createdAt),
+      cycleId: cycleId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cycleId),
     );
   }
 
@@ -2067,7 +2335,9 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
       totalAmount: serializer.fromJson<int>(json['totalAmount']),
       paidAmount: serializer.fromJson<int>(json['paidAmount']),
       isFullyPaid: serializer.fromJson<bool>(json['isFullyPaid']),
+      notes: serializer.fromJson<String?>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      cycleId: serializer.fromJson<int?>(json['cycleId']),
     );
   }
   @override
@@ -2079,7 +2349,9 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
       'totalAmount': serializer.toJson<int>(totalAmount),
       'paidAmount': serializer.toJson<int>(paidAmount),
       'isFullyPaid': serializer.toJson<bool>(isFullyPaid),
+      'notes': serializer.toJson<String?>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'cycleId': serializer.toJson<int?>(cycleId),
     };
   }
 
@@ -2089,14 +2361,18 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
     int? totalAmount,
     int? paidAmount,
     bool? isFullyPaid,
+    Value<String?> notes = const Value.absent(),
     DateTime? createdAt,
+    Value<int?> cycleId = const Value.absent(),
   }) => DebtRow(
     id: id ?? this.id,
     creditorName: creditorName ?? this.creditorName,
     totalAmount: totalAmount ?? this.totalAmount,
     paidAmount: paidAmount ?? this.paidAmount,
     isFullyPaid: isFullyPaid ?? this.isFullyPaid,
+    notes: notes.present ? notes.value : this.notes,
     createdAt: createdAt ?? this.createdAt,
+    cycleId: cycleId.present ? cycleId.value : this.cycleId,
   );
   DebtRow copyWithCompanion(DebtsCompanion data) {
     return DebtRow(
@@ -2113,7 +2389,9 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
       isFullyPaid: data.isFullyPaid.present
           ? data.isFullyPaid.value
           : this.isFullyPaid,
+      notes: data.notes.present ? data.notes.value : this.notes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      cycleId: data.cycleId.present ? data.cycleId.value : this.cycleId,
     );
   }
 
@@ -2125,7 +2403,9 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
           ..write('totalAmount: $totalAmount, ')
           ..write('paidAmount: $paidAmount, ')
           ..write('isFullyPaid: $isFullyPaid, ')
-          ..write('createdAt: $createdAt')
+          ..write('notes: $notes, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('cycleId: $cycleId')
           ..write(')'))
         .toString();
   }
@@ -2137,7 +2417,9 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
     totalAmount,
     paidAmount,
     isFullyPaid,
+    notes,
     createdAt,
+    cycleId,
   );
   @override
   bool operator ==(Object other) =>
@@ -2148,7 +2430,9 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
           other.totalAmount == this.totalAmount &&
           other.paidAmount == this.paidAmount &&
           other.isFullyPaid == this.isFullyPaid &&
-          other.createdAt == this.createdAt);
+          other.notes == this.notes &&
+          other.createdAt == this.createdAt &&
+          other.cycleId == this.cycleId);
 }
 
 class DebtsCompanion extends UpdateCompanion<DebtRow> {
@@ -2157,14 +2441,18 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
   final Value<int> totalAmount;
   final Value<int> paidAmount;
   final Value<bool> isFullyPaid;
+  final Value<String?> notes;
   final Value<DateTime> createdAt;
+  final Value<int?> cycleId;
   const DebtsCompanion({
     this.id = const Value.absent(),
     this.creditorName = const Value.absent(),
     this.totalAmount = const Value.absent(),
     this.paidAmount = const Value.absent(),
     this.isFullyPaid = const Value.absent(),
+    this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.cycleId = const Value.absent(),
   });
   DebtsCompanion.insert({
     this.id = const Value.absent(),
@@ -2172,7 +2460,9 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
     required int totalAmount,
     this.paidAmount = const Value.absent(),
     this.isFullyPaid = const Value.absent(),
+    this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.cycleId = const Value.absent(),
   }) : creditorName = Value(creditorName),
        totalAmount = Value(totalAmount);
   static Insertable<DebtRow> custom({
@@ -2181,7 +2471,9 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
     Expression<int>? totalAmount,
     Expression<int>? paidAmount,
     Expression<bool>? isFullyPaid,
+    Expression<String>? notes,
     Expression<DateTime>? createdAt,
+    Expression<int>? cycleId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2189,7 +2481,9 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
       if (totalAmount != null) 'total_amount': totalAmount,
       if (paidAmount != null) 'paid_amount': paidAmount,
       if (isFullyPaid != null) 'is_fully_paid': isFullyPaid,
+      if (notes != null) 'notes': notes,
       if (createdAt != null) 'created_at': createdAt,
+      if (cycleId != null) 'cycle_id': cycleId,
     });
   }
 
@@ -2199,7 +2493,9 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
     Value<int>? totalAmount,
     Value<int>? paidAmount,
     Value<bool>? isFullyPaid,
+    Value<String?>? notes,
     Value<DateTime>? createdAt,
+    Value<int?>? cycleId,
   }) {
     return DebtsCompanion(
       id: id ?? this.id,
@@ -2207,7 +2503,9 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
       totalAmount: totalAmount ?? this.totalAmount,
       paidAmount: paidAmount ?? this.paidAmount,
       isFullyPaid: isFullyPaid ?? this.isFullyPaid,
+      notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
+      cycleId: cycleId ?? this.cycleId,
     );
   }
 
@@ -2229,8 +2527,14 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
     if (isFullyPaid.present) {
       map['is_fully_paid'] = Variable<bool>(isFullyPaid.value);
     }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (cycleId.present) {
+      map['cycle_id'] = Variable<int>(cycleId.value);
     }
     return map;
   }
@@ -2243,7 +2547,9 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
           ..write('totalAmount: $totalAmount, ')
           ..write('paidAmount: $paidAmount, ')
           ..write('isFullyPaid: $isFullyPaid, ')
-          ..write('createdAt: $createdAt')
+          ..write('notes: $notes, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('cycleId: $cycleId')
           ..write(')'))
         .toString();
   }
@@ -2309,6 +2615,33 @@ class $DebtPaymentsTable extends DebtPayments
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _fromSavingsMeta = const VerificationMeta(
+    'fromSavings',
+  );
+  @override
+  late final GeneratedColumn<bool> fromSavings = GeneratedColumn<bool>(
+    'from_savings',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("from_savings" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _savingsAmountMeta = const VerificationMeta(
+    'savingsAmount',
+  );
+  @override
+  late final GeneratedColumn<int> savingsAmount = GeneratedColumn<int>(
+    'savings_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2316,6 +2649,8 @@ class $DebtPaymentsTable extends DebtPayments
     cycleId,
     amount,
     createdAt,
+    fromSavings,
+    savingsAmount,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2362,6 +2697,24 @@ class $DebtPaymentsTable extends DebtPayments
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('from_savings')) {
+      context.handle(
+        _fromSavingsMeta,
+        fromSavings.isAcceptableOrUnknown(
+          data['from_savings']!,
+          _fromSavingsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('savings_amount')) {
+      context.handle(
+        _savingsAmountMeta,
+        savingsAmount.isAcceptableOrUnknown(
+          data['savings_amount']!,
+          _savingsAmountMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2391,6 +2744,14 @@ class $DebtPaymentsTable extends DebtPayments
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      fromSavings: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}from_savings'],
+      )!,
+      savingsAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}savings_amount'],
+      )!,
     );
   }
 
@@ -2406,12 +2767,16 @@ class DebtPaymentRow extends DataClass implements Insertable<DebtPaymentRow> {
   final int cycleId;
   final int amount;
   final DateTime createdAt;
+  final bool fromSavings;
+  final int savingsAmount;
   const DebtPaymentRow({
     required this.id,
     required this.debtId,
     required this.cycleId,
     required this.amount,
     required this.createdAt,
+    required this.fromSavings,
+    required this.savingsAmount,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2421,6 +2786,8 @@ class DebtPaymentRow extends DataClass implements Insertable<DebtPaymentRow> {
     map['cycle_id'] = Variable<int>(cycleId);
     map['amount'] = Variable<int>(amount);
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['from_savings'] = Variable<bool>(fromSavings);
+    map['savings_amount'] = Variable<int>(savingsAmount);
     return map;
   }
 
@@ -2431,6 +2798,8 @@ class DebtPaymentRow extends DataClass implements Insertable<DebtPaymentRow> {
       cycleId: Value(cycleId),
       amount: Value(amount),
       createdAt: Value(createdAt),
+      fromSavings: Value(fromSavings),
+      savingsAmount: Value(savingsAmount),
     );
   }
 
@@ -2445,6 +2814,8 @@ class DebtPaymentRow extends DataClass implements Insertable<DebtPaymentRow> {
       cycleId: serializer.fromJson<int>(json['cycleId']),
       amount: serializer.fromJson<int>(json['amount']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      fromSavings: serializer.fromJson<bool>(json['fromSavings']),
+      savingsAmount: serializer.fromJson<int>(json['savingsAmount']),
     );
   }
   @override
@@ -2456,6 +2827,8 @@ class DebtPaymentRow extends DataClass implements Insertable<DebtPaymentRow> {
       'cycleId': serializer.toJson<int>(cycleId),
       'amount': serializer.toJson<int>(amount),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'fromSavings': serializer.toJson<bool>(fromSavings),
+      'savingsAmount': serializer.toJson<int>(savingsAmount),
     };
   }
 
@@ -2465,12 +2838,16 @@ class DebtPaymentRow extends DataClass implements Insertable<DebtPaymentRow> {
     int? cycleId,
     int? amount,
     DateTime? createdAt,
+    bool? fromSavings,
+    int? savingsAmount,
   }) => DebtPaymentRow(
     id: id ?? this.id,
     debtId: debtId ?? this.debtId,
     cycleId: cycleId ?? this.cycleId,
     amount: amount ?? this.amount,
     createdAt: createdAt ?? this.createdAt,
+    fromSavings: fromSavings ?? this.fromSavings,
+    savingsAmount: savingsAmount ?? this.savingsAmount,
   );
   DebtPaymentRow copyWithCompanion(DebtPaymentsCompanion data) {
     return DebtPaymentRow(
@@ -2479,6 +2856,12 @@ class DebtPaymentRow extends DataClass implements Insertable<DebtPaymentRow> {
       cycleId: data.cycleId.present ? data.cycleId.value : this.cycleId,
       amount: data.amount.present ? data.amount.value : this.amount,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      fromSavings: data.fromSavings.present
+          ? data.fromSavings.value
+          : this.fromSavings,
+      savingsAmount: data.savingsAmount.present
+          ? data.savingsAmount.value
+          : this.savingsAmount,
     );
   }
 
@@ -2489,13 +2872,23 @@ class DebtPaymentRow extends DataClass implements Insertable<DebtPaymentRow> {
           ..write('debtId: $debtId, ')
           ..write('cycleId: $cycleId, ')
           ..write('amount: $amount, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('fromSavings: $fromSavings, ')
+          ..write('savingsAmount: $savingsAmount')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, debtId, cycleId, amount, createdAt);
+  int get hashCode => Object.hash(
+    id,
+    debtId,
+    cycleId,
+    amount,
+    createdAt,
+    fromSavings,
+    savingsAmount,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2504,7 +2897,9 @@ class DebtPaymentRow extends DataClass implements Insertable<DebtPaymentRow> {
           other.debtId == this.debtId &&
           other.cycleId == this.cycleId &&
           other.amount == this.amount &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.fromSavings == this.fromSavings &&
+          other.savingsAmount == this.savingsAmount);
 }
 
 class DebtPaymentsCompanion extends UpdateCompanion<DebtPaymentRow> {
@@ -2513,12 +2908,16 @@ class DebtPaymentsCompanion extends UpdateCompanion<DebtPaymentRow> {
   final Value<int> cycleId;
   final Value<int> amount;
   final Value<DateTime> createdAt;
+  final Value<bool> fromSavings;
+  final Value<int> savingsAmount;
   const DebtPaymentsCompanion({
     this.id = const Value.absent(),
     this.debtId = const Value.absent(),
     this.cycleId = const Value.absent(),
     this.amount = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.fromSavings = const Value.absent(),
+    this.savingsAmount = const Value.absent(),
   });
   DebtPaymentsCompanion.insert({
     this.id = const Value.absent(),
@@ -2526,6 +2925,8 @@ class DebtPaymentsCompanion extends UpdateCompanion<DebtPaymentRow> {
     required int cycleId,
     required int amount,
     this.createdAt = const Value.absent(),
+    this.fromSavings = const Value.absent(),
+    this.savingsAmount = const Value.absent(),
   }) : debtId = Value(debtId),
        cycleId = Value(cycleId),
        amount = Value(amount);
@@ -2535,6 +2936,8 @@ class DebtPaymentsCompanion extends UpdateCompanion<DebtPaymentRow> {
     Expression<int>? cycleId,
     Expression<int>? amount,
     Expression<DateTime>? createdAt,
+    Expression<bool>? fromSavings,
+    Expression<int>? savingsAmount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2542,6 +2945,8 @@ class DebtPaymentsCompanion extends UpdateCompanion<DebtPaymentRow> {
       if (cycleId != null) 'cycle_id': cycleId,
       if (amount != null) 'amount': amount,
       if (createdAt != null) 'created_at': createdAt,
+      if (fromSavings != null) 'from_savings': fromSavings,
+      if (savingsAmount != null) 'savings_amount': savingsAmount,
     });
   }
 
@@ -2551,6 +2956,8 @@ class DebtPaymentsCompanion extends UpdateCompanion<DebtPaymentRow> {
     Value<int>? cycleId,
     Value<int>? amount,
     Value<DateTime>? createdAt,
+    Value<bool>? fromSavings,
+    Value<int>? savingsAmount,
   }) {
     return DebtPaymentsCompanion(
       id: id ?? this.id,
@@ -2558,6 +2965,8 @@ class DebtPaymentsCompanion extends UpdateCompanion<DebtPaymentRow> {
       cycleId: cycleId ?? this.cycleId,
       amount: amount ?? this.amount,
       createdAt: createdAt ?? this.createdAt,
+      fromSavings: fromSavings ?? this.fromSavings,
+      savingsAmount: savingsAmount ?? this.savingsAmount,
     );
   }
 
@@ -2579,6 +2988,12 @@ class DebtPaymentsCompanion extends UpdateCompanion<DebtPaymentRow> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (fromSavings.present) {
+      map['from_savings'] = Variable<bool>(fromSavings.value);
+    }
+    if (savingsAmount.present) {
+      map['savings_amount'] = Variable<int>(savingsAmount.value);
+    }
     return map;
   }
 
@@ -2589,7 +3004,9 @@ class DebtPaymentsCompanion extends UpdateCompanion<DebtPaymentRow> {
           ..write('debtId: $debtId, ')
           ..write('cycleId: $cycleId, ')
           ..write('amount: $amount, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('fromSavings: $fromSavings, ')
+          ..write('savingsAmount: $savingsAmount')
           ..write(')'))
         .toString();
   }
@@ -3391,25 +3808,26 @@ class $WeeklyChallengesTable extends WeeklyChallenges
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _targetReductionMeta = const VerificationMeta(
-    'targetReduction',
+  static const VerificationMeta _targetAmountMeta = const VerificationMeta(
+    'targetAmount',
   );
   @override
-  late final GeneratedColumn<int> targetReduction = GeneratedColumn<int>(
-    'target_reduction',
+  late final GeneratedColumn<int> targetAmount = GeneratedColumn<int>(
+    'target_amount',
     aliasedName,
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _previousWeekSpendingMeta =
-      const VerificationMeta('previousWeekSpending');
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
   @override
-  late final GeneratedColumn<int> previousWeekSpending = GeneratedColumn<int>(
-    'previous_week_spending',
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
     aliasedName,
     false,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
   static const VerificationMeta _isCompletedMeta = const VerificationMeta(
@@ -3427,14 +3845,27 @@ class $WeeklyChallengesTable extends WeeklyChallenges
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     cycleId,
     weekStart,
-    targetReduction,
-    previousWeekSpending,
+    targetAmount,
+    description,
     isCompleted,
+    createdAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3467,27 +3898,27 @@ class $WeeklyChallengesTable extends WeeklyChallenges
     } else if (isInserting) {
       context.missing(_weekStartMeta);
     }
-    if (data.containsKey('target_reduction')) {
+    if (data.containsKey('target_amount')) {
       context.handle(
-        _targetReductionMeta,
-        targetReduction.isAcceptableOrUnknown(
-          data['target_reduction']!,
-          _targetReductionMeta,
+        _targetAmountMeta,
+        targetAmount.isAcceptableOrUnknown(
+          data['target_amount']!,
+          _targetAmountMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_targetReductionMeta);
+      context.missing(_targetAmountMeta);
     }
-    if (data.containsKey('previous_week_spending')) {
+    if (data.containsKey('description')) {
       context.handle(
-        _previousWeekSpendingMeta,
-        previousWeekSpending.isAcceptableOrUnknown(
-          data['previous_week_spending']!,
-          _previousWeekSpendingMeta,
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_previousWeekSpendingMeta);
+      context.missing(_descriptionMeta);
     }
     if (data.containsKey('is_completed')) {
       context.handle(
@@ -3496,6 +3927,12 @@ class $WeeklyChallengesTable extends WeeklyChallenges
           data['is_completed']!,
           _isCompletedMeta,
         ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
     return context;
@@ -3519,17 +3956,21 @@ class $WeeklyChallengesTable extends WeeklyChallenges
         DriftSqlType.dateTime,
         data['${effectivePrefix}week_start'],
       )!,
-      targetReduction: attachedDatabase.typeMapping.read(
+      targetAmount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}target_reduction'],
+        data['${effectivePrefix}target_amount'],
       )!,
-      previousWeekSpending: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}previous_week_spending'],
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
       )!,
       isCompleted: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_completed'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
       )!,
     );
   }
@@ -3545,16 +3986,18 @@ class WeeklyChallengeRow extends DataClass
   final int id;
   final int cycleId;
   final DateTime weekStart;
-  final int targetReduction;
-  final int previousWeekSpending;
+  final int targetAmount;
+  final String description;
   final bool isCompleted;
+  final DateTime createdAt;
   const WeeklyChallengeRow({
     required this.id,
     required this.cycleId,
     required this.weekStart,
-    required this.targetReduction,
-    required this.previousWeekSpending,
+    required this.targetAmount,
+    required this.description,
     required this.isCompleted,
+    required this.createdAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3562,9 +4005,10 @@ class WeeklyChallengeRow extends DataClass
     map['id'] = Variable<int>(id);
     map['cycle_id'] = Variable<int>(cycleId);
     map['week_start'] = Variable<DateTime>(weekStart);
-    map['target_reduction'] = Variable<int>(targetReduction);
-    map['previous_week_spending'] = Variable<int>(previousWeekSpending);
+    map['target_amount'] = Variable<int>(targetAmount);
+    map['description'] = Variable<String>(description);
     map['is_completed'] = Variable<bool>(isCompleted);
+    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -3573,9 +4017,10 @@ class WeeklyChallengeRow extends DataClass
       id: Value(id),
       cycleId: Value(cycleId),
       weekStart: Value(weekStart),
-      targetReduction: Value(targetReduction),
-      previousWeekSpending: Value(previousWeekSpending),
+      targetAmount: Value(targetAmount),
+      description: Value(description),
       isCompleted: Value(isCompleted),
+      createdAt: Value(createdAt),
     );
   }
 
@@ -3588,11 +4033,10 @@ class WeeklyChallengeRow extends DataClass
       id: serializer.fromJson<int>(json['id']),
       cycleId: serializer.fromJson<int>(json['cycleId']),
       weekStart: serializer.fromJson<DateTime>(json['weekStart']),
-      targetReduction: serializer.fromJson<int>(json['targetReduction']),
-      previousWeekSpending: serializer.fromJson<int>(
-        json['previousWeekSpending'],
-      ),
+      targetAmount: serializer.fromJson<int>(json['targetAmount']),
+      description: serializer.fromJson<String>(json['description']),
       isCompleted: serializer.fromJson<bool>(json['isCompleted']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -3602,9 +4046,10 @@ class WeeklyChallengeRow extends DataClass
       'id': serializer.toJson<int>(id),
       'cycleId': serializer.toJson<int>(cycleId),
       'weekStart': serializer.toJson<DateTime>(weekStart),
-      'targetReduction': serializer.toJson<int>(targetReduction),
-      'previousWeekSpending': serializer.toJson<int>(previousWeekSpending),
+      'targetAmount': serializer.toJson<int>(targetAmount),
+      'description': serializer.toJson<String>(description),
       'isCompleted': serializer.toJson<bool>(isCompleted),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
@@ -3612,31 +4057,34 @@ class WeeklyChallengeRow extends DataClass
     int? id,
     int? cycleId,
     DateTime? weekStart,
-    int? targetReduction,
-    int? previousWeekSpending,
+    int? targetAmount,
+    String? description,
     bool? isCompleted,
+    DateTime? createdAt,
   }) => WeeklyChallengeRow(
     id: id ?? this.id,
     cycleId: cycleId ?? this.cycleId,
     weekStart: weekStart ?? this.weekStart,
-    targetReduction: targetReduction ?? this.targetReduction,
-    previousWeekSpending: previousWeekSpending ?? this.previousWeekSpending,
+    targetAmount: targetAmount ?? this.targetAmount,
+    description: description ?? this.description,
     isCompleted: isCompleted ?? this.isCompleted,
+    createdAt: createdAt ?? this.createdAt,
   );
   WeeklyChallengeRow copyWithCompanion(WeeklyChallengesCompanion data) {
     return WeeklyChallengeRow(
       id: data.id.present ? data.id.value : this.id,
       cycleId: data.cycleId.present ? data.cycleId.value : this.cycleId,
       weekStart: data.weekStart.present ? data.weekStart.value : this.weekStart,
-      targetReduction: data.targetReduction.present
-          ? data.targetReduction.value
-          : this.targetReduction,
-      previousWeekSpending: data.previousWeekSpending.present
-          ? data.previousWeekSpending.value
-          : this.previousWeekSpending,
+      targetAmount: data.targetAmount.present
+          ? data.targetAmount.value
+          : this.targetAmount,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
       isCompleted: data.isCompleted.present
           ? data.isCompleted.value
           : this.isCompleted,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
 
@@ -3646,9 +4094,10 @@ class WeeklyChallengeRow extends DataClass
           ..write('id: $id, ')
           ..write('cycleId: $cycleId, ')
           ..write('weekStart: $weekStart, ')
-          ..write('targetReduction: $targetReduction, ')
-          ..write('previousWeekSpending: $previousWeekSpending, ')
-          ..write('isCompleted: $isCompleted')
+          ..write('targetAmount: $targetAmount, ')
+          ..write('description: $description, ')
+          ..write('isCompleted: $isCompleted, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
@@ -3658,9 +4107,10 @@ class WeeklyChallengeRow extends DataClass
     id,
     cycleId,
     weekStart,
-    targetReduction,
-    previousWeekSpending,
+    targetAmount,
+    description,
     isCompleted,
+    createdAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -3669,53 +4119,58 @@ class WeeklyChallengeRow extends DataClass
           other.id == this.id &&
           other.cycleId == this.cycleId &&
           other.weekStart == this.weekStart &&
-          other.targetReduction == this.targetReduction &&
-          other.previousWeekSpending == this.previousWeekSpending &&
-          other.isCompleted == this.isCompleted);
+          other.targetAmount == this.targetAmount &&
+          other.description == this.description &&
+          other.isCompleted == this.isCompleted &&
+          other.createdAt == this.createdAt);
 }
 
 class WeeklyChallengesCompanion extends UpdateCompanion<WeeklyChallengeRow> {
   final Value<int> id;
   final Value<int> cycleId;
   final Value<DateTime> weekStart;
-  final Value<int> targetReduction;
-  final Value<int> previousWeekSpending;
+  final Value<int> targetAmount;
+  final Value<String> description;
   final Value<bool> isCompleted;
+  final Value<DateTime> createdAt;
   const WeeklyChallengesCompanion({
     this.id = const Value.absent(),
     this.cycleId = const Value.absent(),
     this.weekStart = const Value.absent(),
-    this.targetReduction = const Value.absent(),
-    this.previousWeekSpending = const Value.absent(),
+    this.targetAmount = const Value.absent(),
+    this.description = const Value.absent(),
     this.isCompleted = const Value.absent(),
+    this.createdAt = const Value.absent(),
   });
   WeeklyChallengesCompanion.insert({
     this.id = const Value.absent(),
     required int cycleId,
     required DateTime weekStart,
-    required int targetReduction,
-    required int previousWeekSpending,
+    required int targetAmount,
+    required String description,
     this.isCompleted = const Value.absent(),
+    this.createdAt = const Value.absent(),
   }) : cycleId = Value(cycleId),
        weekStart = Value(weekStart),
-       targetReduction = Value(targetReduction),
-       previousWeekSpending = Value(previousWeekSpending);
+       targetAmount = Value(targetAmount),
+       description = Value(description);
   static Insertable<WeeklyChallengeRow> custom({
     Expression<int>? id,
     Expression<int>? cycleId,
     Expression<DateTime>? weekStart,
-    Expression<int>? targetReduction,
-    Expression<int>? previousWeekSpending,
+    Expression<int>? targetAmount,
+    Expression<String>? description,
     Expression<bool>? isCompleted,
+    Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (cycleId != null) 'cycle_id': cycleId,
       if (weekStart != null) 'week_start': weekStart,
-      if (targetReduction != null) 'target_reduction': targetReduction,
-      if (previousWeekSpending != null)
-        'previous_week_spending': previousWeekSpending,
+      if (targetAmount != null) 'target_amount': targetAmount,
+      if (description != null) 'description': description,
       if (isCompleted != null) 'is_completed': isCompleted,
+      if (createdAt != null) 'created_at': createdAt,
     });
   }
 
@@ -3723,17 +4178,19 @@ class WeeklyChallengesCompanion extends UpdateCompanion<WeeklyChallengeRow> {
     Value<int>? id,
     Value<int>? cycleId,
     Value<DateTime>? weekStart,
-    Value<int>? targetReduction,
-    Value<int>? previousWeekSpending,
+    Value<int>? targetAmount,
+    Value<String>? description,
     Value<bool>? isCompleted,
+    Value<DateTime>? createdAt,
   }) {
     return WeeklyChallengesCompanion(
       id: id ?? this.id,
       cycleId: cycleId ?? this.cycleId,
       weekStart: weekStart ?? this.weekStart,
-      targetReduction: targetReduction ?? this.targetReduction,
-      previousWeekSpending: previousWeekSpending ?? this.previousWeekSpending,
+      targetAmount: targetAmount ?? this.targetAmount,
+      description: description ?? this.description,
       isCompleted: isCompleted ?? this.isCompleted,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -3749,14 +4206,17 @@ class WeeklyChallengesCompanion extends UpdateCompanion<WeeklyChallengeRow> {
     if (weekStart.present) {
       map['week_start'] = Variable<DateTime>(weekStart.value);
     }
-    if (targetReduction.present) {
-      map['target_reduction'] = Variable<int>(targetReduction.value);
+    if (targetAmount.present) {
+      map['target_amount'] = Variable<int>(targetAmount.value);
     }
-    if (previousWeekSpending.present) {
-      map['previous_week_spending'] = Variable<int>(previousWeekSpending.value);
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
     }
     if (isCompleted.present) {
       map['is_completed'] = Variable<bool>(isCompleted.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     return map;
   }
@@ -3767,9 +4227,10 @@ class WeeklyChallengesCompanion extends UpdateCompanion<WeeklyChallengeRow> {
           ..write('id: $id, ')
           ..write('cycleId: $cycleId, ')
           ..write('weekStart: $weekStart, ')
-          ..write('targetReduction: $targetReduction, ')
-          ..write('previousWeekSpending: $previousWeekSpending, ')
-          ..write('isCompleted: $isCompleted')
+          ..write('targetAmount: $targetAmount, ')
+          ..write('description: $description, ')
+          ..write('isCompleted: $isCompleted, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
@@ -4695,6 +5156,1566 @@ class LicenseActivationsCompanion
   }
 }
 
+class $SavingsHistoryTable extends SavingsHistory
+    with TableInfo<$SavingsHistoryTable, SavingsHistoryRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SavingsHistoryTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _relatedCycleIdMeta = const VerificationMeta(
+    'relatedCycleId',
+  );
+  @override
+  late final GeneratedColumn<int> relatedCycleId = GeneratedColumn<int>(
+    'related_cycle_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _relatedExpenseIdMeta = const VerificationMeta(
+    'relatedExpenseId',
+  );
+  @override
+  late final GeneratedColumn<int> relatedExpenseId = GeneratedColumn<int>(
+    'related_expense_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _relatedDebtPaymentIdMeta =
+      const VerificationMeta('relatedDebtPaymentId');
+  @override
+  late final GeneratedColumn<int> relatedDebtPaymentId = GeneratedColumn<int>(
+    'related_debt_payment_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _relatedLendingIdMeta = const VerificationMeta(
+    'relatedLendingId',
+  );
+  @override
+  late final GeneratedColumn<int> relatedLendingId = GeneratedColumn<int>(
+    'related_lending_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    type,
+    amount,
+    description,
+    relatedCycleId,
+    relatedExpenseId,
+    relatedDebtPaymentId,
+    relatedLendingId,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'savings_history';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SavingsHistoryRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('related_cycle_id')) {
+      context.handle(
+        _relatedCycleIdMeta,
+        relatedCycleId.isAcceptableOrUnknown(
+          data['related_cycle_id']!,
+          _relatedCycleIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('related_expense_id')) {
+      context.handle(
+        _relatedExpenseIdMeta,
+        relatedExpenseId.isAcceptableOrUnknown(
+          data['related_expense_id']!,
+          _relatedExpenseIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('related_debt_payment_id')) {
+      context.handle(
+        _relatedDebtPaymentIdMeta,
+        relatedDebtPaymentId.isAcceptableOrUnknown(
+          data['related_debt_payment_id']!,
+          _relatedDebtPaymentIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('related_lending_id')) {
+      context.handle(
+        _relatedLendingIdMeta,
+        relatedLendingId.isAcceptableOrUnknown(
+          data['related_lending_id']!,
+          _relatedLendingIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SavingsHistoryRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SavingsHistoryRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      )!,
+      relatedCycleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}related_cycle_id'],
+      ),
+      relatedExpenseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}related_expense_id'],
+      ),
+      relatedDebtPaymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}related_debt_payment_id'],
+      ),
+      relatedLendingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}related_lending_id'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SavingsHistoryTable createAlias(String alias) {
+    return $SavingsHistoryTable(attachedDatabase, alias);
+  }
+}
+
+class SavingsHistoryRow extends DataClass
+    implements Insertable<SavingsHistoryRow> {
+  final int id;
+  final String type;
+  final int amount;
+  final String description;
+  final int? relatedCycleId;
+  final int? relatedExpenseId;
+  final int? relatedDebtPaymentId;
+  final int? relatedLendingId;
+  final DateTime createdAt;
+  const SavingsHistoryRow({
+    required this.id,
+    required this.type,
+    required this.amount,
+    required this.description,
+    this.relatedCycleId,
+    this.relatedExpenseId,
+    this.relatedDebtPaymentId,
+    this.relatedLendingId,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['type'] = Variable<String>(type);
+    map['amount'] = Variable<int>(amount);
+    map['description'] = Variable<String>(description);
+    if (!nullToAbsent || relatedCycleId != null) {
+      map['related_cycle_id'] = Variable<int>(relatedCycleId);
+    }
+    if (!nullToAbsent || relatedExpenseId != null) {
+      map['related_expense_id'] = Variable<int>(relatedExpenseId);
+    }
+    if (!nullToAbsent || relatedDebtPaymentId != null) {
+      map['related_debt_payment_id'] = Variable<int>(relatedDebtPaymentId);
+    }
+    if (!nullToAbsent || relatedLendingId != null) {
+      map['related_lending_id'] = Variable<int>(relatedLendingId);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  SavingsHistoryCompanion toCompanion(bool nullToAbsent) {
+    return SavingsHistoryCompanion(
+      id: Value(id),
+      type: Value(type),
+      amount: Value(amount),
+      description: Value(description),
+      relatedCycleId: relatedCycleId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relatedCycleId),
+      relatedExpenseId: relatedExpenseId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relatedExpenseId),
+      relatedDebtPaymentId: relatedDebtPaymentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relatedDebtPaymentId),
+      relatedLendingId: relatedLendingId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relatedLendingId),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory SavingsHistoryRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SavingsHistoryRow(
+      id: serializer.fromJson<int>(json['id']),
+      type: serializer.fromJson<String>(json['type']),
+      amount: serializer.fromJson<int>(json['amount']),
+      description: serializer.fromJson<String>(json['description']),
+      relatedCycleId: serializer.fromJson<int?>(json['relatedCycleId']),
+      relatedExpenseId: serializer.fromJson<int?>(json['relatedExpenseId']),
+      relatedDebtPaymentId: serializer.fromJson<int?>(
+        json['relatedDebtPaymentId'],
+      ),
+      relatedLendingId: serializer.fromJson<int?>(json['relatedLendingId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'type': serializer.toJson<String>(type),
+      'amount': serializer.toJson<int>(amount),
+      'description': serializer.toJson<String>(description),
+      'relatedCycleId': serializer.toJson<int?>(relatedCycleId),
+      'relatedExpenseId': serializer.toJson<int?>(relatedExpenseId),
+      'relatedDebtPaymentId': serializer.toJson<int?>(relatedDebtPaymentId),
+      'relatedLendingId': serializer.toJson<int?>(relatedLendingId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  SavingsHistoryRow copyWith({
+    int? id,
+    String? type,
+    int? amount,
+    String? description,
+    Value<int?> relatedCycleId = const Value.absent(),
+    Value<int?> relatedExpenseId = const Value.absent(),
+    Value<int?> relatedDebtPaymentId = const Value.absent(),
+    Value<int?> relatedLendingId = const Value.absent(),
+    DateTime? createdAt,
+  }) => SavingsHistoryRow(
+    id: id ?? this.id,
+    type: type ?? this.type,
+    amount: amount ?? this.amount,
+    description: description ?? this.description,
+    relatedCycleId: relatedCycleId.present
+        ? relatedCycleId.value
+        : this.relatedCycleId,
+    relatedExpenseId: relatedExpenseId.present
+        ? relatedExpenseId.value
+        : this.relatedExpenseId,
+    relatedDebtPaymentId: relatedDebtPaymentId.present
+        ? relatedDebtPaymentId.value
+        : this.relatedDebtPaymentId,
+    relatedLendingId: relatedLendingId.present
+        ? relatedLendingId.value
+        : this.relatedLendingId,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  SavingsHistoryRow copyWithCompanion(SavingsHistoryCompanion data) {
+    return SavingsHistoryRow(
+      id: data.id.present ? data.id.value : this.id,
+      type: data.type.present ? data.type.value : this.type,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      relatedCycleId: data.relatedCycleId.present
+          ? data.relatedCycleId.value
+          : this.relatedCycleId,
+      relatedExpenseId: data.relatedExpenseId.present
+          ? data.relatedExpenseId.value
+          : this.relatedExpenseId,
+      relatedDebtPaymentId: data.relatedDebtPaymentId.present
+          ? data.relatedDebtPaymentId.value
+          : this.relatedDebtPaymentId,
+      relatedLendingId: data.relatedLendingId.present
+          ? data.relatedLendingId.value
+          : this.relatedLendingId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SavingsHistoryRow(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('amount: $amount, ')
+          ..write('description: $description, ')
+          ..write('relatedCycleId: $relatedCycleId, ')
+          ..write('relatedExpenseId: $relatedExpenseId, ')
+          ..write('relatedDebtPaymentId: $relatedDebtPaymentId, ')
+          ..write('relatedLendingId: $relatedLendingId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    type,
+    amount,
+    description,
+    relatedCycleId,
+    relatedExpenseId,
+    relatedDebtPaymentId,
+    relatedLendingId,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SavingsHistoryRow &&
+          other.id == this.id &&
+          other.type == this.type &&
+          other.amount == this.amount &&
+          other.description == this.description &&
+          other.relatedCycleId == this.relatedCycleId &&
+          other.relatedExpenseId == this.relatedExpenseId &&
+          other.relatedDebtPaymentId == this.relatedDebtPaymentId &&
+          other.relatedLendingId == this.relatedLendingId &&
+          other.createdAt == this.createdAt);
+}
+
+class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
+  final Value<int> id;
+  final Value<String> type;
+  final Value<int> amount;
+  final Value<String> description;
+  final Value<int?> relatedCycleId;
+  final Value<int?> relatedExpenseId;
+  final Value<int?> relatedDebtPaymentId;
+  final Value<int?> relatedLendingId;
+  final Value<DateTime> createdAt;
+  const SavingsHistoryCompanion({
+    this.id = const Value.absent(),
+    this.type = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.description = const Value.absent(),
+    this.relatedCycleId = const Value.absent(),
+    this.relatedExpenseId = const Value.absent(),
+    this.relatedDebtPaymentId = const Value.absent(),
+    this.relatedLendingId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  SavingsHistoryCompanion.insert({
+    this.id = const Value.absent(),
+    required String type,
+    required int amount,
+    required String description,
+    this.relatedCycleId = const Value.absent(),
+    this.relatedExpenseId = const Value.absent(),
+    this.relatedDebtPaymentId = const Value.absent(),
+    this.relatedLendingId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  }) : type = Value(type),
+       amount = Value(amount),
+       description = Value(description);
+  static Insertable<SavingsHistoryRow> custom({
+    Expression<int>? id,
+    Expression<String>? type,
+    Expression<int>? amount,
+    Expression<String>? description,
+    Expression<int>? relatedCycleId,
+    Expression<int>? relatedExpenseId,
+    Expression<int>? relatedDebtPaymentId,
+    Expression<int>? relatedLendingId,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (type != null) 'type': type,
+      if (amount != null) 'amount': amount,
+      if (description != null) 'description': description,
+      if (relatedCycleId != null) 'related_cycle_id': relatedCycleId,
+      if (relatedExpenseId != null) 'related_expense_id': relatedExpenseId,
+      if (relatedDebtPaymentId != null)
+        'related_debt_payment_id': relatedDebtPaymentId,
+      if (relatedLendingId != null) 'related_lending_id': relatedLendingId,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  SavingsHistoryCompanion copyWith({
+    Value<int>? id,
+    Value<String>? type,
+    Value<int>? amount,
+    Value<String>? description,
+    Value<int?>? relatedCycleId,
+    Value<int?>? relatedExpenseId,
+    Value<int?>? relatedDebtPaymentId,
+    Value<int?>? relatedLendingId,
+    Value<DateTime>? createdAt,
+  }) {
+    return SavingsHistoryCompanion(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      amount: amount ?? this.amount,
+      description: description ?? this.description,
+      relatedCycleId: relatedCycleId ?? this.relatedCycleId,
+      relatedExpenseId: relatedExpenseId ?? this.relatedExpenseId,
+      relatedDebtPaymentId: relatedDebtPaymentId ?? this.relatedDebtPaymentId,
+      relatedLendingId: relatedLendingId ?? this.relatedLendingId,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (relatedCycleId.present) {
+      map['related_cycle_id'] = Variable<int>(relatedCycleId.value);
+    }
+    if (relatedExpenseId.present) {
+      map['related_expense_id'] = Variable<int>(relatedExpenseId.value);
+    }
+    if (relatedDebtPaymentId.present) {
+      map['related_debt_payment_id'] = Variable<int>(
+        relatedDebtPaymentId.value,
+      );
+    }
+    if (relatedLendingId.present) {
+      map['related_lending_id'] = Variable<int>(relatedLendingId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SavingsHistoryCompanion(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('amount: $amount, ')
+          ..write('description: $description, ')
+          ..write('relatedCycleId: $relatedCycleId, ')
+          ..write('relatedExpenseId: $relatedExpenseId, ')
+          ..write('relatedDebtPaymentId: $relatedDebtPaymentId, ')
+          ..write('relatedLendingId: $relatedLendingId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LendingsTable extends Lendings
+    with TableInfo<$LendingsTable, LendingRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LendingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _borrowerNameMeta = const VerificationMeta(
+    'borrowerName',
+  );
+  @override
+  late final GeneratedColumn<String> borrowerName = GeneratedColumn<String>(
+    'borrower_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _totalAmountMeta = const VerificationMeta(
+    'totalAmount',
+  );
+  @override
+  late final GeneratedColumn<int> totalAmount = GeneratedColumn<int>(
+    'total_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _collectedAmountMeta = const VerificationMeta(
+    'collectedAmount',
+  );
+  @override
+  late final GeneratedColumn<int> collectedAmount = GeneratedColumn<int>(
+    'collected_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _isFullyCollectedMeta = const VerificationMeta(
+    'isFullyCollected',
+  );
+  @override
+  late final GeneratedColumn<bool> isFullyCollected = GeneratedColumn<bool>(
+    'is_fully_collected',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_fully_collected" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _fromSavingsMeta = const VerificationMeta(
+    'fromSavings',
+  );
+  @override
+  late final GeneratedColumn<bool> fromSavings = GeneratedColumn<bool>(
+    'from_savings',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("from_savings" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _savingsAmountMeta = const VerificationMeta(
+    'savingsAmount',
+  );
+  @override
+  late final GeneratedColumn<int> savingsAmount = GeneratedColumn<int>(
+    'savings_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _cycleIdMeta = const VerificationMeta(
+    'cycleId',
+  );
+  @override
+  late final GeneratedColumn<int> cycleId = GeneratedColumn<int>(
+    'cycle_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    borrowerName,
+    totalAmount,
+    collectedAmount,
+    isFullyCollected,
+    fromSavings,
+    savingsAmount,
+    cycleId,
+    notes,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'lendings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LendingRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('borrower_name')) {
+      context.handle(
+        _borrowerNameMeta,
+        borrowerName.isAcceptableOrUnknown(
+          data['borrower_name']!,
+          _borrowerNameMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_borrowerNameMeta);
+    }
+    if (data.containsKey('total_amount')) {
+      context.handle(
+        _totalAmountMeta,
+        totalAmount.isAcceptableOrUnknown(
+          data['total_amount']!,
+          _totalAmountMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_totalAmountMeta);
+    }
+    if (data.containsKey('collected_amount')) {
+      context.handle(
+        _collectedAmountMeta,
+        collectedAmount.isAcceptableOrUnknown(
+          data['collected_amount']!,
+          _collectedAmountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_fully_collected')) {
+      context.handle(
+        _isFullyCollectedMeta,
+        isFullyCollected.isAcceptableOrUnknown(
+          data['is_fully_collected']!,
+          _isFullyCollectedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('from_savings')) {
+      context.handle(
+        _fromSavingsMeta,
+        fromSavings.isAcceptableOrUnknown(
+          data['from_savings']!,
+          _fromSavingsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('savings_amount')) {
+      context.handle(
+        _savingsAmountMeta,
+        savingsAmount.isAcceptableOrUnknown(
+          data['savings_amount']!,
+          _savingsAmountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cycle_id')) {
+      context.handle(
+        _cycleIdMeta,
+        cycleId.isAcceptableOrUnknown(data['cycle_id']!, _cycleIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cycleIdMeta);
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LendingRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LendingRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      borrowerName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}borrower_name'],
+      )!,
+      totalAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_amount'],
+      )!,
+      collectedAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}collected_amount'],
+      )!,
+      isFullyCollected: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_fully_collected'],
+      )!,
+      fromSavings: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}from_savings'],
+      )!,
+      savingsAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}savings_amount'],
+      )!,
+      cycleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cycle_id'],
+      )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LendingsTable createAlias(String alias) {
+    return $LendingsTable(attachedDatabase, alias);
+  }
+}
+
+class LendingRow extends DataClass implements Insertable<LendingRow> {
+  final int id;
+  final String borrowerName;
+  final int totalAmount;
+  final int collectedAmount;
+  final bool isFullyCollected;
+  final bool fromSavings;
+  final int savingsAmount;
+  final int cycleId;
+  final String? notes;
+  final DateTime createdAt;
+  const LendingRow({
+    required this.id,
+    required this.borrowerName,
+    required this.totalAmount,
+    required this.collectedAmount,
+    required this.isFullyCollected,
+    required this.fromSavings,
+    required this.savingsAmount,
+    required this.cycleId,
+    this.notes,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['borrower_name'] = Variable<String>(borrowerName);
+    map['total_amount'] = Variable<int>(totalAmount);
+    map['collected_amount'] = Variable<int>(collectedAmount);
+    map['is_fully_collected'] = Variable<bool>(isFullyCollected);
+    map['from_savings'] = Variable<bool>(fromSavings);
+    map['savings_amount'] = Variable<int>(savingsAmount);
+    map['cycle_id'] = Variable<int>(cycleId);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  LendingsCompanion toCompanion(bool nullToAbsent) {
+    return LendingsCompanion(
+      id: Value(id),
+      borrowerName: Value(borrowerName),
+      totalAmount: Value(totalAmount),
+      collectedAmount: Value(collectedAmount),
+      isFullyCollected: Value(isFullyCollected),
+      fromSavings: Value(fromSavings),
+      savingsAmount: Value(savingsAmount),
+      cycleId: Value(cycleId),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory LendingRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LendingRow(
+      id: serializer.fromJson<int>(json['id']),
+      borrowerName: serializer.fromJson<String>(json['borrowerName']),
+      totalAmount: serializer.fromJson<int>(json['totalAmount']),
+      collectedAmount: serializer.fromJson<int>(json['collectedAmount']),
+      isFullyCollected: serializer.fromJson<bool>(json['isFullyCollected']),
+      fromSavings: serializer.fromJson<bool>(json['fromSavings']),
+      savingsAmount: serializer.fromJson<int>(json['savingsAmount']),
+      cycleId: serializer.fromJson<int>(json['cycleId']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'borrowerName': serializer.toJson<String>(borrowerName),
+      'totalAmount': serializer.toJson<int>(totalAmount),
+      'collectedAmount': serializer.toJson<int>(collectedAmount),
+      'isFullyCollected': serializer.toJson<bool>(isFullyCollected),
+      'fromSavings': serializer.toJson<bool>(fromSavings),
+      'savingsAmount': serializer.toJson<int>(savingsAmount),
+      'cycleId': serializer.toJson<int>(cycleId),
+      'notes': serializer.toJson<String?>(notes),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  LendingRow copyWith({
+    int? id,
+    String? borrowerName,
+    int? totalAmount,
+    int? collectedAmount,
+    bool? isFullyCollected,
+    bool? fromSavings,
+    int? savingsAmount,
+    int? cycleId,
+    Value<String?> notes = const Value.absent(),
+    DateTime? createdAt,
+  }) => LendingRow(
+    id: id ?? this.id,
+    borrowerName: borrowerName ?? this.borrowerName,
+    totalAmount: totalAmount ?? this.totalAmount,
+    collectedAmount: collectedAmount ?? this.collectedAmount,
+    isFullyCollected: isFullyCollected ?? this.isFullyCollected,
+    fromSavings: fromSavings ?? this.fromSavings,
+    savingsAmount: savingsAmount ?? this.savingsAmount,
+    cycleId: cycleId ?? this.cycleId,
+    notes: notes.present ? notes.value : this.notes,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  LendingRow copyWithCompanion(LendingsCompanion data) {
+    return LendingRow(
+      id: data.id.present ? data.id.value : this.id,
+      borrowerName: data.borrowerName.present
+          ? data.borrowerName.value
+          : this.borrowerName,
+      totalAmount: data.totalAmount.present
+          ? data.totalAmount.value
+          : this.totalAmount,
+      collectedAmount: data.collectedAmount.present
+          ? data.collectedAmount.value
+          : this.collectedAmount,
+      isFullyCollected: data.isFullyCollected.present
+          ? data.isFullyCollected.value
+          : this.isFullyCollected,
+      fromSavings: data.fromSavings.present
+          ? data.fromSavings.value
+          : this.fromSavings,
+      savingsAmount: data.savingsAmount.present
+          ? data.savingsAmount.value
+          : this.savingsAmount,
+      cycleId: data.cycleId.present ? data.cycleId.value : this.cycleId,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LendingRow(')
+          ..write('id: $id, ')
+          ..write('borrowerName: $borrowerName, ')
+          ..write('totalAmount: $totalAmount, ')
+          ..write('collectedAmount: $collectedAmount, ')
+          ..write('isFullyCollected: $isFullyCollected, ')
+          ..write('fromSavings: $fromSavings, ')
+          ..write('savingsAmount: $savingsAmount, ')
+          ..write('cycleId: $cycleId, ')
+          ..write('notes: $notes, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    borrowerName,
+    totalAmount,
+    collectedAmount,
+    isFullyCollected,
+    fromSavings,
+    savingsAmount,
+    cycleId,
+    notes,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LendingRow &&
+          other.id == this.id &&
+          other.borrowerName == this.borrowerName &&
+          other.totalAmount == this.totalAmount &&
+          other.collectedAmount == this.collectedAmount &&
+          other.isFullyCollected == this.isFullyCollected &&
+          other.fromSavings == this.fromSavings &&
+          other.savingsAmount == this.savingsAmount &&
+          other.cycleId == this.cycleId &&
+          other.notes == this.notes &&
+          other.createdAt == this.createdAt);
+}
+
+class LendingsCompanion extends UpdateCompanion<LendingRow> {
+  final Value<int> id;
+  final Value<String> borrowerName;
+  final Value<int> totalAmount;
+  final Value<int> collectedAmount;
+  final Value<bool> isFullyCollected;
+  final Value<bool> fromSavings;
+  final Value<int> savingsAmount;
+  final Value<int> cycleId;
+  final Value<String?> notes;
+  final Value<DateTime> createdAt;
+  const LendingsCompanion({
+    this.id = const Value.absent(),
+    this.borrowerName = const Value.absent(),
+    this.totalAmount = const Value.absent(),
+    this.collectedAmount = const Value.absent(),
+    this.isFullyCollected = const Value.absent(),
+    this.fromSavings = const Value.absent(),
+    this.savingsAmount = const Value.absent(),
+    this.cycleId = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  LendingsCompanion.insert({
+    this.id = const Value.absent(),
+    required String borrowerName,
+    required int totalAmount,
+    this.collectedAmount = const Value.absent(),
+    this.isFullyCollected = const Value.absent(),
+    this.fromSavings = const Value.absent(),
+    this.savingsAmount = const Value.absent(),
+    required int cycleId,
+    this.notes = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  }) : borrowerName = Value(borrowerName),
+       totalAmount = Value(totalAmount),
+       cycleId = Value(cycleId);
+  static Insertable<LendingRow> custom({
+    Expression<int>? id,
+    Expression<String>? borrowerName,
+    Expression<int>? totalAmount,
+    Expression<int>? collectedAmount,
+    Expression<bool>? isFullyCollected,
+    Expression<bool>? fromSavings,
+    Expression<int>? savingsAmount,
+    Expression<int>? cycleId,
+    Expression<String>? notes,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (borrowerName != null) 'borrower_name': borrowerName,
+      if (totalAmount != null) 'total_amount': totalAmount,
+      if (collectedAmount != null) 'collected_amount': collectedAmount,
+      if (isFullyCollected != null) 'is_fully_collected': isFullyCollected,
+      if (fromSavings != null) 'from_savings': fromSavings,
+      if (savingsAmount != null) 'savings_amount': savingsAmount,
+      if (cycleId != null) 'cycle_id': cycleId,
+      if (notes != null) 'notes': notes,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  LendingsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? borrowerName,
+    Value<int>? totalAmount,
+    Value<int>? collectedAmount,
+    Value<bool>? isFullyCollected,
+    Value<bool>? fromSavings,
+    Value<int>? savingsAmount,
+    Value<int>? cycleId,
+    Value<String?>? notes,
+    Value<DateTime>? createdAt,
+  }) {
+    return LendingsCompanion(
+      id: id ?? this.id,
+      borrowerName: borrowerName ?? this.borrowerName,
+      totalAmount: totalAmount ?? this.totalAmount,
+      collectedAmount: collectedAmount ?? this.collectedAmount,
+      isFullyCollected: isFullyCollected ?? this.isFullyCollected,
+      fromSavings: fromSavings ?? this.fromSavings,
+      savingsAmount: savingsAmount ?? this.savingsAmount,
+      cycleId: cycleId ?? this.cycleId,
+      notes: notes ?? this.notes,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (borrowerName.present) {
+      map['borrower_name'] = Variable<String>(borrowerName.value);
+    }
+    if (totalAmount.present) {
+      map['total_amount'] = Variable<int>(totalAmount.value);
+    }
+    if (collectedAmount.present) {
+      map['collected_amount'] = Variable<int>(collectedAmount.value);
+    }
+    if (isFullyCollected.present) {
+      map['is_fully_collected'] = Variable<bool>(isFullyCollected.value);
+    }
+    if (fromSavings.present) {
+      map['from_savings'] = Variable<bool>(fromSavings.value);
+    }
+    if (savingsAmount.present) {
+      map['savings_amount'] = Variable<int>(savingsAmount.value);
+    }
+    if (cycleId.present) {
+      map['cycle_id'] = Variable<int>(cycleId.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LendingsCompanion(')
+          ..write('id: $id, ')
+          ..write('borrowerName: $borrowerName, ')
+          ..write('totalAmount: $totalAmount, ')
+          ..write('collectedAmount: $collectedAmount, ')
+          ..write('isFullyCollected: $isFullyCollected, ')
+          ..write('fromSavings: $fromSavings, ')
+          ..write('savingsAmount: $savingsAmount, ')
+          ..write('cycleId: $cycleId, ')
+          ..write('notes: $notes, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LendingCollectionsTable extends LendingCollections
+    with TableInfo<$LendingCollectionsTable, LendingCollectionRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LendingCollectionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _lendingIdMeta = const VerificationMeta(
+    'lendingId',
+  );
+  @override
+  late final GeneratedColumn<int> lendingId = GeneratedColumn<int>(
+    'lending_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _toSavingsMeta = const VerificationMeta(
+    'toSavings',
+  );
+  @override
+  late final GeneratedColumn<bool> toSavings = GeneratedColumn<bool>(
+    'to_savings',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("to_savings" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    lendingId,
+    amount,
+    toSavings,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'lending_collections';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LendingCollectionRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('lending_id')) {
+      context.handle(
+        _lendingIdMeta,
+        lendingId.isAcceptableOrUnknown(data['lending_id']!, _lendingIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lendingIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('to_savings')) {
+      context.handle(
+        _toSavingsMeta,
+        toSavings.isAcceptableOrUnknown(data['to_savings']!, _toSavingsMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LendingCollectionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LendingCollectionRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      lendingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}lending_id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+      toSavings: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}to_savings'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LendingCollectionsTable createAlias(String alias) {
+    return $LendingCollectionsTable(attachedDatabase, alias);
+  }
+}
+
+class LendingCollectionRow extends DataClass
+    implements Insertable<LendingCollectionRow> {
+  final int id;
+  final int lendingId;
+  final int amount;
+  final bool toSavings;
+  final DateTime createdAt;
+  const LendingCollectionRow({
+    required this.id,
+    required this.lendingId,
+    required this.amount,
+    required this.toSavings,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['lending_id'] = Variable<int>(lendingId);
+    map['amount'] = Variable<int>(amount);
+    map['to_savings'] = Variable<bool>(toSavings);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  LendingCollectionsCompanion toCompanion(bool nullToAbsent) {
+    return LendingCollectionsCompanion(
+      id: Value(id),
+      lendingId: Value(lendingId),
+      amount: Value(amount),
+      toSavings: Value(toSavings),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory LendingCollectionRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LendingCollectionRow(
+      id: serializer.fromJson<int>(json['id']),
+      lendingId: serializer.fromJson<int>(json['lendingId']),
+      amount: serializer.fromJson<int>(json['amount']),
+      toSavings: serializer.fromJson<bool>(json['toSavings']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'lendingId': serializer.toJson<int>(lendingId),
+      'amount': serializer.toJson<int>(amount),
+      'toSavings': serializer.toJson<bool>(toSavings),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  LendingCollectionRow copyWith({
+    int? id,
+    int? lendingId,
+    int? amount,
+    bool? toSavings,
+    DateTime? createdAt,
+  }) => LendingCollectionRow(
+    id: id ?? this.id,
+    lendingId: lendingId ?? this.lendingId,
+    amount: amount ?? this.amount,
+    toSavings: toSavings ?? this.toSavings,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  LendingCollectionRow copyWithCompanion(LendingCollectionsCompanion data) {
+    return LendingCollectionRow(
+      id: data.id.present ? data.id.value : this.id,
+      lendingId: data.lendingId.present ? data.lendingId.value : this.lendingId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      toSavings: data.toSavings.present ? data.toSavings.value : this.toSavings,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LendingCollectionRow(')
+          ..write('id: $id, ')
+          ..write('lendingId: $lendingId, ')
+          ..write('amount: $amount, ')
+          ..write('toSavings: $toSavings, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, lendingId, amount, toSavings, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LendingCollectionRow &&
+          other.id == this.id &&
+          other.lendingId == this.lendingId &&
+          other.amount == this.amount &&
+          other.toSavings == this.toSavings &&
+          other.createdAt == this.createdAt);
+}
+
+class LendingCollectionsCompanion
+    extends UpdateCompanion<LendingCollectionRow> {
+  final Value<int> id;
+  final Value<int> lendingId;
+  final Value<int> amount;
+  final Value<bool> toSavings;
+  final Value<DateTime> createdAt;
+  const LendingCollectionsCompanion({
+    this.id = const Value.absent(),
+    this.lendingId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.toSavings = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  LendingCollectionsCompanion.insert({
+    this.id = const Value.absent(),
+    required int lendingId,
+    required int amount,
+    this.toSavings = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  }) : lendingId = Value(lendingId),
+       amount = Value(amount);
+  static Insertable<LendingCollectionRow> custom({
+    Expression<int>? id,
+    Expression<int>? lendingId,
+    Expression<int>? amount,
+    Expression<bool>? toSavings,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (lendingId != null) 'lending_id': lendingId,
+      if (amount != null) 'amount': amount,
+      if (toSavings != null) 'to_savings': toSavings,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  LendingCollectionsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? lendingId,
+    Value<int>? amount,
+    Value<bool>? toSavings,
+    Value<DateTime>? createdAt,
+  }) {
+    return LendingCollectionsCompanion(
+      id: id ?? this.id,
+      lendingId: lendingId ?? this.lendingId,
+      amount: amount ?? this.amount,
+      toSavings: toSavings ?? this.toSavings,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (lendingId.present) {
+      map['lending_id'] = Variable<int>(lendingId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (toSavings.present) {
+      map['to_savings'] = Variable<bool>(toSavings.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LendingCollectionsCompanion(')
+          ..write('id: $id, ')
+          ..write('lendingId: $lendingId, ')
+          ..write('amount: $amount, ')
+          ..write('toSavings: $toSavings, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4717,6 +6738,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $FinancialInsightsTable(this);
   late final $LicenseActivationsTable licenseActivations =
       $LicenseActivationsTable(this);
+  late final $SavingsHistoryTable savingsHistory = $SavingsHistoryTable(this);
+  late final $LendingsTable lendings = $LendingsTable(this);
+  late final $LendingCollectionsTable lendingCollections =
+      $LendingCollectionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4733,6 +6758,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     weeklyChallenges,
     financialInsights,
     licenseActivations,
+    savingsHistory,
+    lendings,
+    lendingCollections,
   ];
 }
 
@@ -5015,6 +7043,7 @@ typedef $$FinancialCyclesTableCreateCompanionBuilder =
       required DateTime startDate,
       required DateTime endDate,
       required int salaryAmount,
+      Value<int> salarySplitAmount,
       Value<bool> isActive,
     });
 typedef $$FinancialCyclesTableUpdateCompanionBuilder =
@@ -5023,6 +7052,7 @@ typedef $$FinancialCyclesTableUpdateCompanionBuilder =
       Value<DateTime> startDate,
       Value<DateTime> endDate,
       Value<int> salaryAmount,
+      Value<int> salarySplitAmount,
       Value<bool> isActive,
     });
 
@@ -5052,6 +7082,11 @@ class $$FinancialCyclesTableFilterComposer
 
   ColumnFilters<int> get salaryAmount => $composableBuilder(
     column: $table.salaryAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get salarySplitAmount => $composableBuilder(
+    column: $table.salarySplitAmount,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5090,6 +7125,11 @@ class $$FinancialCyclesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get salarySplitAmount => $composableBuilder(
+    column: $table.salarySplitAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isActive => $composableBuilder(
     column: $table.isActive,
     builder: (column) => ColumnOrderings(column),
@@ -5116,6 +7156,11 @@ class $$FinancialCyclesTableAnnotationComposer
 
   GeneratedColumn<int> get salaryAmount => $composableBuilder(
     column: $table.salaryAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get salarySplitAmount => $composableBuilder(
+    column: $table.salarySplitAmount,
     builder: (column) => column,
   );
 
@@ -5164,12 +7209,14 @@ class $$FinancialCyclesTableTableManager
                 Value<DateTime> startDate = const Value.absent(),
                 Value<DateTime> endDate = const Value.absent(),
                 Value<int> salaryAmount = const Value.absent(),
+                Value<int> salarySplitAmount = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
               }) => FinancialCyclesCompanion(
                 id: id,
                 startDate: startDate,
                 endDate: endDate,
                 salaryAmount: salaryAmount,
+                salarySplitAmount: salarySplitAmount,
                 isActive: isActive,
               ),
           createCompanionCallback:
@@ -5178,12 +7225,14 @@ class $$FinancialCyclesTableTableManager
                 required DateTime startDate,
                 required DateTime endDate,
                 required int salaryAmount,
+                Value<int> salarySplitAmount = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
               }) => FinancialCyclesCompanion.insert(
                 id: id,
                 startDate: startDate,
                 endDate: endDate,
                 salaryAmount: salaryAmount,
+                salarySplitAmount: salarySplitAmount,
                 isActive: isActive,
               ),
           withReferenceMapper: (p0) => p0
@@ -5222,6 +7271,8 @@ typedef $$ExpensesTableCreateCompanionBuilder =
       Value<String?> notes,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<bool> fromSavings,
+      Value<int> savingsAmount,
     });
 typedef $$ExpensesTableUpdateCompanionBuilder =
     ExpensesCompanion Function({
@@ -5234,6 +7285,8 @@ typedef $$ExpensesTableUpdateCompanionBuilder =
       Value<String?> notes,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<bool> fromSavings,
+      Value<int> savingsAmount,
     });
 
 class $$ExpensesTableFilterComposer
@@ -5287,6 +7340,16 @@ class $$ExpensesTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get fromSavings => $composableBuilder(
+    column: $table.fromSavings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get savingsAmount => $composableBuilder(
+    column: $table.savingsAmount,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5344,6 +7407,16 @@ class $$ExpensesTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get fromSavings => $composableBuilder(
+    column: $table.fromSavings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get savingsAmount => $composableBuilder(
+    column: $table.savingsAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ExpensesTableAnnotationComposer
@@ -5383,6 +7456,16 @@ class $$ExpensesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get fromSavings => $composableBuilder(
+    column: $table.fromSavings,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get savingsAmount => $composableBuilder(
+    column: $table.savingsAmount,
+    builder: (column) => column,
+  );
 }
 
 class $$ExpensesTableTableManager
@@ -5425,6 +7508,8 @@ class $$ExpensesTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<bool> fromSavings = const Value.absent(),
+                Value<int> savingsAmount = const Value.absent(),
               }) => ExpensesCompanion(
                 id: id,
                 cycleId: cycleId,
@@ -5435,6 +7520,8 @@ class $$ExpensesTableTableManager
                 notes: notes,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                fromSavings: fromSavings,
+                savingsAmount: savingsAmount,
               ),
           createCompanionCallback:
               ({
@@ -5447,6 +7534,8 @@ class $$ExpensesTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<bool> fromSavings = const Value.absent(),
+                Value<int> savingsAmount = const Value.absent(),
               }) => ExpensesCompanion.insert(
                 id: id,
                 cycleId: cycleId,
@@ -5457,6 +7546,8 @@ class $$ExpensesTableTableManager
                 notes: notes,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                fromSavings: fromSavings,
+                savingsAmount: savingsAmount,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -5486,6 +7577,7 @@ typedef $$AdditionalIncomesTableCreateCompanionBuilder =
       required int cycleId,
       required String description,
       required int amount,
+      Value<bool> toSavings,
       Value<DateTime> createdAt,
     });
 typedef $$AdditionalIncomesTableUpdateCompanionBuilder =
@@ -5494,6 +7586,7 @@ typedef $$AdditionalIncomesTableUpdateCompanionBuilder =
       Value<int> cycleId,
       Value<String> description,
       Value<int> amount,
+      Value<bool> toSavings,
       Value<DateTime> createdAt,
     });
 
@@ -5523,6 +7616,11 @@ class $$AdditionalIncomesTableFilterComposer
 
   ColumnFilters<int> get amount => $composableBuilder(
     column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get toSavings => $composableBuilder(
+    column: $table.toSavings,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5561,6 +7659,11 @@ class $$AdditionalIncomesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get toSavings => $composableBuilder(
+    column: $table.toSavings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -5589,6 +7692,9 @@ class $$AdditionalIncomesTableAnnotationComposer
 
   GeneratedColumn<int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<bool> get toSavings =>
+      $composableBuilder(column: $table.toSavings, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -5638,12 +7744,14 @@ class $$AdditionalIncomesTableTableManager
                 Value<int> cycleId = const Value.absent(),
                 Value<String> description = const Value.absent(),
                 Value<int> amount = const Value.absent(),
+                Value<bool> toSavings = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => AdditionalIncomesCompanion(
                 id: id,
                 cycleId: cycleId,
                 description: description,
                 amount: amount,
+                toSavings: toSavings,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -5652,12 +7760,14 @@ class $$AdditionalIncomesTableTableManager
                 required int cycleId,
                 required String description,
                 required int amount,
+                Value<bool> toSavings = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => AdditionalIncomesCompanion.insert(
                 id: id,
                 cycleId: cycleId,
                 description: description,
                 amount: amount,
+                toSavings: toSavings,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -5696,7 +7806,9 @@ typedef $$DebtsTableCreateCompanionBuilder =
       required int totalAmount,
       Value<int> paidAmount,
       Value<bool> isFullyPaid,
+      Value<String?> notes,
       Value<DateTime> createdAt,
+      Value<int?> cycleId,
     });
 typedef $$DebtsTableUpdateCompanionBuilder =
     DebtsCompanion Function({
@@ -5705,7 +7817,9 @@ typedef $$DebtsTableUpdateCompanionBuilder =
       Value<int> totalAmount,
       Value<int> paidAmount,
       Value<bool> isFullyPaid,
+      Value<String?> notes,
       Value<DateTime> createdAt,
+      Value<int?> cycleId,
     });
 
 class $$DebtsTableFilterComposer extends Composer<_$AppDatabase, $DebtsTable> {
@@ -5741,8 +7855,18 @@ class $$DebtsTableFilterComposer extends Composer<_$AppDatabase, $DebtsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cycleId => $composableBuilder(
+    column: $table.cycleId,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5781,8 +7905,18 @@ class $$DebtsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cycleId => $composableBuilder(
+    column: $table.cycleId,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -5819,8 +7953,14 @@ class $$DebtsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get cycleId =>
+      $composableBuilder(column: $table.cycleId, builder: (column) => column);
 }
 
 class $$DebtsTableTableManager
@@ -5856,14 +7996,18 @@ class $$DebtsTableTableManager
                 Value<int> totalAmount = const Value.absent(),
                 Value<int> paidAmount = const Value.absent(),
                 Value<bool> isFullyPaid = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int?> cycleId = const Value.absent(),
               }) => DebtsCompanion(
                 id: id,
                 creditorName: creditorName,
                 totalAmount: totalAmount,
                 paidAmount: paidAmount,
                 isFullyPaid: isFullyPaid,
+                notes: notes,
                 createdAt: createdAt,
+                cycleId: cycleId,
               ),
           createCompanionCallback:
               ({
@@ -5872,14 +8016,18 @@ class $$DebtsTableTableManager
                 required int totalAmount,
                 Value<int> paidAmount = const Value.absent(),
                 Value<bool> isFullyPaid = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int?> cycleId = const Value.absent(),
               }) => DebtsCompanion.insert(
                 id: id,
                 creditorName: creditorName,
                 totalAmount: totalAmount,
                 paidAmount: paidAmount,
                 isFullyPaid: isFullyPaid,
+                notes: notes,
                 createdAt: createdAt,
+                cycleId: cycleId,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -5910,6 +8058,8 @@ typedef $$DebtPaymentsTableCreateCompanionBuilder =
       required int cycleId,
       required int amount,
       Value<DateTime> createdAt,
+      Value<bool> fromSavings,
+      Value<int> savingsAmount,
     });
 typedef $$DebtPaymentsTableUpdateCompanionBuilder =
     DebtPaymentsCompanion Function({
@@ -5918,6 +8068,8 @@ typedef $$DebtPaymentsTableUpdateCompanionBuilder =
       Value<int> cycleId,
       Value<int> amount,
       Value<DateTime> createdAt,
+      Value<bool> fromSavings,
+      Value<int> savingsAmount,
     });
 
 class $$DebtPaymentsTableFilterComposer
@@ -5951,6 +8103,16 @@ class $$DebtPaymentsTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get fromSavings => $composableBuilder(
+    column: $table.fromSavings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get savingsAmount => $composableBuilder(
+    column: $table.savingsAmount,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5988,6 +8150,16 @@ class $$DebtPaymentsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get fromSavings => $composableBuilder(
+    column: $table.fromSavings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get savingsAmount => $composableBuilder(
+    column: $table.savingsAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$DebtPaymentsTableAnnotationComposer
@@ -6013,6 +8185,16 @@ class $$DebtPaymentsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get fromSavings => $composableBuilder(
+    column: $table.fromSavings,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get savingsAmount => $composableBuilder(
+    column: $table.savingsAmount,
+    builder: (column) => column,
+  );
 }
 
 class $$DebtPaymentsTableTableManager
@@ -6051,12 +8233,16 @@ class $$DebtPaymentsTableTableManager
                 Value<int> cycleId = const Value.absent(),
                 Value<int> amount = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<bool> fromSavings = const Value.absent(),
+                Value<int> savingsAmount = const Value.absent(),
               }) => DebtPaymentsCompanion(
                 id: id,
                 debtId: debtId,
                 cycleId: cycleId,
                 amount: amount,
                 createdAt: createdAt,
+                fromSavings: fromSavings,
+                savingsAmount: savingsAmount,
               ),
           createCompanionCallback:
               ({
@@ -6065,12 +8251,16 @@ class $$DebtPaymentsTableTableManager
                 required int cycleId,
                 required int amount,
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<bool> fromSavings = const Value.absent(),
+                Value<int> savingsAmount = const Value.absent(),
               }) => DebtPaymentsCompanion.insert(
                 id: id,
                 debtId: debtId,
                 cycleId: cycleId,
                 amount: amount,
                 createdAt: createdAt,
+                fromSavings: fromSavings,
+                savingsAmount: savingsAmount,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -6531,18 +8721,20 @@ typedef $$WeeklyChallengesTableCreateCompanionBuilder =
       Value<int> id,
       required int cycleId,
       required DateTime weekStart,
-      required int targetReduction,
-      required int previousWeekSpending,
+      required int targetAmount,
+      required String description,
       Value<bool> isCompleted,
+      Value<DateTime> createdAt,
     });
 typedef $$WeeklyChallengesTableUpdateCompanionBuilder =
     WeeklyChallengesCompanion Function({
       Value<int> id,
       Value<int> cycleId,
       Value<DateTime> weekStart,
-      Value<int> targetReduction,
-      Value<int> previousWeekSpending,
+      Value<int> targetAmount,
+      Value<String> description,
       Value<bool> isCompleted,
+      Value<DateTime> createdAt,
     });
 
 class $$WeeklyChallengesTableFilterComposer
@@ -6569,18 +8761,23 @@ class $$WeeklyChallengesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get targetReduction => $composableBuilder(
-    column: $table.targetReduction,
+  ColumnFilters<int> get targetAmount => $composableBuilder(
+    column: $table.targetAmount,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get previousWeekSpending => $composableBuilder(
-    column: $table.previousWeekSpending,
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<bool> get isCompleted => $composableBuilder(
     column: $table.isCompleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -6609,18 +8806,23 @@ class $$WeeklyChallengesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get targetReduction => $composableBuilder(
-    column: $table.targetReduction,
+  ColumnOrderings<int> get targetAmount => $composableBuilder(
+    column: $table.targetAmount,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get previousWeekSpending => $composableBuilder(
-    column: $table.previousWeekSpending,
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<bool> get isCompleted => $composableBuilder(
     column: $table.isCompleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -6643,13 +8845,13 @@ class $$WeeklyChallengesTableAnnotationComposer
   GeneratedColumn<DateTime> get weekStart =>
       $composableBuilder(column: $table.weekStart, builder: (column) => column);
 
-  GeneratedColumn<int> get targetReduction => $composableBuilder(
-    column: $table.targetReduction,
+  GeneratedColumn<int> get targetAmount => $composableBuilder(
+    column: $table.targetAmount,
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get previousWeekSpending => $composableBuilder(
-    column: $table.previousWeekSpending,
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => column,
   );
 
@@ -6657,6 +8859,9 @@ class $$WeeklyChallengesTableAnnotationComposer
     column: $table.isCompleted,
     builder: (column) => column,
   );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
 class $$WeeklyChallengesTableTableManager
@@ -6699,32 +8904,36 @@ class $$WeeklyChallengesTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<int> cycleId = const Value.absent(),
                 Value<DateTime> weekStart = const Value.absent(),
-                Value<int> targetReduction = const Value.absent(),
-                Value<int> previousWeekSpending = const Value.absent(),
+                Value<int> targetAmount = const Value.absent(),
+                Value<String> description = const Value.absent(),
                 Value<bool> isCompleted = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
               }) => WeeklyChallengesCompanion(
                 id: id,
                 cycleId: cycleId,
                 weekStart: weekStart,
-                targetReduction: targetReduction,
-                previousWeekSpending: previousWeekSpending,
+                targetAmount: targetAmount,
+                description: description,
                 isCompleted: isCompleted,
+                createdAt: createdAt,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required int cycleId,
                 required DateTime weekStart,
-                required int targetReduction,
-                required int previousWeekSpending,
+                required int targetAmount,
+                required String description,
                 Value<bool> isCompleted = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
               }) => WeeklyChallengesCompanion.insert(
                 id: id,
                 cycleId: cycleId,
                 weekStart: weekStart,
-                targetReduction: targetReduction,
-                previousWeekSpending: previousWeekSpending,
+                targetAmount: targetAmount,
+                description: description,
                 isCompleted: isCompleted,
+                createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -7255,6 +9464,797 @@ typedef $$LicenseActivationsTableProcessedTableManager =
       LicenseActivationRow,
       PrefetchHooks Function()
     >;
+typedef $$SavingsHistoryTableCreateCompanionBuilder =
+    SavingsHistoryCompanion Function({
+      Value<int> id,
+      required String type,
+      required int amount,
+      required String description,
+      Value<int?> relatedCycleId,
+      Value<int?> relatedExpenseId,
+      Value<int?> relatedDebtPaymentId,
+      Value<int?> relatedLendingId,
+      Value<DateTime> createdAt,
+    });
+typedef $$SavingsHistoryTableUpdateCompanionBuilder =
+    SavingsHistoryCompanion Function({
+      Value<int> id,
+      Value<String> type,
+      Value<int> amount,
+      Value<String> description,
+      Value<int?> relatedCycleId,
+      Value<int?> relatedExpenseId,
+      Value<int?> relatedDebtPaymentId,
+      Value<int?> relatedLendingId,
+      Value<DateTime> createdAt,
+    });
+
+class $$SavingsHistoryTableFilterComposer
+    extends Composer<_$AppDatabase, $SavingsHistoryTable> {
+  $$SavingsHistoryTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get relatedCycleId => $composableBuilder(
+    column: $table.relatedCycleId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get relatedExpenseId => $composableBuilder(
+    column: $table.relatedExpenseId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get relatedDebtPaymentId => $composableBuilder(
+    column: $table.relatedDebtPaymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get relatedLendingId => $composableBuilder(
+    column: $table.relatedLendingId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SavingsHistoryTableOrderingComposer
+    extends Composer<_$AppDatabase, $SavingsHistoryTable> {
+  $$SavingsHistoryTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get relatedCycleId => $composableBuilder(
+    column: $table.relatedCycleId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get relatedExpenseId => $composableBuilder(
+    column: $table.relatedExpenseId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get relatedDebtPaymentId => $composableBuilder(
+    column: $table.relatedDebtPaymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get relatedLendingId => $composableBuilder(
+    column: $table.relatedLendingId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SavingsHistoryTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SavingsHistoryTable> {
+  $$SavingsHistoryTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get relatedCycleId => $composableBuilder(
+    column: $table.relatedCycleId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get relatedExpenseId => $composableBuilder(
+    column: $table.relatedExpenseId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get relatedDebtPaymentId => $composableBuilder(
+    column: $table.relatedDebtPaymentId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get relatedLendingId => $composableBuilder(
+    column: $table.relatedLendingId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$SavingsHistoryTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SavingsHistoryTable,
+          SavingsHistoryRow,
+          $$SavingsHistoryTableFilterComposer,
+          $$SavingsHistoryTableOrderingComposer,
+          $$SavingsHistoryTableAnnotationComposer,
+          $$SavingsHistoryTableCreateCompanionBuilder,
+          $$SavingsHistoryTableUpdateCompanionBuilder,
+          (
+            SavingsHistoryRow,
+            BaseReferences<
+              _$AppDatabase,
+              $SavingsHistoryTable,
+              SavingsHistoryRow
+            >,
+          ),
+          SavingsHistoryRow,
+          PrefetchHooks Function()
+        > {
+  $$SavingsHistoryTableTableManager(
+    _$AppDatabase db,
+    $SavingsHistoryTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SavingsHistoryTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SavingsHistoryTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SavingsHistoryTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+                Value<String> description = const Value.absent(),
+                Value<int?> relatedCycleId = const Value.absent(),
+                Value<int?> relatedExpenseId = const Value.absent(),
+                Value<int?> relatedDebtPaymentId = const Value.absent(),
+                Value<int?> relatedLendingId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => SavingsHistoryCompanion(
+                id: id,
+                type: type,
+                amount: amount,
+                description: description,
+                relatedCycleId: relatedCycleId,
+                relatedExpenseId: relatedExpenseId,
+                relatedDebtPaymentId: relatedDebtPaymentId,
+                relatedLendingId: relatedLendingId,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String type,
+                required int amount,
+                required String description,
+                Value<int?> relatedCycleId = const Value.absent(),
+                Value<int?> relatedExpenseId = const Value.absent(),
+                Value<int?> relatedDebtPaymentId = const Value.absent(),
+                Value<int?> relatedLendingId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => SavingsHistoryCompanion.insert(
+                id: id,
+                type: type,
+                amount: amount,
+                description: description,
+                relatedCycleId: relatedCycleId,
+                relatedExpenseId: relatedExpenseId,
+                relatedDebtPaymentId: relatedDebtPaymentId,
+                relatedLendingId: relatedLendingId,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SavingsHistoryTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SavingsHistoryTable,
+      SavingsHistoryRow,
+      $$SavingsHistoryTableFilterComposer,
+      $$SavingsHistoryTableOrderingComposer,
+      $$SavingsHistoryTableAnnotationComposer,
+      $$SavingsHistoryTableCreateCompanionBuilder,
+      $$SavingsHistoryTableUpdateCompanionBuilder,
+      (
+        SavingsHistoryRow,
+        BaseReferences<_$AppDatabase, $SavingsHistoryTable, SavingsHistoryRow>,
+      ),
+      SavingsHistoryRow,
+      PrefetchHooks Function()
+    >;
+typedef $$LendingsTableCreateCompanionBuilder =
+    LendingsCompanion Function({
+      Value<int> id,
+      required String borrowerName,
+      required int totalAmount,
+      Value<int> collectedAmount,
+      Value<bool> isFullyCollected,
+      Value<bool> fromSavings,
+      Value<int> savingsAmount,
+      required int cycleId,
+      Value<String?> notes,
+      Value<DateTime> createdAt,
+    });
+typedef $$LendingsTableUpdateCompanionBuilder =
+    LendingsCompanion Function({
+      Value<int> id,
+      Value<String> borrowerName,
+      Value<int> totalAmount,
+      Value<int> collectedAmount,
+      Value<bool> isFullyCollected,
+      Value<bool> fromSavings,
+      Value<int> savingsAmount,
+      Value<int> cycleId,
+      Value<String?> notes,
+      Value<DateTime> createdAt,
+    });
+
+class $$LendingsTableFilterComposer
+    extends Composer<_$AppDatabase, $LendingsTable> {
+  $$LendingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get borrowerName => $composableBuilder(
+    column: $table.borrowerName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalAmount => $composableBuilder(
+    column: $table.totalAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get collectedAmount => $composableBuilder(
+    column: $table.collectedAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isFullyCollected => $composableBuilder(
+    column: $table.isFullyCollected,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get fromSavings => $composableBuilder(
+    column: $table.fromSavings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get savingsAmount => $composableBuilder(
+    column: $table.savingsAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cycleId => $composableBuilder(
+    column: $table.cycleId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LendingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LendingsTable> {
+  $$LendingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get borrowerName => $composableBuilder(
+    column: $table.borrowerName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalAmount => $composableBuilder(
+    column: $table.totalAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get collectedAmount => $composableBuilder(
+    column: $table.collectedAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isFullyCollected => $composableBuilder(
+    column: $table.isFullyCollected,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get fromSavings => $composableBuilder(
+    column: $table.fromSavings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get savingsAmount => $composableBuilder(
+    column: $table.savingsAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cycleId => $composableBuilder(
+    column: $table.cycleId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LendingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LendingsTable> {
+  $$LendingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get borrowerName => $composableBuilder(
+    column: $table.borrowerName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get totalAmount => $composableBuilder(
+    column: $table.totalAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get collectedAmount => $composableBuilder(
+    column: $table.collectedAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isFullyCollected => $composableBuilder(
+    column: $table.isFullyCollected,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get fromSavings => $composableBuilder(
+    column: $table.fromSavings,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get savingsAmount => $composableBuilder(
+    column: $table.savingsAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get cycleId =>
+      $composableBuilder(column: $table.cycleId, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$LendingsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LendingsTable,
+          LendingRow,
+          $$LendingsTableFilterComposer,
+          $$LendingsTableOrderingComposer,
+          $$LendingsTableAnnotationComposer,
+          $$LendingsTableCreateCompanionBuilder,
+          $$LendingsTableUpdateCompanionBuilder,
+          (
+            LendingRow,
+            BaseReferences<_$AppDatabase, $LendingsTable, LendingRow>,
+          ),
+          LendingRow,
+          PrefetchHooks Function()
+        > {
+  $$LendingsTableTableManager(_$AppDatabase db, $LendingsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LendingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LendingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LendingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> borrowerName = const Value.absent(),
+                Value<int> totalAmount = const Value.absent(),
+                Value<int> collectedAmount = const Value.absent(),
+                Value<bool> isFullyCollected = const Value.absent(),
+                Value<bool> fromSavings = const Value.absent(),
+                Value<int> savingsAmount = const Value.absent(),
+                Value<int> cycleId = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => LendingsCompanion(
+                id: id,
+                borrowerName: borrowerName,
+                totalAmount: totalAmount,
+                collectedAmount: collectedAmount,
+                isFullyCollected: isFullyCollected,
+                fromSavings: fromSavings,
+                savingsAmount: savingsAmount,
+                cycleId: cycleId,
+                notes: notes,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String borrowerName,
+                required int totalAmount,
+                Value<int> collectedAmount = const Value.absent(),
+                Value<bool> isFullyCollected = const Value.absent(),
+                Value<bool> fromSavings = const Value.absent(),
+                Value<int> savingsAmount = const Value.absent(),
+                required int cycleId,
+                Value<String?> notes = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => LendingsCompanion.insert(
+                id: id,
+                borrowerName: borrowerName,
+                totalAmount: totalAmount,
+                collectedAmount: collectedAmount,
+                isFullyCollected: isFullyCollected,
+                fromSavings: fromSavings,
+                savingsAmount: savingsAmount,
+                cycleId: cycleId,
+                notes: notes,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LendingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LendingsTable,
+      LendingRow,
+      $$LendingsTableFilterComposer,
+      $$LendingsTableOrderingComposer,
+      $$LendingsTableAnnotationComposer,
+      $$LendingsTableCreateCompanionBuilder,
+      $$LendingsTableUpdateCompanionBuilder,
+      (LendingRow, BaseReferences<_$AppDatabase, $LendingsTable, LendingRow>),
+      LendingRow,
+      PrefetchHooks Function()
+    >;
+typedef $$LendingCollectionsTableCreateCompanionBuilder =
+    LendingCollectionsCompanion Function({
+      Value<int> id,
+      required int lendingId,
+      required int amount,
+      Value<bool> toSavings,
+      Value<DateTime> createdAt,
+    });
+typedef $$LendingCollectionsTableUpdateCompanionBuilder =
+    LendingCollectionsCompanion Function({
+      Value<int> id,
+      Value<int> lendingId,
+      Value<int> amount,
+      Value<bool> toSavings,
+      Value<DateTime> createdAt,
+    });
+
+class $$LendingCollectionsTableFilterComposer
+    extends Composer<_$AppDatabase, $LendingCollectionsTable> {
+  $$LendingCollectionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lendingId => $composableBuilder(
+    column: $table.lendingId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get toSavings => $composableBuilder(
+    column: $table.toSavings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LendingCollectionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LendingCollectionsTable> {
+  $$LendingCollectionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lendingId => $composableBuilder(
+    column: $table.lendingId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get toSavings => $composableBuilder(
+    column: $table.toSavings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LendingCollectionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LendingCollectionsTable> {
+  $$LendingCollectionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get lendingId =>
+      $composableBuilder(column: $table.lendingId, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<bool> get toSavings =>
+      $composableBuilder(column: $table.toSavings, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$LendingCollectionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LendingCollectionsTable,
+          LendingCollectionRow,
+          $$LendingCollectionsTableFilterComposer,
+          $$LendingCollectionsTableOrderingComposer,
+          $$LendingCollectionsTableAnnotationComposer,
+          $$LendingCollectionsTableCreateCompanionBuilder,
+          $$LendingCollectionsTableUpdateCompanionBuilder,
+          (
+            LendingCollectionRow,
+            BaseReferences<
+              _$AppDatabase,
+              $LendingCollectionsTable,
+              LendingCollectionRow
+            >,
+          ),
+          LendingCollectionRow,
+          PrefetchHooks Function()
+        > {
+  $$LendingCollectionsTableTableManager(
+    _$AppDatabase db,
+    $LendingCollectionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LendingCollectionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LendingCollectionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LendingCollectionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> lendingId = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+                Value<bool> toSavings = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => LendingCollectionsCompanion(
+                id: id,
+                lendingId: lendingId,
+                amount: amount,
+                toSavings: toSavings,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int lendingId,
+                required int amount,
+                Value<bool> toSavings = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => LendingCollectionsCompanion.insert(
+                id: id,
+                lendingId: lendingId,
+                amount: amount,
+                toSavings: toSavings,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LendingCollectionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LendingCollectionsTable,
+      LendingCollectionRow,
+      $$LendingCollectionsTableFilterComposer,
+      $$LendingCollectionsTableOrderingComposer,
+      $$LendingCollectionsTableAnnotationComposer,
+      $$LendingCollectionsTableCreateCompanionBuilder,
+      $$LendingCollectionsTableUpdateCompanionBuilder,
+      (
+        LendingCollectionRow,
+        BaseReferences<
+          _$AppDatabase,
+          $LendingCollectionsTable,
+          LendingCollectionRow
+        >,
+      ),
+      LendingCollectionRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7281,4 +10281,10 @@ class $AppDatabaseManager {
       $$FinancialInsightsTableTableManager(_db, _db.financialInsights);
   $$LicenseActivationsTableTableManager get licenseActivations =>
       $$LicenseActivationsTableTableManager(_db, _db.licenseActivations);
+  $$SavingsHistoryTableTableManager get savingsHistory =>
+      $$SavingsHistoryTableTableManager(_db, _db.savingsHistory);
+  $$LendingsTableTableManager get lendings =>
+      $$LendingsTableTableManager(_db, _db.lendings);
+  $$LendingCollectionsTableTableManager get lendingCollections =>
+      $$LendingCollectionsTableTableManager(_db, _db.lendingCollections);
 }

@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../domain/entities/debt_entity.dart';
 import '../cubits/debt_cubit.dart';
 import '../cubits/debt_state.dart';
 
 class AddDebtPage extends StatefulWidget {
-  const AddDebtPage({super.key});
+  final DebtEntity? initialDebt;
+
+  const AddDebtPage({this.initialDebt, super.key});
 
   @override
   State<AddDebtPage> createState() => _AddDebtPageState();
@@ -27,6 +30,12 @@ class _AddDebtPageState extends State<AddDebtPage> {
     _amountController = TextEditingController();
     _notesController = TextEditingController();
     _formKey = GlobalKey<FormState>();
+
+    if (widget.initialDebt != null) {
+      _creditorController.text = widget.initialDebt!.creditorName;
+      _amountController.text = widget.initialDebt!.totalAmount.toString();
+      _notesController.text = widget.initialDebt!.notes ?? '';
+    }
   }
 
   @override
@@ -48,11 +57,20 @@ class _AddDebtPageState extends State<AddDebtPage> {
       return;
     }
 
-    cubit.createDebt(
-      creditorName: _creditorController.text,
-      totalAmount: amount * 100, // Convert to centimes
-      notes: _notesController.text.isEmpty ? null : _notesController.text,
-    );
+    if (widget.initialDebt != null) {
+      cubit.updateDebt(
+        id: widget.initialDebt!.id,
+        creditorName: _creditorController.text,
+        totalAmount: amount,
+        notes: _notesController.text.isEmpty ? null : _notesController.text,
+      );
+    } else {
+      cubit.createDebt(
+        creditorName: _creditorController.text,
+        totalAmount: amount,
+        notes: _notesController.text.isEmpty ? null : _notesController.text,
+      );
+    }
   }
 
   @override
@@ -64,6 +82,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
         Injection.updateDebtUseCase,
         Injection.deleteDebtUseCase,
         Injection.addPaymentUseCase,
+        Injection.getSavingsBalanceUseCase,
         notificationService: Injection.notificationService,
       ),
       child: BlocListener<DebtCubit, DebtState>(
@@ -73,6 +92,15 @@ class _AddDebtPageState extends State<AddDebtPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('تم إنشاء الدين بنجاح'),
+                  backgroundColor: AppColors.positive,
+                ),
+              );
+              Navigator.pop(context);
+            },
+            debtUpdated: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('تم تعديل الدين بنجاح'),
                   backgroundColor: AppColors.positive,
                 ),
               );
@@ -91,7 +119,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              'دين جديد',
+              widget.initialDebt != null ? 'تعديل الدين' : 'دين جديد',
               style: AppTypography.headlineSmall,
             ),
           ),
@@ -170,7 +198,11 @@ class _AddDebtPageState extends State<AddDebtPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () => _submit(context, cubit),
-                          child: const Text('حفظ الدين'),
+                          child: Text(
+                            widget.initialDebt != null
+                                ? 'حفظ التعديل'
+                                : 'حفظ الدين',
+                          ),
                         ),
                       ),
                     ],

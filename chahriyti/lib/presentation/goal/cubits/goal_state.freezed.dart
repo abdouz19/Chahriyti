@@ -55,13 +55,14 @@ extension GoalStatePatterns on GoalState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( GoalInitial value)?  initial,TResult Function( GoalLoading value)?  loading,TResult Function( GoalsLoaded value)?  goalsLoaded,TResult Function( GoalCreated value)?  goalCreated,TResult Function( GoalUpdated value)?  goalUpdated,TResult Function( GoalDeleted value)?  goalDeleted,TResult Function( GoalError value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( GoalInitial value)?  initial,TResult Function( GoalLoading value)?  loading,TResult Function( GoalsLoaded value)?  goalsLoaded,TResult Function( GoalLoaded value)?  goalLoaded,TResult Function( GoalCreated value)?  goalCreated,TResult Function( GoalUpdated value)?  goalUpdated,TResult Function( GoalDeleted value)?  goalDeleted,TResult Function( GoalError value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case GoalInitial() when initial != null:
 return initial(_that);case GoalLoading() when loading != null:
 return loading(_that);case GoalsLoaded() when goalsLoaded != null:
-return goalsLoaded(_that);case GoalCreated() when goalCreated != null:
+return goalsLoaded(_that);case GoalLoaded() when goalLoaded != null:
+return goalLoaded(_that);case GoalCreated() when goalCreated != null:
 return goalCreated(_that);case GoalUpdated() when goalUpdated != null:
 return goalUpdated(_that);case GoalDeleted() when goalDeleted != null:
 return goalDeleted(_that);case GoalError() when error != null:
@@ -83,13 +84,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( GoalInitial value)  initial,required TResult Function( GoalLoading value)  loading,required TResult Function( GoalsLoaded value)  goalsLoaded,required TResult Function( GoalCreated value)  goalCreated,required TResult Function( GoalUpdated value)  goalUpdated,required TResult Function( GoalDeleted value)  goalDeleted,required TResult Function( GoalError value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( GoalInitial value)  initial,required TResult Function( GoalLoading value)  loading,required TResult Function( GoalsLoaded value)  goalsLoaded,required TResult Function( GoalLoaded value)  goalLoaded,required TResult Function( GoalCreated value)  goalCreated,required TResult Function( GoalUpdated value)  goalUpdated,required TResult Function( GoalDeleted value)  goalDeleted,required TResult Function( GoalError value)  error,}){
 final _that = this;
 switch (_that) {
 case GoalInitial():
 return initial(_that);case GoalLoading():
 return loading(_that);case GoalsLoaded():
-return goalsLoaded(_that);case GoalCreated():
+return goalsLoaded(_that);case GoalLoaded():
+return goalLoaded(_that);case GoalCreated():
 return goalCreated(_that);case GoalUpdated():
 return goalUpdated(_that);case GoalDeleted():
 return goalDeleted(_that);case GoalError():
@@ -110,13 +112,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( GoalInitial value)?  initial,TResult? Function( GoalLoading value)?  loading,TResult? Function( GoalsLoaded value)?  goalsLoaded,TResult? Function( GoalCreated value)?  goalCreated,TResult? Function( GoalUpdated value)?  goalUpdated,TResult? Function( GoalDeleted value)?  goalDeleted,TResult? Function( GoalError value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( GoalInitial value)?  initial,TResult? Function( GoalLoading value)?  loading,TResult? Function( GoalsLoaded value)?  goalsLoaded,TResult? Function( GoalLoaded value)?  goalLoaded,TResult? Function( GoalCreated value)?  goalCreated,TResult? Function( GoalUpdated value)?  goalUpdated,TResult? Function( GoalDeleted value)?  goalDeleted,TResult? Function( GoalError value)?  error,}){
 final _that = this;
 switch (_that) {
 case GoalInitial() when initial != null:
 return initial(_that);case GoalLoading() when loading != null:
 return loading(_that);case GoalsLoaded() when goalsLoaded != null:
-return goalsLoaded(_that);case GoalCreated() when goalCreated != null:
+return goalsLoaded(_that);case GoalLoaded() when goalLoaded != null:
+return goalLoaded(_that);case GoalCreated() when goalCreated != null:
 return goalCreated(_that);case GoalUpdated() when goalUpdated != null:
 return goalUpdated(_that);case GoalDeleted() when goalDeleted != null:
 return goalDeleted(_that);case GoalError() when error != null:
@@ -137,12 +140,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<GoalEntity> goals,  bool hasMore,  int offset)?  goalsLoaded,TResult Function( int goalId)?  goalCreated,TResult Function()?  goalUpdated,TResult Function()?  goalDeleted,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<GoalEntity> goals,  bool hasMore,  int offset,  bool isCompletedTab)?  goalsLoaded,TResult Function( GoalEntity goal)?  goalLoaded,TResult Function( int goalId)?  goalCreated,TResult Function()?  goalUpdated,TResult Function()?  goalDeleted,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case GoalInitial() when initial != null:
 return initial();case GoalLoading() when loading != null:
 return loading();case GoalsLoaded() when goalsLoaded != null:
-return goalsLoaded(_that.goals,_that.hasMore,_that.offset);case GoalCreated() when goalCreated != null:
+return goalsLoaded(_that.goals,_that.hasMore,_that.offset,_that.isCompletedTab);case GoalLoaded() when goalLoaded != null:
+return goalLoaded(_that.goal);case GoalCreated() when goalCreated != null:
 return goalCreated(_that.goalId);case GoalUpdated() when goalUpdated != null:
 return goalUpdated();case GoalDeleted() when goalDeleted != null:
 return goalDeleted();case GoalError() when error != null:
@@ -164,12 +168,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<GoalEntity> goals,  bool hasMore,  int offset)  goalsLoaded,required TResult Function( int goalId)  goalCreated,required TResult Function()  goalUpdated,required TResult Function()  goalDeleted,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<GoalEntity> goals,  bool hasMore,  int offset,  bool isCompletedTab)  goalsLoaded,required TResult Function( GoalEntity goal)  goalLoaded,required TResult Function( int goalId)  goalCreated,required TResult Function()  goalUpdated,required TResult Function()  goalDeleted,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case GoalInitial():
 return initial();case GoalLoading():
 return loading();case GoalsLoaded():
-return goalsLoaded(_that.goals,_that.hasMore,_that.offset);case GoalCreated():
+return goalsLoaded(_that.goals,_that.hasMore,_that.offset,_that.isCompletedTab);case GoalLoaded():
+return goalLoaded(_that.goal);case GoalCreated():
 return goalCreated(_that.goalId);case GoalUpdated():
 return goalUpdated();case GoalDeleted():
 return goalDeleted();case GoalError():
@@ -190,12 +195,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<GoalEntity> goals,  bool hasMore,  int offset)?  goalsLoaded,TResult? Function( int goalId)?  goalCreated,TResult? Function()?  goalUpdated,TResult? Function()?  goalDeleted,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<GoalEntity> goals,  bool hasMore,  int offset,  bool isCompletedTab)?  goalsLoaded,TResult? Function( GoalEntity goal)?  goalLoaded,TResult? Function( int goalId)?  goalCreated,TResult? Function()?  goalUpdated,TResult? Function()?  goalDeleted,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case GoalInitial() when initial != null:
 return initial();case GoalLoading() when loading != null:
 return loading();case GoalsLoaded() when goalsLoaded != null:
-return goalsLoaded(_that.goals,_that.hasMore,_that.offset);case GoalCreated() when goalCreated != null:
+return goalsLoaded(_that.goals,_that.hasMore,_that.offset,_that.isCompletedTab);case GoalLoaded() when goalLoaded != null:
+return goalLoaded(_that.goal);case GoalCreated() when goalCreated != null:
 return goalCreated(_that.goalId);case GoalUpdated() when goalUpdated != null:
 return goalUpdated();case GoalDeleted() when goalDeleted != null:
 return goalDeleted();case GoalError() when error != null:
@@ -275,7 +281,7 @@ String toString() {
 
 
 class GoalsLoaded implements GoalState {
-  const GoalsLoaded(final  List<GoalEntity> goals, {this.hasMore = false, this.offset = 0}): _goals = goals;
+  const GoalsLoaded(final  List<GoalEntity> goals, {this.hasMore = false, this.offset = 0, this.isCompletedTab = false}): _goals = goals;
   
 
  final  List<GoalEntity> _goals;
@@ -287,6 +293,7 @@ class GoalsLoaded implements GoalState {
 
 @JsonKey() final  bool hasMore;
 @JsonKey() final  int offset;
+@JsonKey() final  bool isCompletedTab;
 
 /// Create a copy of GoalState
 /// with the given fields replaced by the non-null parameter values.
@@ -298,16 +305,16 @@ $GoalsLoadedCopyWith<GoalsLoaded> get copyWith => _$GoalsLoadedCopyWithImpl<Goal
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalsLoaded&&const DeepCollectionEquality().equals(other._goals, _goals)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.offset, offset) || other.offset == offset));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalsLoaded&&const DeepCollectionEquality().equals(other._goals, _goals)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.isCompletedTab, isCompletedTab) || other.isCompletedTab == isCompletedTab));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_goals),hasMore,offset);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_goals),hasMore,offset,isCompletedTab);
 
 @override
 String toString() {
-  return 'GoalState.goalsLoaded(goals: $goals, hasMore: $hasMore, offset: $offset)';
+  return 'GoalState.goalsLoaded(goals: $goals, hasMore: $hasMore, offset: $offset, isCompletedTab: $isCompletedTab)';
 }
 
 
@@ -318,7 +325,7 @@ abstract mixin class $GoalsLoadedCopyWith<$Res> implements $GoalStateCopyWith<$R
   factory $GoalsLoadedCopyWith(GoalsLoaded value, $Res Function(GoalsLoaded) _then) = _$GoalsLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<GoalEntity> goals, bool hasMore, int offset
+ List<GoalEntity> goals, bool hasMore, int offset, bool isCompletedTab
 });
 
 
@@ -335,16 +342,92 @@ class _$GoalsLoadedCopyWithImpl<$Res>
 
 /// Create a copy of GoalState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? goals = null,Object? hasMore = null,Object? offset = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? goals = null,Object? hasMore = null,Object? offset = null,Object? isCompletedTab = null,}) {
   return _then(GoalsLoaded(
 null == goals ? _self._goals : goals // ignore: cast_nullable_to_non_nullable
 as List<GoalEntity>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
 as bool,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as int,
+as int,isCompletedTab: null == isCompletedTab ? _self.isCompletedTab : isCompletedTab // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
 
+}
+
+/// @nodoc
+
+
+class GoalLoaded implements GoalState {
+  const GoalLoaded(this.goal);
+  
+
+ final  GoalEntity goal;
+
+/// Create a copy of GoalState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$GoalLoadedCopyWith<GoalLoaded> get copyWith => _$GoalLoadedCopyWithImpl<GoalLoaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalLoaded&&(identical(other.goal, goal) || other.goal == goal));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,goal);
+
+@override
+String toString() {
+  return 'GoalState.goalLoaded(goal: $goal)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $GoalLoadedCopyWith<$Res> implements $GoalStateCopyWith<$Res> {
+  factory $GoalLoadedCopyWith(GoalLoaded value, $Res Function(GoalLoaded) _then) = _$GoalLoadedCopyWithImpl;
+@useResult
+$Res call({
+ GoalEntity goal
+});
+
+
+$GoalEntityCopyWith<$Res> get goal;
+
+}
+/// @nodoc
+class _$GoalLoadedCopyWithImpl<$Res>
+    implements $GoalLoadedCopyWith<$Res> {
+  _$GoalLoadedCopyWithImpl(this._self, this._then);
+
+  final GoalLoaded _self;
+  final $Res Function(GoalLoaded) _then;
+
+/// Create a copy of GoalState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? goal = null,}) {
+  return _then(GoalLoaded(
+null == goal ? _self.goal : goal // ignore: cast_nullable_to_non_nullable
+as GoalEntity,
+  ));
+}
+
+/// Create a copy of GoalState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$GoalEntityCopyWith<$Res> get goal {
+  
+  return $GoalEntityCopyWith<$Res>(_self.goal, (value) {
+    return _then(_self.copyWith(goal: value));
+  });
+}
 }
 
 /// @nodoc
