@@ -7,8 +7,11 @@ import '../../../domain/repositories/lending_repository.dart';
 class DashboardData {
   final int currentBalance;
   final int totalExpenses;
+  final int totalExpensesFromSavings;
   final int totalDebtPayments;
+  final int totalDebtPaymentsFromSavings;
   final int totalLendingsFromBalance;
+  final int totalLendingsFromSavings;
   final int totalOutstandingLendings;
   final int totalIn;
   final int totalIncome;
@@ -22,8 +25,11 @@ class DashboardData {
   const DashboardData({
     required this.currentBalance,
     required this.totalExpenses,
+    this.totalExpensesFromSavings = 0,
     required this.totalDebtPayments,
+    this.totalDebtPaymentsFromSavings = 0,
     this.totalLendingsFromBalance = 0,
+    this.totalLendingsFromSavings = 0,
     this.totalOutstandingLendings = 0,
     required this.totalIn,
     required this.totalIncome,
@@ -79,28 +85,35 @@ class GetDashboardDataUseCase {
 
     final results = await Future.wait([
       _expenseRepository.getTotalExpenses(cycle.id),
+      _expenseRepository.getTotalExpensesFromSavingsForCycle(cycle.id),
       _incomeRepository.getTotalIncomeForCycle(cycle.id),
       _debtRepository.getTotalDebtPaymentsForCycle(cycle.id),
+      _debtRepository.getTotalDebtPaymentsFromSavingsForCycle(cycle.id),
       _debtRepository.getTotalDebtsCreatedForCycle(cycle.id),
     ]);
 
     final totalExpenses = results[0];
-    final totalIncome = results[1];
-    final totalDebtPayments = results[2];
-    final totalDebtsCreated = results[3];
+    final totalExpensesFromSavings = results[1];
+    final totalIncome = results[2];
+    final totalDebtPayments = results[3];
+    final totalDebtPaymentsFromSavings = results[4];
+    final totalDebtsCreated = results[5];
 
     int totalLendingsFromBalance = 0;
+    int totalLendingsFromSavings = 0;
     int totalOutstandingLendings = 0;
     int totalCollectionsToBalance = 0;
     if (_lendingRepository != null) {
       final lendingResults = await Future.wait([
         _lendingRepository.getTotalLendingsFromBalanceForCycle(cycle.id),
+        _lendingRepository.getTotalLendingsFromSavingsForCycle(cycle.id),
         _lendingRepository.getTotalOutstandingLendingAmount(),
         _lendingRepository.getTotalCollectionsToBalanceForCycle(cycle.id),
       ]);
       totalLendingsFromBalance = lendingResults[0];
-      totalOutstandingLendings = lendingResults[1];
-      totalCollectionsToBalance = lendingResults[2];
+      totalLendingsFromSavings = lendingResults[1];
+      totalOutstandingLendings = lendingResults[2];
+      totalCollectionsToBalance = lendingResults[3];
     }
 
     final salaryAmount = cycle.salaryAmount;
@@ -125,8 +138,11 @@ class GetDashboardDataUseCase {
     return DashboardData(
       currentBalance: currentBalance,
       totalExpenses: totalExpenses,
+      totalExpensesFromSavings: totalExpensesFromSavings,
       totalDebtPayments: totalDebtPayments,
+      totalDebtPaymentsFromSavings: totalDebtPaymentsFromSavings,
       totalLendingsFromBalance: totalLendingsFromBalance,
+      totalLendingsFromSavings: totalLendingsFromSavings,
       totalOutstandingLendings: totalOutstandingLendings,
       totalIn: totalIn,
       totalIncome: totalIncome,

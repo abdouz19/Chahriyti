@@ -21,6 +21,9 @@ class SettingsLoaded extends SettingsState {
   final int salaryDay;
   final bool isActivated;
   final bool challengesEnabled;
+  // Current active cycle values (may differ from pending user values)
+  final int? currentCycleSalary;
+  final int? currentCycleSalaryDay;
 
   const SettingsLoaded({
     required this.userName,
@@ -28,7 +31,15 @@ class SettingsLoaded extends SettingsState {
     required this.salaryDay,
     required this.isActivated,
     required this.challengesEnabled,
+    this.currentCycleSalary,
+    this.currentCycleSalaryDay,
   });
+
+  bool get salaryPending =>
+      currentCycleSalary != null && salary != currentCycleSalary;
+
+  bool get salaryDayPending =>
+      currentCycleSalaryDay != null && salaryDay != currentCycleSalaryDay;
 }
 
 class SettingsUpdating extends SettingsState {
@@ -74,12 +85,16 @@ class SettingsCubit extends Cubit<SettingsState> {
         return;
       }
 
+      final cycle = await _cycleRepository.getActiveCycle();
+
       emit(SettingsLoaded(
         userName: user.fullName,
         salary: user.monthlySalary,
         salaryDay: user.salaryDay,
         isActivated: user.isActivated,
         challengesEnabled: user.challengesEnabled,
+        currentCycleSalary: cycle?.salaryAmount,
+        currentCycleSalaryDay: cycle?.startDate.day,
       ));
     } catch (e) {
       debugPrint('❌ SETTINGS ERROR: $e');
@@ -99,13 +114,8 @@ class SettingsCubit extends Cubit<SettingsState> {
 
       final updatedUser = user.copyWith(monthlySalary: newSalary);
       await _userRepository.updateUser(updatedUser);
-
-      final cycle = await _cycleRepository.getActiveCycle();
-      if (cycle != null) {
-        await _cycleRepository.updateCycleSalary(cycle.id, newSalary);
-      }
-
-      debugPrint('✅ SETTINGS: Salary updated successfully');
+      // Do NOT update the current cycle — change takes effect next cycle only.
+      debugPrint('✅ SETTINGS: Salary updated successfully (applies next cycle)');
       await loadSettings();
     } catch (e) {
       debugPrint('❌ SETTINGS ERROR: $e');

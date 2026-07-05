@@ -19,4 +19,7 @@ class GetLendingsUseCase {
   Future<List<LendingCollectionEntity>> getCollectionsForLending(
           int lendingId) =>
       _repository.getCollectionsForLending(lendingId);
+
+  Future<int> getTotalOutstandingLendingAmount() =>
+      _repository.getTotalOutstandingLendingAmount();
 }

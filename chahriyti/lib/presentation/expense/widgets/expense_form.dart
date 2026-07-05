@@ -125,12 +125,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
             decoration: const InputDecoration(
               hintText: 'مثال: خبز، دجاج، شراب...',
             ),
-            validator: (v) {
-              if (v == null || v.trim().isEmpty) {
-                return 'يرجى إدخال اسم المنتج';
-              }
-              return null;
-            },
           ),
 
           const SizedBox(height: 20),

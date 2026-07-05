@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/constants/categories.dart';
 import '../../../domain/entities/expense_entity.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/confirmation_dialog.dart';
@@ -26,8 +27,44 @@ class ExpenseHistoryPage extends StatelessWidget {
   }
 }
 
-class _ExpenseHistoryView extends StatelessWidget {
+class _ExpenseHistoryView extends StatefulWidget {
   const _ExpenseHistoryView();
+
+  @override
+  State<_ExpenseHistoryView> createState() => _ExpenseHistoryViewState();
+}
+
+String _categoryLabel(String category) {
+  return ExpenseCategory.values
+      .firstWhere((c) => c.name == category, orElse: () => ExpenseCategory.other)
+      .arabicLabel;
+}
+
+class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final pos = _scrollController.position;
+    if (pos.pixels >= pos.maxScrollExtent - 300) {
+      final cubit = context.read<HistoryCubit>();
+      if (cubit.state is HistoryLoaded) {
+        cubit.loadMore();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,17 +139,8 @@ class _ExpenseHistoryView extends StatelessWidget {
           return RefreshIndicator(
             color: AppColors.primary,
             onRefresh: () => context.read<HistoryCubit>().loadExpenses(),
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (scrollInfo) {
-                if (!isLoadingMore &&
-                    hasMore &&
-                    scrollInfo.metrics.pixels >=
-                        scrollInfo.metrics.maxScrollExtent - 200) {
-                  context.read<HistoryCubit>().loadMore();
-                }
-                return false;
-              },
-              child: ListView.builder(
+            child: ListView.builder(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(16),
                 itemCount: expenses.length + (hasMore ? 1 : 0),
                 itemBuilder: (context, index) {
@@ -140,7 +168,6 @@ class _ExpenseHistoryView extends StatelessWidget {
                     ),
                   );
                 },
-              ),
             ),
           );
         },
@@ -196,7 +223,7 @@ class _ExpenseHistoryView extends StatelessWidget {
     final confirmed = await ConfirmationDialog.show(
       context,
       title: 'حذف المصروف',
-      message: 'هل تريد حذف "${expense.itemName}"؟',
+      message: 'هل تريد حذف "${expense.itemName.isNotEmpty ? expense.itemName : _categoryLabel(expense.category)}"؟',
       confirmLabel: 'حذف',
       cancelLabel: 'إلغاء',
       confirmColor: AppColors.negative,
@@ -288,7 +315,9 @@ class _ExpenseRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    expense.itemName,
+                    expense.itemName.isNotEmpty
+                        ? expense.itemName
+                        : _categoryLabel(expense.category),
                     style: AppTypography.labelMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

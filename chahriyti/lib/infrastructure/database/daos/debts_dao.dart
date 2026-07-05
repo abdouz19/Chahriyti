@@ -117,6 +117,13 @@ class DebtsDao extends DatabaseAccessor<AppDatabase> with _$DebtsDaoMixin {
     return rows.fold<int>(0, (sum, row) => sum + row.amount - row.savingsAmount);
   }
 
+  Future<int> getTotalDebtPaymentsFromSavingsForCycle(int cycleId) async {
+    final rows = await (select(debtPayments)
+          ..where((t) => t.cycleId.equals(cycleId) & t.savingsAmount.isBiggerThanValue(0)))
+        .get();
+    return rows.fold<int>(0, (sum, row) => sum + row.savingsAmount);
+  }
+
   Future<int> getTotalDebtsCreatedForCycle(int cycleId) async {
     final sum = debts.totalAmount.sum();
     final query = selectOnly(debts)
@@ -124,5 +131,14 @@ class DebtsDao extends DatabaseAccessor<AppDatabase> with _$DebtsDaoMixin {
       ..where(debts.cycleId.equalsNullable(cycleId));
     final result = await query.getSingle();
     return result.read(sum) ?? 0;
+  }
+
+  Future<int> getTotalActiveRemainingAmount() async {
+    final remaining = (debts.totalAmount - debts.paidAmount).sum();
+    final query = selectOnly(debts)
+      ..addColumns([remaining])
+      ..where(debts.isFullyPaid.equals(false));
+    final result = await query.getSingle();
+    return result.read(remaining) ?? 0;
   }
 }

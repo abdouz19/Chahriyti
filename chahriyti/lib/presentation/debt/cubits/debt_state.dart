@@ -15,6 +15,7 @@ class DebtState with _$DebtState {
     @Default(false) bool hasMore,
     @Default(0) int offset,
     @Default(false) bool isCompletedTab,
+    @Default(0) int totalRemaining,
   }) = DebtsLoaded;
 
   const factory DebtState.debtLoaded(DebtEntity debt) = DebtLoaded;

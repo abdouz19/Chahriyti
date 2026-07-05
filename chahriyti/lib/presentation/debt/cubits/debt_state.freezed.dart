@@ -143,12 +143,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DebtEntity> debts,  bool hasMore,  int offset,  bool isCompletedTab)?  debtsLoaded,TResult Function( DebtEntity debt)?  debtLoaded,TResult Function( int debtId)?  debtCreated,TResult Function()?  debtUpdated,TResult Function()?  debtDeleted,TResult Function()?  paymentAdded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DebtEntity> debts,  bool hasMore,  int offset,  bool isCompletedTab,  int totalRemaining)?  debtsLoaded,TResult Function( DebtEntity debt)?  debtLoaded,TResult Function( int debtId)?  debtCreated,TResult Function()?  debtUpdated,TResult Function()?  debtDeleted,TResult Function()?  paymentAdded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case DebtInitial() when initial != null:
 return initial();case DebtLoading() when loading != null:
 return loading();case DebtsLoaded() when debtsLoaded != null:
-return debtsLoaded(_that.debts,_that.hasMore,_that.offset,_that.isCompletedTab);case DebtLoaded() when debtLoaded != null:
+return debtsLoaded(_that.debts,_that.hasMore,_that.offset,_that.isCompletedTab,_that.totalRemaining);case DebtLoaded() when debtLoaded != null:
 return debtLoaded(_that.debt);case DebtCreated() when debtCreated != null:
 return debtCreated(_that.debtId);case DebtUpdated() when debtUpdated != null:
 return debtUpdated();case DebtDeleted() when debtDeleted != null:
@@ -172,12 +172,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DebtEntity> debts,  bool hasMore,  int offset,  bool isCompletedTab)  debtsLoaded,required TResult Function( DebtEntity debt)  debtLoaded,required TResult Function( int debtId)  debtCreated,required TResult Function()  debtUpdated,required TResult Function()  debtDeleted,required TResult Function()  paymentAdded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DebtEntity> debts,  bool hasMore,  int offset,  bool isCompletedTab,  int totalRemaining)  debtsLoaded,required TResult Function( DebtEntity debt)  debtLoaded,required TResult Function( int debtId)  debtCreated,required TResult Function()  debtUpdated,required TResult Function()  debtDeleted,required TResult Function()  paymentAdded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case DebtInitial():
 return initial();case DebtLoading():
 return loading();case DebtsLoaded():
-return debtsLoaded(_that.debts,_that.hasMore,_that.offset,_that.isCompletedTab);case DebtLoaded():
+return debtsLoaded(_that.debts,_that.hasMore,_that.offset,_that.isCompletedTab,_that.totalRemaining);case DebtLoaded():
 return debtLoaded(_that.debt);case DebtCreated():
 return debtCreated(_that.debtId);case DebtUpdated():
 return debtUpdated();case DebtDeleted():
@@ -200,12 +200,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DebtEntity> debts,  bool hasMore,  int offset,  bool isCompletedTab)?  debtsLoaded,TResult? Function( DebtEntity debt)?  debtLoaded,TResult? Function( int debtId)?  debtCreated,TResult? Function()?  debtUpdated,TResult? Function()?  debtDeleted,TResult? Function()?  paymentAdded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DebtEntity> debts,  bool hasMore,  int offset,  bool isCompletedTab,  int totalRemaining)?  debtsLoaded,TResult? Function( DebtEntity debt)?  debtLoaded,TResult? Function( int debtId)?  debtCreated,TResult? Function()?  debtUpdated,TResult? Function()?  debtDeleted,TResult? Function()?  paymentAdded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case DebtInitial() when initial != null:
 return initial();case DebtLoading() when loading != null:
 return loading();case DebtsLoaded() when debtsLoaded != null:
-return debtsLoaded(_that.debts,_that.hasMore,_that.offset,_that.isCompletedTab);case DebtLoaded() when debtLoaded != null:
+return debtsLoaded(_that.debts,_that.hasMore,_that.offset,_that.isCompletedTab,_that.totalRemaining);case DebtLoaded() when debtLoaded != null:
 return debtLoaded(_that.debt);case DebtCreated() when debtCreated != null:
 return debtCreated(_that.debtId);case DebtUpdated() when debtUpdated != null:
 return debtUpdated();case DebtDeleted() when debtDeleted != null:
@@ -287,7 +287,7 @@ String toString() {
 
 
 class DebtsLoaded implements DebtState {
-  const DebtsLoaded(final  List<DebtEntity> debts, {this.hasMore = false, this.offset = 0, this.isCompletedTab = false}): _debts = debts;
+  const DebtsLoaded(final  List<DebtEntity> debts, {this.hasMore = false, this.offset = 0, this.isCompletedTab = false, this.totalRemaining = 0}): _debts = debts;
   
 
  final  List<DebtEntity> _debts;
@@ -300,6 +300,7 @@ class DebtsLoaded implements DebtState {
 @JsonKey() final  bool hasMore;
 @JsonKey() final  int offset;
 @JsonKey() final  bool isCompletedTab;
+@JsonKey() final  int totalRemaining;
 
 /// Create a copy of DebtState
 /// with the given fields replaced by the non-null parameter values.
@@ -311,16 +312,16 @@ $DebtsLoadedCopyWith<DebtsLoaded> get copyWith => _$DebtsLoadedCopyWithImpl<Debt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DebtsLoaded&&const DeepCollectionEquality().equals(other._debts, _debts)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.isCompletedTab, isCompletedTab) || other.isCompletedTab == isCompletedTab));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DebtsLoaded&&const DeepCollectionEquality().equals(other._debts, _debts)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.isCompletedTab, isCompletedTab) || other.isCompletedTab == isCompletedTab)&&(identical(other.totalRemaining, totalRemaining) || other.totalRemaining == totalRemaining));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_debts),hasMore,offset,isCompletedTab);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_debts),hasMore,offset,isCompletedTab,totalRemaining);
 
 @override
 String toString() {
-  return 'DebtState.debtsLoaded(debts: $debts, hasMore: $hasMore, offset: $offset, isCompletedTab: $isCompletedTab)';
+  return 'DebtState.debtsLoaded(debts: $debts, hasMore: $hasMore, offset: $offset, isCompletedTab: $isCompletedTab, totalRemaining: $totalRemaining)';
 }
 
 
@@ -331,7 +332,7 @@ abstract mixin class $DebtsLoadedCopyWith<$Res> implements $DebtStateCopyWith<$R
   factory $DebtsLoadedCopyWith(DebtsLoaded value, $Res Function(DebtsLoaded) _then) = _$DebtsLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<DebtEntity> debts, bool hasMore, int offset, bool isCompletedTab
+ List<DebtEntity> debts, bool hasMore, int offset, bool isCompletedTab, int totalRemaining
 });
 
 
@@ -348,13 +349,14 @@ class _$DebtsLoadedCopyWithImpl<$Res>
 
 /// Create a copy of DebtState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? debts = null,Object? hasMore = null,Object? offset = null,Object? isCompletedTab = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? debts = null,Object? hasMore = null,Object? offset = null,Object? isCompletedTab = null,Object? totalRemaining = null,}) {
   return _then(DebtsLoaded(
 null == debts ? _self._debts : debts // ignore: cast_nullable_to_non_nullable
 as List<DebtEntity>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
 as bool,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int,isCompletedTab: null == isCompletedTab ? _self.isCompletedTab : isCompletedTab // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,totalRemaining: null == totalRemaining ? _self.totalRemaining : totalRemaining // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

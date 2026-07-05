@@ -143,10 +143,18 @@ class DebtRepositoryImpl implements DebtRepository {
       _dao.getTotalPaymentsForCycle(cycleId);
 
   @override
+  Future<int> getTotalDebtPaymentsFromSavingsForCycle(int cycleId) =>
+      _dao.getTotalDebtPaymentsFromSavingsForCycle(cycleId);
+
+  @override
   Future<int> getTotalDebtsCreatedForCycle(int cycleId) =>
       _dao.getTotalDebtsCreatedForCycle(cycleId);
 
   @override
   Future<List<int>> getSavingsPaymentIds(int debtId) =>
       _dao.getSavingsPaymentIds(debtId);
+
+  @override
+  Future<int> getTotalActiveRemainingAmount() =>
+      _dao.getTotalActiveRemainingAmount();
 }

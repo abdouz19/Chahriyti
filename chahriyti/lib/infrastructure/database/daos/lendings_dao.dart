@@ -88,6 +88,13 @@ class LendingsDao extends DatabaseAccessor<AppDatabase>
     return rows.fold<int>(0, (sum, row) => sum + row.totalAmount - row.savingsAmount);
   }
 
+  Future<int> getTotalLendingsFromSavingsForCycle(int cycleId) async {
+    final rows = await (select(lendings)
+          ..where((t) => t.cycleId.equals(cycleId) & t.savingsAmount.isBiggerThanValue(0)))
+        .get();
+    return rows.fold<int>(0, (sum, row) => sum + row.savingsAmount);
+  }
+
   Future<int> getTotalCollectionsToBalanceForCycle(int cycleId) async {
     final result = await customSelect(
       'SELECT COALESCE(SUM(lc.amount), 0) AS total '

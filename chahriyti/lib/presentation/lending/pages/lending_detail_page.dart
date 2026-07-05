@@ -72,6 +72,7 @@ class _LendingDetailView extends StatelessWidget {
                 backgroundColor: AppColors.negative,
               ),
             );
+            context.read<LendingCubit>().loadLendingById(lendingId);
           },
         );
       },
@@ -552,6 +553,20 @@ class _CollectionDialog extends StatefulWidget {
 
 class _CollectionDialogState extends State<_CollectionDialog> {
   bool _toSavings = false;
+  String? _errorText;
+
+  void _handleSubmit() {
+    final amount = int.tryParse(widget.amountController.text);
+    if (amount == null || amount <= 0) {
+      setState(() => _errorText = 'أدخل مبلغاً صحيحاً');
+      return;
+    }
+    if (amount > widget.maxAmount) {
+      setState(() => _errorText = 'المبلغ يتجاوز المتبقي (${widget.maxAmount.toDZDString()})');
+      return;
+    }
+    widget.onSubmit(amount, _toSavings);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -572,9 +587,13 @@ class _CollectionDialogState extends State<_CollectionDialog> {
             controller: widget.amountController,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
+            onChanged: (_) {
+              if (_errorText != null) setState(() => _errorText = null);
+            },
+            decoration: InputDecoration(
               hintText: 'المبلغ المحصّل',
               suffixText: 'دج',
+              errorText: _errorText,
             ),
           ),
           const SizedBox(height: 16),
@@ -688,12 +707,7 @@ class _CollectionDialogState extends State<_CollectionDialog> {
           child: const Text('إلغاء'),
         ),
         ElevatedButton(
-          onPressed: () {
-            final amount = int.tryParse(widget.amountController.text);
-            if (amount != null && amount > 0) {
-              widget.onSubmit(amount, _toSavings);
-            }
-          },
+          onPressed: _handleSubmit,
           child: const Text('تسجيل'),
         ),
       ],

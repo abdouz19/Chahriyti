@@ -16,9 +16,6 @@ class EditExpenseUseCase {
 
   Future<void> call(ExpenseEntity expense) async {
     if (expense.amount <= 0) throw ArgumentError('Amount must be positive');
-    if (expense.itemName.trim().isEmpty) {
-      throw ArgumentError('Item name required');
-    }
 
     final cycle = await _cycleRepo.getActiveCycle();
     if (cycle == null || cycle.id != expense.cycleId || !cycle.isActive) {

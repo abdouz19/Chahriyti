@@ -52,7 +52,11 @@ abstract class DebtRepository {
 
   Future<int> getTotalDebtPaymentsForCycle(int cycleId);
 
+  Future<int> getTotalDebtPaymentsFromSavingsForCycle(int cycleId);
+
   Future<int> getTotalDebtsCreatedForCycle(int cycleId);
 
   Future<List<int>> getSavingsPaymentIds(int debtId);
+
+  Future<int> getTotalActiveRemainingAmount();
 }

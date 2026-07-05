@@ -68,6 +68,9 @@ class FakeLendingRepository implements LendingRepository {
   Future<int> getTotalLendingsFromBalanceForCycle(int cycleId) async => 0;
 
   @override
+  Future<int> getTotalLendingsFromSavingsForCycle(int cycleId) async => 0;
+
+  @override
   Future<int> getTotalCollectionsToBalanceForCycle(int cycleId) async => 0;
 
   @override

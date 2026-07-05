@@ -39,6 +39,11 @@ class _CategoryCard extends StatelessWidget {
         ExpenseCategory.essentials => Icons.shopping_basket_outlined,
         ExpenseCategory.homeFamily => Icons.home_outlined,
         ExpenseCategory.luxuries => Icons.local_cafe_outlined,
+        ExpenseCategory.health => Icons.local_hospital_outlined,
+        ExpenseCategory.transport => Icons.directions_car_outlined,
+        ExpenseCategory.clothing => Icons.checkroom_outlined,
+        ExpenseCategory.restaurants => Icons.restaurant_outlined,
+        ExpenseCategory.education => Icons.school_outlined,
         ExpenseCategory.other => Icons.more_horiz,
       };
 

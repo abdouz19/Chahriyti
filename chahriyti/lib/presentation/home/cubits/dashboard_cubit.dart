@@ -12,6 +12,7 @@ import '../../../domain/entities/expense_entity.dart';
 import '../../../domain/entities/debt_entity.dart';
 import '../../../domain/entities/lending_entity.dart';
 import '../../../domain/entities/savings_goal_entity.dart';
+import '../../../infrastructure/services/notification_service.dart';
 
 // ─── States ────────────────────────────────────────────────────────────────
 
@@ -53,6 +54,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   final GoalRepository _goalRepository;
   final LendingRepository? _lendingRepository;
   final SavingsRepository? _savingsRepository;
+  final NotificationService? _notificationService;
 
   DashboardCubit({
     required GetDashboardDataUseCase getDashboardData,
@@ -62,6 +64,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     required GoalRepository goalRepository,
     LendingRepository? lendingRepository,
     SavingsRepository? savingsRepository,
+    NotificationService? notificationService,
   })  : _getDashboardData = getDashboardData,
         _cycleRepository = cycleRepository,
         _expenseRepository = expenseRepository,
@@ -69,6 +72,7 @@ class DashboardCubit extends Cubit<DashboardState> {
         _goalRepository = goalRepository,
         _lendingRepository = lendingRepository,
         _savingsRepository = savingsRepository,
+        _notificationService = notificationService,
         super(DashboardLoading());
 
   Future<void> loadDashboard() async {
@@ -131,6 +135,9 @@ class DashboardCubit extends Cubit<DashboardState> {
         savingsBalance: savingsBalance,
       ));
       debugPrint('📊 DASHBOARD: Data fetch completed successfully');
+
+      // Fire notifications after state is emitted — errors are non-fatal
+      _notificationService?.checkNotifications().catchError((_) {});
     } catch (e) {
       debugPrint('❌ DASHBOARD ERROR: ${e.toString()}');
       emit(DashboardError('حدث خطأ في تحميل البيانات: ${e.toString()}'));

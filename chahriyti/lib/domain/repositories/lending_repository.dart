@@ -36,6 +36,8 @@ abstract class LendingRepository {
 
   Future<int> getTotalLendingsFromBalanceForCycle(int cycleId);
 
+  Future<int> getTotalLendingsFromSavingsForCycle(int cycleId);
+
   Future<int> getTotalCollectionsToBalanceForCycle(int cycleId);
 
   Future<int> getTotalOutstandingLendingAmount();

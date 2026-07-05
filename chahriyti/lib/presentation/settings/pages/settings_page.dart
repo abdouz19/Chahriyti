@@ -191,10 +191,23 @@ class _SettingsView extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      MoneyText(
-                        amount: Money(state.salary),
-                        style: AppTypography.amountSmall,
-                        color: AppColors.primary,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          MoneyText(
+                            amount: Money(state.salary),
+                            style: AppTypography.amountSmall,
+                            color: AppColors.primary,
+                          ),
+                          if (state.salaryPending)
+                            Text(
+                              'من الدورة القادمة',
+                              style: AppTypography.bodySmall.copyWith(
+                                color: AppColors.textSecondary,
+                                fontSize: 10,
+                              ),
+                            ),
+                        ],
                       ),
                       const SizedBox(width: 12),
                       GestureDetector(
@@ -228,12 +241,25 @@ class _SettingsView extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Text(
-                        'اليوم ${state.salaryDay}',
-                        style: AppTypography.bodyMedium.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'اليوم ${state.salaryDay}',
+                            style: AppTypography.bodyMedium.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (state.salaryDayPending)
+                            Text(
+                              'من الدورة القادمة',
+                              style: AppTypography.bodySmall.copyWith(
+                                color: AppColors.textSecondary,
+                                fontSize: 10,
+                              ),
+                            ),
+                        ],
                       ),
                       const SizedBox(width: 12),
                       GestureDetector(
@@ -503,74 +529,10 @@ class _SettingsView extends StatelessWidget {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (sheetContext) => StatefulBuilder(
-        builder: (sheetContext, setState) {
-          final controller = TextEditingController(text: state.salary.toString());
-          final formKey = GlobalKey<FormState>();
-
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 20,
-              left: 20,
-              right: 20,
-              top: 20,
-            ),
-            child: SingleChildScrollView(
-              child: Form(
-                key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'تعديل الراتب الشهري',
-                      style: AppTypography.headlineSmall,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: controller,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        hintText: 'أدخل الراتب الجديد',
-                        suffixText: 'دج',
-                      ),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) return 'الراتب مطلوب';
-                        final val = int.tryParse(v);
-                        if (val == null || val <= 0) {
-                          return 'يجب أن يكون الراتب أكبر من صفر';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            final newSalary = int.parse(controller.text);
-                            cubit.updateSalary(newSalary);
-                            Navigator.pop(sheetContext);
-                          }
-                        },
-                        child: const Text('حفظ'),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(sheetContext),
-                        child: const Text('إلغاء'),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                ),
-              ),
-            ),
-          );
+      builder: (_) => _EditSalarySheet(
+        initialSalary: state.salary,
+        onSave: (newSalary) {
+          cubit.updateSalary(newSalary);
         },
       ),
     );
@@ -635,13 +597,47 @@ class _SettingsView extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textSecondary),
+                      const SizedBox(width: 6),
+                      Text(
+                        'سيُطبَّق من الدورة القادمة',
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        cubit.updateSalaryDay(selectedDay);
-                        Navigator.pop(sheetContext);
+                      onPressed: () async {
+                        final confirmed = await showDialog<bool>(
+                          context: sheetContext,
+                          builder: (_) => AlertDialog(
+                            title: const Text('تأكيد تعديل يوم الراتب'),
+                            content: Text(
+                              'سيُطبَّق يوم الراتب الجديد (اليوم $selectedDay) ابتداءً من دورتك القادمة.\nالدورة الحالية لن تتأثر.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(sheetContext, false),
+                                child: const Text('إلغاء'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () => Navigator.pop(sheetContext, true),
+                                child: const Text('تأكيد'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true && sheetContext.mounted) {
+                          cubit.updateSalaryDay(selectedDay);
+                          Navigator.pop(sheetContext);
+                        }
                       },
                       child: const Text('حفظ'),
                     ),
@@ -682,6 +678,134 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
+      ),
+    );
+  }
+}
+
+class _EditSalarySheet extends StatefulWidget {
+  final int initialSalary;
+  final void Function(int) onSave;
+
+  const _EditSalarySheet({
+    required this.initialSalary,
+    required this.onSave,
+  });
+
+  @override
+  State<_EditSalarySheet> createState() => _EditSalarySheetState();
+}
+
+class _EditSalarySheetState extends State<_EditSalarySheet> {
+  late final TextEditingController _controller;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialSalary.toString());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+        left: 20,
+        right: 20,
+        top: 20,
+      ),
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('تعديل الراتب الشهري', style: AppTypography.headlineSmall),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _controller,
+                keyboardType: TextInputType.number,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'أدخل الراتب الجديد',
+                  suffixText: 'دج',
+                ),
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'الراتب مطلوب';
+                  final val = int.tryParse(v);
+                  if (val == null || val <= 0) {
+                    return 'يجب أن يكون الراتب أكبر من صفر';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textSecondary),
+                  const SizedBox(width: 6),
+                  Text(
+                    'سيُطبَّق من الدورة القادمة',
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (!_formKey.currentState!.validate()) return;
+                    final newSalary = int.parse(_controller.text);
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('تأكيد تعديل الراتب'),
+                        content: Text(
+                          'سيُطبَّق الراتب الجديد ($newSalary دج) ابتداءً من دورتك القادمة.\nالدورة الحالية لن تتأثر.',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: const Text('إلغاء'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: const Text('تأكيد'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmed == true && context.mounted) {
+                      widget.onSave(newSalary);
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('حفظ'),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('إلغاء'),
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
       ),
     );
   }

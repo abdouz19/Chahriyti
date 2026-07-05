@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
@@ -10,6 +9,7 @@ import '../../shared/widgets/loading_shimmer.dart';
 import '../cubits/dashboard_cubit.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/consumption_bar.dart';
+
 import '../widgets/daily_average_widget.dart';
 import '../widgets/days_remaining_widget.dart';
 import '../widgets/debt_summary_card.dart';
@@ -43,14 +43,25 @@ class HomePage extends StatelessWidget {
         goalRepository: Injection.goalRepository,
         lendingRepository: Injection.lendingRepository,
         savingsRepository: Injection.savingsRepository,
+        notificationService: Injection.notificationService,
       )..loadDashboard(),
       child: const _HomeView(),
     );
   }
 }
 
-class _HomeView extends StatelessWidget {
+class _HomeView extends StatefulWidget {
   const _HomeView();
+
+  @override
+  State<_HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<_HomeView> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<void> _navigateAndRefresh(
     BuildContext context,
@@ -257,6 +268,7 @@ class _HomeView extends StatelessWidget {
                       Expanded(
                         child: ExpensesCard(
                           expenses: data.totalExpenses,
+                          savingsAmount: data.totalExpensesFromSavings,
                         ),
                       ),
                     ],
@@ -279,6 +291,8 @@ class _HomeView extends StatelessWidget {
                               color: AppColors.warning,
                               subtitleLabel: 'مدفوعات هذه الدورة',
                               subtitleAmount: data.totalDebtPayments > 0 ? data.totalDebtPayments : null,
+                              savingsSubtitleLabel: 'من المدخرات هذه الدورة',
+                              savingsSubtitleAmount: data.totalDebtPaymentsFromSavings,
                             ),
                           ),
                         if ((state.activeDebts.isNotEmpty || data.totalDebtPayments > 0) && (state.activeLendings.isNotEmpty || data.totalLendingsFromBalance > 0))
@@ -292,6 +306,8 @@ class _HomeView extends StatelessWidget {
                               color: AppColors.primary,
                               subtitleLabel: 'سلف هذه الدورة',
                               subtitleAmount: data.totalLendingsFromBalance > 0 ? data.totalLendingsFromBalance : null,
+                              savingsSubtitleLabel: 'من المدخرات هذه الدورة',
+                              savingsSubtitleAmount: data.totalLendingsFromSavings,
                             ),
                           ),
                       ],
@@ -540,53 +556,24 @@ class _HomeView extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Quick actions row
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () => context.push('/statistics'),
-                          icon: Icon(
-                            Icons.bar_chart_rounded,
-                            color: AppColors.primary,
-                          ),
-                          label: Text(
-                            'الإحصائيات',
-                            style: AppTypography.labelSmall.copyWith(
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: AppColors.primary),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: FilledButton.icon(
-                          onPressed: () => context.push('/insights'),
-                          icon: const Icon(Icons.lightbulb_rounded),
-                          label: Text(
-                            'الذكاء المالي',
-                            style: AppTypography.labelSmall.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                          style: FilledButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                OutlinedButton.icon(
+                  onPressed: () => context.push('/statistics'),
+                  icon: Icon(
+                    Icons.bar_chart_rounded,
+                    color: AppColors.primary,
+                  ),
+                  label: Text(
+                    'الإحصائيات',
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: AppColors.primary),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
 
@@ -607,6 +594,8 @@ class _CycleAmountCard extends StatelessWidget {
   final Color color;
   final String? subtitleLabel;
   final int? subtitleAmount;
+  final String? savingsSubtitleLabel;
+  final int? savingsSubtitleAmount;
 
   const _CycleAmountCard({
     required this.label,
@@ -615,6 +604,8 @@ class _CycleAmountCard extends StatelessWidget {
     required this.color,
     this.subtitleLabel,
     this.subtitleAmount,
+    this.savingsSubtitleLabel,
+    this.savingsSubtitleAmount,
   });
 
   @override
@@ -650,6 +641,15 @@ class _CycleAmountCard extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 '$subtitleLabel: ${subtitleAmount!.toDZDString()}',
+                style: AppTypography.bodySmall.copyWith(
+                  color: color.withValues(alpha: 0.65),
+                ),
+              ),
+            ],
+            if (savingsSubtitleLabel != null && savingsSubtitleAmount != null && savingsSubtitleAmount! > 0) ...[
+              const SizedBox(height: 4),
+              Text(
+                '$savingsSubtitleLabel: ${savingsSubtitleAmount!.toDZDString()}',
                 style: AppTypography.bodySmall.copyWith(
                   color: color.withValues(alpha: 0.65),
                 ),

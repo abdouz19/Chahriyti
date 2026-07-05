@@ -167,7 +167,9 @@ class _ExpenseRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    expense.itemName,
+                    expense.itemName.isNotEmpty
+                        ? expense.itemName
+                        : _categoryFromString(expense.category).arabicLabel,
                     style: AppTypography.bodyMedium,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -204,6 +206,16 @@ class _ExpenseRow extends StatelessWidget {
         return Icons.home_rounded;
       case ExpenseCategory.luxuries:
         return Icons.diamond_rounded;
+      case ExpenseCategory.health:
+        return Icons.local_hospital_rounded;
+      case ExpenseCategory.transport:
+        return Icons.directions_car_rounded;
+      case ExpenseCategory.clothing:
+        return Icons.checkroom_rounded;
+      case ExpenseCategory.restaurants:
+        return Icons.restaurant_rounded;
+      case ExpenseCategory.education:
+        return Icons.school_rounded;
       case ExpenseCategory.other:
         return Icons.more_horiz_rounded;
     }

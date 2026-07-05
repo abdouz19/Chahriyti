@@ -97,6 +97,12 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   @override
+  Future<List<ExpenseEntity>> getAllExpenses({int? limit, int? offset}) async {
+    final rows = await _dao.getAllExpenses(limit: limit, offset: offset);
+    return rows.map(_toEntity).toList();
+  }
+
+  @override
   Future<List<ExpenseEntity>> getRecentExpenses(
     int cycleId, {
     int limit = 5,
@@ -120,6 +126,10 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
 
   @override
   Future<int> getTotalExpenses(int cycleId) => _dao.getTotalExpenses(cycleId);
+
+  @override
+  Future<int> getTotalExpensesFromSavingsForCycle(int cycleId) =>
+      _dao.getTotalExpensesFromSavingsForCycle(cycleId);
 
   @override
   Future<Map<String, int>> getExpensesByCategory(int cycleId) =>

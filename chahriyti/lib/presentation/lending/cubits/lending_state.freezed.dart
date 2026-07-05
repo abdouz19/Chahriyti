@@ -137,12 +137,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<LendingEntity> lendings,  bool hasMore,  int offset,  bool isCollectedTab)?  lendingsLoaded,TResult Function( LendingEntity lending,  List<LendingCollectionEntity> collections)?  lendingLoaded,TResult Function( LendingEntity lending)?  lendingCreated,TResult Function()?  lendingDeleted,TResult Function()?  collectionAdded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<LendingEntity> lendings,  bool hasMore,  int offset,  bool isCollectedTab,  int totalRemaining)?  lendingsLoaded,TResult Function( LendingEntity lending,  List<LendingCollectionEntity> collections)?  lendingLoaded,TResult Function( LendingEntity lending)?  lendingCreated,TResult Function()?  lendingDeleted,TResult Function()?  collectionAdded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case LendingInitial() when initial != null:
 return initial();case LendingLoading() when loading != null:
 return loading();case LendingsLoaded() when lendingsLoaded != null:
-return lendingsLoaded(_that.lendings,_that.hasMore,_that.offset,_that.isCollectedTab);case LendingLoaded() when lendingLoaded != null:
+return lendingsLoaded(_that.lendings,_that.hasMore,_that.offset,_that.isCollectedTab,_that.totalRemaining);case LendingLoaded() when lendingLoaded != null:
 return lendingLoaded(_that.lending,_that.collections);case LendingCreated() when lendingCreated != null:
 return lendingCreated(_that.lending);case LendingDeleted() when lendingDeleted != null:
 return lendingDeleted();case CollectionAdded() when collectionAdded != null:
@@ -165,12 +165,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<LendingEntity> lendings,  bool hasMore,  int offset,  bool isCollectedTab)  lendingsLoaded,required TResult Function( LendingEntity lending,  List<LendingCollectionEntity> collections)  lendingLoaded,required TResult Function( LendingEntity lending)  lendingCreated,required TResult Function()  lendingDeleted,required TResult Function()  collectionAdded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<LendingEntity> lendings,  bool hasMore,  int offset,  bool isCollectedTab,  int totalRemaining)  lendingsLoaded,required TResult Function( LendingEntity lending,  List<LendingCollectionEntity> collections)  lendingLoaded,required TResult Function( LendingEntity lending)  lendingCreated,required TResult Function()  lendingDeleted,required TResult Function()  collectionAdded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case LendingInitial():
 return initial();case LendingLoading():
 return loading();case LendingsLoaded():
-return lendingsLoaded(_that.lendings,_that.hasMore,_that.offset,_that.isCollectedTab);case LendingLoaded():
+return lendingsLoaded(_that.lendings,_that.hasMore,_that.offset,_that.isCollectedTab,_that.totalRemaining);case LendingLoaded():
 return lendingLoaded(_that.lending,_that.collections);case LendingCreated():
 return lendingCreated(_that.lending);case LendingDeleted():
 return lendingDeleted();case CollectionAdded():
@@ -189,12 +189,12 @@ return error(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<LendingEntity> lendings,  bool hasMore,  int offset,  bool isCollectedTab)?  lendingsLoaded,TResult? Function( LendingEntity lending,  List<LendingCollectionEntity> collections)?  lendingLoaded,TResult? Function( LendingEntity lending)?  lendingCreated,TResult? Function()?  lendingDeleted,TResult? Function()?  collectionAdded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<LendingEntity> lendings,  bool hasMore,  int offset,  bool isCollectedTab,  int totalRemaining)?  lendingsLoaded,TResult? Function( LendingEntity lending,  List<LendingCollectionEntity> collections)?  lendingLoaded,TResult? Function( LendingEntity lending)?  lendingCreated,TResult? Function()?  lendingDeleted,TResult? Function()?  collectionAdded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case LendingInitial() when initial != null:
 return initial();case LendingLoading() when loading != null:
 return loading();case LendingsLoaded() when lendingsLoaded != null:
-return lendingsLoaded(_that.lendings,_that.hasMore,_that.offset,_that.isCollectedTab);case LendingLoaded() when lendingLoaded != null:
+return lendingsLoaded(_that.lendings,_that.hasMore,_that.offset,_that.isCollectedTab,_that.totalRemaining);case LendingLoaded() when lendingLoaded != null:
 return lendingLoaded(_that.lending,_that.collections);case LendingCreated() when lendingCreated != null:
 return lendingCreated(_that.lending);case LendingDeleted() when lendingDeleted != null:
 return lendingDeleted();case CollectionAdded() when collectionAdded != null:
@@ -275,7 +275,7 @@ String toString() {
 
 
 class LendingsLoaded implements LendingState {
-  const LendingsLoaded(final  List<LendingEntity> lendings, {this.hasMore = false, this.offset = 0, this.isCollectedTab = false}): _lendings = lendings;
+  const LendingsLoaded(final  List<LendingEntity> lendings, {this.hasMore = false, this.offset = 0, this.isCollectedTab = false, this.totalRemaining = 0}): _lendings = lendings;
   
 
  final  List<LendingEntity> _lendings;
@@ -288,6 +288,7 @@ class LendingsLoaded implements LendingState {
 @JsonKey() final  bool hasMore;
 @JsonKey() final  int offset;
 @JsonKey() final  bool isCollectedTab;
+@JsonKey() final  int totalRemaining;
 
 /// Create a copy of LendingState
 /// with the given fields replaced by the non-null parameter values.
@@ -299,16 +300,16 @@ $LendingsLoadedCopyWith<LendingsLoaded> get copyWith => _$LendingsLoadedCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LendingsLoaded&&const DeepCollectionEquality().equals(other._lendings, _lendings)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.isCollectedTab, isCollectedTab) || other.isCollectedTab == isCollectedTab));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LendingsLoaded&&const DeepCollectionEquality().equals(other._lendings, _lendings)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.isCollectedTab, isCollectedTab) || other.isCollectedTab == isCollectedTab)&&(identical(other.totalRemaining, totalRemaining) || other.totalRemaining == totalRemaining));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_lendings),hasMore,offset,isCollectedTab);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_lendings),hasMore,offset,isCollectedTab,totalRemaining);
 
 @override
 String toString() {
-  return 'LendingState.lendingsLoaded(lendings: $lendings, hasMore: $hasMore, offset: $offset, isCollectedTab: $isCollectedTab)';
+  return 'LendingState.lendingsLoaded(lendings: $lendings, hasMore: $hasMore, offset: $offset, isCollectedTab: $isCollectedTab, totalRemaining: $totalRemaining)';
 }
 
 
@@ -319,7 +320,7 @@ abstract mixin class $LendingsLoadedCopyWith<$Res> implements $LendingStateCopyW
   factory $LendingsLoadedCopyWith(LendingsLoaded value, $Res Function(LendingsLoaded) _then) = _$LendingsLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<LendingEntity> lendings, bool hasMore, int offset, bool isCollectedTab
+ List<LendingEntity> lendings, bool hasMore, int offset, bool isCollectedTab, int totalRemaining
 });
 
 
@@ -336,13 +337,14 @@ class _$LendingsLoadedCopyWithImpl<$Res>
 
 /// Create a copy of LendingState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? lendings = null,Object? hasMore = null,Object? offset = null,Object? isCollectedTab = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? lendings = null,Object? hasMore = null,Object? offset = null,Object? isCollectedTab = null,Object? totalRemaining = null,}) {
   return _then(LendingsLoaded(
 null == lendings ? _self._lendings : lendings // ignore: cast_nullable_to_non_nullable
 as List<LendingEntity>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
 as bool,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int,isCollectedTab: null == isCollectedTab ? _self.isCollectedTab : isCollectedTab // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,totalRemaining: null == totalRemaining ? _self.totalRemaining : totalRemaining // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

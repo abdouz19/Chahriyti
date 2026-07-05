@@ -26,4 +26,8 @@ class GetDebtsUseCase {
   }) async {
     return _repository.getCompletedDebts(limit: limit, offset: offset);
   }
+
+  Future<int> getTotalActiveRemainingAmount() {
+    return _repository.getTotalActiveRemainingAmount();
+  }
 }

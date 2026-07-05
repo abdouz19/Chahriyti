@@ -27,12 +27,19 @@ abstract class ExpenseRepository {
     int limit = 5,
   });
 
+  Future<List<ExpenseEntity>> getAllExpenses({
+    int? limit,
+    int? offset,
+  });
+
   Future<List<ExpenseEntity>> getExpensesByDateRange(
     DateTime startDate,
     DateTime endDate,
   );
 
   Future<int> getTotalExpenses(int cycleId);
+
+  Future<int> getTotalExpensesFromSavingsForCycle(int cycleId);
 
   Future<Map<String, int>> getExpensesByCategory(int cycleId);
 }

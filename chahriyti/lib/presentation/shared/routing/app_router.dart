@@ -22,7 +22,6 @@ import '../../expense/pages/edit_expense_page.dart';
 import '../../goal/pages/add_goal_page.dart';
 import '../../goal/pages/goal_detail_page.dart';
 import '../../goal/pages/goals_list_page.dart';
-import '../../insights/pages/insights_page.dart';
 import '../../history/pages/expense_history_page.dart';
 import '../../onboarding/cubits/onboarding_cubit.dart';
 import '../../onboarding/pages/salary_setup_page.dart';
@@ -247,12 +246,6 @@ abstract final class AppRouter {
           final id = int.parse(state.pathParameters['id']!);
           return ChallengeDetailPage(challengeId: id);
         },
-      ),
-
-      // ── Insights ────────────────────────────────────────────────────
-      GoRoute(
-        path: '/insights',
-        builder: (context, state) => const InsightsPage(),
       ),
 
       // ── History ─────────────────────────────────────────────────────

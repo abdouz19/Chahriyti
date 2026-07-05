@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entities/lending_entity.dart';
 import '../../../application/use_cases/lending/add_lending_collection_use_case.dart';
 import '../../../application/use_cases/lending/create_lending_use_case.dart';
 import '../../../application/use_cases/lending/delete_lending_use_case.dart';
@@ -31,14 +32,17 @@ class LendingCubit extends Cubit<LendingState> {
   Future<void> loadLendings() async {
     emit(const LendingState.loading());
     try {
-      final lendings = await _getLendingsUseCase.getActiveLendings(
-        limit: _pageSize,
-        offset: 0,
-      );
+      final results = await Future.wait([
+        _getLendingsUseCase.getActiveLendings(limit: _pageSize, offset: 0),
+        _getLendingsUseCase.getTotalOutstandingLendingAmount(),
+      ]);
+      final lendings = results[0] as List<LendingEntity>;
+      final totalRemaining = results[1] as int;
       emit(LendingState.lendingsLoaded(
         lendings,
         hasMore: lendings.length == _pageSize,
         offset: _pageSize,
+        totalRemaining: totalRemaining,
       ));
     } catch (e) {
       emit(LendingState.error(e.toString()));
@@ -82,6 +86,7 @@ class LendingCubit extends Cubit<LendingState> {
         hasMore: newLendings.length == _pageSize,
         offset: currentState.offset + _pageSize,
         isCollectedTab: currentState.isCollectedTab,
+        totalRemaining: currentState.totalRemaining,
       ));
     } catch (_) {}
     _isLoadingMore = false;

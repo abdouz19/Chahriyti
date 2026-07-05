@@ -64,11 +64,8 @@ import '../../application/use_cases/goal/delete_goal_use_case.dart';
 import '../../application/use_cases/goal/get_goals_use_case.dart';
 import '../../application/use_cases/goal/update_goal_use_case.dart';
 import '../../application/use_cases/statistics/get_category_breakdown_use_case.dart';
-import '../../application/use_cases/statistics/get_predictions_use_case.dart';
 import '../../application/use_cases/statistics/get_monthly_comparison_use_case.dart';
 import '../../application/use_cases/statistics/get_financial_classification_use_case.dart';
-import '../../application/use_cases/statistics/detect_financial_leaks_use_case.dart'
-    as stats_leaks;
 import '../../application/use_cases/insights/calculate_financial_classification_use_case.dart' as insight_classification;
 import '../../application/use_cases/insights/detect_financial_leaks_use_case.dart' as insight_leaks;
 import '../../application/use_cases/insights/generate_spending_trends_use_case.dart';
@@ -165,10 +162,8 @@ abstract final class Injection {
 
   // Use Cases — Statistics
   static late final GetCategoryBreakdownUseCase getCategoryBreakdownUseCase;
-  static late final GetPredictionsUseCase getPredictionsUseCase;
   static late final GetMonthlyComparisonUseCase getMonthlyComparisonUseCase;
   static late final GetFinancialClassificationUseCase getFinancialClassificationUseCase;
-  static late final stats_leaks.DetectFinancialLeaksUseCase detectFinancialLeaksUseCase;
 
   // Use Cases — Insights
   static late final insight_classification.CalculateFinancialClassificationUseCase
@@ -342,10 +337,6 @@ abstract final class Injection {
     getCategoryBreakdownUseCase = GetCategoryBreakdownUseCase(
       expenseRepository: expenseRepository,
     );
-    getPredictionsUseCase = GetPredictionsUseCase(
-      cycleRepository: cycleRepository,
-      expenseRepository: expenseRepository,
-    );
     getMonthlyComparisonUseCase = GetMonthlyComparisonUseCase(
       cycleRepository: cycleRepository,
       expenseRepository: expenseRepository,
@@ -354,11 +345,6 @@ abstract final class Injection {
       cycleRepository: cycleRepository,
       expenseRepository: expenseRepository,
     );
-    detectFinancialLeaksUseCase = stats_leaks.DetectFinancialLeaksUseCase(
-      cycleRepository: cycleRepository,
-      expenseRepository: expenseRepository,
-    );
-
     // Use Cases — Insights
     calculateFinancialClassificationUseCase =
         insight_classification.CalculateFinancialClassificationUseCase(
@@ -408,5 +394,6 @@ abstract final class Injection {
     notificationService = NotificationService(
       generateNotificationUseCase: generateNotificationUseCase,
     );
+    await notificationService.initialize();
   }
 }

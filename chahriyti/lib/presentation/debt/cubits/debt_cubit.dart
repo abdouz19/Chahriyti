@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entities/debt_entity.dart';
 import '../../../application/use_cases/debt/add_debt_payment_use_case.dart';
 import '../../../application/use_cases/debt/create_debt_use_case.dart';
 import '../../../application/use_cases/debt/delete_debt_use_case.dart';
@@ -37,14 +38,17 @@ class DebtCubit extends Cubit<DebtState> {
   Future<void> loadDebts() async {
     emit(const DebtState.loading());
     try {
-      final debts = await _getDebtsUseCase.getActiveDebts(
-        limit: _pageSize,
-        offset: 0,
-      );
+      final results = await Future.wait([
+        _getDebtsUseCase.getActiveDebts(limit: _pageSize, offset: 0),
+        _getDebtsUseCase.getTotalActiveRemainingAmount(),
+      ]);
+      final debts = results[0] as List<DebtEntity>;
+      final totalRemaining = results[1] as int;
       emit(DebtState.debtsLoaded(
         debts,
         hasMore: debts.length == _pageSize,
         offset: _pageSize,
+        totalRemaining: totalRemaining,
       ));
     } catch (e) {
       emit(DebtState.error('فشل تحميل الديون: ${e.toString()}'));
@@ -88,6 +92,7 @@ class DebtCubit extends Cubit<DebtState> {
         hasMore: newDebts.length == _pageSize,
         offset: currentState.offset + _pageSize,
         isCompletedTab: currentState.isCompletedTab,
+        totalRemaining: currentState.totalRemaining,
       ));
     } catch (_) {}
     _isLoadingMore = false;

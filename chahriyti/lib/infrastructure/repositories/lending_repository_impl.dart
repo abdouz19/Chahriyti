@@ -97,6 +97,11 @@ class LendingRepositoryImpl implements LendingRepository {
   }
 
   @override
+  Future<int> getTotalLendingsFromSavingsForCycle(int cycleId) async {
+    return _dao.getTotalLendingsFromSavingsForCycle(cycleId);
+  }
+
+  @override
   Future<int> getTotalCollectionsToBalanceForCycle(int cycleId) async {
     return _dao.getTotalCollectionsToBalanceForCycle(cycleId);
   }

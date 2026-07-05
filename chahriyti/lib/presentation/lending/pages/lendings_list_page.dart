@@ -139,7 +139,7 @@ class _LendingTabContent extends StatelessWidget {
           loading: () => const Center(
             child: CircularProgressIndicator(color: AppColors.primary),
           ),
-          lendingsLoaded: (lendings, hasMore, offset, isCollectedTab) {
+          lendingsLoaded: (lendings, hasMore, offset, isCollectedTab, totalRemaining) {
             if (lendings.isEmpty) {
               return Center(
                 child: Padding(
@@ -173,12 +173,6 @@ class _LendingTabContent extends StatelessWidget {
                   ),
                 ),
               );
-            }
-
-            // Calculate total remaining
-            int totalRemaining = 0;
-            for (final lending in lendings) {
-              totalRemaining += lending.remainingAmount;
             }
 
             return NotificationListener<ScrollNotification>(

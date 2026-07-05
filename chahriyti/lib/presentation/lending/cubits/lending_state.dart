@@ -14,6 +14,7 @@ sealed class LendingState with _$LendingState {
     @Default(false) bool hasMore,
     @Default(0) int offset,
     @Default(false) bool isCollectedTab,
+    @Default(0) int totalRemaining,
   }) = LendingsLoaded;
   const factory LendingState.lendingLoaded(
     LendingEntity lending,

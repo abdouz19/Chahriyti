@@ -64,6 +64,8 @@ class FakeExpenseRepository implements ExpenseRepository {
   @override
   Future<void> editExpense(ExpenseEntity expense) async {}
   @override
+  Future<List<ExpenseEntity>> getAllExpenses({int? limit, int? offset}) async => [];
+  @override
   Future<List<ExpenseEntity>> getExpenses(int cycleId,
           {int? limit, int? offset}) async =>
       [];
@@ -77,6 +79,8 @@ class FakeExpenseRepository implements ExpenseRepository {
       [];
   @override
   Future<int> getTotalExpenses(int cycleId) async => 0;
+  @override
+  Future<int> getTotalExpensesFromSavingsForCycle(int cycleId) async => 0;
   @override
   Future<Map<String, int>> getExpensesByCategory(int cycleId) async => {};
 }

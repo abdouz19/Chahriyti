@@ -1,19 +1,26 @@
-import 'dart:math' as math;
-
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../application/use_cases/statistics/get_monthly_comparison_use_case.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../domain/value_objects/money.dart';
 
-class MonthlyComparisonChart extends StatelessWidget {
+class MonthlyComparisonChart extends StatefulWidget {
   final List<MonthlyComparison> comparisons;
 
-  const MonthlyComparisonChart({
-    super.key,
-    required this.comparisons,
-  });
+  const MonthlyComparisonChart({super.key, required this.comparisons});
+
+  @override
+  State<MonthlyComparisonChart> createState() => _MonthlyComparisonChartState();
+}
+
+class _MonthlyComparisonChartState extends State<MonthlyComparisonChart> {
+  int _touchedIndex = -1;
+
+  static const _arabicMonths = [
+    'جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان',
+    'جويلية', 'أوت', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -27,165 +34,140 @@ class MonthlyComparisonChart extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'مقارنة الأشهر',
-            style: AppTypography.headlineSmall,
-          ),
+          Text('مقارنة الأشهر', style: AppTypography.headlineSmall),
           const SizedBox(height: 20),
-          if (comparisons.length < 2)
-            _buildEmptyState()
+          if (widget.comparisons.length < 2)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: Center(
+                child: Text(
+                  'بيانات غير كافية للمقارنة',
+                  style: AppTypography.bodyMedium
+                      .copyWith(color: AppColors.textSecondary),
+                ),
+              ),
+            )
           else
-            _buildChart(),
+            SizedBox(
+              height: 220,
+              child: BarChart(_buildChartData()),
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildEmptyState() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Center(
-        child: Text(
-          'بيانات غير كافية للمقارنة',
-          style: AppTypography.bodyMedium.copyWith(
-            color: AppColors.textSecondary,
-          ),
+  BarChartData _buildChartData() {
+    final comps = widget.comparisons;
+    final maxY = comps
+            .map((c) => c.totalSpending.toDouble())
+            .reduce((a, b) => a > b ? a : b) *
+        1.25;
+
+    return BarChartData(
+      maxY: maxY,
+      barTouchData: BarTouchData(
+        touchCallback: (event, response) {
+          setState(() {
+            if (!event.isInterestedForInteractions ||
+                response == null ||
+                response.spot == null) {
+              _touchedIndex = -1;
+              return;
+            }
+            _touchedIndex = response.spot!.touchedBarGroupIndex;
+          });
+        },
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipColor: (_) => AppColors.card,
+          tooltipBorder: BorderSide(color: AppColors.border),
+          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            final amount = rod.toY.toInt();
+            final month = comps[groupIndex].month;
+            return BarTooltipItem(
+              '${_arabicMonths[month.month - 1]}\n',
+              AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
+              children: [
+                TextSpan(
+                  text: '${_formatAmount(amount)} دج',
+                  style: AppTypography.labelMedium
+                      .copyWith(color: AppColors.textPrimary),
+                ),
+              ],
+            );
+          },
         ),
       ),
-    );
-  }
-
-  Widget _buildChart() {
-    return RepaintBoundary(
-      child: SizedBox(
-        height: 200,
-        child: CustomPaint(
-          size: const Size(double.infinity, 200),
-          painter: _BarChartPainter(
-            comparisons: comparisons,
+      titlesData: FlTitlesData(
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 28,
+            getTitlesWidget: (value, _) {
+              final i = value.toInt();
+              if (i < 0 || i >= comps.length) return const SizedBox.shrink();
+              final month = comps[i].month;
+              return Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  _arabicMonths[month.month - 1],
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.textSecondary,
+                    fontSize: 10,
+                  ),
+                ),
+              );
+            },
           ),
         ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 44,
+            getTitlesWidget: (value, _) {
+              if (value == 0) return const SizedBox.shrink();
+              return Text(
+                _formatAmount(value.toInt()),
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: 10,
+                ),
+              );
+            },
+          ),
+        ),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
-    );
-  }
-}
-
-class _BarChartPainter extends CustomPainter {
-  final List<MonthlyComparison> comparisons;
-
-  static const List<String> _arabicMonths = [
-    'جانفي',
-    'فيفري',
-    'مارس',
-    'أفريل',
-    'ماي',
-    'جوان',
-    'جويلية',
-    'أوت',
-    'سبتمبر',
-    'أكتوبر',
-    'نوفمبر',
-    'ديسمبر',
-  ];
-
-  _BarChartPainter({required this.comparisons});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (comparisons.isEmpty) return;
-
-    final maxSpending = comparisons
-        .map((c) => c.totalSpending)
-        .reduce((a, b) => math.max(a, b));
-
-    if (maxSpending == 0) return;
-
-    const bottomPadding = 40.0;
-    const topPadding = 20.0;
-    final chartHeight = size.height - bottomPadding - topPadding;
-    final barCount = comparisons.length;
-    final barWidth = (size.width / barCount) * 0.5;
-    final spacing = (size.width - barWidth * barCount) / (barCount + 1);
-
-    final barPaint = Paint()..style = PaintingStyle.fill;
-
-    for (var i = 0; i < barCount; i++) {
-      final comparison = comparisons[i];
-      final barHeight =
-          (comparison.totalSpending / maxSpending) * chartHeight;
-
-      final x = spacing + i * (barWidth + spacing);
-      final y = topPadding + chartHeight - barHeight;
-
-      // Bar gradient effect via solid color
-      barPaint.color = AppColors.primary;
-
-      final barRect = RRect.fromRectAndRadius(
-        Rect.fromLTWH(x, y, barWidth, barHeight),
-        const Radius.circular(6),
-      );
-      canvas.drawRRect(barRect, barPaint);
-
-      // Amount label above bar
-      final amount = Money(comparison.totalSpending);
-      final amountText = TextPainter(
-        text: TextSpan(
-          text: amount.formatDZD(),
-          style: const TextStyle(
-            fontSize: 9,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1A1A2E),
-          ),
-        ),
-        textDirection: TextDirection.rtl,
-      )..layout();
-
-      amountText.paint(
-        canvas,
-        Offset(
-          x + barWidth / 2 - amountText.width / 2,
-          y - amountText.height - 4,
-        ),
-      );
-
-      // Month label below bar
-      final monthIndex = comparison.month.month - 1;
-      final monthLabel = _arabicMonths[monthIndex];
-      final textPainter = TextPainter(
-        text: TextSpan(
-          text: monthLabel,
-          style: const TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF94A3B8),
-          ),
-        ),
-        textDirection: TextDirection.rtl,
-      )..layout();
-
-      textPainter.paint(
-        canvas,
-        Offset(
-          x + barWidth / 2 - textPainter.width / 2,
-          size.height - bottomPadding + 8,
-        ),
-      );
-    }
-
-    // Draw baseline
-    final baselinePaint = Paint()
-      ..color = const Color(0xFFE2E8F0)
-      ..strokeWidth = 1;
-
-    canvas.drawLine(
-      Offset(0, topPadding + chartHeight),
-      Offset(size.width, topPadding + chartHeight),
-      baselinePaint,
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: false,
+        getDrawingHorizontalLine: (_) =>
+            FlLine(color: AppColors.border, strokeWidth: 1),
+      ),
+      borderData: FlBorderData(show: false),
+      barGroups: List.generate(comps.length, (i) {
+        final isTouched = i == _touchedIndex;
+        return BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: comps[i].totalSpending.toDouble(),
+              color: isTouched
+                  ? AppColors.primary
+                  : AppColors.primary.withValues(alpha: 0.7),
+              width: 22,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
+            ),
+          ],
+        );
+      }),
     );
   }
 
-  @override
-  bool shouldRepaint(covariant _BarChartPainter oldDelegate) {
-    return oldDelegate.comparisons != comparisons;
+  String _formatAmount(int amount) {
+    if (amount >= 1000000) return '${(amount / 1000000).toStringAsFixed(1)}م';
+    if (amount >= 1000) return '${(amount / 1000).toStringAsFixed(0)}k';
+    return amount.toString();
   }
 }

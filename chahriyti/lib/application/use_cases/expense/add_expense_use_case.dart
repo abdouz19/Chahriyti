@@ -27,7 +27,6 @@ class AddExpenseUseCase {
     int savingsAmount = 0,
   }) async {
     if (amount <= 0) throw ArgumentError('Amount must be positive');
-    if (itemName.trim().isEmpty) throw ArgumentError('Item name required');
 
     final effectiveSavingsAmount = fromSavings ? amount : savingsAmount.clamp(0, amount);
 

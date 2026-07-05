@@ -39,6 +39,15 @@ class ExpensesDao extends DatabaseAccessor<AppDatabase> with _$ExpensesDaoMixin 
             ..limit(limit))
           .get();
 
+  Future<List<ExpenseRow>> getAllExpenses({
+    int? limit,
+    int? offset,
+  }) =>
+      (select(expenses)
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+            ..limit(limit ?? -1, offset: offset))
+          .get();
+
   Future<List<ExpenseRow>> getExpensesByDateRange(
     DateTime startDate,
     DateTime endDate,
@@ -55,6 +64,13 @@ class ExpensesDao extends DatabaseAccessor<AppDatabase> with _$ExpensesDaoMixin 
           ..where((t) => t.cycleId.equals(cycleId) & t.fromSavings.equals(false)))
         .get();
     return rows.fold<int>(0, (sum, row) => sum + row.amount - row.savingsAmount);
+  }
+
+  Future<int> getTotalExpensesFromSavingsForCycle(int cycleId) async {
+    final rows = await (select(expenses)
+          ..where((t) => t.cycleId.equals(cycleId) & t.savingsAmount.isBiggerThanValue(0)))
+        .get();
+    return rows.fold<int>(0, (sum, row) => sum + row.savingsAmount);
   }
 
   Future<Map<String, int>> getExpensesByCategory(int cycleId) async {
