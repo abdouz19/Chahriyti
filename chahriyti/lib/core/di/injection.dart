@@ -82,7 +82,19 @@ import '../../application/use_cases/lending/delete_lending_use_case.dart';
 import '../../application/use_cases/lending/update_lending_use_case.dart';
 import '../../application/use_cases/income/update_income_use_case.dart';
 import '../../application/use_cases/income/delete_income_use_case.dart';
+import '../../application/use_cases/financial_setup/add_initial_debt_use_case.dart';
+import '../../application/use_cases/financial_setup/add_initial_lending_use_case.dart';
+import '../../application/use_cases/financial_setup/complete_financial_setup_use_case.dart';
+import '../../application/use_cases/financial_setup/delete_initial_debt_use_case.dart';
+import '../../application/use_cases/financial_setup/delete_initial_lending_use_case.dart';
+import '../../application/use_cases/financial_setup/edit_initial_debt_use_case.dart';
+import '../../application/use_cases/financial_setup/edit_initial_lending_use_case.dart';
+import '../../application/use_cases/financial_setup/get_financial_setup_step_use_case.dart';
+import '../../application/use_cases/financial_setup/get_setup_summary_use_case.dart';
+import '../../application/use_cases/financial_setup/set_initial_balance_use_case.dart';
+import '../../application/use_cases/financial_setup/set_initial_savings_use_case.dart';
 import '../../application/use_cases/notification/generate_notification_use_case.dart';
+import '../../presentation/financial_setup/cubits/financial_setup_cubit.dart';
 
 abstract final class Injection {
   static late final AppDatabase _database;
@@ -182,6 +194,24 @@ abstract final class Injection {
   // Pending cycle for salary split (set by auto-cycle detection in router)
   static FinancialCycleEntity? pendingCycleForSplit;
 
+  // Cubit factory — creates new instance each time (not singleton)
+  static FinancialSetupCubit get financialSetupCubit => FinancialSetupCubit(
+        getStepUseCase: getFinancialSetupStepUseCase,
+        setBalanceUseCase: setInitialBalanceUseCase,
+        setSavingsUseCase: setInitialSavingsUseCase,
+        addDebtUseCase: addInitialDebtUseCase,
+        editDebtUseCase: editInitialDebtUseCase,
+        deleteDebtUseCase: deleteInitialDebtUseCase,
+        addLendingUseCase: addInitialLendingUseCase,
+        editLendingUseCase: editInitialLendingUseCase,
+        deleteLendingUseCase: deleteInitialLendingUseCase,
+        completeUseCase: completeFinancialSetupUseCase,
+        getSummaryUseCase: getSetupSummaryUseCase,
+        userRepository: userRepository,
+        debtRepository: debtRepository,
+        lendingRepository: lendingRepository,
+      );
+
   // Use Cases — Challenge
   static late final GenerateWeeklyChallengeUseCase generateWeeklyChallengeUseCase;
   static late final GetActiveChallengeUseCase getActiveChallengeUseCase;
@@ -198,6 +228,19 @@ abstract final class Injection {
   static late final DepositFromBalanceUseCase depositFromBalanceUseCase;
   static late final WithdrawToBalanceUseCase withdrawToBalanceUseCase;
   static late final DepositSalarySplitUseCase depositSalarySplitUseCase;
+
+  // Use Cases — Financial Setup
+  static late final GetFinancialSetupStepUseCase getFinancialSetupStepUseCase;
+  static late final SetInitialBalanceUseCase setInitialBalanceUseCase;
+  static late final SetInitialSavingsUseCase setInitialSavingsUseCase;
+  static late final AddInitialDebtUseCase addInitialDebtUseCase;
+  static late final EditInitialDebtUseCase editInitialDebtUseCase;
+  static late final DeleteInitialDebtUseCase deleteInitialDebtUseCase;
+  static late final AddInitialLendingUseCase addInitialLendingUseCase;
+  static late final EditInitialLendingUseCase editInitialLendingUseCase;
+  static late final DeleteInitialLendingUseCase deleteInitialLendingUseCase;
+  static late final CompleteFinancialSetupUseCase completeFinancialSetupUseCase;
+  static late final GetSetupSummaryUseCase getSetupSummaryUseCase;
 
   // Use Cases — Lending
   static late final CreateLendingUseCase createLendingUseCase;
@@ -281,6 +324,27 @@ abstract final class Injection {
     withdrawToBalanceUseCase = WithdrawToBalanceUseCase(
       savingsRepository,
       cycleRepository,
+    );
+
+    // Use Cases — Financial Setup
+    getFinancialSetupStepUseCase = GetFinancialSetupStepUseCase(userRepository);
+    setInitialBalanceUseCase = SetInitialBalanceUseCase(userRepository);
+    setInitialSavingsUseCase = SetInitialSavingsUseCase(userRepository, savingsRepository);
+    addInitialDebtUseCase = AddInitialDebtUseCase(debtRepository);
+    editInitialDebtUseCase = EditInitialDebtUseCase(debtRepository);
+    deleteInitialDebtUseCase = DeleteInitialDebtUseCase(debtRepository);
+    addInitialLendingUseCase = AddInitialLendingUseCase(lendingRepository, cycleRepository);
+    editInitialLendingUseCase = EditInitialLendingUseCase(lendingRepository);
+    deleteInitialLendingUseCase = DeleteInitialLendingUseCase(lendingRepository);
+    completeFinancialSetupUseCase = CompleteFinancialSetupUseCase(
+      userRepository,
+      cycleRepository,
+      incomeRepository,
+      expenseRepository,
+      lendingRepository,
+    );
+    getSetupSummaryUseCase = GetSetupSummaryUseCase(
+      userRepository, debtRepository, lendingRepository, savingsRepository,
     );
 
     // Use Cases — Lending
@@ -388,6 +452,9 @@ abstract final class Injection {
     generateNotificationUseCase = GenerateNotificationUseCase(
       cycleRepository: cycleRepository,
       expenseRepository: expenseRepository,
+      incomeRepository: incomeRepository,
+      debtRepository: debtRepository,
+      lendingRepository: lendingRepository,
     );
 
     // Notification Service

@@ -23,4 +23,27 @@ class UsersDao extends DatabaseAccessor<AppDatabase> with _$UsersDaoMixin {
           .write(UsersCompanion(isActivated: Value(activated)));
     }
   }
+
+  Future<void> updateInitialBalance(int userId, int balance) async {
+    await (update(users)..where((t) => t.id.equals(userId)))
+        .write(UsersCompanion(initialBalance: Value(balance)));
+  }
+
+  Future<void> updateFinancialSetupStep(int userId, int? step) async {
+    await (update(users)..where((t) => t.id.equals(userId))).write(
+      UsersCompanion(
+        financialSetupStep:
+            step != null ? Value(step) : const Value(null),
+      ),
+    );
+  }
+
+  Future<void> completeFinancialSetup(int userId) async {
+    await (update(users)..where((t) => t.id.equals(userId))).write(
+      const UsersCompanion(
+        hasCompletedFinancialSetup: Value(true),
+        financialSetupStep: Value(null),
+      ),
+    );
+  }
 }

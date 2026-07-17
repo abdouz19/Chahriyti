@@ -91,8 +91,8 @@ class _SplashPageState extends State<SplashPage>
                 opacity: _lottieOpacity,
                 child: Lottie.asset(
                   'assets/animations/welcome.json',
-                  width: 250,
-                  height: 250,
+                  width: 120,
+                  height: 120,
                   fit: BoxFit.contain,
                 ),
               ),

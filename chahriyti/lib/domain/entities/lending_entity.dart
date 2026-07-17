@@ -15,7 +15,7 @@ abstract class LendingEntity with _$LendingEntity {
     @Default(false) bool isFullyCollected,
     @Default(false) bool fromSavings,
     @Default(0) int savingsAmount,
-    required int cycleId,
+    int? cycleId,
     String? notes,
     required DateTime createdAt,
   }) = _LendingEntity;

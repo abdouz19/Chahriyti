@@ -28,16 +28,22 @@ class NotificationService {
       const androidSettings =
           AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosSettings = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
+        requestAlertPermission: false,
+        requestBadgePermission: false,
+        requestSoundPermission: false,
       );
       const settings = InitializationSettings(
         android: androidSettings,
         iOS: iosSettings,
       );
       await _plugin.initialize(settings);
+    } catch (_) {
+      // Notification init must never block app launch
+    }
+  }
 
+  Future<void> requestPermissionsAndShowWelcome() async {
+    try {
       // Request Android 13+ notification permission
       final androidImpl = _plugin
           .resolvePlatformSpecificImplementation<
@@ -51,7 +57,7 @@ class NotificationService {
         await _storage.write(key: _welcomeShownKey, value: '1');
       }
     } catch (_) {
-      // Notification init must never block app launch
+      // Silent fail if permission request fails
     }
   }
 

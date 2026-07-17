@@ -43,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -89,6 +89,27 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 10) {
             await m.addColumn(debts, debts.cycleId);
+          }
+          if (from < 11) {
+            await m.addColumn(users, users.initialBalance);
+            await m.addColumn(
+                users, users.hasCompletedFinancialSetup);
+            await m.addColumn(users, users.financialSetupStep);
+            // Existing activated users skip the wizard
+            await customStatement(
+              'UPDATE users SET has_completed_financial_setup = 1 '
+              'WHERE is_activated = 1',
+            );
+            // Recreate lendings table to make cycle_id nullable
+            await customStatement(
+                'ALTER TABLE lendings RENAME TO _lendings_old');
+            await m.create(lendings);
+            await customStatement(
+                'INSERT INTO lendings SELECT * FROM _lendings_old');
+            await customStatement('DROP TABLE _lendings_old');
+          }
+          if (from < 12) {
+            await m.addColumn(debts, debts.isSpent);
           }
         },
         beforeOpen: (details) async {

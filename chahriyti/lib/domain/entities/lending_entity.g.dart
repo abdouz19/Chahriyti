@@ -15,7 +15,7 @@ _LendingEntity _$LendingEntityFromJson(Map<String, dynamic> json) =>
       isFullyCollected: json['isFullyCollected'] as bool? ?? false,
       fromSavings: json['fromSavings'] as bool? ?? false,
       savingsAmount: (json['savingsAmount'] as num?)?.toInt() ?? 0,
-      cycleId: (json['cycleId'] as num).toInt(),
+      cycleId: (json['cycleId'] as num?)?.toInt(),
       notes: json['notes'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );

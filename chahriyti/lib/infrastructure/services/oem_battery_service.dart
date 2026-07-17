@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class OemBatteryService {
-  static const _channel = MethodChannel('com.example.chahriyti/oem');
+  static const _channel = MethodChannel('com.chahriyti.dz/oem');
   static const _storage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );

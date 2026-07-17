@@ -16,4 +16,10 @@ abstract class UserRepository {
   Future<bool> isActivated();
 
   Future<void> setActivated(bool activated);
+
+  Future<void> updateInitialBalance(int userId, int balance);
+
+  Future<void> updateFinancialSetupStep(int userId, int? step);
+
+  Future<void> completeFinancialSetup(int userId);
 }

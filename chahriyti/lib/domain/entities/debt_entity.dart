@@ -13,6 +13,7 @@ abstract class DebtEntity with _$DebtEntity {
     required int totalAmount,
     required int paidAmount,
     required bool isFullyPaid,
+    @Default(true) bool isSpent,
     required DateTime createdAt,
     String? notes,
   }) = _DebtEntity;

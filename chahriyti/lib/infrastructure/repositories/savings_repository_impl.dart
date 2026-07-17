@@ -100,4 +100,15 @@ class SavingsRepositoryImpl implements SavingsRepository {
   Future<void> updateWithdrawalAmountByDebtPaymentId(
           int debtPaymentId, int newAmount) =>
       _dao.updateAmountByRelatedDebtPaymentId(debtPaymentId, newAmount);
+
+  @override
+  Future<void> createInitialDeposit({required int amount}) async {
+    await _dao.insertRecord(
+      SavingsHistoryCompanion(
+        type: const Value('deposit'),
+        amount: Value(amount),
+        description: const Value('رصيد الادخار الأولي'),
+      ),
+    );
+  }
 }

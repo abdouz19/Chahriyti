@@ -16,6 +16,9 @@ abstract class UserEntity with _$UserEntity {
     required int wilayaCode,
     required bool isActivated,
     required bool challengesEnabled,
+    int? initialBalance,
+    @Default(false) bool hasCompletedFinancialSetup,
+    int? financialSetupStep,
     required DateTime createdAt,
   }) = _UserEntity;
 

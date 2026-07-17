@@ -93,7 +93,7 @@ class _LendingDetailView extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (_) => AddLendingPage(
-                        cycleId: currentState.lending.cycleId,
+                        cycleId: currentState.lending.cycleId ?? 0,
                         initialLending: currentState.lending,
                       ),
                     ),

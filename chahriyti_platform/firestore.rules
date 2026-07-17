@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper: check if user is authenticated
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    // Helper: get user role from custom claims
+    function getRole() {
+      return request.auth.token.role;
+    }
+
+    // Helper: check if user is admin
+    function isAdmin() {
+      return isAuth() && getRole() == 'admin';
+    }
+
+    // Helper: check if user is manager
+    function isManager() {
+      return isAuth() && getRole() == 'manager';
+    }
+
+    // Users collection: admin reads all, manager reads own doc only. Writes via Cloud Functions only.
+    match /users/{userId} {
+      allow read: if isAdmin() || (isAuth() && request.auth.uid == userId);
+      allow write: if false;
+    }
+
+    // Clients collection: admin reads all, manager reads own clients only. Writes via Cloud Functions only.
+    match /clients/{clientId} {
+      allow read: if isAdmin() || (isManager() && resource.data.managerId == request.auth.uid);
+      allow write: if false;
+    }
+
+    // Stats - global: any authenticated user can read. Writes via Cloud Functions only.
+    match /stats/global {
+      allow read: if isAuth();
+      allow write: if false;
+    }
+
+    // Stats - per manager: admin reads all, manager reads own. Writes via Cloud Functions only.
+    match /stats_managers/{managerId} {
+      allow read: if isAdmin() || (isAuth() && request.auth.uid == managerId);
+      allow write: if false;
+    }
+
+    // Stats - daily: any authenticated user can read. Writes via Cloud Functions only.
+    match /stats_daily/{date} {
+      allow read: if isAuth();
+      allow write: if false;
+    }
+
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

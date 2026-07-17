@@ -1,7 +1,7 @@
 name: chahriyti
 description: "شهريتي — Personal salary and expense management app for Algerian employees."
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+6
 
 environment:
   sdk: ^3.9.2
@@ -51,6 +51,9 @@ dependencies:
   intl: ^0.20.2
   equatable: ^2.0.7
 
+  # Splash & Launcher Icons
+  flutter_native_splash: ^2.4.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -59,10 +62,32 @@ dev_dependencies:
   drift_dev: ^2.25.0
   freezed: ^3.0.0
   json_serializable: ^6.9.4
+  flutter_launcher_icons: ^0.14.1
 
 flutter:
   uses-material-design: true
 
   assets:
+    - assets/icons/
     - assets/illustrations/
     - assets/animations/
+
+flutter_launcher_icons:
+  image_path: "assets/icons/CHAHRIYTI 512.png"
+  image_path_android: "assets/icons/CHAHRIYTI 512.png"
+  image_path_ios: "assets/icons/CHAHRIYTI 512.png"
+  android: true
+  ios: true
+  web:
+    generate: true
+    image_path: "assets/icons/CHAHRIYTI 512.png"
+
+flutter_native_splash:
+  image: "assets/icons/CHAHRIYTI png white.png"
+  color: "#0D6E6E"
+  color_dark: "#0D6E6E"
+  android: true
+  ios: true
+  web: false
+  android_gravity: center
+  ios_content_mode: center

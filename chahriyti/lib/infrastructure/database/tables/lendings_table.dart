@@ -10,7 +10,7 @@ class Lendings extends Table {
       boolean().withDefault(const Constant(false))();
   BoolColumn get fromSavings => boolean().withDefault(const Constant(false))();
   IntColumn get savingsAmount => integer().withDefault(const Constant(0))();
-  IntColumn get cycleId => integer()();
+  IntColumn get cycleId => integer().nullable()();
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }

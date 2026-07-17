@@ -292,7 +292,7 @@ class _DebtDetailView extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            _showAddPaymentDialog(context, debt.id);
+                            _showAddPaymentDialog(context, debt.id, debt.remainingAmount);
                           },
                           icon: const Icon(Icons.add),
                           label: const Text('إضافة سداد'),
@@ -366,7 +366,7 @@ class _DebtDetailView extends StatelessWidget {
     );
   }
 
-  void _showAddPaymentDialog(BuildContext context, int debtId) {
+  void _showAddPaymentDialog(BuildContext context, int debtId, int remainingAmount) {
     final amountController = TextEditingController();
     final debtCubit = context.read<DebtCubit>();
 
@@ -380,6 +380,7 @@ class _DebtDetailView extends StatelessWidget {
           return _PaymentDialog(
             amountController: amountController,
             savingsBalance: savingsBalance,
+            maxAmount: remainingAmount,
             onSubmit: (amount, fromSavings) async {
               Navigator.pop(dialogContext);
               if (!fromSavings) {
@@ -471,12 +472,14 @@ class _DebtDetailView extends StatelessWidget {
 class _PaymentDialog extends StatefulWidget {
   final TextEditingController amountController;
   final int savingsBalance;
+  final int maxAmount;
   final void Function(int amount, bool fromSavings) onSubmit;
   final VoidCallback onCancel;
 
   const _PaymentDialog({
     required this.amountController,
     required this.savingsBalance,
+    required this.maxAmount,
     required this.onSubmit,
     required this.onCancel,
   });
@@ -487,6 +490,7 @@ class _PaymentDialog extends StatefulWidget {
 
 class _PaymentDialogState extends State<_PaymentDialog> {
   bool _fromSavings = false;
+  String? _errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -498,9 +502,13 @@ class _PaymentDialogState extends State<_PaymentDialog> {
           TextField(
             controller: widget.amountController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
+            onChanged: (_) {
+              if (_errorText != null) setState(() => _errorText = null);
+            },
+            decoration: InputDecoration(
               hintText: 'المبلغ (بالدينار)',
               suffixText: 'دج',
+              errorText: _errorText,
             ),
           ),
           if (widget.savingsBalance > 0) ...[
@@ -528,9 +536,15 @@ class _PaymentDialogState extends State<_PaymentDialog> {
         ElevatedButton(
           onPressed: () {
             final amount = int.tryParse(widget.amountController.text);
-            if (amount != null && amount > 0) {
-              widget.onSubmit(amount, _fromSavings);
+            if (amount == null || amount <= 0) {
+              setState(() => _errorText = 'أدخل مبلغاً صحيحاً');
+              return;
             }
+            if (amount > widget.maxAmount) {
+              setState(() => _errorText = 'المبلغ يتجاوز المتبقي (${widget.maxAmount} دج)');
+              return;
+            }
+            widget.onSubmit(amount, _fromSavings);
           },
           child: const Text('إضافة'),
         ),

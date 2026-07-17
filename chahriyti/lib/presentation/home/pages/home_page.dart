@@ -9,7 +9,6 @@ import '../../shared/widgets/loading_shimmer.dart';
 import '../cubits/dashboard_cubit.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/consumption_bar.dart';
-
 import '../widgets/daily_average_widget.dart';
 import '../widgets/days_remaining_widget.dart';
 import '../widgets/debt_summary_card.dart';

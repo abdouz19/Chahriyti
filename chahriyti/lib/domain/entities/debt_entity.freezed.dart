@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DebtEntity {
 
- int get id; String get creditorName; int get totalAmount; int get paidAmount; bool get isFullyPaid; DateTime get createdAt; String? get notes;
+ int get id; String get creditorName; int get totalAmount; int get paidAmount; bool get isFullyPaid; bool get isSpent; DateTime get createdAt; String? get notes;
 /// Create a copy of DebtEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DebtEntityCopyWith<DebtEntity> get copyWith => _$DebtEntityCopyWithImpl<DebtEnt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DebtEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.creditorName, creditorName) || other.creditorName == creditorName)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.isFullyPaid, isFullyPaid) || other.isFullyPaid == isFullyPaid)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.notes, notes) || other.notes == notes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DebtEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.creditorName, creditorName) || other.creditorName == creditorName)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.isFullyPaid, isFullyPaid) || other.isFullyPaid == isFullyPaid)&&(identical(other.isSpent, isSpent) || other.isSpent == isSpent)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.notes, notes) || other.notes == notes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,creditorName,totalAmount,paidAmount,isFullyPaid,createdAt,notes);
+int get hashCode => Object.hash(runtimeType,id,creditorName,totalAmount,paidAmount,isFullyPaid,isSpent,createdAt,notes);
 
 @override
 String toString() {
-  return 'DebtEntity(id: $id, creditorName: $creditorName, totalAmount: $totalAmount, paidAmount: $paidAmount, isFullyPaid: $isFullyPaid, createdAt: $createdAt, notes: $notes)';
+  return 'DebtEntity(id: $id, creditorName: $creditorName, totalAmount: $totalAmount, paidAmount: $paidAmount, isFullyPaid: $isFullyPaid, isSpent: $isSpent, createdAt: $createdAt, notes: $notes)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $DebtEntityCopyWith<$Res>  {
   factory $DebtEntityCopyWith(DebtEntity value, $Res Function(DebtEntity) _then) = _$DebtEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String creditorName, int totalAmount, int paidAmount, bool isFullyPaid, DateTime createdAt, String? notes
+ int id, String creditorName, int totalAmount, int paidAmount, bool isFullyPaid, bool isSpent, DateTime createdAt, String? notes
 });
 
 
@@ -65,13 +65,14 @@ class _$DebtEntityCopyWithImpl<$Res>
 
 /// Create a copy of DebtEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? creditorName = null,Object? totalAmount = null,Object? paidAmount = null,Object? isFullyPaid = null,Object? createdAt = null,Object? notes = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? creditorName = null,Object? totalAmount = null,Object? paidAmount = null,Object? isFullyPaid = null,Object? isSpent = null,Object? createdAt = null,Object? notes = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,creditorName: null == creditorName ? _self.creditorName : creditorName // ignore: cast_nullable_to_non_nullable
 as String,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
 as int,paidAmount: null == paidAmount ? _self.paidAmount : paidAmount // ignore: cast_nullable_to_non_nullable
 as int,isFullyPaid: null == isFullyPaid ? _self.isFullyPaid : isFullyPaid // ignore: cast_nullable_to_non_nullable
+as bool,isSpent: null == isSpent ? _self.isSpent : isSpent // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String creditorName,  int totalAmount,  int paidAmount,  bool isFullyPaid,  DateTime createdAt,  String? notes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String creditorName,  int totalAmount,  int paidAmount,  bool isFullyPaid,  bool isSpent,  DateTime createdAt,  String? notes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DebtEntity() when $default != null:
-return $default(_that.id,_that.creditorName,_that.totalAmount,_that.paidAmount,_that.isFullyPaid,_that.createdAt,_that.notes);case _:
+return $default(_that.id,_that.creditorName,_that.totalAmount,_that.paidAmount,_that.isFullyPaid,_that.isSpent,_that.createdAt,_that.notes);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.id,_that.creditorName,_that.totalAmount,_that.paidAmount,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String creditorName,  int totalAmount,  int paidAmount,  bool isFullyPaid,  DateTime createdAt,  String? notes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String creditorName,  int totalAmount,  int paidAmount,  bool isFullyPaid,  bool isSpent,  DateTime createdAt,  String? notes)  $default,) {final _that = this;
 switch (_that) {
 case _DebtEntity():
-return $default(_that.id,_that.creditorName,_that.totalAmount,_that.paidAmount,_that.isFullyPaid,_that.createdAt,_that.notes);case _:
+return $default(_that.id,_that.creditorName,_that.totalAmount,_that.paidAmount,_that.isFullyPaid,_that.isSpent,_that.createdAt,_that.notes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.id,_that.creditorName,_that.totalAmount,_that.paidAmount,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String creditorName,  int totalAmount,  int paidAmount,  bool isFullyPaid,  DateTime createdAt,  String? notes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String creditorName,  int totalAmount,  int paidAmount,  bool isFullyPaid,  bool isSpent,  DateTime createdAt,  String? notes)?  $default,) {final _that = this;
 switch (_that) {
 case _DebtEntity() when $default != null:
-return $default(_that.id,_that.creditorName,_that.totalAmount,_that.paidAmount,_that.isFullyPaid,_that.createdAt,_that.notes);case _:
+return $default(_that.id,_that.creditorName,_that.totalAmount,_that.paidAmount,_that.isFullyPaid,_that.isSpent,_that.createdAt,_that.notes);case _:
   return null;
 
 }
@@ -215,7 +216,7 @@ return $default(_that.id,_that.creditorName,_that.totalAmount,_that.paidAmount,_
 @JsonSerializable()
 
 class _DebtEntity extends DebtEntity {
-  const _DebtEntity({required this.id, required this.creditorName, required this.totalAmount, required this.paidAmount, required this.isFullyPaid, required this.createdAt, this.notes}): super._();
+  const _DebtEntity({required this.id, required this.creditorName, required this.totalAmount, required this.paidAmount, required this.isFullyPaid, this.isSpent = true, required this.createdAt, this.notes}): super._();
   factory _DebtEntity.fromJson(Map<String, dynamic> json) => _$DebtEntityFromJson(json);
 
 @override final  int id;
@@ -223,6 +224,7 @@ class _DebtEntity extends DebtEntity {
 @override final  int totalAmount;
 @override final  int paidAmount;
 @override final  bool isFullyPaid;
+@override@JsonKey() final  bool isSpent;
 @override final  DateTime createdAt;
 @override final  String? notes;
 
@@ -239,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DebtEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.creditorName, creditorName) || other.creditorName == creditorName)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.isFullyPaid, isFullyPaid) || other.isFullyPaid == isFullyPaid)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.notes, notes) || other.notes == notes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DebtEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.creditorName, creditorName) || other.creditorName == creditorName)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.isFullyPaid, isFullyPaid) || other.isFullyPaid == isFullyPaid)&&(identical(other.isSpent, isSpent) || other.isSpent == isSpent)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.notes, notes) || other.notes == notes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,creditorName,totalAmount,paidAmount,isFullyPaid,createdAt,notes);
+int get hashCode => Object.hash(runtimeType,id,creditorName,totalAmount,paidAmount,isFullyPaid,isSpent,createdAt,notes);
 
 @override
 String toString() {
-  return 'DebtEntity(id: $id, creditorName: $creditorName, totalAmount: $totalAmount, paidAmount: $paidAmount, isFullyPaid: $isFullyPaid, createdAt: $createdAt, notes: $notes)';
+  return 'DebtEntity(id: $id, creditorName: $creditorName, totalAmount: $totalAmount, paidAmount: $paidAmount, isFullyPaid: $isFullyPaid, isSpent: $isSpent, createdAt: $createdAt, notes: $notes)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$DebtEntityCopyWith<$Res> implements $DebtEntityCopyWith<$
   factory _$DebtEntityCopyWith(_DebtEntity value, $Res Function(_DebtEntity) _then) = __$DebtEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String creditorName, int totalAmount, int paidAmount, bool isFullyPaid, DateTime createdAt, String? notes
+ int id, String creditorName, int totalAmount, int paidAmount, bool isFullyPaid, bool isSpent, DateTime createdAt, String? notes
 });
 
 
@@ -276,13 +278,14 @@ class __$DebtEntityCopyWithImpl<$Res>
 
 /// Create a copy of DebtEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? creditorName = null,Object? totalAmount = null,Object? paidAmount = null,Object? isFullyPaid = null,Object? createdAt = null,Object? notes = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? creditorName = null,Object? totalAmount = null,Object? paidAmount = null,Object? isFullyPaid = null,Object? isSpent = null,Object? createdAt = null,Object? notes = freezed,}) {
   return _then(_DebtEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,creditorName: null == creditorName ? _self.creditorName : creditorName // ignore: cast_nullable_to_non_nullable
 as String,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
 as int,paidAmount: null == paidAmount ? _self.paidAmount : paidAmount // ignore: cast_nullable_to_non_nullable
 as int,isFullyPaid: null == isFullyPaid ? _self.isFullyPaid : isFullyPaid // ignore: cast_nullable_to_non_nullable
+as bool,isSpent: null == isSpent ? _self.isSpent : isSpent // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,

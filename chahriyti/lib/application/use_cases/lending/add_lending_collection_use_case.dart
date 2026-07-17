@@ -38,7 +38,7 @@ class AddLendingCollectionUseCase {
       await _savingsRepository.createDeposit(
         amount: amount,
         description: 'تحصيل سلفة - ${lending.borrowerName}',
-        cycleId: lending.cycleId,
+        cycleId: lending.cycleId ?? 0,
       );
     }
   }

@@ -18,6 +18,7 @@ class DebtRepositoryImpl implements DebtRepository {
         totalAmount: row.totalAmount,
         paidAmount: row.paidAmount,
         isFullyPaid: row.isFullyPaid,
+        isSpent: row.isSpent,
         createdAt: row.createdAt,
         notes: row.notes,
       );
@@ -28,6 +29,7 @@ class DebtRepositoryImpl implements DebtRepository {
     required int totalAmount,
     String? notes,
     int? cycleId,
+    bool isSpent = true,
   }) async {
     return _dao.insertDebt(
       DebtsCompanion(
@@ -37,6 +39,7 @@ class DebtRepositoryImpl implements DebtRepository {
         isFullyPaid: const Value(false),
         notes: notes != null ? Value(notes) : const Value.absent(),
         cycleId: cycleId != null ? Value(cycleId) : const Value.absent(),
+        isSpent: Value(isSpent),
       ),
     );
   }
@@ -92,12 +95,14 @@ class DebtRepositoryImpl implements DebtRepository {
     String? creditorName,
     int? totalAmount,
     String? notes,
+    bool? isSpent,
   }) =>
       _dao.updateDebt(
         id: id,
         creditorName: creditorName,
         totalAmount: totalAmount,
         notes: notes,
+        isSpent: isSpent,
       );
 
   @override

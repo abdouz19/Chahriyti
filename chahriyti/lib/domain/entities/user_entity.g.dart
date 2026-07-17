@@ -15,6 +15,10 @@ _UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => _UserEntity(
   wilayaCode: (json['wilayaCode'] as num).toInt(),
   isActivated: json['isActivated'] as bool,
   challengesEnabled: json['challengesEnabled'] as bool,
+  initialBalance: (json['initialBalance'] as num?)?.toInt(),
+  hasCompletedFinancialSetup:
+      json['hasCompletedFinancialSetup'] as bool? ?? false,
+  financialSetupStep: (json['financialSetupStep'] as num?)?.toInt(),
   createdAt: DateTime.parse(json['createdAt'] as String),
 );
 
@@ -28,5 +32,8 @@ Map<String, dynamic> _$UserEntityToJson(_UserEntity instance) =>
       'wilayaCode': instance.wilayaCode,
       'isActivated': instance.isActivated,
       'challengesEnabled': instance.challengesEnabled,
+      'initialBalance': instance.initialBalance,
+      'hasCompletedFinancialSetup': instance.hasCompletedFinancialSetup,
+      'financialSetupStep': instance.financialSetupStep,
       'createdAt': instance.createdAt.toIso8601String(),
     };

@@ -19,6 +19,9 @@ class UserRepositoryImpl implements UserRepository {
         wilayaCode: row.wilayaCode,
         isActivated: row.isActivated,
         challengesEnabled: row.challengesEnabled,
+        initialBalance: row.initialBalance,
+        hasCompletedFinancialSetup: row.hasCompletedFinancialSetup,
+        financialSetupStep: row.financialSetupStep,
         createdAt: row.createdAt,
       );
 
@@ -62,6 +65,9 @@ class UserRepositoryImpl implements UserRepository {
         wilayaCode: user.wilayaCode,
         isActivated: user.isActivated,
         challengesEnabled: user.challengesEnabled,
+        initialBalance: user.initialBalance,
+        hasCompletedFinancialSetup: user.hasCompletedFinancialSetup,
+        financialSetupStep: user.financialSetupStep,
         createdAt: user.createdAt,
       ),
     );
@@ -75,4 +81,16 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<void> setActivated(bool activated) => _dao.setActivated(activated);
+
+  @override
+  Future<void> updateInitialBalance(int userId, int balance) =>
+      _dao.updateInitialBalance(userId, balance);
+
+  @override
+  Future<void> updateFinancialSetupStep(int userId, int? step) =>
+      _dao.updateFinancialSetupStep(userId, step);
+
+  @override
+  Future<void> completeFinancialSetup(int userId) =>
+      _dao.completeFinancialSetup(userId);
 }

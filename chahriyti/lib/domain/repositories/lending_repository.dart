@@ -7,7 +7,7 @@ abstract class LendingRepository {
     required int totalAmount,
     required bool fromSavings,
     int savingsAmount = 0,
-    required int cycleId,
+    int? cycleId,
     String? notes,
   });
 

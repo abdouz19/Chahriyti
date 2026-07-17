@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LendingEntity {
 
- int get id; String get borrowerName; int get totalAmount; int get collectedAmount; bool get isFullyCollected; bool get fromSavings; int get savingsAmount; int get cycleId; String? get notes; DateTime get createdAt;
+ int get id; String get borrowerName; int get totalAmount; int get collectedAmount; bool get isFullyCollected; bool get fromSavings; int get savingsAmount; int? get cycleId; String? get notes; DateTime get createdAt;
 /// Create a copy of LendingEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $LendingEntityCopyWith<$Res>  {
   factory $LendingEntityCopyWith(LendingEntity value, $Res Function(LendingEntity) _then) = _$LendingEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String borrowerName, int totalAmount, int collectedAmount, bool isFullyCollected, bool fromSavings, int savingsAmount, int cycleId, String? notes, DateTime createdAt
+ int id, String borrowerName, int totalAmount, int collectedAmount, bool isFullyCollected, bool fromSavings, int savingsAmount, int? cycleId, String? notes, DateTime createdAt
 });
 
 
@@ -65,7 +65,7 @@ class _$LendingEntityCopyWithImpl<$Res>
 
 /// Create a copy of LendingEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? borrowerName = null,Object? totalAmount = null,Object? collectedAmount = null,Object? isFullyCollected = null,Object? fromSavings = null,Object? savingsAmount = null,Object? cycleId = null,Object? notes = freezed,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? borrowerName = null,Object? totalAmount = null,Object? collectedAmount = null,Object? isFullyCollected = null,Object? fromSavings = null,Object? savingsAmount = null,Object? cycleId = freezed,Object? notes = freezed,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,borrowerName: null == borrowerName ? _self.borrowerName : borrowerName // ignore: cast_nullable_to_non_nullable
@@ -74,8 +74,8 @@ as int,collectedAmount: null == collectedAmount ? _self.collectedAmount : collec
 as int,isFullyCollected: null == isFullyCollected ? _self.isFullyCollected : isFullyCollected // ignore: cast_nullable_to_non_nullable
 as bool,fromSavings: null == fromSavings ? _self.fromSavings : fromSavings // ignore: cast_nullable_to_non_nullable
 as bool,savingsAmount: null == savingsAmount ? _self.savingsAmount : savingsAmount // ignore: cast_nullable_to_non_nullable
-as int,cycleId: null == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
-as int,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as int,cycleId: freezed == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
+as int?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -162,7 +162,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String borrowerName,  int totalAmount,  int collectedAmount,  bool isFullyCollected,  bool fromSavings,  int savingsAmount,  int cycleId,  String? notes,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String borrowerName,  int totalAmount,  int collectedAmount,  bool isFullyCollected,  bool fromSavings,  int savingsAmount,  int? cycleId,  String? notes,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LendingEntity() when $default != null:
 return $default(_that.id,_that.borrowerName,_that.totalAmount,_that.collectedAmount,_that.isFullyCollected,_that.fromSavings,_that.savingsAmount,_that.cycleId,_that.notes,_that.createdAt);case _:
@@ -183,7 +183,7 @@ return $default(_that.id,_that.borrowerName,_that.totalAmount,_that.collectedAmo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String borrowerName,  int totalAmount,  int collectedAmount,  bool isFullyCollected,  bool fromSavings,  int savingsAmount,  int cycleId,  String? notes,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String borrowerName,  int totalAmount,  int collectedAmount,  bool isFullyCollected,  bool fromSavings,  int savingsAmount,  int? cycleId,  String? notes,  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _LendingEntity():
 return $default(_that.id,_that.borrowerName,_that.totalAmount,_that.collectedAmount,_that.isFullyCollected,_that.fromSavings,_that.savingsAmount,_that.cycleId,_that.notes,_that.createdAt);case _:
@@ -203,7 +203,7 @@ return $default(_that.id,_that.borrowerName,_that.totalAmount,_that.collectedAmo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String borrowerName,  int totalAmount,  int collectedAmount,  bool isFullyCollected,  bool fromSavings,  int savingsAmount,  int cycleId,  String? notes,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String borrowerName,  int totalAmount,  int collectedAmount,  bool isFullyCollected,  bool fromSavings,  int savingsAmount,  int? cycleId,  String? notes,  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _LendingEntity() when $default != null:
 return $default(_that.id,_that.borrowerName,_that.totalAmount,_that.collectedAmount,_that.isFullyCollected,_that.fromSavings,_that.savingsAmount,_that.cycleId,_that.notes,_that.createdAt);case _:
@@ -218,7 +218,7 @@ return $default(_that.id,_that.borrowerName,_that.totalAmount,_that.collectedAmo
 @JsonSerializable()
 
 class _LendingEntity extends LendingEntity {
-  const _LendingEntity({required this.id, required this.borrowerName, required this.totalAmount, this.collectedAmount = 0, this.isFullyCollected = false, this.fromSavings = false, this.savingsAmount = 0, required this.cycleId, this.notes, required this.createdAt}): super._();
+  const _LendingEntity({required this.id, required this.borrowerName, required this.totalAmount, this.collectedAmount = 0, this.isFullyCollected = false, this.fromSavings = false, this.savingsAmount = 0, this.cycleId, this.notes, required this.createdAt}): super._();
   factory _LendingEntity.fromJson(Map<String, dynamic> json) => _$LendingEntityFromJson(json);
 
 @override final  int id;
@@ -228,7 +228,7 @@ class _LendingEntity extends LendingEntity {
 @override@JsonKey() final  bool isFullyCollected;
 @override@JsonKey() final  bool fromSavings;
 @override@JsonKey() final  int savingsAmount;
-@override final  int cycleId;
+@override final  int? cycleId;
 @override final  String? notes;
 @override final  DateTime createdAt;
 
@@ -265,7 +265,7 @@ abstract mixin class _$LendingEntityCopyWith<$Res> implements $LendingEntityCopy
   factory _$LendingEntityCopyWith(_LendingEntity value, $Res Function(_LendingEntity) _then) = __$LendingEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String borrowerName, int totalAmount, int collectedAmount, bool isFullyCollected, bool fromSavings, int savingsAmount, int cycleId, String? notes, DateTime createdAt
+ int id, String borrowerName, int totalAmount, int collectedAmount, bool isFullyCollected, bool fromSavings, int savingsAmount, int? cycleId, String? notes, DateTime createdAt
 });
 
 
@@ -282,7 +282,7 @@ class __$LendingEntityCopyWithImpl<$Res>
 
 /// Create a copy of LendingEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? borrowerName = null,Object? totalAmount = null,Object? collectedAmount = null,Object? isFullyCollected = null,Object? fromSavings = null,Object? savingsAmount = null,Object? cycleId = null,Object? notes = freezed,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? borrowerName = null,Object? totalAmount = null,Object? collectedAmount = null,Object? isFullyCollected = null,Object? fromSavings = null,Object? savingsAmount = null,Object? cycleId = freezed,Object? notes = freezed,Object? createdAt = null,}) {
   return _then(_LendingEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,borrowerName: null == borrowerName ? _self.borrowerName : borrowerName // ignore: cast_nullable_to_non_nullable
@@ -291,8 +291,8 @@ as int,collectedAmount: null == collectedAmount ? _self.collectedAmount : collec
 as int,isFullyCollected: null == isFullyCollected ? _self.isFullyCollected : isFullyCollected // ignore: cast_nullable_to_non_nullable
 as bool,fromSavings: null == fromSavings ? _self.fromSavings : fromSavings // ignore: cast_nullable_to_non_nullable
 as bool,savingsAmount: null == savingsAmount ? _self.savingsAmount : savingsAmount // ignore: cast_nullable_to_non_nullable
-as int,cycleId: null == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
-as int,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as int,cycleId: freezed == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
+as int?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

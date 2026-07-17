@@ -1,4 +1,4 @@
-package com.example.chahriyti
+package com.chahriyti.dz
 
 import android.content.Intent
 import android.os.Build
@@ -8,8 +8,8 @@ import io.flutter.plugin.common.MethodChannel
 import java.util.TimeZone
 
 class MainActivity : FlutterActivity() {
-    private val timezoneChannel = "com.example.chahriyti/timezone"
-    private val oemChannel = "com.example.chahriyti/oem"
+    private val timezoneChannel = "com.chahriyti.dz/timezone"
+    private val oemChannel = "com.chahriyti.dz/oem"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

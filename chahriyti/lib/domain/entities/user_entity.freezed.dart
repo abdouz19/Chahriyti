@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserEntity {
 
- int get id; int get monthlySalary; int get salaryDay; String get fullName; String get phoneNumber; int get wilayaCode; bool get isActivated; bool get challengesEnabled; DateTime get createdAt;
+ int get id; int get monthlySalary; int get salaryDay; String get fullName; String get phoneNumber; int get wilayaCode; bool get isActivated; bool get challengesEnabled; int? get initialBalance; bool get hasCompletedFinancialSetup; int? get financialSetupStep; DateTime get createdAt;
 /// Create a copy of UserEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserEntityCopyWith<UserEntity> get copyWith => _$UserEntityCopyWithImpl<UserEnt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.monthlySalary, monthlySalary) || other.monthlySalary == monthlySalary)&&(identical(other.salaryDay, salaryDay) || other.salaryDay == salaryDay)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.wilayaCode, wilayaCode) || other.wilayaCode == wilayaCode)&&(identical(other.isActivated, isActivated) || other.isActivated == isActivated)&&(identical(other.challengesEnabled, challengesEnabled) || other.challengesEnabled == challengesEnabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.monthlySalary, monthlySalary) || other.monthlySalary == monthlySalary)&&(identical(other.salaryDay, salaryDay) || other.salaryDay == salaryDay)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.wilayaCode, wilayaCode) || other.wilayaCode == wilayaCode)&&(identical(other.isActivated, isActivated) || other.isActivated == isActivated)&&(identical(other.challengesEnabled, challengesEnabled) || other.challengesEnabled == challengesEnabled)&&(identical(other.initialBalance, initialBalance) || other.initialBalance == initialBalance)&&(identical(other.hasCompletedFinancialSetup, hasCompletedFinancialSetup) || other.hasCompletedFinancialSetup == hasCompletedFinancialSetup)&&(identical(other.financialSetupStep, financialSetupStep) || other.financialSetupStep == financialSetupStep)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,monthlySalary,salaryDay,fullName,phoneNumber,wilayaCode,isActivated,challengesEnabled,createdAt);
+int get hashCode => Object.hash(runtimeType,id,monthlySalary,salaryDay,fullName,phoneNumber,wilayaCode,isActivated,challengesEnabled,initialBalance,hasCompletedFinancialSetup,financialSetupStep,createdAt);
 
 @override
 String toString() {
-  return 'UserEntity(id: $id, monthlySalary: $monthlySalary, salaryDay: $salaryDay, fullName: $fullName, phoneNumber: $phoneNumber, wilayaCode: $wilayaCode, isActivated: $isActivated, challengesEnabled: $challengesEnabled, createdAt: $createdAt)';
+  return 'UserEntity(id: $id, monthlySalary: $monthlySalary, salaryDay: $salaryDay, fullName: $fullName, phoneNumber: $phoneNumber, wilayaCode: $wilayaCode, isActivated: $isActivated, challengesEnabled: $challengesEnabled, initialBalance: $initialBalance, hasCompletedFinancialSetup: $hasCompletedFinancialSetup, financialSetupStep: $financialSetupStep, createdAt: $createdAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserEntityCopyWith<$Res>  {
   factory $UserEntityCopyWith(UserEntity value, $Res Function(UserEntity) _then) = _$UserEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, int monthlySalary, int salaryDay, String fullName, String phoneNumber, int wilayaCode, bool isActivated, bool challengesEnabled, DateTime createdAt
+ int id, int monthlySalary, int salaryDay, String fullName, String phoneNumber, int wilayaCode, bool isActivated, bool challengesEnabled, int? initialBalance, bool hasCompletedFinancialSetup, int? financialSetupStep, DateTime createdAt
 });
 
 
@@ -65,7 +65,7 @@ class _$UserEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? monthlySalary = null,Object? salaryDay = null,Object? fullName = null,Object? phoneNumber = null,Object? wilayaCode = null,Object? isActivated = null,Object? challengesEnabled = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? monthlySalary = null,Object? salaryDay = null,Object? fullName = null,Object? phoneNumber = null,Object? wilayaCode = null,Object? isActivated = null,Object? challengesEnabled = null,Object? initialBalance = freezed,Object? hasCompletedFinancialSetup = null,Object? financialSetupStep = freezed,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,monthlySalary: null == monthlySalary ? _self.monthlySalary : monthlySalary // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,10 @@ as String,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // 
 as String,wilayaCode: null == wilayaCode ? _self.wilayaCode : wilayaCode // ignore: cast_nullable_to_non_nullable
 as int,isActivated: null == isActivated ? _self.isActivated : isActivated // ignore: cast_nullable_to_non_nullable
 as bool,challengesEnabled: null == challengesEnabled ? _self.challengesEnabled : challengesEnabled // ignore: cast_nullable_to_non_nullable
-as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as bool,initialBalance: freezed == initialBalance ? _self.initialBalance : initialBalance // ignore: cast_nullable_to_non_nullable
+as int?,hasCompletedFinancialSetup: null == hasCompletedFinancialSetup ? _self.hasCompletedFinancialSetup : hasCompletedFinancialSetup // ignore: cast_nullable_to_non_nullable
+as bool,financialSetupStep: freezed == financialSetupStep ? _self.financialSetupStep : financialSetupStep // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -161,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int monthlySalary,  int salaryDay,  String fullName,  String phoneNumber,  int wilayaCode,  bool isActivated,  bool challengesEnabled,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int monthlySalary,  int salaryDay,  String fullName,  String phoneNumber,  int wilayaCode,  bool isActivated,  bool challengesEnabled,  int? initialBalance,  bool hasCompletedFinancialSetup,  int? financialSetupStep,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserEntity() when $default != null:
-return $default(_that.id,_that.monthlySalary,_that.salaryDay,_that.fullName,_that.phoneNumber,_that.wilayaCode,_that.isActivated,_that.challengesEnabled,_that.createdAt);case _:
+return $default(_that.id,_that.monthlySalary,_that.salaryDay,_that.fullName,_that.phoneNumber,_that.wilayaCode,_that.isActivated,_that.challengesEnabled,_that.initialBalance,_that.hasCompletedFinancialSetup,_that.financialSetupStep,_that.createdAt);case _:
   return orElse();
 
 }
@@ -182,10 +185,10 @@ return $default(_that.id,_that.monthlySalary,_that.salaryDay,_that.fullName,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int monthlySalary,  int salaryDay,  String fullName,  String phoneNumber,  int wilayaCode,  bool isActivated,  bool challengesEnabled,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int monthlySalary,  int salaryDay,  String fullName,  String phoneNumber,  int wilayaCode,  bool isActivated,  bool challengesEnabled,  int? initialBalance,  bool hasCompletedFinancialSetup,  int? financialSetupStep,  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _UserEntity():
-return $default(_that.id,_that.monthlySalary,_that.salaryDay,_that.fullName,_that.phoneNumber,_that.wilayaCode,_that.isActivated,_that.challengesEnabled,_that.createdAt);case _:
+return $default(_that.id,_that.monthlySalary,_that.salaryDay,_that.fullName,_that.phoneNumber,_that.wilayaCode,_that.isActivated,_that.challengesEnabled,_that.initialBalance,_that.hasCompletedFinancialSetup,_that.financialSetupStep,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +205,10 @@ return $default(_that.id,_that.monthlySalary,_that.salaryDay,_that.fullName,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int monthlySalary,  int salaryDay,  String fullName,  String phoneNumber,  int wilayaCode,  bool isActivated,  bool challengesEnabled,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int monthlySalary,  int salaryDay,  String fullName,  String phoneNumber,  int wilayaCode,  bool isActivated,  bool challengesEnabled,  int? initialBalance,  bool hasCompletedFinancialSetup,  int? financialSetupStep,  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _UserEntity() when $default != null:
-return $default(_that.id,_that.monthlySalary,_that.salaryDay,_that.fullName,_that.phoneNumber,_that.wilayaCode,_that.isActivated,_that.challengesEnabled,_that.createdAt);case _:
+return $default(_that.id,_that.monthlySalary,_that.salaryDay,_that.fullName,_that.phoneNumber,_that.wilayaCode,_that.isActivated,_that.challengesEnabled,_that.initialBalance,_that.hasCompletedFinancialSetup,_that.financialSetupStep,_that.createdAt);case _:
   return null;
 
 }
@@ -217,7 +220,7 @@ return $default(_that.id,_that.monthlySalary,_that.salaryDay,_that.fullName,_tha
 @JsonSerializable()
 
 class _UserEntity extends UserEntity {
-  const _UserEntity({required this.id, required this.monthlySalary, required this.salaryDay, required this.fullName, required this.phoneNumber, required this.wilayaCode, required this.isActivated, required this.challengesEnabled, required this.createdAt}): super._();
+  const _UserEntity({required this.id, required this.monthlySalary, required this.salaryDay, required this.fullName, required this.phoneNumber, required this.wilayaCode, required this.isActivated, required this.challengesEnabled, this.initialBalance, this.hasCompletedFinancialSetup = false, this.financialSetupStep, required this.createdAt}): super._();
   factory _UserEntity.fromJson(Map<String, dynamic> json) => _$UserEntityFromJson(json);
 
 @override final  int id;
@@ -228,6 +231,9 @@ class _UserEntity extends UserEntity {
 @override final  int wilayaCode;
 @override final  bool isActivated;
 @override final  bool challengesEnabled;
+@override final  int? initialBalance;
+@override@JsonKey() final  bool hasCompletedFinancialSetup;
+@override final  int? financialSetupStep;
 @override final  DateTime createdAt;
 
 /// Create a copy of UserEntity
@@ -243,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.monthlySalary, monthlySalary) || other.monthlySalary == monthlySalary)&&(identical(other.salaryDay, salaryDay) || other.salaryDay == salaryDay)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.wilayaCode, wilayaCode) || other.wilayaCode == wilayaCode)&&(identical(other.isActivated, isActivated) || other.isActivated == isActivated)&&(identical(other.challengesEnabled, challengesEnabled) || other.challengesEnabled == challengesEnabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.monthlySalary, monthlySalary) || other.monthlySalary == monthlySalary)&&(identical(other.salaryDay, salaryDay) || other.salaryDay == salaryDay)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.wilayaCode, wilayaCode) || other.wilayaCode == wilayaCode)&&(identical(other.isActivated, isActivated) || other.isActivated == isActivated)&&(identical(other.challengesEnabled, challengesEnabled) || other.challengesEnabled == challengesEnabled)&&(identical(other.initialBalance, initialBalance) || other.initialBalance == initialBalance)&&(identical(other.hasCompletedFinancialSetup, hasCompletedFinancialSetup) || other.hasCompletedFinancialSetup == hasCompletedFinancialSetup)&&(identical(other.financialSetupStep, financialSetupStep) || other.financialSetupStep == financialSetupStep)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,monthlySalary,salaryDay,fullName,phoneNumber,wilayaCode,isActivated,challengesEnabled,createdAt);
+int get hashCode => Object.hash(runtimeType,id,monthlySalary,salaryDay,fullName,phoneNumber,wilayaCode,isActivated,challengesEnabled,initialBalance,hasCompletedFinancialSetup,financialSetupStep,createdAt);
 
 @override
 String toString() {
-  return 'UserEntity(id: $id, monthlySalary: $monthlySalary, salaryDay: $salaryDay, fullName: $fullName, phoneNumber: $phoneNumber, wilayaCode: $wilayaCode, isActivated: $isActivated, challengesEnabled: $challengesEnabled, createdAt: $createdAt)';
+  return 'UserEntity(id: $id, monthlySalary: $monthlySalary, salaryDay: $salaryDay, fullName: $fullName, phoneNumber: $phoneNumber, wilayaCode: $wilayaCode, isActivated: $isActivated, challengesEnabled: $challengesEnabled, initialBalance: $initialBalance, hasCompletedFinancialSetup: $hasCompletedFinancialSetup, financialSetupStep: $financialSetupStep, createdAt: $createdAt)';
 }
 
 
@@ -263,7 +269,7 @@ abstract mixin class _$UserEntityCopyWith<$Res> implements $UserEntityCopyWith<$
   factory _$UserEntityCopyWith(_UserEntity value, $Res Function(_UserEntity) _then) = __$UserEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int monthlySalary, int salaryDay, String fullName, String phoneNumber, int wilayaCode, bool isActivated, bool challengesEnabled, DateTime createdAt
+ int id, int monthlySalary, int salaryDay, String fullName, String phoneNumber, int wilayaCode, bool isActivated, bool challengesEnabled, int? initialBalance, bool hasCompletedFinancialSetup, int? financialSetupStep, DateTime createdAt
 });
 
 
@@ -280,7 +286,7 @@ class __$UserEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? monthlySalary = null,Object? salaryDay = null,Object? fullName = null,Object? phoneNumber = null,Object? wilayaCode = null,Object? isActivated = null,Object? challengesEnabled = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? monthlySalary = null,Object? salaryDay = null,Object? fullName = null,Object? phoneNumber = null,Object? wilayaCode = null,Object? isActivated = null,Object? challengesEnabled = null,Object? initialBalance = freezed,Object? hasCompletedFinancialSetup = null,Object? financialSetupStep = freezed,Object? createdAt = null,}) {
   return _then(_UserEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,monthlySalary: null == monthlySalary ? _self.monthlySalary : monthlySalary // ignore: cast_nullable_to_non_nullable
@@ -290,7 +296,10 @@ as String,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // 
 as String,wilayaCode: null == wilayaCode ? _self.wilayaCode : wilayaCode // ignore: cast_nullable_to_non_nullable
 as int,isActivated: null == isActivated ? _self.isActivated : isActivated // ignore: cast_nullable_to_non_nullable
 as bool,challengesEnabled: null == challengesEnabled ? _self.challengesEnabled : challengesEnabled // ignore: cast_nullable_to_non_nullable
-as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as bool,initialBalance: freezed == initialBalance ? _self.initialBalance : initialBalance // ignore: cast_nullable_to_non_nullable
+as int?,hasCompletedFinancialSetup: null == hasCompletedFinancialSetup ? _self.hasCompletedFinancialSetup : hasCompletedFinancialSetup // ignore: cast_nullable_to_non_nullable
+as bool,financialSetupStep: freezed == financialSetupStep ? _self.financialSetupStep : financialSetupStep // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }

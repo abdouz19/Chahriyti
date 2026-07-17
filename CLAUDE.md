@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/007-auto-cycle-renewal/plan.md
+at specs/009-license-management-platform/plan.md
 <!-- SPECKIT END -->

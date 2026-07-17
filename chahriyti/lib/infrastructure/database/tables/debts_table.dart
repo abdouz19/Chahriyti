@@ -11,4 +11,5 @@ class Debts extends Table {
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   // nullable: old records pre-v10 have no cycleId
   IntColumn get cycleId => integer().nullable()();
+  BoolColumn get isSpent => boolean().withDefault(const Constant(true))();
 }

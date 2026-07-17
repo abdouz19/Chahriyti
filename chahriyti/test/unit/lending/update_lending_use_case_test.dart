@@ -16,7 +16,7 @@ class FakeLendingRepository implements LendingRepository {
     required String borrowerName,
     required int totalAmount,
     required bool fromSavings,
-    required int cycleId,
+    int? cycleId,
     String? notes,
     int savingsAmount = 0,
   }) async =>

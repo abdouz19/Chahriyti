@@ -17,7 +17,7 @@ class LendingRepositoryImpl implements LendingRepository {
     required int totalAmount,
     required bool fromSavings,
     int savingsAmount = 0,
-    required int cycleId,
+    int? cycleId,
     String? notes,
   }) async {
     final row = await _dao.insertLending(
@@ -26,7 +26,7 @@ class LendingRepositoryImpl implements LendingRepository {
         totalAmount: Value(totalAmount),
         fromSavings: Value(fromSavings),
         savingsAmount: Value(savingsAmount),
-        cycleId: Value(cycleId),
+        cycleId: cycleId != null ? Value(cycleId) : const Value.absent(),
         notes: notes != null ? Value(notes) : const Value.absent(),
       ),
     );

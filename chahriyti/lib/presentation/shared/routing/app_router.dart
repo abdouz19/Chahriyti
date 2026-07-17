@@ -12,6 +12,7 @@ import '../../../core/di/injection.dart';
 import '../../../domain/entities/expense_entity.dart';
 import '../../activation/cubits/activation_cubit.dart';
 import '../../activation/pages/activation_page.dart';
+import '../../financial_setup/pages/financial_setup_page.dart';
 import '../../challenge/pages/challenge_detail_page.dart';
 import '../../cycle_history/pages/cycle_history_page.dart';
 import '../../debt/pages/add_debt_page.dart';
@@ -63,6 +64,11 @@ abstract final class AppRouter {
       // User exists but not activated: only allow activation
       if (!user.isActivated) {
         return path == '/activation' ? null : '/activation';
+      }
+
+      // User is activated but hasn't completed financial setup
+      if (!user.hasCompletedFinancialSetup) {
+        return path == '/financial-setup' ? null : '/financial-setup';
       }
 
       // User is activated: go to home if on splash or onboarding
@@ -145,6 +151,15 @@ abstract final class AppRouter {
                 const ComposeWhatsAppMessageUseCase(),
           )..loadDeviceId(),
           child: const ActivationPage(),
+        ),
+      ),
+
+      // ── Financial Setup ────────────────────────────────────────────
+      GoRoute(
+        path: '/financial-setup',
+        builder: (context, state) => BlocProvider(
+          create: (_) => Injection.financialSetupCubit..start(),
+          child: const FinancialSetupPage(),
         ),
       ),
 

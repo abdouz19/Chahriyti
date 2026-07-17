@@ -45,6 +45,7 @@ class DebtsDao extends DatabaseAccessor<AppDatabase> with _$DebtsDaoMixin {
     String? creditorName,
     int? totalAmount,
     String? notes,
+    bool? isSpent,
   }) =>
       (update(debts)..where((t) => t.id.equals(id))).write(
         DebtsCompanion(
@@ -53,6 +54,7 @@ class DebtsDao extends DatabaseAccessor<AppDatabase> with _$DebtsDaoMixin {
           totalAmount:
               totalAmount != null ? Value(totalAmount) : const Value.absent(),
           notes: notes != null ? Value(notes) : const Value.absent(),
+          isSpent: isSpent != null ? Value(isSpent) : const Value.absent(),
         ),
       );
 

@@ -8,6 +8,7 @@ abstract class SavingsRepository {
     required String description,
     required int cycleId,
   });
+  Future<void> createInitialDeposit({required int amount});
   Future<SavingsHistoryEntity> createWithdrawal({
     required int amount,
     required String description,

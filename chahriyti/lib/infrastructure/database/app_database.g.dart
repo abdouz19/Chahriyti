@@ -109,6 +109,42 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserRow> {
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _initialBalanceMeta = const VerificationMeta(
+    'initialBalance',
+  );
+  @override
+  late final GeneratedColumn<int> initialBalance = GeneratedColumn<int>(
+    'initial_balance',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _hasCompletedFinancialSetupMeta =
+      const VerificationMeta('hasCompletedFinancialSetup');
+  @override
+  late final GeneratedColumn<bool> hasCompletedFinancialSetup =
+      GeneratedColumn<bool>(
+        'has_completed_financial_setup',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("has_completed_financial_setup" IN (0, 1))',
+        ),
+        defaultValue: const Constant(false),
+      );
+  static const VerificationMeta _financialSetupStepMeta =
+      const VerificationMeta('financialSetupStep');
+  @override
+  late final GeneratedColumn<int> financialSetupStep = GeneratedColumn<int>(
+    'financial_setup_step',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -131,6 +167,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserRow> {
     wilayaCode,
     isActivated,
     challengesEnabled,
+    initialBalance,
+    hasCompletedFinancialSetup,
+    financialSetupStep,
     createdAt,
   ];
   @override
@@ -206,6 +245,33 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserRow> {
         ),
       );
     }
+    if (data.containsKey('initial_balance')) {
+      context.handle(
+        _initialBalanceMeta,
+        initialBalance.isAcceptableOrUnknown(
+          data['initial_balance']!,
+          _initialBalanceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('has_completed_financial_setup')) {
+      context.handle(
+        _hasCompletedFinancialSetupMeta,
+        hasCompletedFinancialSetup.isAcceptableOrUnknown(
+          data['has_completed_financial_setup']!,
+          _hasCompletedFinancialSetupMeta,
+        ),
+      );
+    }
+    if (data.containsKey('financial_setup_step')) {
+      context.handle(
+        _financialSetupStepMeta,
+        financialSetupStep.isAcceptableOrUnknown(
+          data['financial_setup_step']!,
+          _financialSetupStepMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -253,6 +319,18 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserRow> {
         DriftSqlType.bool,
         data['${effectivePrefix}challenges_enabled'],
       )!,
+      initialBalance: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}initial_balance'],
+      ),
+      hasCompletedFinancialSetup: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_completed_financial_setup'],
+      )!,
+      financialSetupStep: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}financial_setup_step'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -275,6 +353,9 @@ class UserRow extends DataClass implements Insertable<UserRow> {
   final int wilayaCode;
   final bool isActivated;
   final bool challengesEnabled;
+  final int? initialBalance;
+  final bool hasCompletedFinancialSetup;
+  final int? financialSetupStep;
   final DateTime createdAt;
   const UserRow({
     required this.id,
@@ -285,6 +366,9 @@ class UserRow extends DataClass implements Insertable<UserRow> {
     required this.wilayaCode,
     required this.isActivated,
     required this.challengesEnabled,
+    this.initialBalance,
+    required this.hasCompletedFinancialSetup,
+    this.financialSetupStep,
     required this.createdAt,
   });
   @override
@@ -298,6 +382,15 @@ class UserRow extends DataClass implements Insertable<UserRow> {
     map['wilaya_code'] = Variable<int>(wilayaCode);
     map['is_activated'] = Variable<bool>(isActivated);
     map['challenges_enabled'] = Variable<bool>(challengesEnabled);
+    if (!nullToAbsent || initialBalance != null) {
+      map['initial_balance'] = Variable<int>(initialBalance);
+    }
+    map['has_completed_financial_setup'] = Variable<bool>(
+      hasCompletedFinancialSetup,
+    );
+    if (!nullToAbsent || financialSetupStep != null) {
+      map['financial_setup_step'] = Variable<int>(financialSetupStep);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -312,6 +405,13 @@ class UserRow extends DataClass implements Insertable<UserRow> {
       wilayaCode: Value(wilayaCode),
       isActivated: Value(isActivated),
       challengesEnabled: Value(challengesEnabled),
+      initialBalance: initialBalance == null && nullToAbsent
+          ? const Value.absent()
+          : Value(initialBalance),
+      hasCompletedFinancialSetup: Value(hasCompletedFinancialSetup),
+      financialSetupStep: financialSetupStep == null && nullToAbsent
+          ? const Value.absent()
+          : Value(financialSetupStep),
       createdAt: Value(createdAt),
     );
   }
@@ -330,6 +430,11 @@ class UserRow extends DataClass implements Insertable<UserRow> {
       wilayaCode: serializer.fromJson<int>(json['wilayaCode']),
       isActivated: serializer.fromJson<bool>(json['isActivated']),
       challengesEnabled: serializer.fromJson<bool>(json['challengesEnabled']),
+      initialBalance: serializer.fromJson<int?>(json['initialBalance']),
+      hasCompletedFinancialSetup: serializer.fromJson<bool>(
+        json['hasCompletedFinancialSetup'],
+      ),
+      financialSetupStep: serializer.fromJson<int?>(json['financialSetupStep']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -345,6 +450,11 @@ class UserRow extends DataClass implements Insertable<UserRow> {
       'wilayaCode': serializer.toJson<int>(wilayaCode),
       'isActivated': serializer.toJson<bool>(isActivated),
       'challengesEnabled': serializer.toJson<bool>(challengesEnabled),
+      'initialBalance': serializer.toJson<int?>(initialBalance),
+      'hasCompletedFinancialSetup': serializer.toJson<bool>(
+        hasCompletedFinancialSetup,
+      ),
+      'financialSetupStep': serializer.toJson<int?>(financialSetupStep),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -358,6 +468,9 @@ class UserRow extends DataClass implements Insertable<UserRow> {
     int? wilayaCode,
     bool? isActivated,
     bool? challengesEnabled,
+    Value<int?> initialBalance = const Value.absent(),
+    bool? hasCompletedFinancialSetup,
+    Value<int?> financialSetupStep = const Value.absent(),
     DateTime? createdAt,
   }) => UserRow(
     id: id ?? this.id,
@@ -368,6 +481,14 @@ class UserRow extends DataClass implements Insertable<UserRow> {
     wilayaCode: wilayaCode ?? this.wilayaCode,
     isActivated: isActivated ?? this.isActivated,
     challengesEnabled: challengesEnabled ?? this.challengesEnabled,
+    initialBalance: initialBalance.present
+        ? initialBalance.value
+        : this.initialBalance,
+    hasCompletedFinancialSetup:
+        hasCompletedFinancialSetup ?? this.hasCompletedFinancialSetup,
+    financialSetupStep: financialSetupStep.present
+        ? financialSetupStep.value
+        : this.financialSetupStep,
     createdAt: createdAt ?? this.createdAt,
   );
   UserRow copyWithCompanion(UsersCompanion data) {
@@ -390,6 +511,15 @@ class UserRow extends DataClass implements Insertable<UserRow> {
       challengesEnabled: data.challengesEnabled.present
           ? data.challengesEnabled.value
           : this.challengesEnabled,
+      initialBalance: data.initialBalance.present
+          ? data.initialBalance.value
+          : this.initialBalance,
+      hasCompletedFinancialSetup: data.hasCompletedFinancialSetup.present
+          ? data.hasCompletedFinancialSetup.value
+          : this.hasCompletedFinancialSetup,
+      financialSetupStep: data.financialSetupStep.present
+          ? data.financialSetupStep.value
+          : this.financialSetupStep,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -405,6 +535,9 @@ class UserRow extends DataClass implements Insertable<UserRow> {
           ..write('wilayaCode: $wilayaCode, ')
           ..write('isActivated: $isActivated, ')
           ..write('challengesEnabled: $challengesEnabled, ')
+          ..write('initialBalance: $initialBalance, ')
+          ..write('hasCompletedFinancialSetup: $hasCompletedFinancialSetup, ')
+          ..write('financialSetupStep: $financialSetupStep, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -420,6 +553,9 @@ class UserRow extends DataClass implements Insertable<UserRow> {
     wilayaCode,
     isActivated,
     challengesEnabled,
+    initialBalance,
+    hasCompletedFinancialSetup,
+    financialSetupStep,
     createdAt,
   );
   @override
@@ -434,6 +570,9 @@ class UserRow extends DataClass implements Insertable<UserRow> {
           other.wilayaCode == this.wilayaCode &&
           other.isActivated == this.isActivated &&
           other.challengesEnabled == this.challengesEnabled &&
+          other.initialBalance == this.initialBalance &&
+          other.hasCompletedFinancialSetup == this.hasCompletedFinancialSetup &&
+          other.financialSetupStep == this.financialSetupStep &&
           other.createdAt == this.createdAt);
 }
 
@@ -446,6 +585,9 @@ class UsersCompanion extends UpdateCompanion<UserRow> {
   final Value<int> wilayaCode;
   final Value<bool> isActivated;
   final Value<bool> challengesEnabled;
+  final Value<int?> initialBalance;
+  final Value<bool> hasCompletedFinancialSetup;
+  final Value<int?> financialSetupStep;
   final Value<DateTime> createdAt;
   const UsersCompanion({
     this.id = const Value.absent(),
@@ -456,6 +598,9 @@ class UsersCompanion extends UpdateCompanion<UserRow> {
     this.wilayaCode = const Value.absent(),
     this.isActivated = const Value.absent(),
     this.challengesEnabled = const Value.absent(),
+    this.initialBalance = const Value.absent(),
+    this.hasCompletedFinancialSetup = const Value.absent(),
+    this.financialSetupStep = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   UsersCompanion.insert({
@@ -467,6 +612,9 @@ class UsersCompanion extends UpdateCompanion<UserRow> {
     this.wilayaCode = const Value.absent(),
     this.isActivated = const Value.absent(),
     this.challengesEnabled = const Value.absent(),
+    this.initialBalance = const Value.absent(),
+    this.hasCompletedFinancialSetup = const Value.absent(),
+    this.financialSetupStep = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : monthlySalary = Value(monthlySalary),
        salaryDay = Value(salaryDay);
@@ -479,6 +627,9 @@ class UsersCompanion extends UpdateCompanion<UserRow> {
     Expression<int>? wilayaCode,
     Expression<bool>? isActivated,
     Expression<bool>? challengesEnabled,
+    Expression<int>? initialBalance,
+    Expression<bool>? hasCompletedFinancialSetup,
+    Expression<int>? financialSetupStep,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -490,6 +641,11 @@ class UsersCompanion extends UpdateCompanion<UserRow> {
       if (wilayaCode != null) 'wilaya_code': wilayaCode,
       if (isActivated != null) 'is_activated': isActivated,
       if (challengesEnabled != null) 'challenges_enabled': challengesEnabled,
+      if (initialBalance != null) 'initial_balance': initialBalance,
+      if (hasCompletedFinancialSetup != null)
+        'has_completed_financial_setup': hasCompletedFinancialSetup,
+      if (financialSetupStep != null)
+        'financial_setup_step': financialSetupStep,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -503,6 +659,9 @@ class UsersCompanion extends UpdateCompanion<UserRow> {
     Value<int>? wilayaCode,
     Value<bool>? isActivated,
     Value<bool>? challengesEnabled,
+    Value<int?>? initialBalance,
+    Value<bool>? hasCompletedFinancialSetup,
+    Value<int?>? financialSetupStep,
     Value<DateTime>? createdAt,
   }) {
     return UsersCompanion(
@@ -514,6 +673,10 @@ class UsersCompanion extends UpdateCompanion<UserRow> {
       wilayaCode: wilayaCode ?? this.wilayaCode,
       isActivated: isActivated ?? this.isActivated,
       challengesEnabled: challengesEnabled ?? this.challengesEnabled,
+      initialBalance: initialBalance ?? this.initialBalance,
+      hasCompletedFinancialSetup:
+          hasCompletedFinancialSetup ?? this.hasCompletedFinancialSetup,
+      financialSetupStep: financialSetupStep ?? this.financialSetupStep,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -545,6 +708,17 @@ class UsersCompanion extends UpdateCompanion<UserRow> {
     if (challengesEnabled.present) {
       map['challenges_enabled'] = Variable<bool>(challengesEnabled.value);
     }
+    if (initialBalance.present) {
+      map['initial_balance'] = Variable<int>(initialBalance.value);
+    }
+    if (hasCompletedFinancialSetup.present) {
+      map['has_completed_financial_setup'] = Variable<bool>(
+        hasCompletedFinancialSetup.value,
+      );
+    }
+    if (financialSetupStep.present) {
+      map['financial_setup_step'] = Variable<int>(financialSetupStep.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -562,6 +736,9 @@ class UsersCompanion extends UpdateCompanion<UserRow> {
           ..write('wilayaCode: $wilayaCode, ')
           ..write('isActivated: $isActivated, ')
           ..write('challengesEnabled: $challengesEnabled, ')
+          ..write('initialBalance: $initialBalance, ')
+          ..write('hasCompletedFinancialSetup: $hasCompletedFinancialSetup, ')
+          ..write('financialSetupStep: $financialSetupStep, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -2139,6 +2316,21 @@ class $DebtsTable extends Debts with TableInfo<$DebtsTable, DebtRow> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _isSpentMeta = const VerificationMeta(
+    'isSpent',
+  );
+  @override
+  late final GeneratedColumn<bool> isSpent = GeneratedColumn<bool>(
+    'is_spent',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_spent" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2149,6 +2341,7 @@ class $DebtsTable extends Debts with TableInfo<$DebtsTable, DebtRow> {
     notes,
     createdAt,
     cycleId,
+    isSpent,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2220,6 +2413,12 @@ class $DebtsTable extends Debts with TableInfo<$DebtsTable, DebtRow> {
         cycleId.isAcceptableOrUnknown(data['cycle_id']!, _cycleIdMeta),
       );
     }
+    if (data.containsKey('is_spent')) {
+      context.handle(
+        _isSpentMeta,
+        isSpent.isAcceptableOrUnknown(data['is_spent']!, _isSpentMeta),
+      );
+    }
     return context;
   }
 
@@ -2261,6 +2460,10 @@ class $DebtsTable extends Debts with TableInfo<$DebtsTable, DebtRow> {
         DriftSqlType.int,
         data['${effectivePrefix}cycle_id'],
       ),
+      isSpent: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_spent'],
+      )!,
     );
   }
 
@@ -2279,6 +2482,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
   final String? notes;
   final DateTime createdAt;
   final int? cycleId;
+  final bool isSpent;
   const DebtRow({
     required this.id,
     required this.creditorName,
@@ -2288,6 +2492,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
     this.notes,
     required this.createdAt,
     this.cycleId,
+    required this.isSpent,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2304,6 +2509,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
     if (!nullToAbsent || cycleId != null) {
       map['cycle_id'] = Variable<int>(cycleId);
     }
+    map['is_spent'] = Variable<bool>(isSpent);
     return map;
   }
 
@@ -2321,6 +2527,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
       cycleId: cycleId == null && nullToAbsent
           ? const Value.absent()
           : Value(cycleId),
+      isSpent: Value(isSpent),
     );
   }
 
@@ -2338,6 +2545,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
       notes: serializer.fromJson<String?>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       cycleId: serializer.fromJson<int?>(json['cycleId']),
+      isSpent: serializer.fromJson<bool>(json['isSpent']),
     );
   }
   @override
@@ -2352,6 +2560,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
       'notes': serializer.toJson<String?>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'cycleId': serializer.toJson<int?>(cycleId),
+      'isSpent': serializer.toJson<bool>(isSpent),
     };
   }
 
@@ -2364,6 +2573,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
     Value<String?> notes = const Value.absent(),
     DateTime? createdAt,
     Value<int?> cycleId = const Value.absent(),
+    bool? isSpent,
   }) => DebtRow(
     id: id ?? this.id,
     creditorName: creditorName ?? this.creditorName,
@@ -2373,6 +2583,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
     notes: notes.present ? notes.value : this.notes,
     createdAt: createdAt ?? this.createdAt,
     cycleId: cycleId.present ? cycleId.value : this.cycleId,
+    isSpent: isSpent ?? this.isSpent,
   );
   DebtRow copyWithCompanion(DebtsCompanion data) {
     return DebtRow(
@@ -2392,6 +2603,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
       notes: data.notes.present ? data.notes.value : this.notes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       cycleId: data.cycleId.present ? data.cycleId.value : this.cycleId,
+      isSpent: data.isSpent.present ? data.isSpent.value : this.isSpent,
     );
   }
 
@@ -2405,7 +2617,8 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
           ..write('isFullyPaid: $isFullyPaid, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
-          ..write('cycleId: $cycleId')
+          ..write('cycleId: $cycleId, ')
+          ..write('isSpent: $isSpent')
           ..write(')'))
         .toString();
   }
@@ -2420,6 +2633,7 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
     notes,
     createdAt,
     cycleId,
+    isSpent,
   );
   @override
   bool operator ==(Object other) =>
@@ -2432,7 +2646,8 @@ class DebtRow extends DataClass implements Insertable<DebtRow> {
           other.isFullyPaid == this.isFullyPaid &&
           other.notes == this.notes &&
           other.createdAt == this.createdAt &&
-          other.cycleId == this.cycleId);
+          other.cycleId == this.cycleId &&
+          other.isSpent == this.isSpent);
 }
 
 class DebtsCompanion extends UpdateCompanion<DebtRow> {
@@ -2444,6 +2659,7 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
   final Value<String?> notes;
   final Value<DateTime> createdAt;
   final Value<int?> cycleId;
+  final Value<bool> isSpent;
   const DebtsCompanion({
     this.id = const Value.absent(),
     this.creditorName = const Value.absent(),
@@ -2453,6 +2669,7 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.cycleId = const Value.absent(),
+    this.isSpent = const Value.absent(),
   });
   DebtsCompanion.insert({
     this.id = const Value.absent(),
@@ -2463,6 +2680,7 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.cycleId = const Value.absent(),
+    this.isSpent = const Value.absent(),
   }) : creditorName = Value(creditorName),
        totalAmount = Value(totalAmount);
   static Insertable<DebtRow> custom({
@@ -2474,6 +2692,7 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
     Expression<String>? notes,
     Expression<DateTime>? createdAt,
     Expression<int>? cycleId,
+    Expression<bool>? isSpent,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2484,6 +2703,7 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
       if (notes != null) 'notes': notes,
       if (createdAt != null) 'created_at': createdAt,
       if (cycleId != null) 'cycle_id': cycleId,
+      if (isSpent != null) 'is_spent': isSpent,
     });
   }
 
@@ -2496,6 +2716,7 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
     Value<String?>? notes,
     Value<DateTime>? createdAt,
     Value<int?>? cycleId,
+    Value<bool>? isSpent,
   }) {
     return DebtsCompanion(
       id: id ?? this.id,
@@ -2506,6 +2727,7 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
       cycleId: cycleId ?? this.cycleId,
+      isSpent: isSpent ?? this.isSpent,
     );
   }
 
@@ -2536,6 +2758,9 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
     if (cycleId.present) {
       map['cycle_id'] = Variable<int>(cycleId.value);
     }
+    if (isSpent.present) {
+      map['is_spent'] = Variable<bool>(isSpent.value);
+    }
     return map;
   }
 
@@ -2549,7 +2774,8 @@ class DebtsCompanion extends UpdateCompanion<DebtRow> {
           ..write('isFullyPaid: $isFullyPaid, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
-          ..write('cycleId: $cycleId')
+          ..write('cycleId: $cycleId, ')
+          ..write('isSpent: $isSpent')
           ..write(')'))
         .toString();
   }
@@ -5844,9 +6070,9 @@ class $LendingsTable extends Lendings
   late final GeneratedColumn<int> cycleId = GeneratedColumn<int>(
     'cycle_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _notesMeta = const VerificationMeta('notes');
   @override
@@ -5960,8 +6186,6 @@ class $LendingsTable extends Lendings
         _cycleIdMeta,
         cycleId.isAcceptableOrUnknown(data['cycle_id']!, _cycleIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_cycleIdMeta);
     }
     if (data.containsKey('notes')) {
       context.handle(
@@ -6015,7 +6239,7 @@ class $LendingsTable extends Lendings
       cycleId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}cycle_id'],
-      )!,
+      ),
       notes: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
@@ -6041,7 +6265,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
   final bool isFullyCollected;
   final bool fromSavings;
   final int savingsAmount;
-  final int cycleId;
+  final int? cycleId;
   final String? notes;
   final DateTime createdAt;
   const LendingRow({
@@ -6052,7 +6276,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
     required this.isFullyCollected,
     required this.fromSavings,
     required this.savingsAmount,
-    required this.cycleId,
+    this.cycleId,
     this.notes,
     required this.createdAt,
   });
@@ -6066,7 +6290,9 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
     map['is_fully_collected'] = Variable<bool>(isFullyCollected);
     map['from_savings'] = Variable<bool>(fromSavings);
     map['savings_amount'] = Variable<int>(savingsAmount);
-    map['cycle_id'] = Variable<int>(cycleId);
+    if (!nullToAbsent || cycleId != null) {
+      map['cycle_id'] = Variable<int>(cycleId);
+    }
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
     }
@@ -6083,7 +6309,9 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
       isFullyCollected: Value(isFullyCollected),
       fromSavings: Value(fromSavings),
       savingsAmount: Value(savingsAmount),
-      cycleId: Value(cycleId),
+      cycleId: cycleId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cycleId),
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
@@ -6104,7 +6332,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
       isFullyCollected: serializer.fromJson<bool>(json['isFullyCollected']),
       fromSavings: serializer.fromJson<bool>(json['fromSavings']),
       savingsAmount: serializer.fromJson<int>(json['savingsAmount']),
-      cycleId: serializer.fromJson<int>(json['cycleId']),
+      cycleId: serializer.fromJson<int?>(json['cycleId']),
       notes: serializer.fromJson<String?>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -6120,7 +6348,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
       'isFullyCollected': serializer.toJson<bool>(isFullyCollected),
       'fromSavings': serializer.toJson<bool>(fromSavings),
       'savingsAmount': serializer.toJson<int>(savingsAmount),
-      'cycleId': serializer.toJson<int>(cycleId),
+      'cycleId': serializer.toJson<int?>(cycleId),
       'notes': serializer.toJson<String?>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -6134,7 +6362,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
     bool? isFullyCollected,
     bool? fromSavings,
     int? savingsAmount,
-    int? cycleId,
+    Value<int?> cycleId = const Value.absent(),
     Value<String?> notes = const Value.absent(),
     DateTime? createdAt,
   }) => LendingRow(
@@ -6145,7 +6373,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
     isFullyCollected: isFullyCollected ?? this.isFullyCollected,
     fromSavings: fromSavings ?? this.fromSavings,
     savingsAmount: savingsAmount ?? this.savingsAmount,
-    cycleId: cycleId ?? this.cycleId,
+    cycleId: cycleId.present ? cycleId.value : this.cycleId,
     notes: notes.present ? notes.value : this.notes,
     createdAt: createdAt ?? this.createdAt,
   );
@@ -6230,7 +6458,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
   final Value<bool> isFullyCollected;
   final Value<bool> fromSavings;
   final Value<int> savingsAmount;
-  final Value<int> cycleId;
+  final Value<int?> cycleId;
   final Value<String?> notes;
   final Value<DateTime> createdAt;
   const LendingsCompanion({
@@ -6253,12 +6481,11 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
     this.isFullyCollected = const Value.absent(),
     this.fromSavings = const Value.absent(),
     this.savingsAmount = const Value.absent(),
-    required int cycleId,
+    this.cycleId = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : borrowerName = Value(borrowerName),
-       totalAmount = Value(totalAmount),
-       cycleId = Value(cycleId);
+       totalAmount = Value(totalAmount);
   static Insertable<LendingRow> custom({
     Expression<int>? id,
     Expression<String>? borrowerName,
@@ -6293,7 +6520,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
     Value<bool>? isFullyCollected,
     Value<bool>? fromSavings,
     Value<int>? savingsAmount,
-    Value<int>? cycleId,
+    Value<int?>? cycleId,
     Value<String?>? notes,
     Value<DateTime>? createdAt,
   }) {
@@ -6774,6 +7001,9 @@ typedef $$UsersTableCreateCompanionBuilder =
       Value<int> wilayaCode,
       Value<bool> isActivated,
       Value<bool> challengesEnabled,
+      Value<int?> initialBalance,
+      Value<bool> hasCompletedFinancialSetup,
+      Value<int?> financialSetupStep,
       Value<DateTime> createdAt,
     });
 typedef $$UsersTableUpdateCompanionBuilder =
@@ -6786,6 +7016,9 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<int> wilayaCode,
       Value<bool> isActivated,
       Value<bool> challengesEnabled,
+      Value<int?> initialBalance,
+      Value<bool> hasCompletedFinancialSetup,
+      Value<int?> financialSetupStep,
       Value<DateTime> createdAt,
     });
 
@@ -6834,6 +7067,21 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<bool> get challengesEnabled => $composableBuilder(
     column: $table.challengesEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get initialBalance => $composableBuilder(
+    column: $table.initialBalance,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hasCompletedFinancialSetup => $composableBuilder(
+    column: $table.hasCompletedFinancialSetup,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get financialSetupStep => $composableBuilder(
+    column: $table.financialSetupStep,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6892,6 +7140,21 @@ class $$UsersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get initialBalance => $composableBuilder(
+    column: $table.initialBalance,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hasCompletedFinancialSetup => $composableBuilder(
+    column: $table.hasCompletedFinancialSetup,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get financialSetupStep => $composableBuilder(
+    column: $table.financialSetupStep,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -6941,6 +7204,21 @@ class $$UsersTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get initialBalance => $composableBuilder(
+    column: $table.initialBalance,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get hasCompletedFinancialSetup => $composableBuilder(
+    column: $table.hasCompletedFinancialSetup,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get financialSetupStep => $composableBuilder(
+    column: $table.financialSetupStep,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
@@ -6981,6 +7259,9 @@ class $$UsersTableTableManager
                 Value<int> wilayaCode = const Value.absent(),
                 Value<bool> isActivated = const Value.absent(),
                 Value<bool> challengesEnabled = const Value.absent(),
+                Value<int?> initialBalance = const Value.absent(),
+                Value<bool> hasCompletedFinancialSetup = const Value.absent(),
+                Value<int?> financialSetupStep = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => UsersCompanion(
                 id: id,
@@ -6991,6 +7272,9 @@ class $$UsersTableTableManager
                 wilayaCode: wilayaCode,
                 isActivated: isActivated,
                 challengesEnabled: challengesEnabled,
+                initialBalance: initialBalance,
+                hasCompletedFinancialSetup: hasCompletedFinancialSetup,
+                financialSetupStep: financialSetupStep,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -7003,6 +7287,9 @@ class $$UsersTableTableManager
                 Value<int> wilayaCode = const Value.absent(),
                 Value<bool> isActivated = const Value.absent(),
                 Value<bool> challengesEnabled = const Value.absent(),
+                Value<int?> initialBalance = const Value.absent(),
+                Value<bool> hasCompletedFinancialSetup = const Value.absent(),
+                Value<int?> financialSetupStep = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => UsersCompanion.insert(
                 id: id,
@@ -7013,6 +7300,9 @@ class $$UsersTableTableManager
                 wilayaCode: wilayaCode,
                 isActivated: isActivated,
                 challengesEnabled: challengesEnabled,
+                initialBalance: initialBalance,
+                hasCompletedFinancialSetup: hasCompletedFinancialSetup,
+                financialSetupStep: financialSetupStep,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -7809,6 +8099,7 @@ typedef $$DebtsTableCreateCompanionBuilder =
       Value<String?> notes,
       Value<DateTime> createdAt,
       Value<int?> cycleId,
+      Value<bool> isSpent,
     });
 typedef $$DebtsTableUpdateCompanionBuilder =
     DebtsCompanion Function({
@@ -7820,6 +8111,7 @@ typedef $$DebtsTableUpdateCompanionBuilder =
       Value<String?> notes,
       Value<DateTime> createdAt,
       Value<int?> cycleId,
+      Value<bool> isSpent,
     });
 
 class $$DebtsTableFilterComposer extends Composer<_$AppDatabase, $DebtsTable> {
@@ -7867,6 +8159,11 @@ class $$DebtsTableFilterComposer extends Composer<_$AppDatabase, $DebtsTable> {
 
   ColumnFilters<int> get cycleId => $composableBuilder(
     column: $table.cycleId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSpent => $composableBuilder(
+    column: $table.isSpent,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -7919,6 +8216,11 @@ class $$DebtsTableOrderingComposer
     column: $table.cycleId,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isSpent => $composableBuilder(
+    column: $table.isSpent,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$DebtsTableAnnotationComposer
@@ -7961,6 +8263,9 @@ class $$DebtsTableAnnotationComposer
 
   GeneratedColumn<int> get cycleId =>
       $composableBuilder(column: $table.cycleId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSpent =>
+      $composableBuilder(column: $table.isSpent, builder: (column) => column);
 }
 
 class $$DebtsTableTableManager
@@ -7999,6 +8304,7 @@ class $$DebtsTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int?> cycleId = const Value.absent(),
+                Value<bool> isSpent = const Value.absent(),
               }) => DebtsCompanion(
                 id: id,
                 creditorName: creditorName,
@@ -8008,6 +8314,7 @@ class $$DebtsTableTableManager
                 notes: notes,
                 createdAt: createdAt,
                 cycleId: cycleId,
+                isSpent: isSpent,
               ),
           createCompanionCallback:
               ({
@@ -8019,6 +8326,7 @@ class $$DebtsTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int?> cycleId = const Value.absent(),
+                Value<bool> isSpent = const Value.absent(),
               }) => DebtsCompanion.insert(
                 id: id,
                 creditorName: creditorName,
@@ -8028,6 +8336,7 @@ class $$DebtsTableTableManager
                 notes: notes,
                 createdAt: createdAt,
                 cycleId: cycleId,
+                isSpent: isSpent,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -9759,7 +10068,7 @@ typedef $$LendingsTableCreateCompanionBuilder =
       Value<bool> isFullyCollected,
       Value<bool> fromSavings,
       Value<int> savingsAmount,
-      required int cycleId,
+      Value<int?> cycleId,
       Value<String?> notes,
       Value<DateTime> createdAt,
     });
@@ -9772,7 +10081,7 @@ typedef $$LendingsTableUpdateCompanionBuilder =
       Value<bool> isFullyCollected,
       Value<bool> fromSavings,
       Value<int> savingsAmount,
-      Value<int> cycleId,
+      Value<int?> cycleId,
       Value<String?> notes,
       Value<DateTime> createdAt,
     });
@@ -9987,7 +10296,7 @@ class $$LendingsTableTableManager
                 Value<bool> isFullyCollected = const Value.absent(),
                 Value<bool> fromSavings = const Value.absent(),
                 Value<int> savingsAmount = const Value.absent(),
-                Value<int> cycleId = const Value.absent(),
+                Value<int?> cycleId = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => LendingsCompanion(
@@ -10011,7 +10320,7 @@ class $$LendingsTableTableManager
                 Value<bool> isFullyCollected = const Value.absent(),
                 Value<bool> fromSavings = const Value.absent(),
                 Value<int> savingsAmount = const Value.absent(),
-                required int cycleId,
+                Value<int?> cycleId = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => LendingsCompanion.insert(

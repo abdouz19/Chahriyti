@@ -6,6 +6,7 @@ abstract class DebtRepository {
     required int totalAmount,
     String? notes,
     int? cycleId,
+    bool isSpent = true,
   });
 
   Future<DebtEntity> addDebt({
@@ -30,6 +31,7 @@ abstract class DebtRepository {
     String? creditorName,
     int? totalAmount,
     String? notes,
+    bool? isSpent,
   });
 
   Future<void> deleteDebt(int id);
