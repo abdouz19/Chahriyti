@@ -68,3 +68,25 @@ export function callGetDashboardStats({ period, managerId }) {
 export function callSendToDelivery(data) {
   return callFunction(FUNCTIONS.SEND_TO_DELIVERY, data);
 }
+
+// ---------------------------------------------------------------------------
+// Pool license system
+// ---------------------------------------------------------------------------
+
+/**
+ * Generate a batch of pool license keys (admin only).
+ * @param {{ count: number }} data
+ * @returns {Promise<{ success: boolean, batchId: string, count: number }>}
+ */
+export function callGenerateLicenseBatch({ count }) {
+  return callFunction(FUNCTIONS.GENERATE_LICENSE_BATCH, { count });
+}
+
+/**
+ * Assign a pool license to a client (pre-delivery tracking).
+ * @param {{ licenseKey: string, clientName: string, phone: string }} data
+ * @returns {Promise<{ success: boolean }>}
+ */
+export function callAssignLicense({ licenseKey, clientName, phone }) {
+  return callFunction(FUNCTIONS.ASSIGN_LICENSE, { licenseKey, clientName, phone });
+}

@@ -40,6 +40,15 @@ final class ActivationError extends ActivationState {
   const ActivationError(this.message);
 }
 
+final class ActivationAlreadyUsed extends ActivationState {
+  const ActivationAlreadyUsed();
+}
+
+final class ActivationNetworkError extends ActivationState {
+  final String message;
+  const ActivationNetworkError(this.message);
+}
+
 // ---------------------------------------------------------------------------
 // Cubit
 // ---------------------------------------------------------------------------
@@ -95,16 +104,20 @@ class ActivationCubit extends Cubit<ActivationState> {
     }
     emit(const ActivationValidating());
     try {
-      final isValid = await _validateLicenseUseCase(
+      final result = await _validateLicenseUseCase(
         licenseKey: key,
         deviceId: _deviceId!,
       );
-      if (isValid) {
-        emit(const ActivationSuccess());
-      } else {
-        emit(ActivationReady(_deviceId!));
-        // Emit error after ready so UI can show dialog error while keeping state
-        emit(const ActivationError('مفتاح التفعيل غير صحيح أو منتهي الصلاحية'));
+      switch (result) {
+        case ValidationResult.success:
+          emit(const ActivationSuccess());
+        case ValidationResult.alreadyUsed:
+          emit(const ActivationAlreadyUsed());
+        case ValidationResult.invalid:
+          emit(ActivationReady(_deviceId!));
+          emit(const ActivationError('مفتاح التفعيل غير صحيح'));
+        case ValidationResult.networkError:
+          emit(const ActivationNetworkError('تحقق من اتصالك بالإنترنت'));
       }
     } catch (_) {
       emit(const ActivationError('فشل التحقق من مفتاح التفعيل'));

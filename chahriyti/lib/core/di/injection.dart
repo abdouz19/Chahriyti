@@ -31,6 +31,7 @@ import '../../infrastructure/repositories/challenge_repository_impl.dart';
 import '../../infrastructure/services/device_info_service.dart';
 import '../../infrastructure/services/secure_storage_service.dart';
 import '../../infrastructure/services/license_service.dart';
+import '../../infrastructure/services/online_license_service.dart';
 import '../../infrastructure/services/notification_service.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../../domain/repositories/cycle_repository.dart';
@@ -101,6 +102,7 @@ abstract final class Injection {
   static late final DeviceInfoService _deviceInfoService;
   static late final SecureStorageService _secureStorageService;
   static late final LicenseService _licenseService;
+  static late final OnlineLicenseService _onlineLicenseService;
 
   // DAOs
   static late final UsersDao _usersDao;
@@ -130,6 +132,7 @@ abstract final class Injection {
   static DeviceInfoService get deviceInfoService => _deviceInfoService;
   static SecureStorageService get secureStorageService => _secureStorageService;
   static LicenseService get licenseService => _licenseService;
+  static OnlineLicenseService get onlineLicenseService => _onlineLicenseService;
   static AppDatabase get database => _database;
   static late final NotificationService notificationService;
 
@@ -207,7 +210,9 @@ abstract final class Injection {
         deleteLendingUseCase: deleteInitialLendingUseCase,
         completeUseCase: completeFinancialSetupUseCase,
         getSummaryUseCase: getSetupSummaryUseCase,
+        depositSalarySplitUseCase: depositSalarySplitUseCase,
         userRepository: userRepository,
+        cycleRepository: cycleRepository,
         debtRepository: debtRepository,
         lendingRepository: lendingRepository,
       );
@@ -269,6 +274,7 @@ abstract final class Injection {
     _deviceInfoService = DeviceInfoService();
     _secureStorageService = SecureStorageService();
     _licenseService = LicenseService();
+    _onlineLicenseService = OnlineLicenseService();
 
     // Repositories
     userRepository = UserRepositoryImpl(_usersDao);
@@ -288,7 +294,7 @@ abstract final class Injection {
 
     // Use Cases — Activation
     getDeviceIdUseCase = GetDeviceIdUseCase(_deviceInfoService);
-    validateLicenseUseCase = ValidateLicenseUseCase(_licenseService, userRepository);
+    validateLicenseUseCase = ValidateLicenseUseCase(_onlineLicenseService, userRepository);
     composeWhatsAppMessageUseCase = ComposeWhatsAppMessageUseCase();
 
     // Use Cases — Dashboard

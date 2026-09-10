@@ -36,6 +36,14 @@ const ManagersPage = lazy(() =>
   import('../features/managers/pages/ManagersPage').then(m => ({ default: m.ManagersPage }))
 );
 
+// Lazy-loaded pages — License pool
+const LicensePoolPage = lazy(() =>
+  import('../features/pool/pages/LicensePoolPage').then(m => ({ default: m.LicensePoolPage }))
+);
+const BatchGeneratePage = lazy(() =>
+  import('../features/pool/pages/BatchGeneratePage').then(m => ({ default: m.BatchGeneratePage }))
+);
+
 /** Loading fallback for lazy-loaded routes */
 function PageLoader() {
   return (
@@ -74,6 +82,8 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <LazyPage><AdminDashboardPage /></LazyPage> },
       { path: 'managers', element: <LazyPage><ManagersPage /></LazyPage> },
+      { path: 'pool', element: <LazyPage><LicensePoolPage /></LazyPage> },
+      { path: 'pool/generate', element: <LazyPage><BatchGeneratePage /></LazyPage> },
     ],
   },
 
@@ -91,6 +101,7 @@ export const router = createBrowserRouter([
       { index: true, element: <LazyPage><ManagerDashboardPage /></LazyPage> },
       { path: 'generate', element: <LazyPage><GenerateLicensePage /></LazyPage> },
       { path: 'clients', element: <LazyPage><ClientsPage /></LazyPage> },
+      { path: 'pool', element: <LazyPage><LicensePoolPage /></LazyPage> },
     ],
   },
 

@@ -6,6 +6,7 @@ import {
   limit,
   startAfter,
   getDocs,
+  getDoc,
   doc,
   onSnapshot,
 } from 'firebase/firestore';
@@ -227,4 +228,88 @@ export async function getClientByDeviceId(deviceId) {
   } catch (error) {
     throw new Error('Failed to look up client by device ID.');
   }
+}
+
+// ---------------------------------------------------------------------------
+// License pool
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch paginated pool licenses with optional status filter.
+ *
+ * @param {object} options
+ * @param {string}  [options.status]    — 'available' or 'used'
+ * @param {number}  [options.pageSize]  — results per page (defaults to PAGE_SIZE)
+ * @param {object}  [options.lastDoc]   — Firestore snapshot for cursor pagination
+ * @returns {Promise<{ licenses: object[], lastDoc: object|null, hasMore: boolean }>}
+ */
+export async function getLicenses({
+  status,
+  pageSize = PAGE_SIZE,
+  lastDoc: lastDocCursor,
+} = {}) {
+  try {
+    const constraints = [];
+    const colRef = collection(db, COLLECTIONS.LICENSES);
+
+    if (status) {
+      constraints.push(where('status', '==', status));
+    }
+
+    constraints.push(orderBy('createdAt', 'desc'));
+    constraints.push(limit(pageSize + 1));
+
+    if (lastDocCursor) {
+      constraints.push(startAfter(lastDocCursor));
+    }
+
+    const q = query(colRef, ...constraints);
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const pageDocs = hasMore ? docs.slice(0, pageSize) : docs;
+
+    const licenses = pageDocs.map((d) => ({ id: d.id, ...d.data() }));
+    const newLastDoc = pageDocs.length > 0 ? pageDocs[pageDocs.length - 1] : null;
+
+    return { licenses, lastDoc: newLastDoc, hasMore };
+  } catch (error) {
+    throw new Error('Failed to load licenses.');
+  }
+}
+
+/**
+ * Look up a single license by its formatted key.
+ * @param {string} licenseKey — formatted key e.g. "CHRY-XXXX-XXXX-XXXX-XXXX"
+ * @returns {Promise<object|null>}
+ */
+export async function getLicenseByKey(licenseKey) {
+  try {
+    const raw = licenseKey.replace(/^CHRY-/, '').replace(/-/g, '').toUpperCase();
+    const docRef = doc(db, COLLECTIONS.LICENSES, raw);
+    const snapshot = await getDoc(docRef);
+    if (!snapshot.exists()) return null;
+    return { id: snapshot.id, ...snapshot.data() };
+  } catch (error) {
+    throw new Error('Failed to look up license.');
+  }
+}
+
+/**
+ * Subscribe to pool statistics (stats/pool document).
+ * @param {function} callback — receives the stats data object.
+ * @returns {function} Unsubscribe function.
+ */
+export function onPoolStatsSnapshot(callback) {
+  const docRef = doc(db, COLLECTIONS.STATS, 'pool');
+  return onSnapshot(
+    docRef,
+    (snapshot) => {
+      callback(snapshot.exists() ? snapshot.data() : null);
+    },
+    (error) => {
+      console.error('Pool stats listener error:', error);
+    },
+  );
 }

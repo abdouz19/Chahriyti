@@ -40,6 +40,10 @@ class _LicenseKeyDialogState extends State<LicenseKeyDialog> {
         if (state is ActivationSuccess) {
           Navigator.of(context).pop();
           // The parent page BlocListener handles navigation to /home
+        } else if (state is ActivationAlreadyUsed) {
+          setState(() => _errorText = 'هذا الترخيص مستخدم على جهاز آخر');
+        } else if (state is ActivationNetworkError) {
+          setState(() => _errorText = state.message);
         } else if (state is ActivationError) {
           setState(() => _errorText = state.message);
         }

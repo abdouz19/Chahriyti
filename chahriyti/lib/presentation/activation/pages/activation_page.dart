@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/wilayas.dart';
@@ -41,6 +42,20 @@ class _ActivationPageState extends State<ActivationPage> {
           } else if (context.mounted) {
             context.go('/home');
           }
+        } else if (state is ActivationAlreadyUsed) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('هذا الترخيص مستخدم على جهاز آخر'),
+              backgroundColor: AppColors.negative,
+            ),
+          );
+        } else if (state is ActivationNetworkError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: AppColors.warning,
+            ),
+          );
         } else if (state is ActivationError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -357,10 +372,27 @@ class _ActivationPageState extends State<ActivationPage> {
         ),
         const SizedBox(height: 12),
         Text(
-          'إذا حصلت على مفتاح التفعيل، أدخله هنا لتفعيل التطبيق مباشرة.',
+          'امسح رمز QR أو أدخل المفتاح يدوياً لتفعيل التطبيق.',
           style: AppTypography.bodySmall,
         ),
         const SizedBox(height: 16),
+        // QR Scan button
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              setState(() => _currentStep = 2);
+              _openQrScanner(context);
+            },
+            icon: const Icon(Icons.qr_code_scanner_rounded, size: 20),
+            label: const Text('مسح رمز QR'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        // Manual entry button
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
@@ -375,11 +407,25 @@ class _ActivationPageState extends State<ActivationPage> {
                 ),
               );
             },
-            icon: const Icon(Icons.key_rounded, size: 20),
-            label: const Text('لدي مفتاح التفعيل'),
+            icon: const Icon(Icons.keyboard_rounded, size: 20),
+            label: const Text('إدخال المفتاح يدوياً'),
           ),
         ),
       ],
+    );
+  }
+
+  void _openQrScanner(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _QrScannerSheet(
+        onScanned: (key) {
+          Navigator.of(context).pop();
+          context.read<ActivationCubit>().validateLicense(key);
+        },
+      ),
     );
   }
 }
@@ -509,6 +555,111 @@ class _InfoRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// QR Scanner Bottom Sheet
+// ---------------------------------------------------------------------------
+
+class _QrScannerSheet extends StatefulWidget {
+  final void Function(String licenseKey) onScanned;
+
+  const _QrScannerSheet({required this.onScanned});
+
+  @override
+  State<_QrScannerSheet> createState() => _QrScannerSheetState();
+}
+
+class _QrScannerSheetState extends State<_QrScannerSheet> {
+  final MobileScannerController _controller = MobileScannerController();
+  bool _scanned = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.7,
+      decoration: const BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        children: [
+          // Handle bar
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white38,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          // Title
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            child: Row(
+              children: [
+                const Icon(Icons.qr_code_scanner_rounded,
+                    color: Colors.white, size: 24),
+                const SizedBox(width: 12),
+                Text(
+                  'امسح رمز QR للترخيص',
+                  style: AppTypography.labelLarge.copyWith(color: Colors.white),
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          // Scanner
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: MobileScanner(
+                  controller: _controller,
+                  onDetect: (capture) {
+                    if (_scanned) return;
+                    final barcodes = capture.barcodes;
+                    for (final barcode in barcodes) {
+                      final value = barcode.rawValue;
+                      if (value != null &&
+                          value.toUpperCase().startsWith('CHRY-')) {
+                        _scanned = true;
+                        widget.onScanned(value.toUpperCase());
+                        return;
+                      }
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+          // Hint
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              'وجّه الكاميرا نحو رمز QR الموجود على بطاقة الترخيص',
+              style: AppTypography.bodySmall.copyWith(color: Colors.white70),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

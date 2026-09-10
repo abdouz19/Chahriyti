@@ -3,6 +3,7 @@ export const COLLECTIONS = {
   USERS: 'users',
   CLIENTS: 'clients',
   STATS: 'stats',
+  LICENSES: 'licenses',
 };
 
 // User roles
@@ -24,6 +25,14 @@ export const FUNCTIONS = {
   UPDATE_USER_STATUS: 'updateUserStatus',
   GET_DASHBOARD_STATS: 'getDashboardStats',
   SEND_TO_DELIVERY: 'sendToDelivery',
+  GENERATE_LICENSE_BATCH: 'generateLicenseBatch',
+  ASSIGN_LICENSE: 'assignLicense',
+};
+
+// License pool statuses
+export const LICENSE_STATUS = {
+  AVAILABLE: 'available',
+  USED: 'used',
 };
 
 // Pagination

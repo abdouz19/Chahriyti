@@ -51,6 +51,23 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Pool stats: any authenticated user can read. Writes via Cloud Functions only.
+    match /stats/pool {
+      allow read: if isAuth();
+      allow write: if false;
+    }
+
+    // Licenses pool: admin and manager can read. All writes via Cloud Functions (Admin SDK).
+    match /licenses/{licenseId} {
+      allow read: if isAdmin() || isManager();
+      allow write: if false;
+    }
+
+    // Rate limits: internal use only. Cloud Functions write via Admin SDK.
+    match /rate_limits/{docId} {
+      allow read, write: if false;
+    }
+
     // Deny all other access
     match /{document=**} {
       allow read, write: if false;

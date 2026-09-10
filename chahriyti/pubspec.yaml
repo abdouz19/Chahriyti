@@ -1,7 +1,7 @@
 name: chahriyti
 description: "شهريتي — Personal salary and expense management app for Algerian employees."
 publish_to: 'none'
-version: 1.0.0+6
+version: 1.0.0+10
 
 environment:
   sdk: ^3.9.2
@@ -43,6 +43,12 @@ dependencies:
   # Notifications
   flutter_local_notifications: ^18.0.0
   timezone: ^0.9.0
+
+  # HTTP
+  http: ^1.2.2
+
+  # QR Scanner
+  mobile_scanner: ^6.0.0
 
   # Utilities
   url_launcher: ^6.3.1
