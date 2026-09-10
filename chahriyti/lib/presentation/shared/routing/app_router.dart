@@ -144,7 +144,7 @@ abstract final class AppRouter {
             getDeviceIdUseCase:
                 GetDeviceIdUseCase(Injection.deviceInfoService),
             validateLicenseUseCase: ValidateLicenseUseCase(
-              Injection.licenseService,
+              Injection.onlineLicenseService,
               Injection.userRepository,
             ),
             composeWhatsAppMessageUseCase:

@@ -32,9 +32,8 @@ class LicenseNetworkError extends LicenseActivationResult {
 }
 
 class OnlineLicenseService {
-  // TODO: Update this URL after deploying Cloud Functions
   static const _baseUrl =
-      'https://us-central1-chahriyti-platform.cloudfunctions.net/activateLicense';
+      'https://us-central1-chahriyati.cloudfunctions.net/activateLicense';
 
   /// Validate Luhn-mod-32 checksum on a Crockford Base32 string.
   /// Returns true if the last character is the correct check digit.
