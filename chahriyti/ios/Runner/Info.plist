@@ -47,6 +47,8 @@
 		<true/>
 		<key>NSUserNotificationUsageDescription</key>
 		<string>شهريتي تحتاج إذنك لإرسال تنبيهات مالية تساعدك على إدارة ميزانيتك</string>
+		<key>NSCameraUsageDescription</key>
+		<string>شهريتي تحتاج الكاميرا لمسح رمز QR الخاص بالترخيص</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>
