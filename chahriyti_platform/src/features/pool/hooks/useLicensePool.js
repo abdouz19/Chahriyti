@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getLicenses, onPoolStatsSnapshot } from '../../../services/firestore';
 
 /**
@@ -9,6 +9,8 @@ export function useLicensePool() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [statusFilter, setStatusFilter] = useState(''); // '' = all
+  const [printedFilter, setPrintedFilter] = useState(''); // '' | 'printed' | 'unprinted'
+  const [deviceSearch, setDeviceSearch] = useState('');
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(false);
   const [poolStats, setPoolStats] = useState(null);
@@ -44,11 +46,29 @@ export function useLicensePool() {
     }
   }, [statusFilter, lastDoc]);
 
-  // Refetch when filter changes
+  // Refetch when status filter changes
   useEffect(() => {
     fetchLicenses(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter]);
+
+  // Client-side filtered results
+  const filteredLicenses = useMemo(() => {
+    let result = licenses;
+
+    if (printedFilter === 'printed') {
+      result = result.filter((l) => l.printed);
+    } else if (printedFilter === 'unprinted') {
+      result = result.filter((l) => !l.printed);
+    }
+
+    if (deviceSearch.trim()) {
+      const q = deviceSearch.trim().toLowerCase();
+      result = result.filter((l) => l.deviceId && l.deviceId.toLowerCase().includes(q));
+    }
+
+    return result;
+  }, [licenses, printedFilter, deviceSearch]);
 
   const loadMore = useCallback(() => {
     if (hasMore && !loading) {
@@ -63,11 +83,15 @@ export function useLicensePool() {
   }, [statusFilter]);
 
   return {
-    licenses,
+    licenses: filteredLicenses,
     loading,
     error,
     statusFilter,
     setStatusFilter,
+    printedFilter,
+    setPrintedFilter,
+    deviceSearch,
+    setDeviceSearch,
     hasMore,
     loadMore,
     refresh,

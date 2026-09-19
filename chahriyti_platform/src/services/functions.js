@@ -90,3 +90,12 @@ export function callGenerateLicenseBatch({ count }) {
 export function callAssignLicense({ licenseKey, clientName, phone }) {
   return callFunction(FUNCTIONS.ASSIGN_LICENSE, { licenseKey, clientName, phone });
 }
+
+/**
+ * Mark a list of licenses as printed.
+ * @param {string[]} licenseKeys — formatted license keys (e.g. "CHRY-XXXX-XXXX-XXXX-XXXX")
+ * @returns {Promise<{ success: boolean, count: number }>}
+ */
+export function callMarkLicensesPrinted(licenseKeys) {
+  return callFunction(FUNCTIONS.MARK_LICENSES_PRINTED, { licenseKeys });
+}

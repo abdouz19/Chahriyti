@@ -4,7 +4,7 @@ import React from 'react';
  * Small pill-shaped badge for status indicators.
  *
  * @param {Object} props
- * @param {'success'|'warning'|'danger'|'neutral'} props.variant - Color scheme
+ * @param {'success'|'warning'|'danger'|'neutral'|'info'} props.variant - Color scheme
  * @param {string} props.className - Additional CSS classes
  * @param {React.ReactNode} props.children
  */
@@ -16,6 +16,8 @@ export function Badge({ variant = 'neutral', className = '', children }) {
       'bg-warning/10 text-warning ring-warning/20',
     danger:
       'bg-negative/10 text-negative ring-negative/20',
+    info:
+      'bg-primary/10 text-primary ring-primary/20',
     neutral:
       'bg-text-secondary/10 text-text-secondary ring-text-secondary/20',
   }[variant];

@@ -124,13 +124,28 @@ const activateLicense = onRequest(
         return { status: 200, body: { success: true, status: 'activated' } };
       });
 
-      // Update pool stats if freshly activated
+      // Update stats if freshly activated
       if (result.body.status === 'activated') {
-        const statsRef = db.collection('stats').doc('pool');
-        await statsRef.set(
+        const now = new Date();
+        const dateId = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+        const batch = db.batch();
+
+        // Decrement available count
+        batch.set(
+          db.doc('stats/pool'),
           { availableLicenses: admin.firestore.FieldValue.increment(-1) },
           { merge: true }
         );
+
+        // Increment daily activation counter
+        batch.set(
+          db.doc(`stats_daily/${dateId}`),
+          { date: dateId, count: admin.firestore.FieldValue.increment(1) },
+          { merge: true }
+        );
+
+        await batch.commit();
       }
 
       res.status(result.status).json(result.body);

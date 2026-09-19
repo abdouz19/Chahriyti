@@ -11,6 +11,8 @@ const { sendToDelivery } = require('./sendToDelivery');
 const { generateLicenseBatch } = require('./generateLicenseBatch');
 const { activateLicense } = require('./activateLicense');
 const { assignLicense } = require('./assignLicense');
+const { markLicensesPrinted } = require('./markLicensesPrinted');
+const { getAppConfig } = require('./getAppConfig');
 
 exports.generateLicense = generateLicense;
 exports.getDashboardStats = getDashboardStats;
@@ -22,3 +24,5 @@ exports.sendToDelivery = sendToDelivery;
 exports.generateLicenseBatch = generateLicenseBatch;
 exports.activateLicense = activateLicense;
 exports.assignLicense = assignLicense;
+exports.markLicensesPrinted = markLicensesPrinted;
+exports.getAppConfig = getAppConfig;

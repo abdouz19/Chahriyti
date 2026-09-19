@@ -27,6 +27,7 @@ export const FUNCTIONS = {
   SEND_TO_DELIVERY: 'sendToDelivery',
   GENERATE_LICENSE_BATCH: 'generateLicenseBatch',
   ASSIGN_LICENSE: 'assignLicense',
+  MARK_LICENSES_PRINTED: 'markLicensesPrinted',
 };
 
 // License pool statuses

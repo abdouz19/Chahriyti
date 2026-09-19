@@ -1,33 +1,30 @@
+import { useEffect, useState } from 'react';
 import { Spinner } from '../../../components/ui';
 import { KPICard, TrendChart } from '../../../components/charts';
-import { ManagerLeaderboard } from '../components/ManagerLeaderboard';
 import { GrowthIndicator } from '../components/GrowthIndicator';
-import { ManagerDrilldown } from '../components/ManagerDrilldown';
 import { useAdminDashboard } from '../hooks/useAdminDashboard';
+import { onPoolStatsSnapshot } from '../../../services/firestore';
 import { chartColors } from '../../../config/theme';
 import { PERIODS } from '../../../config/constants';
 
 const PERIOD_OPTIONS = [PERIODS.WEEK, PERIODS.MONTH, PERIODS.QUARTER, PERIODS.YEAR];
 
-/** Icon: total clients */
-function UsersIcon() {
+function KeyIcon() {
   return (
     <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
-      <path d="M7 8a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm8-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM1 18a6 6 0 0 1 12 0H1Zm12.93-1a5 5 0 0 1 6.07 0h-6.07Z" />
+      <path fillRule="evenodd" d="M8 7a5 5 0 1 1 3.61 4.804l-1.903 1.903A1 1 0 0 1 9 14H8v1a1 1 0 0 1-1 1H6v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1.586a1 1 0 0 1 .293-.707l5.902-5.903A5.002 5.002 0 0 1 8 7Zm5-3a.75.75 0 0 0 0 1.5A1.5 1.5 0 0 1 14.5 7 .75.75 0 0 0 16 7a3 3 0 0 0-3-3Z" clipRule="evenodd" />
     </svg>
   );
 }
 
-/** Icon: calendar / this month */
-function CalendarIcon() {
+function CheckIcon() {
   return (
     <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
-      <path fillRule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2ZM4.75 5.5c-.69 0-1.25.56-1.25 1.25V8h13V6.75c0-.69-.56-1.25-1.25-1.25H4.75ZM16.5 9.5h-13v5.75c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V9.5Z" clipRule="evenodd" />
+      <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clipRule="evenodd" />
     </svg>
   );
 }
 
-/** Icon: today */
 function TodayIcon() {
   return (
     <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
@@ -36,34 +33,40 @@ function TodayIcon() {
   );
 }
 
-/** Icon: managers */
-function TeamIcon() {
+function PrintIcon() {
   return (
     <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
-      <path d="M10 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm-4.51 7.326a.78.78 0 0 1-.358-.442 3 3 0 0 1 4.308-3.516 6.484 6.484 0 0 0-1.905 3.959c-.023.222-.014.442.025.654a4.97 4.97 0 0 1-2.07-.655ZM18 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm-2.44 7.326c.507-.2.96-.496 1.345-.87a.78.78 0 0 0 .358-.442 3 3 0 0 0-4.308-3.516 6.484 6.484 0 0 1 1.905 3.959c.023.222.014.442-.025.654a4.97 4.97 0 0 0 2.07-.655v-.13ZM10 11a6 6 0 0 0-5.996 5.775l-.003.124A.78.78 0 0 0 4.36 17.5c1.69.889 3.61 1.5 5.64 1.5s3.95-.611 5.64-1.5a.78.78 0 0 0 .36-.601 6 6 0 0 0-6-5.899Z" />
+      <path fillRule="evenodd" d="M5 2.75C5 1.784 5.784 1 6.75 1h6.5c.966 0 1.75.784 1.75 1.75v3.552c.377.338.75.753.75 1.25v4.698a2.25 2.25 0 0 1-2.25 2.25H15v1.75c0 .966-.784 1.75-1.75 1.75h-6.5A1.75 1.75 0 0 1 5 15.25V14.5h-.5A2.25 2.25 0 0 1 2.25 12.25V8.552c0-.497.373-.912.75-1.25V2.75ZM6.5 4h7V2.75a.25.25 0 0 0-.25-.25h-6.5a.25.25 0 0 0-.25.25V4Zm-1 10.75c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25v3.5Z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
+function StackIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+      <path d="M1 12.5A4.5 4.5 0 0 0 5.5 17H15a4 4 0 0 0 1.866-7.539 3.504 3.504 0 0 0-4.504-4.272A4.5 4.5 0 0 0 4.06 8.235 4.502 4.502 0 0 0 1 12.5Z" />
     </svg>
   );
 }
 
 /**
- * Admin dashboard page — aggregate KPIs, trend chart, manager leaderboard, drill-down
+ * Admin dashboard — license pool KPIs and activation trends
  */
 export function AdminDashboardPage() {
   const {
     stats,
     dailyCounts,
-    leaderboard,
     loading,
     selectedPeriod,
-    drilldownManagerId,
-    drilldownManagerName,
-    drilldownStats,
-    drilldownDailyCounts,
-    drilldownLoading,
     setPeriod,
-    setDrilldownManager,
-    clearDrilldown,
   } = useAdminDashboard();
+
+  const [poolStats, setPoolStats] = useState(null);
+
+  useEffect(() => {
+    const unsub = onPoolStatsSnapshot(setPoolStats);
+    return unsub;
+  }, []);
 
   if (loading) {
     return (
@@ -73,49 +76,44 @@ export function AdminDashboardPage() {
     );
   }
 
-  // Drill-down view for selected manager
-  if (drilldownManagerId) {
-    return (
-      <ManagerDrilldown
-        managerName={drilldownManagerName}
-        stats={drilldownStats}
-        dailyCounts={drilldownDailyCounts}
-        loading={drilldownLoading}
-        selectedPeriod={selectedPeriod}
-        onPeriodChange={setPeriod}
-        onBack={clearDrilldown}
-      />
-    );
-  }
+  const totalLicenses = poolStats?.totalLicenses ?? 0;
+  const availableLicenses = poolStats?.availableLicenses ?? 0;
+  const usedLicenses = totalLicenses - availableLicenses;
 
   return (
     <div className="space-y-6">
-      {/* KPI cards row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Pool overview KPIs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <KPICard
-          icon={<UsersIcon />}
-          label="إجمالي العملاء"
-          value={stats?.totalClients ?? 0}
+          icon={<StackIcon />}
+          label="إجمالي التراخيص"
+          value={totalLicenses}
           accentColor={chartColors.primary}
-          trend={stats?.growthPercent ? { value: stats.growthPercent, isPositive: stats.growthPercent > 0 } : undefined}
         />
         <KPICard
-          icon={<CalendarIcon />}
-          label="هذا الشهر"
-          value={stats?.monthClients ?? 0}
-          accentColor={chartColors.secondary}
-        />
-        <KPICard
-          icon={<TodayIcon />}
-          label="اليوم"
-          value={stats?.todayClients ?? 0}
+          icon={<KeyIcon />}
+          label="متاحة"
+          value={availableLicenses}
           accentColor={chartColors.positive}
         />
         <KPICard
-          icon={<TeamIcon />}
-          label="المسؤولين"
-          value={stats?.totalManagers ?? 0}
+          icon={<CheckIcon />}
+          label="مفعّلة"
+          value={usedLicenses}
           accentColor={chartColors.warning}
+          trend={stats?.growthPercent ? { value: stats.growthPercent, isPositive: stats.growthPercent > 0 } : undefined}
+        />
+        <KPICard
+          icon={<TodayIcon />}
+          label="تفعيلات اليوم"
+          value={stats?.todayClients ?? 0}
+          accentColor={chartColors.secondary}
+        />
+        <KPICard
+          icon={<PrintIcon />}
+          label="تفعيلات الشهر"
+          value={stats?.monthClients ?? 0}
+          accentColor="#8b5cf6"
         />
       </div>
 
@@ -124,46 +122,32 @@ export function AdminDashboardPage() {
         <GrowthIndicator value={stats.growthPercent} label="مقارنة بالفترة السابقة" />
       )}
 
-      {/* Main content: chart + leaderboard */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Trend chart — takes 2/3 width */}
-        <div className="lg:col-span-2">
-          <div className="card">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-text-primary">اتجاه التفعيلات</h3>
-              <div className="flex gap-1">
-                {PERIOD_OPTIONS.map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setPeriod(p)}
-                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors
-                      ${selectedPeriod === p
-                        ? 'bg-primary text-white'
-                        : 'bg-surface text-text-secondary hover:text-text-primary'
-                      }`}
-                  >
-                    {p === PERIODS.WEEK ? '7 أيام' : p === PERIODS.MONTH ? '30 يوم' : p === PERIODS.QUARTER ? '90 يوم' : 'سنة'}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <TrendChart
-              data={dailyCounts}
-              color={chartColors.primary}
-              type="bar"
-              height={320}
-            />
+      {/* Activation trend chart */}
+      <div className="card">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-text-primary">اتجاه التفعيلات</h3>
+          <div className="flex gap-1">
+            {PERIOD_OPTIONS.map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors
+                  ${selectedPeriod === p
+                    ? 'bg-primary text-white'
+                    : 'bg-surface text-text-secondary hover:text-text-primary'
+                  }`}
+              >
+                {p === PERIODS.WEEK ? '7 أيام' : p === PERIODS.MONTH ? '30 يوم' : p === PERIODS.QUARTER ? '90 يوم' : 'سنة'}
+              </button>
+            ))}
           </div>
         </div>
-
-        {/* Leaderboard — takes 1/3 width */}
-        <div>
-          <ManagerLeaderboard
-            managers={leaderboard}
-            onSelect={setDrilldownManager}
-            selectedId={drilldownManagerId}
-          />
-        </div>
+        <TrendChart
+          data={dailyCounts}
+          color={chartColors.primary}
+          type="bar"
+          height={320}
+        />
       </div>
     </div>
   );

@@ -8,32 +8,15 @@ import { ROLES } from '../config/constants';
 const AdminLayout = lazy(() =>
   import('../components/layout/AdminLayout').then(m => ({ default: m.AdminLayout }))
 );
-const ManagerLayout = lazy(() =>
-  import('../components/layout/ManagerLayout').then(m => ({ default: m.ManagerLayout }))
-);
 
 // Lazy-loaded pages — Auth
 const LoginPage = lazy(() =>
   import('../features/auth/pages/LoginPage').then(m => ({ default: m.LoginPage }))
 );
 
-// Lazy-loaded pages — Manager portal
-const GenerateLicensePage = lazy(() =>
-  import('../features/license/pages/GenerateLicensePage').then(m => ({ default: m.GenerateLicensePage }))
-);
-const ClientsPage = lazy(() =>
-  import('../features/clients/pages/ClientsPage').then(m => ({ default: m.ClientsPage }))
-);
-const ManagerDashboardPage = lazy(() =>
-  import('../features/dashboard/pages/ManagerDashboardPage').then(m => ({ default: m.ManagerDashboardPage }))
-);
-
 // Lazy-loaded pages — Admin portal
 const AdminDashboardPage = lazy(() =>
   import('../features/dashboard/pages/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage }))
-);
-const ManagersPage = lazy(() =>
-  import('../features/managers/pages/ManagersPage').then(m => ({ default: m.ManagersPage }))
 );
 
 // Lazy-loaded pages — License pool
@@ -81,27 +64,8 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <LazyPage><AdminDashboardPage /></LazyPage> },
-      { path: 'managers', element: <LazyPage><ManagersPage /></LazyPage> },
       { path: 'pool', element: <LazyPage><LicensePoolPage /></LazyPage> },
       { path: 'pool/generate', element: <LazyPage><BatchGeneratePage /></LazyPage> },
-    ],
-  },
-
-  // Manager portal
-  {
-    path: '/manager',
-    element: (
-      <ProtectedRoute allowedRole={ROLES.MANAGER}>
-        <LazyPage>
-          <ManagerLayout />
-        </LazyPage>
-      </ProtectedRoute>
-    ),
-    children: [
-      { index: true, element: <LazyPage><ManagerDashboardPage /></LazyPage> },
-      { path: 'generate', element: <LazyPage><GenerateLicensePage /></LazyPage> },
-      { path: 'clients', element: <LazyPage><ClientsPage /></LazyPage> },
-      { path: 'pool', element: <LazyPage><LicensePoolPage /></LazyPage> },
     ],
   },
 
