@@ -4,7 +4,6 @@ import '../../../application/use_cases/financial_setup/add_initial_debt_use_case
 import '../../../application/use_cases/financial_setup/add_initial_lending_use_case.dart';
 import '../../../application/use_cases/financial_setup/complete_financial_setup_use_case.dart';
 import '../../../application/use_cases/financial_setup/delete_initial_debt_use_case.dart';
-import '../../../application/use_cases/savings/deposit_salary_split_use_case.dart';
 import '../../../application/use_cases/financial_setup/delete_initial_lending_use_case.dart';
 import '../../../application/use_cases/financial_setup/edit_initial_debt_use_case.dart';
 import '../../../application/use_cases/financial_setup/edit_initial_lending_use_case.dart';
@@ -30,7 +29,6 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
   final DeleteInitialLendingUseCase _deleteLendingUseCase;
   final CompleteFinancialSetupUseCase _completeUseCase;
   final GetSetupSummaryUseCase _getSummaryUseCase;
-  final DepositSalarySplitUseCase _depositSalarySplitUseCase;
   final UserRepository _userRepository;
   final CycleRepository _cycleRepository;
   final DebtRepository _debtRepository;
@@ -53,7 +51,6 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
     required DeleteInitialLendingUseCase deleteLendingUseCase,
     required CompleteFinancialSetupUseCase completeUseCase,
     required GetSetupSummaryUseCase getSummaryUseCase,
-    required DepositSalarySplitUseCase depositSalarySplitUseCase,
     required UserRepository userRepository,
     required CycleRepository cycleRepository,
     required DebtRepository debtRepository,
@@ -69,7 +66,6 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
         _deleteLendingUseCase = deleteLendingUseCase,
         _completeUseCase = completeUseCase,
         _getSummaryUseCase = getSummaryUseCase,
-        _depositSalarySplitUseCase = depositSalarySplitUseCase,
         _userRepository = userRepository,
         _cycleRepository = cycleRepository,
         _debtRepository = debtRepository,
@@ -303,14 +299,15 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
   Future<void> confirm() async {
     emit(const FinancialSetupLoading());
     try {
-      // Deposit salary split before completing setup so the cycle's
-      // salarySplitAmount is set for the balance calculation.
+      // Only record the split amount on the cycle — do NOT create a savings
+      // deposit. The setup wizard captures current state; no money is moving.
+      // Real savings deposits happen on monthly cycle renewal.
       if (_cachedSalarySplit > 0) {
         final cycle = await _cycleRepository.getActiveCycle();
         if (cycle != null) {
-          await _depositSalarySplitUseCase(
-            cycleId: cycle.id,
-            amount: _cachedSalarySplit,
+          await _cycleRepository.updateCycleSalarySplit(
+            cycle.id,
+            _cachedSalarySplit,
           );
         }
       }

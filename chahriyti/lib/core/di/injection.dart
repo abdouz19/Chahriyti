@@ -223,7 +223,6 @@ abstract final class Injection {
         deleteLendingUseCase: deleteInitialLendingUseCase,
         completeUseCase: completeFinancialSetupUseCase,
         getSummaryUseCase: getSetupSummaryUseCase,
-        depositSalarySplitUseCase: depositSalarySplitUseCase,
         userRepository: userRepository,
         cycleRepository: cycleRepository,
         debtRepository: debtRepository,
