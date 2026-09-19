@@ -54,6 +54,8 @@ class IncomesDao extends DatabaseAccessor<AppDatabase> with _$IncomesDaoMixin {
     await (delete(additionalIncomes)..where((t) => t.id.equals(id))).go();
   }
 
+  static const _excludedDescriptions = {'رصيد أولي', 'رصيد اولي'};
+
   Future<List<String>> getDistinctDescriptions() async {
     final rows = await (select(additionalIncomes)
           ..where((t) => t.description.isNotValue(''))
@@ -63,7 +65,9 @@ class IncomesDao extends DatabaseAccessor<AppDatabase> with _$IncomesDaoMixin {
     final result = <String>[];
     for (final row in rows) {
       final name = row.description.trim();
-      if (name.isNotEmpty && seen.add(name.toLowerCase())) {
+      if (name.isNotEmpty &&
+          !_excludedDescriptions.contains(name) &&
+          seen.add(name.toLowerCase())) {
         result.add(name);
         if (result.length >= 100) break;
       }

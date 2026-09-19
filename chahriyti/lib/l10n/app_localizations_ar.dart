@@ -850,7 +850,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get consumptionRate => 'نسبة الاستهلاك';
 
   @override
-  String get daysRemainingLabel => 'الأيام المتبقية';
+  String get daysRemainingLabel => 'يوم متبقٍ';
 
   @override
   String get salaryDayExclamation => 'يوم الراتب!';
@@ -1252,4 +1252,74 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get availableLabel => 'متاح';
+
+  @override
+  String get incomeBreakdownTitle => 'مصادر الدخل الإضافي';
+
+  @override
+  String totalAdditionalIncome(String total) {
+    return 'الإجمالي: $total';
+  }
+
+  @override
+  String get noAdditionalIncomeYet => 'لا توجد مداخيل إضافية هذا الشهر';
+
+  @override
+  String get incomeVsSpendingTitle => 'الدخل مقابل الإنفاق';
+
+  @override
+  String get incomeLabel => 'الدخل';
+
+  @override
+  String get spendingLabel => 'الإنفاق';
+
+  @override
+  String get totalIncomeThisCycle => 'إجمالي الدخل هذا الشهر';
+
+  @override
+  String get savingsRateLabel => 'معدل الادخار';
+
+  @override
+  String get savingsHistoryTitle => 'تاريخ رصيد التوفير';
+
+  @override
+  String get savingsHistorySubtitle => 'تطور رصيدك الادخاري عبر الدورات';
+
+  @override
+  String get filterWeek => 'أسبوع';
+
+  @override
+  String get filterMonth => 'شهر';
+
+  @override
+  String get filterThreeMonths => '3 أشهر';
+
+  @override
+  String get filterCustom => 'مخصص';
+
+  @override
+  String statsDateRangeLabel(String start, String end) {
+    return 'الفترة: $start — $end';
+  }
+
+  @override
+  String get dailyBudgetTitle => 'متبقي يومياً';
+
+  @override
+  String get perDayLabel => '/ يوم';
+
+  @override
+  String get monthForecastTitle => 'توقع نهاية الدورة';
+
+  @override
+  String get overBudgetLabel => 'فوق الميزانية';
+
+  @override
+  String get nearBudgetLabel => 'قريب من الحد';
+
+  @override
+  String get underBudgetLabel => 'ضمن الميزانية';
+
+  @override
+  String get forecastFromLabel => 'من';
 }

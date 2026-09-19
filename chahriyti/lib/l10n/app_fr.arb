@@ -429,5 +429,44 @@
 
   "paymentSource": "Source de paiement",
   "totalLabel": "Total",
-  "availableLabel": "Disponible"
+  "availableLabel": "Disponible",
+
+  "incomeBreakdownTitle": "Sources de revenus additionnels",
+  "totalAdditionalIncome": "Total : {total}",
+  "@totalAdditionalIncome": {
+    "placeholders": {
+      "total": { "type": "String" }
+    }
+  },
+  "noAdditionalIncomeYet": "Aucun revenu additionnel ce cycle",
+
+  "incomeVsSpendingTitle": "Revenus vs Dépenses",
+  "incomeLabel": "Revenus",
+  "spendingLabel": "Dépenses",
+  "totalIncomeThisCycle": "Total des revenus ce cycle",
+  "savingsRateLabel": "Taux d'épargne",
+
+  "savingsHistoryTitle": "Historique du solde d'épargne",
+  "savingsHistorySubtitle": "Évolution de votre épargne par cycle",
+
+  "filterWeek": "Semaine",
+  "filterMonth": "Mois",
+  "filterThreeMonths": "3 Mois",
+  "filterCustom": "Personnalisé",
+  "statsDateRangeLabel": "Période: {start} — {end}",
+  "@statsDateRangeLabel": {
+    "placeholders": {
+      "start": { "type": "String" },
+      "end": { "type": "String" }
+    }
+  },
+
+  "dailyBudgetTitle": "Reste par jour",
+  "daysRemainingLabel": "jours restants",
+  "perDayLabel": "/ jour",
+  "monthForecastTitle": "Prévision fin de cycle",
+  "overBudgetLabel": "Dépassement",
+  "nearBudgetLabel": "Proche du seuil",
+  "underBudgetLabel": "Dans les limites",
+  "forecastFromLabel": "sur"
 }

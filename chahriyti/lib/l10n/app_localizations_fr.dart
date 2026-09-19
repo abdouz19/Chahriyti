@@ -860,7 +860,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get consumptionRate => 'Taux de consommation';
 
   @override
-  String get daysRemainingLabel => 'Jours restants';
+  String get daysRemainingLabel => 'jours restants';
 
   @override
   String get salaryDayExclamation => 'Jour de salaire !';
@@ -1274,4 +1274,74 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get availableLabel => 'Disponible';
+
+  @override
+  String get incomeBreakdownTitle => 'Sources de revenus additionnels';
+
+  @override
+  String totalAdditionalIncome(String total) {
+    return 'Total : $total';
+  }
+
+  @override
+  String get noAdditionalIncomeYet => 'Aucun revenu additionnel ce cycle';
+
+  @override
+  String get incomeVsSpendingTitle => 'Revenus vs Dépenses';
+
+  @override
+  String get incomeLabel => 'Revenus';
+
+  @override
+  String get spendingLabel => 'Dépenses';
+
+  @override
+  String get totalIncomeThisCycle => 'Total des revenus ce cycle';
+
+  @override
+  String get savingsRateLabel => 'Taux d\'épargne';
+
+  @override
+  String get savingsHistoryTitle => 'Historique du solde d\'épargne';
+
+  @override
+  String get savingsHistorySubtitle => 'Évolution de votre épargne par cycle';
+
+  @override
+  String get filterWeek => 'Semaine';
+
+  @override
+  String get filterMonth => 'Mois';
+
+  @override
+  String get filterThreeMonths => '3 Mois';
+
+  @override
+  String get filterCustom => 'Personnalisé';
+
+  @override
+  String statsDateRangeLabel(String start, String end) {
+    return 'Période: $start — $end';
+  }
+
+  @override
+  String get dailyBudgetTitle => 'Reste par jour';
+
+  @override
+  String get perDayLabel => '/ jour';
+
+  @override
+  String get monthForecastTitle => 'Prévision fin de cycle';
+
+  @override
+  String get overBudgetLabel => 'Dépassement';
+
+  @override
+  String get nearBudgetLabel => 'Proche du seuil';
+
+  @override
+  String get underBudgetLabel => 'Dans les limites';
+
+  @override
+  String get forecastFromLabel => 'sur';
 }

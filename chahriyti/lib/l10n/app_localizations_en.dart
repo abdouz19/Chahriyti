@@ -854,7 +854,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get consumptionRate => 'Consumption Rate';
 
   @override
-  String get daysRemainingLabel => 'Days Remaining';
+  String get daysRemainingLabel => 'days left';
 
   @override
   String get salaryDayExclamation => 'Salary Day!';
@@ -1266,4 +1266,74 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get availableLabel => 'Available';
+
+  @override
+  String get incomeBreakdownTitle => 'Additional Income Sources';
+
+  @override
+  String totalAdditionalIncome(String total) {
+    return 'Total: $total';
+  }
+
+  @override
+  String get noAdditionalIncomeYet => 'No additional income this cycle';
+
+  @override
+  String get incomeVsSpendingTitle => 'Income vs Spending';
+
+  @override
+  String get incomeLabel => 'Income';
+
+  @override
+  String get spendingLabel => 'Spending';
+
+  @override
+  String get totalIncomeThisCycle => 'Total income this cycle';
+
+  @override
+  String get savingsRateLabel => 'Savings rate';
+
+  @override
+  String get savingsHistoryTitle => 'Savings balance history';
+
+  @override
+  String get savingsHistorySubtitle => 'Your savings balance across cycles';
+
+  @override
+  String get filterWeek => 'Week';
+
+  @override
+  String get filterMonth => 'Month';
+
+  @override
+  String get filterThreeMonths => '3 Months';
+
+  @override
+  String get filterCustom => 'Custom';
+
+  @override
+  String statsDateRangeLabel(String start, String end) {
+    return 'Period: $start — $end';
+  }
+
+  @override
+  String get dailyBudgetTitle => 'Daily remaining';
+
+  @override
+  String get perDayLabel => '/ day';
+
+  @override
+  String get monthForecastTitle => 'Cycle-end forecast';
+
+  @override
+  String get overBudgetLabel => 'Over budget';
+
+  @override
+  String get nearBudgetLabel => 'Near limit';
+
+  @override
+  String get underBudgetLabel => 'On track';
+
+  @override
+  String get forecastFromLabel => 'of';
 }

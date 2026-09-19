@@ -1723,7 +1723,7 @@ abstract class AppLocalizations {
   /// No description provided for @daysRemainingLabel.
   ///
   /// In en, this message translates to:
-  /// **'Days Remaining'**
+  /// **'days left'**
   String get daysRemainingLabel;
 
   /// No description provided for @salaryDayExclamation.
@@ -2487,6 +2487,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Available'**
   String get availableLabel;
+
+  /// No description provided for @incomeBreakdownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Income Sources'**
+  String get incomeBreakdownTitle;
+
+  /// No description provided for @totalAdditionalIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {total}'**
+  String totalAdditionalIncome(String total);
+
+  /// No description provided for @noAdditionalIncomeYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No additional income this cycle'**
+  String get noAdditionalIncomeYet;
+
+  /// No description provided for @incomeVsSpendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Income vs Spending'**
+  String get incomeVsSpendingTitle;
+
+  /// No description provided for @incomeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get incomeLabel;
+
+  /// No description provided for @spendingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending'**
+  String get spendingLabel;
+
+  /// No description provided for @totalIncomeThisCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Total income this cycle'**
+  String get totalIncomeThisCycle;
+
+  /// No description provided for @savingsRateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings rate'**
+  String get savingsRateLabel;
+
+  /// No description provided for @savingsHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings balance history'**
+  String get savingsHistoryTitle;
+
+  /// No description provided for @savingsHistorySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your savings balance across cycles'**
+  String get savingsHistorySubtitle;
+
+  /// No description provided for @filterWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get filterWeek;
+
+  /// No description provided for @filterMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get filterMonth;
+
+  /// No description provided for @filterThreeMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Months'**
+  String get filterThreeMonths;
+
+  /// No description provided for @filterCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get filterCustom;
+
+  /// No description provided for @statsDateRangeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Period: {start} — {end}'**
+  String statsDateRangeLabel(String start, String end);
+
+  /// No description provided for @dailyBudgetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily remaining'**
+  String get dailyBudgetTitle;
+
+  /// No description provided for @perDayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'/ day'**
+  String get perDayLabel;
+
+  /// No description provided for @monthForecastTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle-end forecast'**
+  String get monthForecastTitle;
+
+  /// No description provided for @overBudgetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Over budget'**
+  String get overBudgetLabel;
+
+  /// No description provided for @nearBudgetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Near limit'**
+  String get nearBudgetLabel;
+
+  /// No description provided for @underBudgetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'On track'**
+  String get underBudgetLabel;
+
+  /// No description provided for @forecastFromLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get forecastFromLabel;
 }
 
 class _AppLocalizationsDelegate

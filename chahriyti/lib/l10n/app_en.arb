@@ -870,5 +870,65 @@
   "totalLabel": "Total",
   "@totalLabel": {},
   "availableLabel": "Available",
-  "@availableLabel": {}
+  "@availableLabel": {},
+
+  "incomeBreakdownTitle": "Additional Income Sources",
+  "@incomeBreakdownTitle": {},
+  "totalAdditionalIncome": "Total: {total}",
+  "@totalAdditionalIncome": {
+    "placeholders": {
+      "total": { "type": "String" }
+    }
+  },
+  "noAdditionalIncomeYet": "No additional income this cycle",
+  "@noAdditionalIncomeYet": {},
+
+  "incomeVsSpendingTitle": "Income vs Spending",
+  "@incomeVsSpendingTitle": {},
+  "incomeLabel": "Income",
+  "@incomeLabel": {},
+  "spendingLabel": "Spending",
+  "@spendingLabel": {},
+  "totalIncomeThisCycle": "Total income this cycle",
+  "@totalIncomeThisCycle": {},
+  "savingsRateLabel": "Savings rate",
+  "@savingsRateLabel": {},
+
+  "savingsHistoryTitle": "Savings balance history",
+  "@savingsHistoryTitle": {},
+  "savingsHistorySubtitle": "Your savings balance across cycles",
+  "@savingsHistorySubtitle": {},
+
+  "filterWeek": "Week",
+  "@filterWeek": {},
+  "filterMonth": "Month",
+  "@filterMonth": {},
+  "filterThreeMonths": "3 Months",
+  "@filterThreeMonths": {},
+  "filterCustom": "Custom",
+  "@filterCustom": {},
+  "statsDateRangeLabel": "Period: {start} — {end}",
+  "@statsDateRangeLabel": {
+    "placeholders": {
+      "start": { "type": "String" },
+      "end": { "type": "String" }
+    }
+  },
+
+  "dailyBudgetTitle": "Daily remaining",
+  "@dailyBudgetTitle": {},
+  "daysRemainingLabel": "days left",
+  "@daysRemainingLabel": {},
+  "perDayLabel": "/ day",
+  "@perDayLabel": {},
+  "monthForecastTitle": "Cycle-end forecast",
+  "@monthForecastTitle": {},
+  "overBudgetLabel": "Over budget",
+  "@overBudgetLabel": {},
+  "nearBudgetLabel": "Near limit",
+  "@nearBudgetLabel": {},
+  "underBudgetLabel": "On track",
+  "@underBudgetLabel": {},
+  "forecastFromLabel": "of",
+  "@forecastFromLabel": {}
 }

@@ -270,28 +270,7 @@ class _AddCustomCategorySheetState extends State<_AddCustomCategorySheet> {
   final _nameController = TextEditingController();
   late int _selectedIconCodePoint;
 
-  static final _icons = [
-    Icons.label_outline_rounded,
-    Icons.shopping_basket_outlined,
-    Icons.restaurant_outlined,
-    Icons.local_cafe_outlined,
-    Icons.home_outlined,
-    Icons.directions_car_outlined,
-    Icons.local_hospital_outlined,
-    Icons.school_outlined,
-    Icons.checkroom_outlined,
-    Icons.fitness_center_outlined,
-    Icons.sports_soccer_outlined,
-    Icons.music_note_outlined,
-    Icons.flight_outlined,
-    Icons.card_giftcard_outlined,
-    Icons.computer_outlined,
-    Icons.pets_outlined,
-    Icons.build_outlined,
-    Icons.spa_outlined,
-    Icons.local_movies_outlined,
-    Icons.savings_outlined,
-  ];
+  static const _icons = CustomCategoryEntity.pickerIcons;
 
   @override
   void initState() {

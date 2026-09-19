@@ -429,5 +429,44 @@
 
   "paymentSource": "مصدر الدفع",
   "totalLabel": "الإجمالي",
-  "availableLabel": "متاح"
+  "availableLabel": "متاح",
+
+  "incomeBreakdownTitle": "مصادر الدخل الإضافي",
+  "totalAdditionalIncome": "الإجمالي: {total}",
+  "@totalAdditionalIncome": {
+    "placeholders": {
+      "total": { "type": "String" }
+    }
+  },
+  "noAdditionalIncomeYet": "لا توجد مداخيل إضافية هذا الشهر",
+
+  "incomeVsSpendingTitle": "الدخل مقابل الإنفاق",
+  "incomeLabel": "الدخل",
+  "spendingLabel": "الإنفاق",
+  "totalIncomeThisCycle": "إجمالي الدخل هذا الشهر",
+  "savingsRateLabel": "معدل الادخار",
+
+  "savingsHistoryTitle": "تاريخ رصيد التوفير",
+  "savingsHistorySubtitle": "تطور رصيدك الادخاري عبر الدورات",
+
+  "filterWeek": "أسبوع",
+  "filterMonth": "شهر",
+  "filterThreeMonths": "3 أشهر",
+  "filterCustom": "مخصص",
+  "statsDateRangeLabel": "الفترة: {start} — {end}",
+  "@statsDateRangeLabel": {
+    "placeholders": {
+      "start": { "type": "String" },
+      "end": { "type": "String" }
+    }
+  },
+
+  "dailyBudgetTitle": "متبقي يومياً",
+  "daysRemainingLabel": "يوم متبقٍ",
+  "perDayLabel": "/ يوم",
+  "monthForecastTitle": "توقع نهاية الدورة",
+  "overBudgetLabel": "فوق الميزانية",
+  "nearBudgetLabel": "قريب من الحد",
+  "underBudgetLabel": "ضمن الميزانية",
+  "forecastFromLabel": "من"
 }
