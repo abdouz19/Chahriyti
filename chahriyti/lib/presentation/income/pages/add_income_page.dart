@@ -4,12 +4,49 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/additional_income_entity.dart';
 import '../../shared/widgets/confirmation_dialog.dart';
 import '../cubits/income_cubit.dart';
+
+// Shared options view for income source autocomplete (same style as expense form)
+Widget _buildOptionsView(
+  BuildContext context,
+  AutocompleteOnSelected<String> onSelected,
+  Iterable<String> options,
+) {
+  return Align(
+    alignment: AlignmentDirectional.topStart,
+    child: Material(
+      elevation: 6,
+      borderRadius: BorderRadius.circular(12),
+      color: AppColors.surface,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 220),
+        child: ListView.separated(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          shrinkWrap: true,
+          itemCount: options.length,
+          separatorBuilder: (_, __) => Divider(height: 1, color: AppColors.border),
+          itemBuilder: (_, i) {
+            final option = options.elementAt(i);
+            return InkWell(
+              onTap: () => onSelected(option),
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Text(option, style: AppTypography.bodyMedium),
+              ),
+            );
+          },
+        ),
+      ),
+    ),
+  );
+}
 
 class AddIncomePage extends StatelessWidget {
   const AddIncomePage({super.key});
@@ -38,13 +75,35 @@ class _AddIncomeView extends StatefulWidget {
 
 class _AddIncomeViewState extends State<_AddIncomeView> {
   final _formKey = GlobalKey<FormState>();
-  final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
   bool _toSavings = false;
 
+  List<String> _suggestions = [];
+  String _description = '';
+  TextEditingController? _descCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSuggestions();
+  }
+
+  Future<void> _loadSuggestions() async {
+    try {
+      final results = await Injection.getIncomeSuggestionsUseCase();
+      if (mounted) setState(() => _suggestions = results);
+    } catch (_) {}
+  }
+
+  Iterable<String> _optionsBuilder(TextEditingValue value) {
+    if (_suggestions.isEmpty) return const [];
+    final q = value.text.trim().toLowerCase();
+    if (q.isEmpty) return _suggestions.take(8);
+    return _suggestions.where((s) => s.toLowerCase().contains(q));
+  }
+
   @override
   void dispose() {
-    _descriptionController.dispose();
     _amountController.dispose();
     super.dispose();
   }
@@ -52,7 +111,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
   void _onSave() {
     if (!_formKey.currentState!.validate()) return;
 
-    final description = _descriptionController.text.trim();
+    final description = _description.trim();
     final amount = int.tryParse(_amountController.text.trim()) ?? 0;
 
     context.read<IncomeCubit>().addIncome(
@@ -62,6 +121,8 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
         );
   }
 
+  void _onDescChanged() => _description = _descCtrl?.text ?? '';
+
   Future<void> _showEditDialog(AdditionalIncomeEntity income) async {
     final controller = TextEditingController(text: income.description);
     final cubit = context.read<IncomeCubit>();
@@ -69,14 +130,13 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.card,
-        title: Text('تعديل المدخول', style: AppTypography.headlineSmall),
+        title: Text(context.l10n.editIncomeTitle, style: AppTypography.headlineSmall),
         content: TextField(
           controller: controller,
-          textDirection: TextDirection.rtl,
           autofocus: true,
           style: AppTypography.bodyLarge,
           decoration: InputDecoration(
-            hintText: 'مصدر المدخول',
+            hintText: context.l10n.incomeSource,
             hintStyle:
                 AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
             border: OutlineInputBorder(
@@ -94,13 +154,13 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text('إلغاء',
+            child: Text(ctx.l10n.cancel,
                 style:
                     AppTypography.labelMedium.copyWith(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text('حفظ',
+            child: Text(ctx.l10n.save,
                 style: AppTypography.labelMedium.copyWith(color: AppColors.primary)),
           ),
         ],
@@ -116,8 +176,8 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
     final cubit = context.read<IncomeCubit>();
     final confirmed = await ConfirmationDialog.show(
       context,
-      title: 'حذف المدخول',
-      message: 'هل تريد حذف "${income.description}"؟',
+      title: context.l10n.deleteIncome,
+      message: context.l10n.deleteIncomeConfirm(income.description),
       confirmColor: AppColors.negative,
     );
     if (confirmed) {
@@ -133,7 +193,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'تم حفظ المدخول بنجاح',
+                context.l10n.incomeSaved,
                 style: AppTypography.bodyMedium.copyWith(color: Colors.white),
               ),
               backgroundColor: AppColors.positive,
@@ -144,7 +204,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'تم تعديل المدخول بنجاح',
+                context.l10n.incomeUpdated,
                 style: AppTypography.bodyMedium.copyWith(color: Colors.white),
               ),
               backgroundColor: AppColors.positive,
@@ -155,7 +215,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'تم حذف المدخول',
+                context.l10n.incomeDeleted,
                 style: AppTypography.bodyMedium.copyWith(color: Colors.white),
               ),
               backgroundColor: AppColors.positive,
@@ -178,7 +238,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           title: Text(
-            'إضافة مدخول',
+            context.l10n.addIncomeTitle,
             style: AppTypography.headlineSmall,
           ),
           centerTitle: true,
@@ -195,43 +255,57 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
               children: [
                 const SizedBox(height: 16),
 
-                // Description field
-                TextFormField(
-                  controller: _descriptionController,
-                  textDirection: TextDirection.rtl,
-                  decoration: InputDecoration(
-                    hintText: 'مصدر المدخول',
-                    hintStyle: AppTypography.bodyMedium.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.description_rounded,
-                      color: AppColors.textSecondary,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColors.border),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColors.border),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: AppColors.primary,
-                        width: 2,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: AppColors.card,
-                  ),
-                  style: AppTypography.bodyLarge,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'مصدر الدخل مطلوب';
+                // Description field with history suggestions
+                Autocomplete<String>(
+                  optionsBuilder: _optionsBuilder,
+                  displayStringForOption: (s) => s,
+                  onSelected: (value) => _description = value,
+                  optionsViewBuilder: _buildOptionsView,
+                  fieldViewBuilder: (ctx, controller, focusNode, onFieldSubmitted) {
+                    if (_descCtrl != controller) {
+                      _descCtrl?.removeListener(_onDescChanged);
+                      _descCtrl = controller;
+                      controller.addListener(_onDescChanged);
                     }
-                    return null;
+                    return TextFormField(
+                      controller: controller,
+                      focusNode: focusNode,
+                      textDirection: TextDirection.rtl,
+                      style: AppTypography.bodyLarge,
+                      decoration: InputDecoration(
+                        hintText: context.l10n.incomeSource,
+                        hintStyle: AppTypography.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.description_rounded,
+                          color: AppColors.textSecondary,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: AppColors.border),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: AppColors.border),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppColors.primary,
+                            width: 2,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: AppColors.card,
+                      ),
+                      validator: (_) {
+                        if (_description.trim().isEmpty) {
+                          return context.l10n.incomeSourceRequired;
+                        }
+                        return null;
+                      },
+                    );
                   },
                 ),
                 const SizedBox(height: 16),
@@ -246,11 +320,11 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   decoration: InputDecoration(
-                    hintText: 'المبلغ',
+                    hintText: context.l10n.amount,
                     hintStyle: AppTypography.bodyMedium.copyWith(
                       color: AppColors.textSecondary,
                     ),
-                    suffixText: 'دج',
+                    suffixText: context.l10n.currencySymbol,
                     suffixStyle: AppTypography.labelMedium.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -279,11 +353,11 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                   style: AppTypography.amountMedium,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'المبلغ مطلوب';
+                      return context.l10n.amountRequired;
                     }
                     final amount = int.tryParse(value.trim());
                     if (amount == null || amount <= 0) {
-                      return 'المبلغ يجب أن يكون أكبر من الصفر';
+                      return context.l10n.amountMustBePositive;
                     }
                     return null;
                   },
@@ -292,7 +366,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
 
                 // Destination toggle
                 Text(
-                  'الوجهة',
+                  context.l10n.destination,
                   style: AppTypography.labelMedium.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -330,7 +404,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                'الرصيد',
+                                context.l10n.balanceSummaryLabel,
                                 style: AppTypography.labelMedium.copyWith(
                                   color: !_toSavings
                                       ? AppColors.primary
@@ -376,7 +450,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                'المدخرات',
+                                context.l10n.savings,
                                 style: AppTypography.labelMedium.copyWith(
                                   color: _toSavings
                                       ? AppColors.primary
@@ -423,7 +497,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                                 ),
                               )
                             : Text(
-                                'حفظ',
+                                context.l10n.save,
                                 style: AppTypography.labelLarge.copyWith(
                                   color: Colors.white,
                                 ),
@@ -484,7 +558,7 @@ class _IncomeList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'المدخولات الإضافية',
+          context.l10n.additionalIncomes,
           style: AppTypography.labelMedium.copyWith(
             color: AppColors.textSecondary,
           ),
@@ -529,7 +603,7 @@ class _IncomeItem extends StatelessWidget {
           textDirection: TextDirection.rtl,
         ),
         subtitle: Text(
-          income.amount.toDZDString(),
+          income.amount.toDZDString(symbol: context.l10n.currencySymbol),
           style: AppTypography.labelMedium.copyWith(
             color: AppColors.positive,
             fontWeight: FontWeight.w600,
@@ -543,13 +617,13 @@ class _IncomeItem extends StatelessWidget {
               icon: Icon(Icons.edit_outlined,
                   size: 20, color: AppColors.textSecondary),
               onPressed: () => onEdit(income),
-              tooltip: 'تعديل',
+              tooltip: context.l10n.edit,
             ),
             IconButton(
               icon: Icon(Icons.delete_outline,
                   size: 20, color: AppColors.negative),
               onPressed: () => onDelete(income),
-              tooltip: 'حذف',
+              tooltip: context.l10n.delete,
             ),
           ],
         ),

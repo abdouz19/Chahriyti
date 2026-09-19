@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../core/constants/wilayas.dart';
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/activation_cubit.dart';
@@ -20,10 +24,6 @@ class ActivationPage extends StatefulWidget {
 }
 
 class _ActivationPageState extends State<ActivationPage> {
-  int _currentStep = 0;
-
-  static const _stepLabels = ['بياناتك', 'إرسال', 'تفعيل'];
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<ActivationCubit, ActivationState>(
@@ -44,8 +44,8 @@ class _ActivationPageState extends State<ActivationPage> {
           }
         } else if (state is ActivationAlreadyUsed) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('هذا الترخيص مستخدم على جهاز آخر'),
+            SnackBar(
+              content: Text(context.l10n.licenseAlreadyUsed),
               backgroundColor: AppColors.negative,
             ),
           );
@@ -67,58 +67,58 @@ class _ActivationPageState extends State<ActivationPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('تفعيل التطبيق'),
+          title: Text(context.l10n.activationTitle),
           automaticallyImplyLeading: false,
+          leading: context.canPop()
+              ? IconButton(
+                  onPressed: () => context.pop(),
+                  icon: const Icon(Icons.arrow_back_ios_rounded),
+                  tooltip: context.l10n.editData,
+                )
+              : null,
+          actions: [
+            BlocBuilder<ActivationCubit, ActivationState>(
+              builder: (context, state) {
+                return IconButton(
+                  onPressed: () => _showDeviceId(context, state),
+                  icon: const Icon(
+                    Icons.fingerprint_rounded,
+                    color: AppColors.primary,
+                  ),
+                  tooltip: context.l10n.chahriytiNumber,
+                );
+              },
+            ),
+          ],
         ),
         body: SafeArea(
-          child: Column(
-            children: [
-              // Step indicator
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
-                child: _StepIndicator(
-                  currentStep: _currentStep,
-                  labels: _stepLabels,
-                ),
-              ),
-              // Content
-              Expanded(
-                child: BlocBuilder<ActivationCubit, ActivationState>(
-                  builder: (context, state) {
-                    if (state is ActivationLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                        ),
-                      );
-                    }
-                    return ListView(
-                      padding: const EdgeInsets.all(24),
-                      children: [
-                        // Step 1: User info
-                        _buildUserInfoSection(),
-                        const SizedBox(height: 16),
-                        // Device ID
-                        _buildDeviceIdSection(context, state),
-                        const SizedBox(height: 16),
-                        // Step 2: Send via WhatsApp
-                        _buildWhatsAppSection(context, state),
-                        const SizedBox(height: 16),
-                        // Step 3: Enter license key
-                        _buildLicenseSection(context, state),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
+          child: BlocBuilder<ActivationCubit, ActivationState>(
+            builder: (context, state) {
+              if (state is ActivationLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primary,
+                  ),
+                );
+              }
+              return ListView(
+                padding: const EdgeInsets.all(24),
+                children: [
+                  _buildUserInfoSection(context),
+                  const SizedBox(height: 16),
+                  _buildLicenseSection(context, state),
+                  const SizedBox(height: 24),
+                  _buildBuyLink(context),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildUserInfoSection() {
+  Widget _buildUserInfoSection(BuildContext context) {
     return FutureBuilder(
       future: Injection.userRepository.getUser(),
       builder: (context, snapshot) {
@@ -128,7 +128,7 @@ class _ActivationPageState extends State<ActivationPage> {
         }
         final wilaya = Wilayas.all.firstWhere(
           (w) => w.code == user.wilayaCode,
-          orElse: () => const Wilaya(0, 'غير معروف'),
+          orElse: () => Wilaya(0, context.l10n.unknown),
         );
         return _SectionCard(
           children: [
@@ -149,7 +149,7 @@ class _ActivationPageState extends State<ActivationPage> {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'بياناتك',
+                  context.l10n.yourData,
                   style: AppTypography.labelLarge.copyWith(
                     color: AppColors.primary,
                   ),
@@ -157,12 +157,12 @@ class _ActivationPageState extends State<ActivationPage> {
               ],
             ),
             const SizedBox(height: 16),
-            _InfoRow(label: 'الاسم', value: user.fullName),
+            _InfoRow(label: context.l10n.name, value: user.fullName),
             const SizedBox(height: 8),
-            _InfoRow(label: 'الهاتف', value: user.phoneNumber),
+            _InfoRow(label: context.l10n.phone, value: user.phoneNumber),
             const SizedBox(height: 8),
             _InfoRow(
-              label: 'الولاية',
+              label: context.l10n.wilaya,
               value: '${wilaya.code} - ${wilaya.arabicName}',
             ),
           ],
@@ -171,176 +171,112 @@ class _ActivationPageState extends State<ActivationPage> {
     );
   }
 
-  Widget _buildDeviceIdSection(BuildContext context, ActivationState state) {
+  void _showDeviceId(BuildContext context, ActivationState state) {
     final deviceId = state is ActivationReady
         ? state.deviceId.displayFormat
         : context.read<ActivationCubit>().deviceId?.displayFormat ?? '...';
 
-    return _SectionCard(
-      children: [
-        Row(
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 36,
-              height: 36,
+              width: 40,
+              height: 4,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.devices_rounded,
-                size: 20,
-                color: AppColors.primary,
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const SizedBox(width: 12),
-            Text(
-              'رقم الجهاز',
-              style: AppTypography.labelLarge.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  deviceId,
-                  style: AppTypography.bodySmall.copyWith(
-                    fontFamily: 'monospace',
-                    fontSize: 13,
-                    letterSpacing: 0.5,
-                    color: AppColors.textPrimary,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 8),
-              InkWell(
-                onTap: () {
-                  Clipboard.setData(ClipboardData(text: deviceId));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('تم نسخ رقم الجهاز'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                },
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.copy_rounded,
-                    size: 18,
+                    Icons.fingerprint_rounded,
+                    size: 20,
                     color: AppColors.primary,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildWhatsAppSection(BuildContext context, ActivationState state) {
-    return _SectionCard(
-      children: [
-        Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.positive.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.send_rounded,
-                size: 20,
-                color: AppColors.positive,
-              ),
+                const SizedBox(width: 12),
+                Text(
+                  context.l10n.chahriytiNumber,
+                  style: AppTypography.labelLarge.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'أرسل طلب التفعيل عبر واتساب',
-                style: AppTypography.labelLarge,
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      deviceId,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontFamily: 'monospace',
+                        fontSize: 13,
+                        letterSpacing: 0.5,
+                        color: AppColors.textPrimary,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  InkWell(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: deviceId));
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(context.l10n.copiedChahriytiNumber),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.copy_rounded,
+                        size: 18,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        Text(
-          'سيتم إرسال بياناتك ورقم الجهاز للمسؤول لتفعيل حسابك.',
-          style: AppTypography.bodySmall,
-        ),
-        const SizedBox(height: 16),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: state is ActivationSending
-                ? null
-                : () => _sendWhatsApp(context),
-            icon: state is ActivationSending
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
-                : const Icon(Icons.chat_rounded, size: 20),
-            label: const Text('أرسل عبر واتساب'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF25D366),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
-  }
-
-  Future<void> _sendWhatsApp(BuildContext context) async {
-    setState(() => _currentStep = 1);
-    final user = await Injection.userRepository.getUser();
-    if (user == null || !context.mounted) return;
-
-    final cubit = context.read<ActivationCubit>();
-    final url = cubit.composeWhatsAppUrl(
-      name: user.fullName,
-      phone: user.phoneNumber,
-      wilayaCode: user.wilayaCode,
-    );
-
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('لا يمكن فتح واتساب'),
-            backgroundColor: AppColors.negative,
-          ),
-        );
-      }
-    }
   }
 
   Widget _buildLicenseSection(BuildContext context, ActivationState state) {
@@ -364,7 +300,7 @@ class _ActivationPageState extends State<ActivationPage> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'هل لديك مفتاح التفعيل؟',
+                context.l10n.haveActivationKey,
                 style: AppTypography.labelLarge,
               ),
             ),
@@ -372,7 +308,7 @@ class _ActivationPageState extends State<ActivationPage> {
         ),
         const SizedBox(height: 12),
         Text(
-          'امسح رمز QR أو أدخل المفتاح يدوياً لتفعيل التطبيق.',
+          context.l10n.activationKeyDesc,
           style: AppTypography.bodySmall,
         ),
         const SizedBox(height: 16),
@@ -380,12 +316,9 @@ class _ActivationPageState extends State<ActivationPage> {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
-            onPressed: () {
-              setState(() => _currentStep = 2);
-              _openQrScanner(context);
-            },
+            onPressed: () => _openQrScanner(context),
             icon: const Icon(Icons.qr_code_scanner_rounded, size: 20),
-            label: const Text('مسح رمز QR'),
+            label: Text(context.l10n.scanQrCode),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
             ),
@@ -397,7 +330,6 @@ class _ActivationPageState extends State<ActivationPage> {
           width: double.infinity,
           child: OutlinedButton.icon(
             onPressed: () {
-              setState(() => _currentStep = 2);
               showDialog(
                 context: context,
                 barrierDismissible: false,
@@ -408,10 +340,66 @@ class _ActivationPageState extends State<ActivationPage> {
               );
             },
             icon: const Icon(Icons.keyboard_rounded, size: 20),
-            label: const Text('إدخال المفتاح يدوياً'),
+            label: Text(context.l10n.enterKeyManually),
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> _openStore() async {
+    try {
+      final response = await http.get(Uri.parse(
+        'https://us-central1-chahriyati.cloudfunctions.net/getAppConfig',
+      ));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final url = data['data']?['storeUrl'] as String?;
+        if (url != null && url.isNotEmpty && mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => _StoreWebViewPage(
+                url: url,
+                title: context.l10n.getChahriyti,
+              ),
+            ),
+          );
+          return;
+        }
+      }
+    } catch (_) {}
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.cannotOpenPage)),
+      );
+    }
+  }
+
+  Widget _buildBuyLink(BuildContext context) {
+    return GestureDetector(
+      onTap: _openStore,
+      child: Center(
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.textSecondary,
+            ),
+            children: [
+              TextSpan(text: context.l10n.buyBookLink),
+              TextSpan(
+                text: context.l10n.buyBookLinkHere,
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.underline,
+                  decorationColor: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -421,83 +409,13 @@ class _ActivationPageState extends State<ActivationPage> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => _QrScannerSheet(
+        title: context.l10n.scanQrForLicense,
+        hint: context.l10n.scanQrHint,
         onScanned: (key) {
           Navigator.of(context).pop();
           context.read<ActivationCubit>().validateLicense(key);
         },
       ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Step Indicator
-// ---------------------------------------------------------------------------
-
-class _StepIndicator extends StatelessWidget {
-  final int currentStep;
-  final List<String> labels;
-
-  const _StepIndicator({
-    required this.currentStep,
-    required this.labels,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(labels.length * 2 - 1, (index) {
-        if (index.isOdd) {
-          // Connector line between dots
-          final stepBefore = index ~/ 2;
-          return Expanded(
-            child: Container(
-              height: 2,
-              color: stepBefore < currentStep
-                  ? AppColors.primary
-                  : AppColors.border,
-            ),
-          );
-        }
-        final stepIndex = index ~/ 2;
-        final isActive = stepIndex <= currentStep;
-        final isCurrent = stepIndex == currentStep;
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: isCurrent ? 32 : 26,
-              height: isCurrent ? 32 : 26,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isActive ? AppColors.primary : AppColors.surface,
-                border: Border.all(
-                  color: isActive ? AppColors.primary : AppColors.border,
-                  width: isCurrent ? 2.5 : 1.5,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  '${stepIndex + 1}',
-                  style: AppTypography.labelSmall.copyWith(
-                    color: isActive ? Colors.white : AppColors.textSecondary,
-                    fontSize: isCurrent ? 13 : 11,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              labels[stepIndex],
-              style: AppTypography.labelSmall.copyWith(
-                color: isActive ? AppColors.primary : AppColors.textSecondary,
-                fontSize: 11,
-              ),
-            ),
-          ],
-        );
-      }),
     );
   }
 }
@@ -564,9 +482,15 @@ class _InfoRow extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _QrScannerSheet extends StatefulWidget {
+  final String title;
+  final String hint;
   final void Function(String licenseKey) onScanned;
 
-  const _QrScannerSheet({required this.onScanned});
+  const _QrScannerSheet({
+    required this.title,
+    required this.hint,
+    required this.onScanned,
+  });
 
   @override
   State<_QrScannerSheet> createState() => _QrScannerSheetState();
@@ -613,7 +537,7 @@ class _QrScannerSheetState extends State<_QrScannerSheet> {
                     color: Colors.white, size: 24),
                 const SizedBox(width: 12),
                 Text(
-                  'امسح رمز QR للترخيص',
+                  widget.title,
                   style: AppTypography.labelLarge.copyWith(color: Colors.white),
                 ),
                 const Spacer(),
@@ -653,13 +577,52 @@ class _QrScannerSheetState extends State<_QrScannerSheet> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'وجّه الكاميرا نحو رمز QR الموجود على بطاقة الترخيص',
+              widget.hint,
               style: AppTypography.bodySmall.copyWith(color: Colors.white70),
               textAlign: TextAlign.center,
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Store WebView Page
+// ---------------------------------------------------------------------------
+
+class _StoreWebViewPage extends StatefulWidget {
+  final String url;
+  final String title;
+  const _StoreWebViewPage({required this.url, required this.title});
+
+  @override
+  State<_StoreWebViewPage> createState() => _StoreWebViewPageState();
+}
+
+class _StoreWebViewPageState extends State<_StoreWebViewPage> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }

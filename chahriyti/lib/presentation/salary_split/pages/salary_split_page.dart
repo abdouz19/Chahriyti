@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/salary_split_cubit.dart';
@@ -139,7 +140,7 @@ class _SalarySplitViewState extends State<_SalarySplitView> {
                   ),
                   decoration: InputDecoration(
                     hintText: '0',
-                    suffixText: 'دج',
+                    suffixText: context.l10n.currencySymbol,
                     suffixStyle: AppTypography.bodyLarge.copyWith(
                       color: AppColors.textSecondary,
                     ),

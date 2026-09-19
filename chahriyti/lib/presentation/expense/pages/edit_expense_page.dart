@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/expense_entity.dart';
 import '../widgets/expense_form.dart';
+import '../../shared/widgets/funding_source_sheet.dart';
 
 // ---------------------------------------------------------------------------
 // Edit-specific states
@@ -37,6 +38,27 @@ class EditExpenseSaved extends EditExpenseState {
 class EditExpenseError extends EditExpenseState {
   final String message;
   const EditExpenseError(this.message);
+}
+
+/// Emitted when the new amount exceeds available balance.
+/// Body keeps showing the form; listener shows funding sheet.
+class EditExpenseBalanceExceeded extends EditExpenseState {
+  final ExpenseEntity originalExpense;
+  final String pendingItemName;
+  final int pendingAmount;
+  final String? pendingNotes;
+  /// currentBalance + originalExpense.amount — effective max from balance.
+  final int effectiveBalance;
+  final int savingsBalance;
+
+  const EditExpenseBalanceExceeded({
+    required this.originalExpense,
+    required this.pendingItemName,
+    required this.pendingAmount,
+    this.pendingNotes,
+    required this.effectiveBalance,
+    required this.savingsBalance,
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -79,15 +101,72 @@ class EditExpenseCubit extends Cubit<EditExpenseState> {
     final current = state;
     if (current is! EditExpenseReady) return;
 
-    final updated = current.expense.copyWith(
-      itemName: itemName,
-      amount: amount,
-      notes: notes,
+    final delta = amount - current.expense.amount;
+
+    if (delta > 0) {
+      final balance = await _getAvailableBalance();
+      if (delta > balance) {
+        final savingsBalance = await Injection.getSavingsBalanceUseCase();
+        final effectiveBalance = balance + current.expense.amount;
+
+        if (amount > effectiveBalance + savingsBalance) {
+          emit(EditExpenseError(
+            'رصيدك الحالي $balance دج والمدخرات $savingsBalance دج — لا يكفي لإتمام هذا المبلغ',
+          ));
+          return;
+        }
+
+        emit(EditExpenseBalanceExceeded(
+          originalExpense: current.expense,
+          pendingItemName: itemName,
+          pendingAmount: amount,
+          pendingNotes: notes,
+          effectiveBalance: effectiveBalance,
+          savingsBalance: savingsBalance,
+        ));
+        return;
+      }
+    }
+
+    await _doSave(
+      current.expense.copyWith(itemName: itemName, amount: amount, notes: notes),
+      originalSavingsAmount: current.expense.savingsAmount,
+    );
+  }
+
+  /// Called after user selects funding split from the sheet.
+  Future<void> saveWithFunding(int savingsAmount) async {
+    final current = state;
+    if (current is! EditExpenseBalanceExceeded) return;
+
+    final updated = current.originalExpense.copyWith(
+      itemName: current.pendingItemName,
+      amount: current.pendingAmount,
+      notes: current.pendingNotes,
+      savingsAmount: savingsAmount,
+      fromSavings: savingsAmount >= current.pendingAmount,
     );
 
+    await _doSave(
+      updated,
+      originalSavingsAmount: current.originalExpense.savingsAmount,
+    );
+  }
+
+  void resetToReady() {
+    final current = state;
+    if (current is EditExpenseBalanceExceeded) {
+      emit(EditExpenseReady(current.originalExpense));
+    }
+  }
+
+  Future<void> _doSave(
+    ExpenseEntity updated, {
+    required int originalSavingsAmount,
+  }) async {
     emit(EditExpenseSaving(updated));
     try {
-      await _editExpense(updated);
+      await _editExpense(updated, originalSavingsAmount: originalSavingsAmount);
       emit(const EditExpenseSaved());
     } on ArgumentError catch (e) {
       emit(EditExpenseError(e.message.toString()));
@@ -96,6 +175,31 @@ class EditExpenseCubit extends Cubit<EditExpenseState> {
     } catch (_) {
       emit(const EditExpenseError('حدث خطأ غير متوقع'));
     }
+  }
+
+  Future<int> _getAvailableBalance() async {
+    final totalExpenses =
+        await Injection.expenseRepository.getTotalExpenses(cycleId);
+    final totalIncome =
+        await Injection.incomeRepository.getTotalIncomeForCycle(cycleId);
+    final totalDebtPayments =
+        await Injection.debtRepository.getTotalDebtPaymentsForCycle(cycleId);
+    final totalDebtsCreated =
+        await Injection.debtRepository.getTotalDebtsCreatedForCycle(cycleId);
+    final totalLendings =
+        await Injection.lendingRepository.getTotalLendingsFromBalanceForCycle(cycleId);
+    final totalCollections =
+        await Injection.lendingRepository.getTotalCollectionsToBalanceForCycle(cycleId);
+    final cycle = await Injection.cycleRepository.getCycleById(cycleId);
+    if (cycle == null) return 0;
+    return cycle.salaryAmount -
+        cycle.salarySplitAmount +
+        totalIncome +
+        totalDebtsCreated -
+        totalExpenses -
+        totalDebtPayments -
+        totalLendings +
+        totalCollections;
   }
 }
 
@@ -135,7 +239,7 @@ class _EditExpenseView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<EditExpenseCubit, EditExpenseState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is EditExpenseSaved) {
           Navigator.of(context).pop(true);
         } else if (state is EditExpenseError) {
@@ -145,6 +249,20 @@ class _EditExpenseView extends StatelessWidget {
               backgroundColor: AppColors.negative,
             ),
           );
+        } else if (state is EditExpenseBalanceExceeded) {
+          final cubit = context.read<EditExpenseCubit>();
+          final result = await showFundingSourceSheet(
+            context,
+            amount: state.pendingAmount,
+            availableBalance: state.effectiveBalance,
+            availableSavings: state.savingsBalance,
+          );
+          if (!context.mounted) return;
+          if (result == null) {
+            cubit.resetToReady();
+          } else {
+            cubit.saveWithFunding(result.savingsAmount);
+          }
         }
       },
       builder: (context, state) {
@@ -197,10 +315,14 @@ class _EditExpenseView extends StatelessWidget {
       );
     }
 
-    if (state is EditExpenseReady || state is EditExpenseSaving) {
+    if (state is EditExpenseReady ||
+        state is EditExpenseSaving ||
+        state is EditExpenseBalanceExceeded) {
       final expense = state is EditExpenseReady
           ? state.expense
-          : (state as EditExpenseSaving).expense;
+          : state is EditExpenseSaving
+              ? state.expense
+              : (state as EditExpenseBalanceExceeded).originalExpense;
       final isSaving = state is EditExpenseSaving;
       final cubit = context.read<EditExpenseCubit>();
 
@@ -211,6 +333,7 @@ class _EditExpenseView extends StatelessWidget {
           initialAmount: expense.amount,
           initialNotes: expense.notes,
           isSaving: isSaving,
+          category: expense.category,
           onSave: ({
             required String itemName,
             required int amount,

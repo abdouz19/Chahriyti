@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
@@ -82,7 +83,7 @@ class _LendingsListViewState extends State<_LendingsListView>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'السلف',
+          context.l10n.lendingsTitle,
           style: AppTypography.headlineSmall,
         ),
         bottom: TabBar(
@@ -90,9 +91,9 @@ class _LendingsListViewState extends State<_LendingsListView>
           labelColor: AppColors.primary,
           unselectedLabelColor: AppColors.textSecondary,
           indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'نشطة'),
-            Tab(text: 'تم التحصيل'),
+          tabs: [
+            Tab(text: context.l10n.activeTab),
+            Tab(text: context.l10n.collectedTab),
           ],
         ),
       ),
@@ -106,7 +107,7 @@ class _LendingsListViewState extends State<_LendingsListView>
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
         label: Text(
-          'سلفة جديدة',
+          context.l10n.newLending,
           style: AppTypography.labelLarge.copyWith(color: Colors.white),
         ),
       ),
@@ -155,15 +156,15 @@ class _LendingTabContent extends StatelessWidget {
                       const SizedBox(height: 16),
                       Text(
                         isCollectedTab
-                            ? 'لا توجد سلف محصّلة'
-                            : 'لا توجد سلف حالياً',
+                            ? context.l10n.noCollectedLendings
+                            : context.l10n.noLendingsNow,
                         style: AppTypography.headlineSmall,
                       ),
                       const SizedBox(height: 8),
                       Text(
                         isCollectedTab
-                            ? 'ستظهر هنا السلف التي تم تحصيلها بالكامل'
-                            : 'تابع سلفك بسهولة وتحكم بتحصيلاتك',
+                            ? context.l10n.collectedLendingsEmptyDesc
+                            : context.l10n.activeLendingsEmptyDesc,
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -212,7 +213,7 @@ class _LendingTabContent extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'إجمالي السلف المتبقية',
+                                context.l10n.totalLendingsRemaining,
                                 style: AppTypography.bodySmall.copyWith(
                                   color: AppColors.textSecondary,
                                 ),
@@ -288,7 +289,7 @@ class _LendingTabContent extends StatelessWidget {
                     onPressed: () {
                       context.read<LendingCubit>().loadLendings();
                     },
-                    child: const Text('إعادة المحاولة'),
+                    child: Text(context.l10n.retry),
                   ),
                 ],
               ),

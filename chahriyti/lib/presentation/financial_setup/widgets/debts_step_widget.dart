@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/debt_entity.dart';
@@ -33,12 +34,12 @@ class DebtsStepWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SetupProgressBar(currentStep: 4, totalSteps: 6),
+          const SetupProgressBar(currentStep: 4, totalSteps: 7),
           const SizedBox(height: 32),
-          Text('لمن أنت مدين؟', style: AppTypography.headlineMedium),
+          Text(context.l10n.debtsStepTitle, style: AppTypography.headlineMedium),
           const SizedBox(height: 8),
           Text(
-            'ديون بنكية، قروض شخصية، أو أي مبلغ تدين به.',
+            context.l10n.debtsStepDesc,
             style: AppTypography.bodyMedium.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -54,7 +55,7 @@ class DebtsStepWidget extends StatelessWidget {
                             size: 48, color: AppColors.textSecondary),
                         const SizedBox(height: 12),
                         Text(
-                          'لا توجد ديون',
+                          context.l10n.noDebts,
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -72,7 +73,7 @@ class DebtsStepWidget extends StatelessWidget {
                           title: Text(debt.creditorName,
                               style: AppTypography.labelMedium),
                           trailing: Text(
-                            '${debt.totalAmount} دج',
+                            '${debt.totalAmount} ${context.l10n.currencySymbol}',
                             style: AppTypography.amountSmall.copyWith(
                               color: AppColors.negative,
                             ),
@@ -104,7 +105,7 @@ class DebtsStepWidget extends StatelessWidget {
             width: double.infinity,
             child: OutlinedButton.icon(
               icon: const Icon(Icons.add),
-              label: Text(debts.isEmpty ? 'إضافة أول دَيْن' : 'إضافة دَيْن آخر'),
+              label: Text(debts.isEmpty ? context.l10n.addFirstDebt : context.l10n.addAnotherDebt),
               onPressed: () async {
                 final result = await DebtFormBottomSheet.show(context);
                 if (result != null) {
@@ -120,14 +121,14 @@ class DebtsStepWidget extends StatelessWidget {
               Expanded(
                 child: OutlinedButton(
                   onPressed: debts.isEmpty ? onSkip : null,
-                  child: const Text('تخطي'),
+                  child: Text(context.l10n.skip),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton(
                   onPressed: onNext,
-                  child: const Text('التالي'),
+                  child: Text(context.l10n.next),
                 ),
               ),
             ],

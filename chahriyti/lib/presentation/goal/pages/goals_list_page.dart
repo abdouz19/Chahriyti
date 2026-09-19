@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/goal_cubit.dart';
@@ -91,7 +92,7 @@ class _GoalsListViewState extends State<_GoalsListView>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'الأهداف المالية',
+          context.l10n.financialGoalsTitle,
           style: AppTypography.headlineSmall,
         ),
         bottom: TabBar(
@@ -99,9 +100,9 @@ class _GoalsListViewState extends State<_GoalsListView>
           labelColor: AppColors.primary,
           unselectedLabelColor: AppColors.textSecondary,
           indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'نشطة'),
-            Tab(text: 'مكتملة'),
+          tabs: [
+            Tab(text: context.l10n.activeTab),
+            Tab(text: context.l10n.completedTab),
           ],
         ),
       ),
@@ -110,7 +111,7 @@ class _GoalsListViewState extends State<_GoalsListView>
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
         label: Text(
-          'هدف جديد',
+          context.l10n.newGoal,
           style: AppTypography.labelLarge.copyWith(color: Colors.white),
         ),
       ),
@@ -165,15 +166,15 @@ class _GoalTabContent extends StatelessWidget {
                       const SizedBox(height: 16),
                       Text(
                         isCompletedTab
-                            ? 'لا توجد أهداف مكتملة'
-                            : 'لا توجد أهداف بعد',
+                            ? context.l10n.noCompletedGoals
+                            : context.l10n.noGoalsYet,
                         style: AppTypography.headlineSmall,
                       ),
                       const SizedBox(height: 8),
                       Text(
                         isCompletedTab
-                            ? 'ستظهر هنا الأهداف التي تم شراؤها'
-                            : 'ابدأ برحلتك المالية بإنشاء هدف جديد',
+                            ? context.l10n.completedGoalsEmptyDesc
+                            : context.l10n.activeGoalsEmptyDesc,
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -258,7 +259,7 @@ class _GoalTabContent extends StatelessWidget {
                     onPressed: () {
                       context.read<GoalCubit>().loadGoals();
                     },
-                    child: const Text('إعادة المحاولة'),
+                    child: Text(context.l10n.retry),
                   ),
                 ],
               ),

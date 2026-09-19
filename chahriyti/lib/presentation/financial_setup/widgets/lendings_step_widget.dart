@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/lending_entity.dart';
@@ -33,12 +34,12 @@ class LendingsStepWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SetupProgressBar(currentStep: 5, totalSteps: 6),
+          const SetupProgressBar(currentStep: 5, totalSteps: 7),
           const SizedBox(height: 32),
-          Text('من يدين لك بالمال؟', style: AppTypography.headlineMedium),
+          Text(context.l10n.lendingsStepTitle, style: AppTypography.headlineMedium),
           const SizedBox(height: 8),
           Text(
-            'سلفات أعطيتها لأصدقاء أو عائلة.',
+            context.l10n.lendingsStepDesc,
             style: AppTypography.bodyMedium.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -54,7 +55,7 @@ class LendingsStepWidget extends StatelessWidget {
                             size: 48, color: AppColors.textSecondary),
                         const SizedBox(height: 12),
                         Text(
-                          'لا توجد سلفات',
+                          context.l10n.noLendings,
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -72,7 +73,7 @@ class LendingsStepWidget extends StatelessWidget {
                           title: Text(lending.borrowerName,
                               style: AppTypography.labelMedium),
                           trailing: Text(
-                            '${lending.totalAmount} دج',
+                            '${lending.totalAmount} ${context.l10n.currencySymbol}',
                             style: AppTypography.amountSmall.copyWith(
                               color: AppColors.positive,
                             ),
@@ -103,7 +104,7 @@ class LendingsStepWidget extends StatelessWidget {
             child: OutlinedButton.icon(
               icon: const Icon(Icons.add),
               label: Text(
-                  lendings.isEmpty ? 'إضافة أول سلفة' : 'إضافة سلفة أخرى'),
+                  lendings.isEmpty ? context.l10n.addFirstLending : context.l10n.addAnotherLending),
               onPressed: () async {
                 final result = await LendingFormBottomSheet.show(context);
                 if (result != null) {
@@ -118,14 +119,14 @@ class LendingsStepWidget extends StatelessWidget {
               Expanded(
                 child: OutlinedButton(
                   onPressed: lendings.isEmpty ? onSkip : null,
-                  child: const Text('تخطي'),
+                  child: Text(context.l10n.skip),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton(
                   onPressed: onNext,
-                  child: const Text('التالي'),
+                  child: Text(context.l10n.next),
                 ),
               ),
             ],

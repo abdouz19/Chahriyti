@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../application/use_cases/expense/delete_expense_use_case.dart';
 import '../../../domain/entities/expense_entity.dart';
 import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/expense_repository.dart';
@@ -47,6 +48,7 @@ class HistoryError extends HistoryState {
 class HistoryCubit extends Cubit<HistoryState> {
   final ExpenseRepository _expenseRepository;
   final CycleRepository _cycleRepository;
+  final DeleteExpenseUseCase _deleteExpenseUseCase;
 
   static const int _pageSize = 10;
   int _currentOffset = 0;
@@ -56,8 +58,10 @@ class HistoryCubit extends Cubit<HistoryState> {
   HistoryCubit({
     required ExpenseRepository expenseRepository,
     required CycleRepository cycleRepository,
+    required DeleteExpenseUseCase deleteExpenseUseCase,
   })  : _expenseRepository = expenseRepository,
         _cycleRepository = cycleRepository,
+        _deleteExpenseUseCase = deleteExpenseUseCase,
         super(const HistoryLoading());
 
   Future<void> loadExpenses() async {
@@ -127,8 +131,12 @@ class HistoryCubit extends Cubit<HistoryState> {
   }
 
   Future<void> deleteExpense(int expenseId) async {
+    if (_activeCycleId == null) return;
     try {
-      await _expenseRepository.deleteExpense(expenseId);
+      await _deleteExpenseUseCase(
+        expenseId: expenseId,
+        cycleId: _activeCycleId!,
+      );
       await loadExpenses();
     } catch (e) {
       emit(HistoryError('حدث خطأ في حذف المصروف: ${e.toString()}'));

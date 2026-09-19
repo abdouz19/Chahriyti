@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/lending_entity.dart';
@@ -74,7 +75,7 @@ class LendingCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'تم التحصيل',
+                      context.l10n.collected,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.positive,
                         fontWeight: FontWeight.w600,
@@ -93,7 +94,7 @@ class LendingCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'المبلغ الكلي',
+                      context.l10n.totalAmount,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -110,7 +111,7 @@ class LendingCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'المبلغ المتبقي',
+                      context.l10n.remainingAmount,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -142,7 +143,7 @@ class LendingCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '${percentageCollected.toStringAsFixed(1)}% محصّل',
+              context.l10n.percentCollected(percentageCollected.toStringAsFixed(1)),
               style: AppTypography.bodySmall.copyWith(
                 color: AppColors.textSecondary,
                 fontWeight: FontWeight.w600,

@@ -4,6 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
+import '../../../core/extensions/l10n_extension.dart';
 
 class DailyAverageWidget extends StatelessWidget {
   final int dailyAverage;
@@ -35,7 +36,7 @@ class DailyAverageWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'المعدل اليومي',
+                  context.l10n.dailyAverageLabel,
                   style: AppTypography.labelSmall,
                   textAlign: TextAlign.start,
                 ),

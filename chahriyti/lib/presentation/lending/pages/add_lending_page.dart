@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/lending_entity.dart';
 import '../../shared/widgets/payment_source_toggle.dart';
 import '../../shared/widgets/funding_source_sheet.dart';
+import '../../../application/use_cases/lending/update_lending_use_case.dart';
 import '../cubits/lending_cubit.dart';
 import '../cubits/lending_state.dart';
 
@@ -65,18 +67,13 @@ class _AddLendingPageState extends State<AddLendingPage> {
     final amount = int.tryParse(_amountController.text);
     if (amount == null || amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('أدخل مبلغاً صحيحاً')),
+        SnackBar(content: Text(context.l10n.enterValidAmount)),
       );
       return;
     }
 
     if (widget.initialLending != null) {
-      cubit.updateLending(
-        id: widget.initialLending!.id,
-        borrowerName: _borrowerController.text,
-        notes: _notesController.text.isEmpty ? null : _notesController.text,
-        totalAmount: amount,
-      );
+      await _submitEdit(context, cubit, amount);
       return;
     }
 
@@ -86,7 +83,7 @@ class _AddLendingPageState extends State<AddLendingPage> {
       if (amount > balance + _savingsBalance) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('الرصيد والمدخرات غير كافية')),
+            SnackBar(content: Text(context.l10n.insufficientFunds)),
           );
         }
         return;
@@ -113,7 +110,7 @@ class _AddLendingPageState extends State<AddLendingPage> {
       if (amount > _savingsBalance) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('رصيد المدخرات غير كافٍ')),
+            SnackBar(content: Text(context.l10n.insufficientSavings)),
           );
         }
         return;
@@ -125,6 +122,79 @@ class _AddLendingPageState extends State<AddLendingPage> {
       amount: amount,
       fromSavings: _fromSavings,
       notes: _notesController.text.isEmpty ? null : _notesController.text,
+    );
+  }
+
+  Future<void> _submitEdit(
+    BuildContext context,
+    LendingCubit cubit,
+    int newAmount,
+  ) async {
+    final lending = widget.initialLending!;
+    final delta = newAmount - lending.totalAmount;
+
+    if (delta > 0) {
+      final balance = await _getCurrentBalance();
+      // Effective balance = current balance + original amount freed up (if from balance)
+      final effectiveBalance = balance + (lending.fromSavings ? 0 : lending.totalAmount);
+
+      if (delta > effectiveBalance) {
+        await _loadSavingsBalance();
+        if (!context.mounted) return;
+
+        if (newAmount > effectiveBalance + _savingsBalance) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(context.l10n.insufficientFunds),
+              backgroundColor: AppColors.negative,
+            ),
+          );
+          return;
+        }
+
+        final result = await showFundingSourceSheet(
+          context,
+          amount: newAmount,
+          availableBalance: effectiveBalance,
+          availableSavings: _savingsBalance,
+        );
+        if (result == null || !context.mounted) return;
+
+        // Update lending
+        await Injection.updateLendingUseCase(UpdateLendingRequest(
+          id: lending.id,
+          borrowerName: _borrowerController.text,
+          notes: _notesController.text.isEmpty ? null : _notesController.text,
+          totalAmount: newAmount,
+        ));
+
+        // Handle savings withdrawal delta
+        final newSavingsAmount = result.savingsAmount;
+        final oldSavingsAmount = lending.savingsAmount;
+        if (newSavingsAmount > 0) {
+          if (oldSavingsAmount > 0) {
+            // Replace old record
+            await Injection.savingsRepository.deleteWithdrawalByLendingId(lending.id);
+          }
+          await Injection.withdrawSavingsUseCase(
+            amount: newSavingsAmount,
+            description: _borrowerController.text,
+            lendingId: lending.id,
+          );
+        }
+
+        if (!context.mounted) return;
+        cubit.loadLendingById(lending.id);
+        return;
+      }
+    }
+
+    // Delta fits in balance (or is reduction) — update directly
+    cubit.updateLending(
+      id: lending.id,
+      borrowerName: _borrowerController.text,
+      notes: _notesController.text.isEmpty ? null : _notesController.text,
+      totalAmount: newAmount,
     );
   }
 
@@ -174,8 +244,8 @@ class _AddLendingPageState extends State<AddLendingPage> {
           state.whenOrNull(
             lendingCreated: (_) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('تم تسجيل السلفة بنجاح'),
+                SnackBar(
+                  content: Text(context.l10n.lendingCreated),
                   backgroundColor: AppColors.positive,
                 ),
               );
@@ -184,8 +254,8 @@ class _AddLendingPageState extends State<AddLendingPage> {
             lendingLoaded: (_, __) {
               if (widget.initialLending != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('تم تعديل السلفة بنجاح'),
+                  SnackBar(
+                    content: Text(context.l10n.lendingUpdated),
                     backgroundColor: AppColors.positive,
                   ),
                 );
@@ -205,7 +275,7 @@ class _AddLendingPageState extends State<AddLendingPage> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              widget.initialLending != null ? 'تعديل السلفة' : 'سلفة جديدة',
+              widget.initialLending != null ? context.l10n.editLending : context.l10n.newLending,
               style: AppTypography.headlineSmall,
             ),
           ),
@@ -227,25 +297,25 @@ class _AddLendingPageState extends State<AddLendingPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'اسم المقترض',
+                        context.l10n.borrowerName,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _borrowerController,
-                        decoration: const InputDecoration(
-                          hintText: 'مثال: أحمد',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.borrowerNameHint,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'اسم المقترض مطلوب';
+                            return context.l10n.borrowerNameRequired;
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'مبلغ السلفة',
+                        context.l10n.lendingAmount,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
@@ -255,16 +325,16 @@ class _AddLendingPageState extends State<AddLendingPage> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
-                        decoration: const InputDecoration(
-                          hintText: 'أدخل المبلغ',
-                          suffixText: 'دج',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.enterAmount,
+                          suffixText: context.l10n.currencySymbol,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'المبلغ مطلوب';
+                            return context.l10n.amountRequired;
                           }
                           if (int.tryParse(value) == null) {
-                            return 'أدخل رقماً صحيحاً';
+                            return context.l10n.enterNumber;
                           }
                           return null;
                         },
@@ -289,15 +359,15 @@ class _AddLendingPageState extends State<AddLendingPage> {
                         const SizedBox(height: 20),
                       ],
                       Text(
-                        'ملاحظات (اختياري)',
+                        context.l10n.notesOptional,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _notesController,
                         maxLines: 3,
-                        decoration: const InputDecoration(
-                          hintText: 'أضف ملاحظات عن السلفة...',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.addLendingNoteHint,
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -307,8 +377,8 @@ class _AddLendingPageState extends State<AddLendingPage> {
                           onPressed: () async => _submit(context, cubit),
                           child: Text(
                             widget.initialLending != null
-                                ? 'حفظ التعديل'
-                                : 'تسجيل السلفة',
+                                ? context.l10n.saveEdit
+                                : context.l10n.saveLending,
                           ),
                         ),
                       ),

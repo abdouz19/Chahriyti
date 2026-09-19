@@ -53,4 +53,21 @@ class IncomesDao extends DatabaseAccessor<AppDatabase> with _$IncomesDaoMixin {
     }
     await (delete(additionalIncomes)..where((t) => t.id.equals(id))).go();
   }
+
+  Future<List<String>> getDistinctDescriptions() async {
+    final rows = await (select(additionalIncomes)
+          ..where((t) => t.description.isNotValue(''))
+          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+        .get();
+    final seen = <String>{};
+    final result = <String>[];
+    for (final row in rows) {
+      final name = row.description.trim();
+      if (name.isNotEmpty && seen.add(name.toLowerCase())) {
+        result.add(name);
+        if (result.length >= 100) break;
+      }
+    }
+    return result;
+  }
 }

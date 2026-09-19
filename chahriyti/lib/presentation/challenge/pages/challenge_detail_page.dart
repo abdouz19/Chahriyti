@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/weekly_challenge_entity.dart';
@@ -36,7 +37,7 @@ class _ChallengeDetailView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'تفاصيل التحدي',
+          context.l10n.challengeDetails,
           style: AppTypography.headlineSmall,
         ),
       ),
@@ -70,7 +71,7 @@ class _ChallengeDetailView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'وصف التحدي',
+                          context.l10n.challengeDescription,
                           style: AppTypography.labelLarge.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -96,14 +97,14 @@ class _ChallengeDetailView extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'المبلغ المستهدف',
+                          context.l10n.targetAmount,
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.textSecondary,
                           ),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'دج ${challenge.targetAmount}',
+                          '${challenge.targetAmount} ${context.l10n.currencySymbol}',
                           style: AppTypography.headlineMedium.copyWith(
                             color: AppColors.primary,
                           ),
@@ -127,7 +128,7 @@ class _ChallengeDetailView extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                'بداية الأسبوع',
+                                context.l10n.weekStart,
                                 style: AppTypography.labelSmall.copyWith(
                                   color: AppColors.textSecondary,
                                 ),
@@ -159,14 +160,14 @@ class _ChallengeDetailView extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                'الحالة',
+                                context.l10n.statusLabel,
                                 style: AppTypography.labelSmall.copyWith(
                                   color: AppColors.textSecondary,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                challenge.isCompleted ? 'مكتمل' : 'قيد التقدم',
+                                challenge.isCompleted ? context.l10n.completed : context.l10n.inProgress,
                                 style: AppTypography.labelLarge.copyWith(
                                   color: challenge.isCompleted
                                       ? AppColors.positive
@@ -203,7 +204,7 @@ class _ChallengeDetailView extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'حاول تحقيق هذا الهدف هذا الأسبوع!',
+                            context.l10n.challengeMotivation,
                             style: AppTypography.bodyLarge.copyWith(
                               color: AppColors.primary,
                             ),
@@ -232,7 +233,7 @@ class _ChallengeDetailView extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'رائع! لقد أكملت هذا التحدي 🎉',
+                            context.l10n.challengeCompletedMsg,
                             style: AppTypography.bodyLarge.copyWith(
                               color: AppColors.positive,
                             ),

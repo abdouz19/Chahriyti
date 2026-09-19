@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/goal_cubit.dart';
@@ -65,13 +66,12 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('حذف الهدف'),
-        content: const Text(
-            'سيتم حذف الهدف. ستبقى مساهماتك محفوظة في المدخرات.'),
+        title: Text(context.l10n.deleteGoalTitle),
+        content: Text(context.l10n.deleteGoalBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('إلغاء'),
+            child: Text(context.l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -82,7 +82,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
               backgroundColor: AppColors.negative,
               foregroundColor: Colors.white,
             ),
-            child: const Text('حذف'),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),
@@ -94,13 +94,13 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'تفاصيل الهدف',
+          context.l10n.goalDetails,
           style: AppTypography.headlineSmall,
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
-            tooltip: 'تعديل',
+            tooltip: context.l10n.edit,
             onPressed: () async {
               final cubit = context.read<GoalCubit>();
               final currentState = cubit.state;
@@ -118,7 +118,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
           ),
           IconButton(
             icon: Icon(Icons.delete_outline, color: AppColors.negative),
-            tooltip: 'حذف',
+            tooltip: context.l10n.delete,
             onPressed: () => _showDeleteConfirmation(context),
           ),
         ],
@@ -127,8 +127,8 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
         listener: (context, state) {
           if (state is GoalUpdated) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تمت عملية الشراء بنجاح!'),
+              SnackBar(
+                content: Text(context.l10n.purchaseSuccess),
                 backgroundColor: AppColors.positive,
               ),
             );
@@ -136,8 +136,8 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
           }
           if (state is GoalDeleted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم حذف الهدف'),
+              SnackBar(
+                content: Text(context.l10n.goalDeletedMsg),
                 backgroundColor: AppColors.positive,
               ),
             );
@@ -188,7 +188,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'اسم الهدف',
+                            context.l10n.goalName,
                             style: AppTypography.labelLarge.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -217,14 +217,14 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                             child: Column(
                               children: [
                                 Text(
-                                  'المبلغ المستهدف',
+                                  context.l10n.targetAmount,
                                   style: AppTypography.labelSmall.copyWith(
                                     color: AppColors.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'دج ${goal.targetAmount}',
+                                  '${goal.targetAmount} ${context.l10n.currencySymbol}',
                                   style: AppTypography.labelLarge,
                                 ),
                               ],
@@ -246,14 +246,14 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                             child: Column(
                               children: [
                                 Text(
-                                  'المبلغ المجمع',
+                                  context.l10n.amountSaved,
                                   style: AppTypography.labelSmall.copyWith(
                                     color: AppColors.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'دج $saved',
+                                  '$saved ${context.l10n.currencySymbol}',
                                   style: AppTypography.labelLarge.copyWith(
                                     color: AppColors.positive,
                                   ),
@@ -274,7 +274,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'التقدم',
+                              context.l10n.progress,
                               style: AppTypography.labelLarge,
                             ),
                             Text(
@@ -318,14 +318,14 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                         child: Column(
                           children: [
                             Text(
-                              'المبلغ المتبقي',
+                              context.l10n.remainingAmount,
                               style: AppTypography.labelLarge.copyWith(
                                 color: AppColors.textSecondary,
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'دج $remaining',
+                              '$remaining ${context.l10n.currencySymbol}',
                               style: AppTypography.headlineSmall.copyWith(
                                 color: AppColors.warning,
                               ),
@@ -350,7 +350,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                           icon: const Icon(Icons.shopping_cart_rounded,
                               size: 24),
                           label: Text(
-                            'شراء',
+                            context.l10n.purchase,
                             style: AppTypography.labelLarge
                                 .copyWith(color: Colors.white),
                           ),
@@ -388,7 +388,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'تم الشراء',
+                              context.l10n.purchased,
                               style: AppTypography.labelLarge.copyWith(
                                 color: AppColors.positive,
                                 fontWeight: FontWeight.w600,
@@ -444,12 +444,12 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(
-          'تأكيد الشراء',
+          context.l10n.confirmPurchaseTitle,
           style: AppTypography.headlineSmall,
           textAlign: TextAlign.center,
         ),
         content: Text(
-          'هل تريد شراء "$goalName"؟\nسيتم خصم $targetAmount دج من المدخرات.',
+          context.l10n.confirmPurchaseBody(goalName, targetAmount),
           style: AppTypography.bodyMedium,
           textAlign: TextAlign.center,
         ),
@@ -457,7 +457,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(
-              'إلغاء',
+              context.l10n.cancel,
               style: AppTypography.labelLarge.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -477,7 +477,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
               foregroundColor: Colors.white,
             ),
             child: Text(
-              'شراء',
+              context.l10n.purchase,
               style: AppTypography.labelLarge.copyWith(color: Colors.white),
             ),
           ),

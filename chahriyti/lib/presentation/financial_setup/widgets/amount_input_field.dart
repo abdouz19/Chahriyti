@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
+
 class AmountInputField extends StatelessWidget {
   final TextEditingController controller;
   final String? hintText;
@@ -13,10 +15,9 @@ class AmountInputField extends StatelessWidget {
     this.validator,
   });
 
-  /// Parses the display text (which may contain spaces) back to a raw int.
+  /// Parses the display text back to a raw int.
   static int? parse(String text) {
-    final raw = text.replaceAll(' ', '');
-    return raw.isEmpty ? null : int.tryParse(raw);
+    return text.isEmpty ? null : int.tryParse(text);
   }
 
   @override
@@ -27,37 +28,13 @@ class AmountInputField extends StatelessWidget {
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
-        _ThousandSeparatorFormatter(),
       ],
       decoration: InputDecoration(
-        hintText: hintText ?? 'مثال: 50 000',
-        suffixText: 'دج',
+        hintText: hintText ?? 'مثال: 50000',
+        suffixText: context.l10n.currencySymbol,
       ),
       validator: validator,
     );
   }
 }
 
-class _ThousandSeparatorFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final digitsOnly = newValue.text.replaceAll(' ', '');
-    if (digitsOnly.isEmpty) return newValue.copyWith(text: '');
-
-    final buffer = StringBuffer();
-    for (var i = 0; i < digitsOnly.length; i++) {
-      if (i > 0 && (digitsOnly.length - i) % 3 == 0) {
-        buffer.write(' ');
-      }
-      buffer.write(digitsOnly[i]);
-    }
-    final formatted = buffer.toString();
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
-  }
-}

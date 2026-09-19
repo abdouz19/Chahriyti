@@ -27,6 +27,7 @@ import 'package:chahriyti/application/use_cases/financial_setup/get_financial_se
 import 'package:chahriyti/application/use_cases/financial_setup/get_setup_summary_use_case.dart';
 import 'package:chahriyti/application/use_cases/financial_setup/set_initial_balance_use_case.dart';
 import 'package:chahriyti/application/use_cases/financial_setup/set_initial_savings_use_case.dart';
+import 'package:chahriyti/application/use_cases/savings/deposit_salary_split_use_case.dart';
 import 'package:chahriyti/presentation/financial_setup/cubits/financial_setup_cubit.dart';
 import 'package:chahriyti/presentation/financial_setup/cubits/financial_setup_state.dart';
 
@@ -278,8 +279,17 @@ class FakeSavingsRepository implements SavingsRepository {
     required int amount,
     required String description,
     required int cycleId,
-  }) async =>
-      throw UnimplementedError();
+  }) async {
+    _balance += amount;
+    return SavingsHistoryEntity(
+      id: 99,
+      type: SavingsTransactionType.deposit,
+      amount: amount,
+      description: description,
+      relatedCycleId: cycleId,
+      createdAt: DateTime.now(),
+    );
+  }
   @override
   Future<List<SavingsHistoryEntity>> getSavingsHistory(
           {int? limit, int? offset}) async =>
@@ -328,7 +338,8 @@ class FakeCycleRepository implements CycleRepository {
       throw UnimplementedError();
 
   @override
-  Future<FinancialCycleEntity?> getCycleById(int id) async => null;
+  Future<FinancialCycleEntity?> getCycleById(int id) async =>
+      id == 1 ? await getActiveCycle() : null;
   @override
   Future<FinancialCycleEntity?> getPreviousCycle(int cycleId) async => null;
   @override
@@ -448,7 +459,9 @@ FinancialSetupCubit _createCubit({
   required FakeDebtRepository debtRepo,
   required FakeLendingRepository lendingRepo,
   required FakeSavingsRepository savingsRepo,
+  FakeCycleRepository? cycleRepo,
 }) {
+  final cr = cycleRepo ?? FakeCycleRepository();
   return FinancialSetupCubit(
     getStepUseCase: GetFinancialSetupStepUseCase(userRepo),
     setBalanceUseCase: SetInitialBalanceUseCase(userRepo),
@@ -456,14 +469,17 @@ FinancialSetupCubit _createCubit({
     addDebtUseCase: AddInitialDebtUseCase(debtRepo),
     editDebtUseCase: EditInitialDebtUseCase(debtRepo),
     deleteDebtUseCase: DeleteInitialDebtUseCase(debtRepo),
-    addLendingUseCase: AddInitialLendingUseCase(lendingRepo, FakeCycleRepository()),
+    addLendingUseCase: AddInitialLendingUseCase(lendingRepo, cr),
     editLendingUseCase: EditInitialLendingUseCase(lendingRepo),
     deleteLendingUseCase: DeleteInitialLendingUseCase(lendingRepo),
     completeUseCase: CompleteFinancialSetupUseCase(
-        userRepo, FakeCycleRepository(), FakeIncomeRepository(), FakeExpenseRepository(), lendingRepo),
+        userRepo, cr, FakeIncomeRepository(), FakeExpenseRepository(), lendingRepo),
     getSummaryUseCase: GetSetupSummaryUseCase(
         userRepo, debtRepo, lendingRepo, savingsRepo),
+    depositSalarySplitUseCase: DepositSalarySplitUseCase(
+        cycleRepository: cr, savingsRepository: savingsRepo),
     userRepository: userRepo,
+    cycleRepository: cr,
     debtRepository: debtRepo,
     lendingRepository: lendingRepo,
   );
@@ -530,8 +546,13 @@ void main() {
       await cubit.addLending(borrowerName: 'أحمد', totalAmount: 30000);
       expect((cubit.state as FinancialSetupLendings).lendings.length, 1);
 
-      // Next → Summary
+      // Next → Salary Split
       await cubit.nextFromLendings();
+      expect(cubit.state, isA<FinancialSetupSalarySplit>());
+      expect((cubit.state as FinancialSetupSalarySplit).salaryAmount, 50000);
+
+      // Set salary split → Summary
+      await cubit.setSalarySplit(10000);
       expect(cubit.state, isA<FinancialSetupSummary>());
 
       final summary = cubit.state as FinancialSetupSummary;
@@ -539,6 +560,8 @@ void main() {
       expect(summary.savings, 20000);
       expect(summary.debts.length, 2);
       expect(summary.lendings.length, 1);
+      expect(summary.salarySplit, 10000);
+      expect(summary.salaryAmount, 50000);
 
       // Confirm → Completed
       await cubit.confirm();
@@ -555,6 +578,7 @@ void main() {
       await cubit.skipSavings();
       await cubit.nextFromDebts();
       await cubit.nextFromLendings();
+      await cubit.skipSalarySplit();
 
       expect(cubit.state, isA<FinancialSetupSummary>());
 
@@ -571,6 +595,7 @@ void main() {
       await cubit.skipSavings();
       await cubit.nextFromDebts();
       await cubit.nextFromLendings();
+      await cubit.skipSalarySplit();
 
       final summary = cubit.state as FinancialSetupSummary;
       expect(summary.balance, 80000);
@@ -638,6 +663,35 @@ void main() {
       expect(cubit.state, isA<FinancialSetupDebts>());
       expect((cubit.state as FinancialSetupDebts).debts.length, 1);
     });
+
+    test('back from salary split → lendings', () async {
+      await cubit.start();
+      cubit.beginSetup();
+      await cubit.setBalance(10000);
+      await cubit.skipSavings();
+      await cubit.nextFromDebts();
+      await cubit.nextFromLendings();
+      expect(cubit.state, isA<FinancialSetupSalarySplit>());
+
+      await cubit.goBack();
+      expect(cubit.state, isA<FinancialSetupLendings>());
+    });
+
+    test('back from summary → salary split with cached value', () async {
+      await cubit.start();
+      cubit.beginSetup();
+      await cubit.setBalance(10000);
+      await cubit.skipSavings();
+      await cubit.nextFromDebts();
+      await cubit.nextFromLendings();
+      await cubit.setSalarySplit(5000);
+      expect(cubit.state, isA<FinancialSetupSummary>());
+
+      await cubit.goBack();
+      expect(cubit.state, isA<FinancialSetupSalarySplit>());
+      expect(
+          (cubit.state as FinancialSetupSalarySplit).currentAllocation, 5000);
+    });
   });
 
   group('Financial Setup — resume after restart', () {
@@ -690,9 +744,26 @@ void main() {
       cubit.close();
     });
 
-    test('resumes at summary when step = 5', () async {
+    test('resumes at salary split when step = 5', () async {
       final userRepo =
           FakeUserRepository(user: _testUser(step: 5, balance: 60000));
+      final cubit = _createCubit(
+        userRepo: userRepo,
+        debtRepo: FakeDebtRepository(),
+        lendingRepo: FakeLendingRepository(),
+        savingsRepo: FakeSavingsRepository(),
+      );
+
+      await cubit.start();
+      expect(cubit.state, isA<FinancialSetupSalarySplit>());
+      expect(
+          (cubit.state as FinancialSetupSalarySplit).salaryAmount, 50000);
+      cubit.close();
+    });
+
+    test('resumes at summary when step = 6', () async {
+      final userRepo =
+          FakeUserRepository(user: _testUser(step: 6, balance: 60000));
       final savingsRepo = FakeSavingsRepository();
       await savingsRepo.createInitialDeposit(amount: 15000);
 

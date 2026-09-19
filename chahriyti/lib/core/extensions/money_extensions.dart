@@ -1,7 +1,7 @@
 extension MoneyFormatting on int {
-  String toDZDString() {
+  String toDZDString({String symbol = 'دج'}) {
     final formatted = _formatWithThousands(this);
-    return '$formatted دج';
+    return '$formatted $symbol';
   }
 
   String toFormattedNumber() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
@@ -42,15 +43,15 @@ class _PaymentFormWidgetState extends State<PaymentFormWidget> {
     final amount = int.tryParse(_amountController.text);
     if (amount == null || amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('أدخل مبلغاً صحيحاً')),
+        SnackBar(content: Text(context.l10n.enterValidAmount)),
       );
       return;
     }
 
     if (amount > widget.remainingBalance) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('المبلغ يتجاوز الرصيد المتبقي'),
+        SnackBar(
+          content: Text(context.l10n.amountExceedsRemaining('${widget.remainingBalance}')),
           backgroundColor: AppColors.negative,
         ),
       );
@@ -76,7 +77,7 @@ class _PaymentFormWidgetState extends State<PaymentFormWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'إضافة سداد',
+              context.l10n.addPayment,
               style: AppTypography.labelLarge,
             ),
             const SizedBox(height: 12),
@@ -84,16 +85,16 @@ class _PaymentFormWidgetState extends State<PaymentFormWidget> {
               controller: _amountController,
               keyboardType: TextInputType.number,
               enabled: !widget.isLoading,
-              decoration: const InputDecoration(
-                hintText: 'أدخل مبلغ السداد',
-                suffixText: 'دج',
+              decoration: InputDecoration(
+                hintText: context.l10n.enterAmount,
+                suffixText: context.l10n.currencySymbol,
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'المبلغ مطلوب';
+                  return context.l10n.amountRequired;
                 }
                 if (int.tryParse(value) == null) {
-                  return 'أدخل رقماً صحيحاً';
+                  return context.l10n.enterNumber;
                 }
                 return null;
               },
@@ -113,7 +114,7 @@ class _PaymentFormWidgetState extends State<PaymentFormWidget> {
                               AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : const Text('إضافة السداد'),
+                    : Text(context.l10n.addPayment),
               ),
             ),
           ],

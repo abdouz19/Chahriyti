@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
@@ -86,7 +87,7 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('مداخيل إضافية'),
+          title: Text(context.l10n.additionalIncomePageTitle),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () => context.go('/onboarding/salary'),
@@ -99,12 +100,12 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
               padding: const EdgeInsets.all(24),
               children: [
                 Text(
-                  'أضف مداخيلك الإضافية',
+                  context.l10n.addAdditionalIncomes,
                   style: AppTypography.headlineSmall,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'مثال: عمل إضافي، إيجار، منحة...',
+                  context.l10n.additionalIncomeExample,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -123,7 +124,7 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
                             Row(
                               children: [
                                 Text(
-                                  'مدخول ${i + 1}',
+                                  context.l10n.incomeNumber(i + 1),
                                   style: AppTypography.labelMedium,
                                 ),
                                 const Spacer(),
@@ -143,11 +144,11 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
                               controller: entry.descriptionController,
                               textAlign: TextAlign.start,
                               textInputAction: TextInputAction.next,
-                              decoration: const InputDecoration(
-                                hintText: 'المصدر (مثال: عمل إضافي)',
+                              decoration: InputDecoration(
+                                hintText: context.l10n.incomeSourceHint,
                               ),
                               validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? 'المصدر مطلوب'
+                                  ? context.l10n.incomeSourceRequired
                                   : null,
                             ),
                             const SizedBox(height: 12),
@@ -158,15 +159,15 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              decoration: const InputDecoration(
-                                hintText: 'المبلغ',
-                                suffixText: 'دج',
+                              decoration: InputDecoration(
+                                hintText: context.l10n.amount,
+                                suffixText: context.l10n.currencySymbol,
                               ),
                               validator: (v) {
-                                if (v == null || v.isEmpty) return 'المبلغ مطلوب';
+                                if (v == null || v.isEmpty) return context.l10n.amountRequired;
                                 final val = int.tryParse(v);
                                 if (val == null || val <= 0) {
-                                  return 'يجب أن يكون المبلغ أكبر من صفر';
+                                  return context.l10n.amountMustBePositive;
                                 }
                                 return null;
                               },
@@ -180,7 +181,7 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
                 TextButton.icon(
                   onPressed: _addEntry,
                   icon: const Icon(Icons.add_rounded),
-                  label: const Text('إضافة مدخول آخر'),
+                  label: Text(context.l10n.addAnotherIncome),
                 ),
                 const SizedBox(height: 24),
                 BlocBuilder<OnboardingCubit, OnboardingState>(
@@ -197,7 +198,7 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
                                 strokeWidth: 2.5,
                               ),
                             )
-                          : const Text('حفظ والمتابعة'),
+                          : Text(context.l10n.saveAndContinue),
                     );
                   },
                 ),
@@ -205,7 +206,7 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
                 TextButton(
                   onPressed: _skip,
                   child: Text(
-                    'تخطي',
+                    context.l10n.skip,
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.textSecondary,
                     ),

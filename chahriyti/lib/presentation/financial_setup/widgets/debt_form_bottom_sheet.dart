@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import 'amount_input_field.dart';
@@ -110,7 +111,7 @@ class _DebtFormBottomSheetState extends State<DebtFormBottomSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.initialName != null ? 'تعديل الدَّيْن' : 'إضافة دَيْن',
+                  widget.initialName != null ? context.l10n.editDebt : context.l10n.newDebt,
                   style: AppTypography.headlineSmall,
                 ),
                 if (widget.onDelete != null)
@@ -125,32 +126,32 @@ class _DebtFormBottomSheetState extends State<DebtFormBottomSheet> {
               ],
             ),
             const SizedBox(height: 16),
-            Text('الاسم / الجهة', style: AppTypography.labelMedium),
+            Text(context.l10n.nameOrOrganization, style: AppTypography.labelMedium),
             const SizedBox(height: 8),
             TextFormField(
               controller: _nameController,
               textAlign: TextAlign.start,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(hintText: 'مثال: البنك، صديق'),
+              decoration: InputDecoration(hintText: context.l10n.creditorNameHint2),
               validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'يجب إدخال الاسم' : null,
+                  (v == null || v.trim().isEmpty) ? context.l10n.nameRequired : null,
             ),
             const SizedBox(height: 16),
-            Text('المبلغ', style: AppTypography.labelMedium),
+            Text(context.l10n.amount, style: AppTypography.labelMedium),
             const SizedBox(height: 8),
             TextFormField(
               controller: _amountController,
               textAlign: TextAlign.start,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                hintText: 'مثال: 20000',
-                suffixText: 'دج',
+              decoration: InputDecoration(
+                hintText: context.l10n.amountHint,
+                suffixText: context.l10n.currencySymbol,
               ),
               validator: (v) {
-                if (v == null || v.isEmpty) return 'يجب إدخال المبلغ';
+                if (v == null || v.isEmpty) return context.l10n.amountRequired;
                 final val = AmountInputField.parse(v);
-                if (val == null || val <= 0) return 'المبلغ يجب أن يكون أكبر من صفر';
+                if (val == null || val <= 0) return context.l10n.amountMustBePositive;
                 return null;
               },
             ),
@@ -158,13 +159,13 @@ class _DebtFormBottomSheetState extends State<DebtFormBottomSheet> {
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(
-                'هل صرفت هذا المبلغ؟',
+                context.l10n.debtIsSpentQuestion,
                 style: AppTypography.labelMedium,
               ),
               subtitle: Text(
                 _isSpent
-                    ? 'المبلغ تم صرفه ولم يعد في رصيدك'
-                    : 'المبلغ لا يزال في رصيدك',
+                    ? context.l10n.debtIsSpentDesc
+                    : context.l10n.debtNotSpentDesc,
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -177,7 +178,7 @@ class _DebtFormBottomSheetState extends State<DebtFormBottomSheet> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _submit,
-                child: const Text('حفظ'),
+                child: Text(context.l10n.save),
               ),
             ),
           ],

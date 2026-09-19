@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
@@ -30,7 +32,7 @@ class _CycleHistoryView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'سجل الدورات',
+          context.l10n.cycleHistory,
           style: AppTypography.headlineSmall,
         ),
       ),
@@ -64,7 +66,7 @@ class _CycleHistoryView extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () =>
                           context.read<CycleHistoryCubit>().loadHistory(),
-                      child: const Text('إعادة المحاولة'),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -87,7 +89,7 @@ class _CycleHistoryView extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'لا توجد دورات سابقة',
+                        context.l10n.noPreviousCycles,
                         style: AppTypography.bodyLarge.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -140,24 +142,10 @@ class _CycleCard extends StatelessWidget {
 
   const _CycleCard({required this.cycle});
 
-  String _formatDateRange(DateTime start, DateTime end) {
-    final arabicMonths = [
-      'جانفي',
-      'فيفري',
-      'مارس',
-      'أفريل',
-      'ماي',
-      'جوان',
-      'جويلية',
-      'أوت',
-      'سبتمبر',
-      'أكتوبر',
-      'نوفمبر',
-      'ديسمبر'
-    ];
-
-    final startMonth = arabicMonths[start.month - 1];
-    final endMonth = arabicMonths[end.month - 1];
+  String _formatDateRange(BuildContext context, DateTime start, DateTime end) {
+    final locale = Localizations.localeOf(context).languageCode;
+    final startMonth = DateFormat('MMM', locale).format(start);
+    final endMonth = DateFormat('MMM', locale).format(end);
 
     if (start.month == end.month) {
       return '${start.day} - ${end.day} $startMonth ${start.year}';
@@ -189,7 +177,7 @@ class _CycleCard extends StatelessWidget {
           children: [
             // Date range
             Text(
-              _formatDateRange(cycle.cycle.startDate, cycle.cycle.endDate),
+              _formatDateRange(context, cycle.cycle.startDate, cycle.cycle.endDate),
               style: AppTypography.labelMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -201,7 +189,7 @@ class _CycleCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'الراتب',
+                  context.l10n.salary,
                   style: AppTypography.bodyMedium,
                 ),
                 MoneyText(
@@ -218,7 +206,7 @@ class _CycleCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'إجمالي المصاريف',
+                  context.l10n.totalExpensesLabel,
                   style: AppTypography.bodyMedium,
                 ),
                 MoneyText(
@@ -244,7 +232,7 @@ class _CycleCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'الرصيد النهائي',
+                    context.l10n.finalBalance,
                     style: AppTypography.labelMedium,
                   ),
                   MoneyText(

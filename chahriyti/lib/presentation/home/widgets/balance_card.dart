@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
+import '../../../core/extensions/l10n_extension.dart';
 
 class BalanceCard extends StatelessWidget {
   final int amount;
@@ -41,7 +42,7 @@ class BalanceCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'الرصيد الحالي',
+                  context.l10n.currentBalance,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.positive,
                   ),
@@ -58,7 +59,7 @@ class BalanceCard extends StatelessWidget {
             if (cycleTotal > 0) ...[
               const SizedBox(height: 6),
               Text(
-                'رصيد الدورة: ${cycleTotal.toDZDString()}',
+                context.l10n.cycleBalance(cycleTotal.toDZDString(symbol: context.l10n.currencySymbol)),
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.positive.withValues(alpha: 0.65),
                 ),

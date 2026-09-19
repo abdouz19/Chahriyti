@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../application/use_cases/statistics/get_financial_classification_use_case.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/extensions/l10n_extension.dart';
 
 class ClassificationBadge extends StatelessWidget {
   final FinancialTier tier;
@@ -42,14 +43,14 @@ class ClassificationBadge extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            tier.arabicLabel,
+            _tierLabel(context),
             style: AppTypography.headlineLarge.copyWith(
               color: Colors.white,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            _tierDescription,
+            _tierDescription(context),
             style: AppTypography.bodyMedium.copyWith(
               color: Colors.white.withValues(alpha: 0.85),
             ),
@@ -77,20 +78,25 @@ class ClassificationBadge extends StatelessWidget {
     }
   }
 
-  String get _tierDescription {
+  String _tierLabel(BuildContext context) {
     switch (tier) {
-      case FinancialTier.legendary:
-        return 'أداء مالي استثنائي! وفّرت أكثر من 30%';
-      case FinancialTier.smart:
-        return 'إدارة ذكية للمال. وفّرت بين 15% و 30%';
-      case FinancialTier.balanced:
-        return 'إنفاق متوازن. وفّرت بين 5% و 15%';
-      case FinancialTier.spender:
-        return 'إنفاقك مرتفع. حاول التوفير أكثر';
-      case FinancialTier.danger:
-        return 'تجاوزت ميزانيتك! راجع مصاريفك';
-      case FinancialTier.earlyBankrupt:
-        return 'إنفاق سريع جداً مع بداية الشهر';
+      case FinancialTier.legendary: return context.l10n.tierLegendary;
+      case FinancialTier.smart: return context.l10n.tierSmart;
+      case FinancialTier.balanced: return context.l10n.tierBalanced;
+      case FinancialTier.spender: return context.l10n.tierSpender;
+      case FinancialTier.danger: return context.l10n.tierDanger;
+      case FinancialTier.earlyBankrupt: return context.l10n.tierEarlyBankrupt;
+    }
+  }
+
+  String _tierDescription(BuildContext context) {
+    switch (tier) {
+      case FinancialTier.legendary: return context.l10n.tierLegendaryDesc;
+      case FinancialTier.smart: return context.l10n.tierSmartDesc;
+      case FinancialTier.balanced: return context.l10n.tierBalancedDesc;
+      case FinancialTier.spender: return context.l10n.tierSpenderDesc;
+      case FinancialTier.danger: return context.l10n.tierDangerDesc;
+      case FinancialTier.earlyBankrupt: return context.l10n.tierEarlyBankruptDesc;
     }
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
@@ -83,7 +84,7 @@ class _DebtsListViewState extends State<_DebtsListView>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'الديون',
+          context.l10n.debtsTitle,
           style: AppTypography.headlineSmall,
         ),
         bottom: TabBar(
@@ -91,9 +92,9 @@ class _DebtsListViewState extends State<_DebtsListView>
           labelColor: AppColors.primary,
           unselectedLabelColor: AppColors.textSecondary,
           indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'نشطة'),
-            Tab(text: 'مسددة'),
+          tabs: [
+            Tab(text: context.l10n.activeTab),
+            Tab(text: context.l10n.settledTab),
           ],
         ),
       ),
@@ -102,7 +103,7 @@ class _DebtsListViewState extends State<_DebtsListView>
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
         label: Text(
-          'دين جديد',
+          context.l10n.newDebt,
           style: AppTypography.labelLarge.copyWith(color: Colors.white),
         ),
       ),
@@ -147,15 +148,15 @@ class _DebtTabContent extends StatelessWidget {
                       const SizedBox(height: 16),
                       Text(
                         isCompletedTab
-                            ? 'لا توجد ديون مسددة'
-                            : 'لا توجد ديون حالياً',
+                            ? context.l10n.noSettledDebts
+                            : context.l10n.noDebtsNow,
                         style: AppTypography.headlineSmall,
                       ),
                       const SizedBox(height: 8),
                       Text(
                         isCompletedTab
-                            ? 'ستظهر هنا الديون التي تم سدادها بالكامل'
-                            : 'تابع ديونك بسهولة وتحكم بسداداتك',
+                            ? context.l10n.settledDebtsEmptyDesc
+                            : context.l10n.activeDebtsEmptyDesc,
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -204,7 +205,7 @@ class _DebtTabContent extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'إجمالي الديون المتبقية',
+                                context.l10n.totalDebtsRemaining,
                                 style: AppTypography.bodySmall.copyWith(
                                   color: AppColors.textSecondary,
                                 ),
@@ -280,7 +281,7 @@ class _DebtTabContent extends StatelessWidget {
                     onPressed: () {
                       context.read<DebtCubit>().loadDebts();
                     },
-                    child: const Text('إعادة المحاولة'),
+                    child: Text(context.l10n.retry),
                   ),
                 ],
               ),

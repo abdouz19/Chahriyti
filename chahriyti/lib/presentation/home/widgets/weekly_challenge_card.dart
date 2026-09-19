@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../models/weekly_challenge_data.dart';
@@ -84,13 +85,13 @@ class WeeklyChallengeCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'المبلغ المستهدف',
+                    context.l10n.targetAmount,
                     style: AppTypography.bodySmall.copyWith(
                       color: AppColors.textSecondary,
                     ),
                   ),
                   Text(
-                    'دج ${data.targetAmount}',
+                    '${data.targetAmount} ${context.l10n.currencySymbol}',
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w600,

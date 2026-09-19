@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
+import '../cubits/locale_cubit.dart';
 import '../cubits/settings_cubit.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -33,7 +35,7 @@ class _SettingsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'الإعدادات',
+          context.l10n.settingsTitle,
           style: AppTypography.headlineSmall,
         ),
       ),
@@ -41,8 +43,8 @@ class _SettingsView extends StatelessWidget {
         listener: (context, state) {
           if (state is SettingsDataResetComplete) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم مسح جميع البيانات بنجاح'),
+              SnackBar(
+                content: Text(context.l10n.dataClearedSuccess),
                 backgroundColor: AppColors.positive,
               ),
             );
@@ -64,13 +66,13 @@ class _SettingsView extends StatelessWidget {
           }
 
           if (state is SettingsResetting) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(color: AppColors.primary),
-                  SizedBox(height: 16),
-                  Text('جاري إعادة التعيين...'),
+                  const CircularProgressIndicator(color: AppColors.primary),
+                  const SizedBox(height: 16),
+                  Text(context.l10n.resetting),
                 ],
               ),
             );
@@ -102,7 +104,7 @@ class _SettingsView extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () =>
                           context.read<SettingsCubit>().loadSettings(),
-                      child: const Text('إعادة المحاولة'),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -163,7 +165,7 @@ class _SettingsView extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              state.isActivated ? 'مفعّل' : 'غير مفعّل',
+                              state.isActivated ? context.l10n.activated : context.l10n.notActivated,
                               style: AppTypography.bodySmall.copyWith(
                                 color: state.isActivated
                                     ? AppColors.positive
@@ -184,7 +186,7 @@ class _SettingsView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'الراتب الشهري',
+                    context.l10n.monthlySalary,
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -201,7 +203,7 @@ class _SettingsView extends StatelessWidget {
                           ),
                           if (state.salaryPending)
                             Text(
-                              'من الدورة القادمة',
+                              context.l10n.fromNextCycle,
                               style: AppTypography.bodySmall.copyWith(
                                 color: AppColors.textSecondary,
                                 fontSize: 10,
@@ -234,7 +236,7 @@ class _SettingsView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'يوم استلام الراتب',
+                    context.l10n.salaryDay,
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -245,7 +247,7 @@ class _SettingsView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            'اليوم ${state.salaryDay}',
+                            context.l10n.dayN(state.salaryDay),
                             style: AppTypography.bodyMedium.copyWith(
                               color: AppColors.primary,
                               fontWeight: FontWeight.w600,
@@ -253,7 +255,7 @@ class _SettingsView extends StatelessWidget {
                           ),
                           if (state.salaryDayPending)
                             Text(
-                              'من الدورة القادمة',
+                              context.l10n.fromNextCycle,
                               style: AppTypography.bodySmall.copyWith(
                                 color: AppColors.textSecondary,
                                 fontSize: 10,
@@ -289,12 +291,12 @@ class _SettingsView extends StatelessWidget {
           _SectionCard(
             children: [
               Text(
-                'الأهداف والديون',
+                context.l10n.goalsAndDebts,
                 style: AppTypography.labelLarge,
               ),
               const SizedBox(height: 8),
               Text(
-                'إدارة أهدافك المالية والديون',
+                context.l10n.goalsAndDebtsDesc,
                 style: AppTypography.bodySmall,
               ),
               const SizedBox(height: 16),
@@ -304,7 +306,7 @@ class _SettingsView extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/goals'),
                   icon: const Icon(Icons.flag_rounded),
-                  label: const Text('عرض الأهداف'),
+                  label: Text(context.l10n.viewGoals),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: const BorderSide(color: AppColors.primary),
@@ -321,7 +323,7 @@ class _SettingsView extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/debts'),
                   icon: const Icon(Icons.paid_rounded),
-                  label: const Text('عرض الديون'),
+                  label: Text(context.l10n.viewDebts),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: const BorderSide(color: AppColors.primary),
@@ -338,7 +340,7 @@ class _SettingsView extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/savings'),
                   icon: const Icon(Icons.savings_rounded),
-                  label: const Text('المدخرات'),
+                  label: Text(context.l10n.savings),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: const BorderSide(color: AppColors.primary),
@@ -356,12 +358,12 @@ class _SettingsView extends StatelessWidget {
           _SectionCard(
             children: [
               Text(
-                'إدارة الدورة المالية',
+                context.l10n.manageCycle,
                 style: AppTypography.labelLarge,
               ),
               const SizedBox(height: 8),
               Text(
-                'تبدأ الدورة تلقائياً في يوم استلام راتبك كل شهر',
+                context.l10n.manageCycleDesc,
                 style: AppTypography.bodySmall,
               ),
               const SizedBox(height: 16),
@@ -371,7 +373,7 @@ class _SettingsView extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/cycle-history'),
                   icon: const Icon(Icons.history_rounded),
-                  label: const Text('سجل الدورات'),
+                  label: Text(context.l10n.cycleHistory),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: const BorderSide(color: AppColors.primary),
@@ -381,6 +383,35 @@ class _SettingsView extends StatelessWidget {
                   ),
                 ),
               ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // ── Language section ──
+          _SectionCard(
+            children: [
+              Text(
+                context.l10n.language,
+                style: AppTypography.labelLarge,
+              ),
+              const SizedBox(height: 12),
+              ...['ar', 'fr', 'en'].map((code) {
+                final label = code == 'ar'
+                    ? context.l10n.languageAr
+                    : code == 'fr'
+                        ? context.l10n.languageFr
+                        : context.l10n.languageEn;
+                final isSelected = Localizations.localeOf(context).languageCode == code;
+                return ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(label, style: AppTypography.bodyMedium),
+                  trailing: isSelected
+                      ? const Icon(Icons.check_rounded, color: AppColors.primary, size: 20)
+                      : null,
+                  onTap: () => context.read<LocaleCubit>().setLocale(Locale(code)),
+                );
+              }),
             ],
           ),
           const SizedBox(height: 20),
@@ -401,7 +432,7 @@ class _SettingsView extends StatelessWidget {
                     Icon(Icons.warning_rounded, color: AppColors.negative, size: 20),
                     const SizedBox(width: 8),
                     Text(
-                      'منطقة الخطر',
+                      context.l10n.dangerZone,
                       style: AppTypography.labelLarge.copyWith(
                         color: AppColors.negative,
                       ),
@@ -410,7 +441,7 @@ class _SettingsView extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'هذه الإجراءات لا يمكن التراجع عنها. تأكد تماماً قبل المتابعة.',
+                  context.l10n.dangerZoneDesc,
                   style: AppTypography.bodySmall.copyWith(
                     color: AppColors.negative.withValues(alpha: 0.8),
                   ),
@@ -422,7 +453,7 @@ class _SettingsView extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: () => _onResetAllData(context),
                     icon: const Icon(Icons.delete_forever_rounded),
-                    label: const Text('مسح كل البيانات'),
+                    label: Text(context.l10n.clearAllData),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.negative,
                       side: const BorderSide(color: AppColors.negative),
@@ -440,7 +471,7 @@ class _SettingsView extends StatelessWidget {
           // ── App version ──
           Center(
             child: Text(
-              'شهريتي - الإصدار 1.0.0',
+              context.l10n.appVersion,
               style: AppTypography.bodySmall.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -462,28 +493,21 @@ class _SettingsView extends StatelessWidget {
           children: [
             Icon(Icons.warning_rounded, color: AppColors.negative, size: 24),
             const SizedBox(width: 8),
-            Text('تحذير مهم', style: AppTypography.headlineSmall),
+            Text(context.l10n.importantWarning, style: AppTypography.headlineSmall),
           ],
         ),
         content: Text(
-          'ستقوم بمسح جميع بياناتك المالية بما فيها:\n\n'
-          '• جميع المصاريف\n'
-          '• جميع الديون والمدفوعات\n'
-          '• جميع الإقراضات\n'
-          '• جميع الأهداف والمدخرات\n'
-          '• سجل الدورات المالية\n\n'
-          'سيتم الاحتفاظ فقط براتبك ويوم استلامه.\n\n'
-          'هذا الإجراء لا يمكن التراجع عنه نهائياً.',
+          context.l10n.resetWarningBody,
           style: AppTypography.bodyMedium,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text('إلغاء', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(context.l10n.cancel, style: TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text('متابعة', style: TextStyle(color: AppColors.negative)),
+            child: Text(context.l10n.continueLabel, style: TextStyle(color: AppColors.negative)),
           ),
         ],
       ),
@@ -496,15 +520,15 @@ class _SettingsView extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('هل أنت متأكد تماماً؟', style: AppTypography.headlineSmall),
+        title: Text(context.l10n.areYouSure, style: AppTypography.headlineSmall),
         content: Text(
-          'لن تتمكن من استرجاع أي بيانات بعد هذه الخطوة.\n\nهل تريد المتابعة؟',
+          context.l10n.cannotBeUndone,
           style: AppTypography.bodyMedium,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text('لا، إلغاء', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(context.l10n.noCancel, style: TextStyle(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -513,7 +537,7 @@ class _SettingsView extends StatelessWidget {
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
-            child: const Text('نعم، امسح كل شيء'),
+            child: Text(context.l10n.yesDeleteEverything),
           ),
         ],
       ),
@@ -555,12 +579,12 @@ class _SettingsView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'تعديل يوم استلام الراتب',
+                    sheetContext.l10n.editSalaryDay,
                     style: AppTypography.headlineSmall,
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'اختر يوم من 1 إلى 28',
+                    sheetContext.l10n.chooseDayHint,
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -580,7 +604,7 @@ class _SettingsView extends StatelessWidget {
                           min: 1,
                           max: 28,
                           divisions: 27,
-                          label: 'اليوم $selectedDay',
+                          label: sheetContext.l10n.sliderDayLabel(selectedDay),
                           onChanged: (value) {
                             setState(() {
                               selectedDay = value.toInt();
@@ -589,7 +613,7 @@ class _SettingsView extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'اليوم المختار: $selectedDay من كل شهر',
+                          sheetContext.l10n.selectedDayLabel(selectedDay),
                           style: AppTypography.labelLarge.copyWith(
                             color: AppColors.primary,
                           ),
@@ -603,7 +627,7 @@ class _SettingsView extends StatelessWidget {
                       const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textSecondary),
                       const SizedBox(width: 6),
                       Text(
-                        'سيُطبَّق من الدورة القادمة',
+                        sheetContext.l10n.appliesFromNextCycle,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -618,18 +642,18 @@ class _SettingsView extends StatelessWidget {
                         final confirmed = await showDialog<bool>(
                           context: sheetContext,
                           builder: (_) => AlertDialog(
-                            title: const Text('تأكيد تعديل يوم الراتب'),
+                            title: Text(sheetContext.l10n.confirmEditSalaryDay),
                             content: Text(
-                              'سيُطبَّق يوم الراتب الجديد (اليوم $selectedDay) ابتداءً من دورتك القادمة.\nالدورة الحالية لن تتأثر.',
+                              sheetContext.l10n.newSalaryDayConfirmBody(selectedDay),
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(sheetContext, false),
-                                child: const Text('إلغاء'),
+                                child: Text(sheetContext.l10n.cancel),
                               ),
                               ElevatedButton(
                                 onPressed: () => Navigator.pop(sheetContext, true),
-                                child: const Text('تأكيد'),
+                                child: Text(sheetContext.l10n.confirm),
                               ),
                             ],
                           ),
@@ -639,7 +663,7 @@ class _SettingsView extends StatelessWidget {
                           Navigator.pop(sheetContext);
                         }
                       },
-                      child: const Text('حفظ'),
+                      child: Text(sheetContext.l10n.save),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -647,7 +671,7 @@ class _SettingsView extends StatelessWidget {
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(sheetContext),
-                      child: const Text('إلغاء'),
+                      child: Text(sheetContext.l10n.cancel),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -728,21 +752,21 @@ class _EditSalarySheetState extends State<_EditSalarySheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('تعديل الراتب الشهري', style: AppTypography.headlineSmall),
+              Text(context.l10n.editMonthlySalary, style: AppTypography.headlineSmall),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _controller,
                 keyboardType: TextInputType.number,
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'أدخل الراتب الجديد',
-                  suffixText: 'دج',
+                decoration: InputDecoration(
+                  hintText: context.l10n.enterNewSalary,
+                  suffixText: context.l10n.currencySymbol,
                 ),
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'الراتب مطلوب';
+                  if (v == null || v.isEmpty) return context.l10n.salaryRequired;
                   final val = int.tryParse(v);
                   if (val == null || val <= 0) {
-                    return 'يجب أن يكون الراتب أكبر من صفر';
+                    return context.l10n.salaryMustBePositive;
                   }
                   return null;
                 },
@@ -753,7 +777,7 @@ class _EditSalarySheetState extends State<_EditSalarySheet> {
                   const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textSecondary),
                   const SizedBox(width: 6),
                   Text(
-                    'سيُطبَّق من الدورة القادمة',
+                    context.l10n.appliesFromNextCycle,
                     style: AppTypography.bodySmall.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -770,18 +794,18 @@ class _EditSalarySheetState extends State<_EditSalarySheet> {
                     final confirmed = await showDialog<bool>(
                       context: context,
                       builder: (_) => AlertDialog(
-                        title: const Text('تأكيد تعديل الراتب'),
+                        title: Text(context.l10n.confirmEditSalary),
                         content: Text(
-                          'سيُطبَّق الراتب الجديد ($newSalary دج) ابتداءً من دورتك القادمة.\nالدورة الحالية لن تتأثر.',
+                          context.l10n.newSalaryConfirmBody(newSalary),
                         ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, false),
-                            child: const Text('إلغاء'),
+                            child: Text(context.l10n.cancel),
                           ),
                           ElevatedButton(
                             onPressed: () => Navigator.pop(context, true),
-                            child: const Text('تأكيد'),
+                            child: Text(context.l10n.confirm),
                           ),
                         ],
                       ),
@@ -791,7 +815,7 @@ class _EditSalarySheetState extends State<_EditSalarySheet> {
                       Navigator.pop(context);
                     }
                   },
-                  child: const Text('حفظ'),
+                  child: Text(context.l10n.save),
                 ),
               ),
               const SizedBox(height: 8),
@@ -799,7 +823,7 @@ class _EditSalarySheetState extends State<_EditSalarySheet> {
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('إلغاء'),
+                  child: Text(context.l10n.cancel),
                 ),
               ),
               const SizedBox(height: 8),

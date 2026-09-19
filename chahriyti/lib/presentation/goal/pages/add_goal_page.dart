@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/goal_entity.dart';
@@ -52,7 +53,7 @@ class _AddGoalPageState extends State<AddGoalPage> {
     final amount = int.tryParse(_amountController.text);
     if (amount == null || amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('أدخل مبلغاً صحيحاً')),
+        SnackBar(content: Text(context.l10n.enterValidAmount)),
       );
       return;
     }
@@ -94,8 +95,8 @@ class _AddGoalPageState extends State<AddGoalPage> {
           state.whenOrNull(
             goalCreated: (_) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('تم إنشاء الهدف بنجاح'),
+                SnackBar(
+                  content: Text(context.l10n.goalCreated),
                   backgroundColor: AppColors.positive,
                 ),
               );
@@ -103,8 +104,8 @@ class _AddGoalPageState extends State<AddGoalPage> {
             },
             goalUpdated: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('تم تعديل الهدف بنجاح'),
+                SnackBar(
+                  content: Text(context.l10n.goalUpdated),
                   backgroundColor: AppColors.positive,
                 ),
               );
@@ -123,7 +124,7 @@ class _AddGoalPageState extends State<AddGoalPage> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              widget.initialGoal != null ? 'تعديل الهدف' : 'هدف جديد',
+              widget.initialGoal != null ? context.l10n.editGoal : context.l10n.newGoal,
               style: AppTypography.headlineSmall,
             ),
           ),
@@ -145,56 +146,56 @@ class _AddGoalPageState extends State<AddGoalPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'اسم الهدف',
+                        context.l10n.goalName,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _nameController,
-                        decoration: const InputDecoration(
-                          hintText: 'مثال: شراء هاتف',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.goalNameHint,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'الاسم مطلوب';
+                            return context.l10n.goalNameRequired;
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'المبلغ المستهدف',
+                        context.l10n.targetAmount,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          hintText: 'أدخل المبلغ',
-                          suffixText: 'دج',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.enterAmount,
+                          suffixText: context.l10n.currencySymbol,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'المبلغ مطلوب';
+                            return context.l10n.amountRequired;
                           }
                           if (int.tryParse(value) == null) {
-                            return 'أدخل رقماً صحيحاً';
+                            return context.l10n.enterNumber;
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'الوصف (اختياري)',
+                        context.l10n.goalDescOptional,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _descriptionController,
                         maxLines: 3,
-                        decoration: const InputDecoration(
-                          hintText: 'أضف ملاحظات...',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.goalDescHint,
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -204,8 +205,8 @@ class _AddGoalPageState extends State<AddGoalPage> {
                           onPressed: () => _submit(context, cubit),
                           child: Text(
                             widget.initialGoal != null
-                                ? 'حفظ التعديل'
-                                : 'حفظ الهدف',
+                                ? context.l10n.saveEdit
+                                : context.l10n.saveGoal,
                           ),
                         ),
                       ),

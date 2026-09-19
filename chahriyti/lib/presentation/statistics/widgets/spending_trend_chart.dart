@@ -2,8 +2,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../application/use_cases/statistics/get_spending_trend_use_case.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SpendingTrendChart extends StatelessWidget {
   final SpendingTrend trend;
@@ -22,10 +24,10 @@ class SpendingTrendChart extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('مسار الإنفاق', style: AppTypography.headlineSmall),
+          Text(context.l10n.spendingTrendTitle, style: AppTypography.headlineSmall),
           const SizedBox(height: 4),
           Text(
-            'الإنفاق التراكمي مقارنة بالميزانية',
+            context.l10n.cumulativeVsBudget,
             style:
                 AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
           ),
@@ -35,7 +37,7 @@ class SpendingTrendChart extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Text(
-                  'لا توجد بيانات بعد',
+                  context.l10n.noDataYet,
                   style: AppTypography.bodyMedium
                       .copyWith(color: AppColors.textSecondary),
                 ),
@@ -44,16 +46,16 @@ class SpendingTrendChart extends StatelessWidget {
           else
             SizedBox(
               height: 200,
-              child: LineChart(_buildChartData()),
+              child: LineChart(_buildChartData(context.l10n)),
             ),
           const SizedBox(height: 16),
-          _buildLegend(),
+          _buildLegend(context.l10n),
         ],
       ),
     );
   }
 
-  LineChartData _buildChartData() {
+  LineChartData _buildChartData(AppLocalizations l10n) {
     final budget = trend.budget;
     final totalDays = trend.totalDays.toDouble();
     final maxY = (budget * 1.1).ceilToDouble();
@@ -114,7 +116,7 @@ class SpendingTrendChart extends StatelessWidget {
             interval: (totalDays / 4).ceilToDouble(),
             getTitlesWidget: (value, _) {
               return Text(
-                'ي${value.toInt()}',
+                l10n.chartDayShort(value.toInt()),
                 style: AppTypography.bodySmall
                     .copyWith(color: AppColors.textSecondary, fontSize: 10),
               );
@@ -159,7 +161,7 @@ class SpendingTrendChart extends StatelessWidget {
               if (spot.barIndex == 1) return null; // skip budget line tooltip
               final amount = spot.y.toInt();
               return LineTooltipItem(
-                'يوم ${spot.x.toInt()}\n${_formatAmount(amount)} دج',
+                '${l10n.dayN(spot.x.toInt())}\n${_formatAmount(amount)} ${l10n.currencySymbol}',
                 AppTypography.bodySmall.copyWith(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
@@ -181,18 +183,18 @@ class SpendingTrendChart extends StatelessWidget {
     return amount.toString();
   }
 
-  Widget _buildLegend() {
+  Widget _buildLegend(AppLocalizations l10n) {
     return Row(
       children: [
         _legendDot(AppColors.primary),
         const SizedBox(width: 6),
-        Text('الإنفاق الفعلي',
+        Text(l10n.actualSpendingLegend,
             style:
                 AppTypography.bodySmall.copyWith(color: AppColors.textPrimary)),
         const SizedBox(width: 20),
         _legendLine(AppColors.negative.withValues(alpha: 0.5)),
         const SizedBox(width: 6),
-        Text('سقف الميزانية',
+        Text(l10n.budgetCeilingLegend,
             style:
                 AppTypography.bodySmall.copyWith(color: AppColors.textPrimary)),
       ],

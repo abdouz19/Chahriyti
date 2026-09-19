@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/wilayas.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
@@ -165,9 +166,9 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
                       textAlign: TextAlign.start,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'مثال: 50000',
-                        suffixText: 'دج',
+                        suffixText: context.l10n.currencySymbol,
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'الراتب مطلوب';

@@ -130,7 +130,7 @@ class DebtsDao extends DatabaseAccessor<AppDatabase> with _$DebtsDaoMixin {
     final sum = debts.totalAmount.sum();
     final query = selectOnly(debts)
       ..addColumns([sum])
-      ..where(debts.cycleId.equalsNullable(cycleId));
+      ..where(debts.cycleId.equalsNullable(cycleId) & debts.isSpent.equals(false));
     final result = await query.getSingle();
     return result.read(sum) ?? 0;
   }

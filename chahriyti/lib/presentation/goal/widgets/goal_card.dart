@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/goal_entity.dart';
@@ -69,7 +70,7 @@ class GoalCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'مكتمل',
+                      context.l10n.completed,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.positive,
                         fontWeight: FontWeight.w600,
@@ -83,7 +84,7 @@ class GoalCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'الهدف:',
+                  context.l10n.goalLabel,
                   style: AppTypography.bodySmall.copyWith(
                     color: AppColors.textSecondary,
                   ),

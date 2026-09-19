@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
@@ -85,8 +86,8 @@ class _HomeViewState extends State<_HomeView> {
       BuildContext context, ExpenseEntity expense) async {
     final confirmed = await ConfirmationDialog.show(
       context,
-      title: 'حذف المصروف',
-      message: 'هل تريد حذف هذا المصروف؟',
+      title: context.l10n.deleteExpense,
+      message: context.l10n.deleteExpenseConfirm,
       confirmColor: AppColors.negative,
     );
     if (!confirmed || !context.mounted) return;
@@ -121,7 +122,7 @@ class _HomeViewState extends State<_HomeView> {
         child: BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
             if (state is DashboardLoading) {
-              return _buildLoading();
+              return _buildLoading(context);
             }
             if (state is DashboardError) {
               return _buildError(context, state.message);
@@ -136,10 +137,10 @@ class _HomeViewState extends State<_HomeView> {
     );
   }
 
-  Widget _buildLoading() {
+  Widget _buildLoading(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        _buildAppBar(null),
+        _buildAppBar(context, showActions: false),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -163,7 +164,7 @@ class _HomeViewState extends State<_HomeView> {
   Widget _buildError(BuildContext context, String message) {
     return CustomScrollView(
       slivers: [
-        _buildAppBar(null),
+        _buildAppBar(context, showActions: false),
         SliverFillRemaining(
           child: Center(
             child: Padding(
@@ -190,7 +191,7 @@ class _HomeViewState extends State<_HomeView> {
                       context.read<DashboardCubit>().loadDashboard();
                     },
                     icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('إعادة المحاولة'),
+                    label: Text(context.l10n.retry),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
@@ -205,7 +206,7 @@ class _HomeViewState extends State<_HomeView> {
     );
   }
 
-  SliverAppBar _buildAppBar(BuildContext? context) {
+  SliverAppBar _buildAppBar(BuildContext context, {bool showActions = true}) {
     return SliverAppBar(
       floating: true,
       snap: true,
@@ -213,11 +214,11 @@ class _HomeViewState extends State<_HomeView> {
       scrolledUnderElevation: 0,
       backgroundColor: AppColors.background,
       title: Text(
-        'شهريتي',
+        context.l10n.appName,
         style: AppTypography.headlineMedium,
       ),
       centerTitle: true,
-      actions: context != null
+      actions: showActions
           ? [
               IconButton(
                 onPressed: () => _navigateAndRefresh(context, '/income/add'),
@@ -225,7 +226,7 @@ class _HomeViewState extends State<_HomeView> {
                   Icons.add_card_rounded,
                   color: AppColors.primary,
                 ),
-                tooltip: 'إضافة مدخول',
+                tooltip: context.l10n.addIncomeTooltip,
               ),
               IconButton(
                 onPressed: () => _navigateAndRefresh(context, '/settings'),
@@ -233,7 +234,7 @@ class _HomeViewState extends State<_HomeView> {
                   Icons.settings_rounded,
                   color: AppColors.textSecondary,
                 ),
-                tooltip: 'الإعدادات',
+                tooltip: context.l10n.settingsTitle,
               ),
             ]
           : null,
@@ -284,13 +285,13 @@ class _HomeViewState extends State<_HomeView> {
                         if (state.activeDebts.isNotEmpty || data.totalDebtPayments > 0)
                           Expanded(
                             child: _CycleAmountCard(
-                              label: 'الديون',
+                              label: context.l10n.debtsLabel,
                               amount: state.activeDebts.fold(0, (sum, d) => sum + d.remainingAmount),
                               icon: Icons.paid_rounded,
                               color: AppColors.warning,
-                              subtitleLabel: 'مدفوعات هذه الدورة',
+                              subtitleLabel: context.l10n.debtPaymentsThisCycle,
                               subtitleAmount: data.totalDebtPayments > 0 ? data.totalDebtPayments : null,
-                              savingsSubtitleLabel: 'من المدخرات هذه الدورة',
+                              savingsSubtitleLabel: context.l10n.fromSavingsThisCycle,
                               savingsSubtitleAmount: data.totalDebtPaymentsFromSavings,
                             ),
                           ),
@@ -299,13 +300,13 @@ class _HomeViewState extends State<_HomeView> {
                         if (state.activeLendings.isNotEmpty || data.totalLendingsFromBalance > 0)
                           Expanded(
                             child: _CycleAmountCard(
-                              label: 'السلف',
+                              label: context.l10n.lendingsLabel,
                               amount: state.activeLendings.fold(0, (sum, l) => sum + l.remainingAmount),
                               icon: Icons.handshake_rounded,
                               color: AppColors.primary,
-                              subtitleLabel: 'سلف هذه الدورة',
+                              subtitleLabel: context.l10n.lendingsThisCycle,
                               subtitleAmount: data.totalLendingsFromBalance > 0 ? data.totalLendingsFromBalance : null,
-                              savingsSubtitleLabel: 'من المدخرات هذه الدورة',
+                              savingsSubtitleLabel: context.l10n.fromSavingsThisCycle,
                               savingsSubtitleAmount: data.totalLendingsFromSavings,
                             ),
                           ),
@@ -333,7 +334,7 @@ class _HomeViewState extends State<_HomeView> {
                     },
                     icon: const Icon(Icons.add, size: 24),
                     label: Text(
-                      'تسجيل مصروف',
+                      context.l10n.recordExpense,
                       style: AppTypography.labelLarge
                           .copyWith(color: Colors.white),
                     ),
@@ -401,7 +402,7 @@ class _HomeViewState extends State<_HomeView> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'الأهداف المالية',
+                                  context.l10n.financialGoals,
                                   style: AppTypography.labelLarge,
                                 ),
                               ],
@@ -416,7 +417,7 @@ class _HomeViewState extends State<_HomeView> {
                         const SizedBox(height: 8),
                         if (state.activeGoals.isEmpty)
                           Text(
-                            'لم تضع أهدافاً بعد',
+                            context.l10n.noGoalsYet,
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -458,7 +459,7 @@ class _HomeViewState extends State<_HomeView> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'الديون',
+                                  context.l10n.debtsLabel,
                                   style: AppTypography.labelLarge,
                                 ),
                               ],
@@ -473,7 +474,7 @@ class _HomeViewState extends State<_HomeView> {
                         const SizedBox(height: 8),
                         if (state.activeDebts.isEmpty)
                           Text(
-                            'لا توجد ديون حالياً',
+                            context.l10n.noDebtsNow,
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.positive,
                             ),
@@ -514,7 +515,7 @@ class _HomeViewState extends State<_HomeView> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'السلف',
+                                  context.l10n.lendingsLabel,
                                   style: AppTypography.labelLarge,
                                 ),
                               ],
@@ -529,7 +530,7 @@ class _HomeViewState extends State<_HomeView> {
                         const SizedBox(height: 8),
                         if (state.activeLendings.isEmpty)
                           Text(
-                            'لا توجد سلف حالياً',
+                            context.l10n.noLendingsNow,
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.positive,
                             ),
@@ -562,7 +563,7 @@ class _HomeViewState extends State<_HomeView> {
                     color: AppColors.primary,
                   ),
                   label: Text(
-                    'الإحصائيات',
+                    context.l10n.statisticsTitle,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
                     ),
@@ -633,13 +634,13 @@ class _CycleAmountCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              amount.toDZDString(),
+              amount.toDZDString(symbol: context.l10n.currencySymbol),
               style: AppTypography.amountLarge.copyWith(color: color),
             ),
             if (subtitleLabel != null && subtitleAmount != null) ...[
               const SizedBox(height: 6),
               Text(
-                '$subtitleLabel: ${subtitleAmount!.toDZDString()}',
+                '$subtitleLabel: ${subtitleAmount!.toDZDString(symbol: context.l10n.currencySymbol)}',
                 style: AppTypography.bodySmall.copyWith(
                   color: color.withValues(alpha: 0.65),
                 ),
@@ -648,7 +649,7 @@ class _CycleAmountCard extends StatelessWidget {
             if (savingsSubtitleLabel != null && savingsSubtitleAmount != null && savingsSubtitleAmount! > 0) ...[
               const SizedBox(height: 4),
               Text(
-                '$savingsSubtitleLabel: ${savingsSubtitleAmount!.toDZDString()}',
+                '$savingsSubtitleLabel: ${savingsSubtitleAmount!.toDZDString(symbol: context.l10n.currencySymbol)}',
                 style: AppTypography.bodySmall.copyWith(
                   color: color.withValues(alpha: 0.65),
                 ),

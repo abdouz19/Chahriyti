@@ -4,6 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
+import '../../../core/extensions/l10n_extension.dart';
 
 class SafeBalanceCard extends StatelessWidget {
   final int safeDaily;
@@ -35,7 +36,7 @@ class SafeBalanceCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'الصرف الآمن يومياً',
+                  context.l10n.safeDailyLabel,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                   ),
@@ -47,7 +48,7 @@ class SafeBalanceCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'يمكنك صرف',
+                  context.l10n.canSpendPrefix,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.primary,
                   ),
@@ -60,7 +61,7 @@ class SafeBalanceCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'يومياً',
+                  context.l10n.dailySuffix,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.primary,
                   ),

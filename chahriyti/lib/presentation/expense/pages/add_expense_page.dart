@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/categories.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -10,6 +9,7 @@ import '../widgets/category_grid.dart';
 import '../widgets/expense_form.dart';
 import '../../shared/widgets/payment_source_toggle.dart';
 import '../../shared/widgets/funding_source_sheet.dart';
+import '../../../core/extensions/l10n_extension.dart';
 
 class AddExpensePage extends StatelessWidget {
   final int cycleId;
@@ -32,9 +32,9 @@ class AddExpensePage extends StatelessWidget {
 class _AddExpenseView extends StatelessWidget {
   const _AddExpenseView();
 
-  String _titleForState(ExpenseState state) {
-    if (state is ExpenseFormInput) return 'تفاصيل المصروف';
-    return 'صرف';
+  String _titleForState(BuildContext context, ExpenseState state) {
+    if (state is ExpenseFormInput) return context.l10n.expenseTitle;
+    return context.l10n.spend;
   }
 
   bool _canGoBack(ExpenseState state) => state is ExpenseFormInput;
@@ -61,8 +61,8 @@ class _AddExpenseView extends StatelessWidget {
             title: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
               child: Text(
-                _titleForState(state),
-                key: ValueKey(_titleForState(state)),
+                _titleForState(context, state),
+                key: ValueKey(_titleForState(context, state)),
                 style: AppTypography.headlineSmall,
               ),
             ),
@@ -94,7 +94,7 @@ class _AddExpenseView extends StatelessWidget {
     if (state is ExpenseCategorySelection) {
       return _CategoryStep(
         key: const ValueKey('category'),
-        onCategorySelected: (cat) => cubit.selectCategory(cat.name),
+        onCategorySelected: cubit.selectCategory,
       );
     }
 
@@ -102,6 +102,7 @@ class _AddExpenseView extends StatelessWidget {
       return _FormStep(
         key: const ValueKey('form'),
         isSaving: false,
+        category: state.category,
         savingsBalance: state.savingsBalance,
         fromSavings: state.fromSavings,
         onFromSavingsChanged: cubit.setFromSavings,
@@ -134,7 +135,7 @@ class _AddExpenseView extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _CategoryStep extends StatelessWidget {
-  final ValueChanged<ExpenseCategory> onCategorySelected;
+  final void Function(String categoryKey) onCategorySelected;
 
   const _CategoryStep({super.key, required this.onCategorySelected});
 
@@ -146,7 +147,7 @@ class _CategoryStep extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'اختر نوع المصروف',
+            context.l10n.selectExpenseType,
             style: AppTypography.bodyLarge.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -164,6 +165,7 @@ class _FormStep extends StatelessWidget {
   final bool isSaving;
   final int savingsBalance;
   final bool fromSavings;
+  final String? category;
   final ValueChanged<bool>? onFromSavingsChanged;
   final void Function({
     required String itemName,
@@ -178,6 +180,7 @@ class _FormStep extends StatelessWidget {
     required this.onSave,
     this.savingsBalance = 0,
     this.fromSavings = false,
+    this.category,
     this.onFromSavingsChanged,
   });
 
@@ -209,6 +212,7 @@ class _FormStep extends StatelessWidget {
           ],
           ExpenseForm(
             isSaving: isSaving,
+            category: category,
             onSave: ({required String itemName, required int amount, String? notes}) async {
               await _handleSave(
                 context: context,
@@ -234,7 +238,7 @@ class _FormStep extends StatelessWidget {
       if (amount > savingsBalance) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('رصيد المدخرات غير كافٍ')),
+            SnackBar(content: Text(context.l10n.insufficientSavings)),
           );
         }
         return;
@@ -250,7 +254,7 @@ class _FormStep extends StatelessWidget {
     if (amount > balance + savingsBalance) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('الرصيد والمدخرات غير كافية')),
+          SnackBar(content: Text(context.l10n.insufficientFunds)),
         );
       }
       return;

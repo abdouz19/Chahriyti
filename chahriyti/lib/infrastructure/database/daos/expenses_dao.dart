@@ -73,6 +73,24 @@ class ExpensesDao extends DatabaseAccessor<AppDatabase> with _$ExpensesDaoMixin 
     return rows.fold<int>(0, (sum, row) => sum + row.savingsAmount);
   }
 
+  Future<List<String>> getDistinctItemNames(String category) async {
+    final rows = await (select(expenses)
+          ..where((t) => t.category.equals(category) & t.itemName.isNotValue(''))
+          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+        .get();
+    // Deduplicate preserving most-recent-first order
+    final seen = <String>{};
+    final result = <String>[];
+    for (final row in rows) {
+      final name = row.itemName.trim();
+      if (name.isNotEmpty && seen.add(name.toLowerCase())) {
+        result.add(name);
+        if (result.length >= 100) break;
+      }
+    }
+    return result;
+  }
+
   Future<Map<String, int>> getExpensesByCategory(int cycleId) async {
     final category = expenses.category;
     final sum = expenses.amount.sum();

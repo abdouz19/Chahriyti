@@ -18,8 +18,12 @@ class Money extends Equatable {
   bool operator <=(Money other) => amount <= other.amount;
 
   String formatDZD() {
+    return formatWithSymbol('دج');
+  }
+
+  String formatWithSymbol(String symbol) {
     final formatted = _formatWithThousands(amount);
-    return '$formatted دج';
+    return '$formatted $symbol';
   }
 
   static String _formatWithThousands(int value) {

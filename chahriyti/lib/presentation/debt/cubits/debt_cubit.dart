@@ -116,6 +116,7 @@ class DebtCubit extends Cubit<DebtState> {
     required String creditorName,
     required int totalAmount,
     String? notes,
+    bool isSpent = false,
   }) async {
     emit(const DebtState.loading());
     try {
@@ -123,6 +124,7 @@ class DebtCubit extends Cubit<DebtState> {
         creditorName: creditorName,
         totalAmount: totalAmount,
         notes: notes,
+        isSpent: isSpent,
       );
       final debtId = await _createDebtUseCase(request);
       emit(DebtState.debtCreated(debtId));
@@ -142,6 +144,7 @@ class DebtCubit extends Cubit<DebtState> {
     String? creditorName,
     int? totalAmount,
     String? notes,
+    bool? isSpent,
   }) async {
     emit(const DebtState.loading());
     try {
@@ -150,6 +153,7 @@ class DebtCubit extends Cubit<DebtState> {
         creditorName: creditorName,
         totalAmount: totalAmount,
         notes: notes,
+        isSpent: isSpent,
       );
       await _updateDebtUseCase(request);
       emit(const DebtState.debtUpdated());

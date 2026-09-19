@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -50,8 +51,8 @@ class _LendingDetailView extends StatelessWidget {
         state.whenOrNull(
           lendingDeleted: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم حذف السلفة'),
+              SnackBar(
+                content: Text(context.l10n.lendingDeletedMsg),
                 backgroundColor: AppColors.positive,
               ),
             );
@@ -59,8 +60,8 @@ class _LendingDetailView extends StatelessWidget {
           },
           collectionAdded: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم تسجيل التحصيل بنجاح'),
+              SnackBar(
+                content: Text(context.l10n.collectionAddedMsg),
                 backgroundColor: AppColors.positive,
               ),
             );
@@ -79,13 +80,13 @@ class _LendingDetailView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'تفاصيل السلفة',
+            context.l10n.lendingDetails,
             style: AppTypography.headlineSmall,
           ),
           actions: [
             IconButton(
               icon: const Icon(Icons.edit_outlined),
-              tooltip: 'تعديل',
+              tooltip: context.l10n.edit,
               onPressed: () async {
                 final currentState = context.read<LendingCubit>().state;
                 if (currentState is LendingLoaded) {
@@ -110,7 +111,7 @@ class _LendingDetailView extends StatelessWidget {
                 Icons.delete_outline,
                 color: AppColors.negative,
               ),
-              tooltip: 'حذف السلفة',
+              tooltip: context.l10n.deleteLendingTitle,
             ),
           ],
         ),
@@ -129,7 +130,8 @@ class _LendingDetailView extends StatelessWidget {
                             lending.totalAmount.toDouble()) *
                         100
                     : 0.0;
-                final dateFormat = DateFormat('yyyy/MM/dd', 'ar');
+                final locale = Localizations.localeOf(context).languageCode;
+                final dateFormat = DateFormat('yyyy/MM/dd', locale);
 
                 return SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
@@ -150,7 +152,7 @@ class _LendingDetailView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'اسم المقترض',
+                              context.l10n.borrowerName,
                               style: AppTypography.labelLarge.copyWith(
                                 color: AppColors.textSecondary,
                               ),
@@ -179,7 +181,7 @@ class _LendingDetailView extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Text(
-                                    'المبلغ الإجمالي',
+                                    context.l10n.totalAmount,
                                     style: AppTypography.labelSmall.copyWith(
                                       color: AppColors.textSecondary,
                                     ),
@@ -210,7 +212,7 @@ class _LendingDetailView extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Text(
-                                    'المبلغ المحصّل',
+                                    context.l10n.collectedAmount,
                                     style: AppTypography.labelSmall.copyWith(
                                       color: AppColors.textSecondary,
                                     ),
@@ -237,7 +239,7 @@ class _LendingDetailView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'التقدم',
+                                context.l10n.progress,
                                 style: AppTypography.labelLarge,
                               ),
                               Text(
@@ -280,7 +282,7 @@ class _LendingDetailView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'المبلغ المتبقي',
+                              context.l10n.remainingAmount,
                               style: AppTypography.labelLarge.copyWith(
                                 color: AppColors.textSecondary,
                               ),
@@ -321,8 +323,8 @@ class _LendingDetailView extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             lending.fromSavings
-                                ? 'من المدخرات'
-                                : 'من الرصيد',
+                                ? context.l10n.fromSavings
+                                : context.l10n.fromBalance,
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -335,7 +337,7 @@ class _LendingDetailView extends StatelessWidget {
                       if (lending.notes != null &&
                           lending.notes!.isNotEmpty) ...[
                         Text(
-                          'ملاحظات',
+                          context.l10n.notes,
                           style: AppTypography.labelLarge,
                         ),
                         const SizedBox(height: 8),
@@ -365,7 +367,7 @@ class _LendingDetailView extends StatelessWidget {
                               lending.remainingAmount,
                             ),
                             icon: const Icon(Icons.add),
-                            label: const Text('تسجيل تحصيل'),
+                            label: Text(context.l10n.addCollection),
                           ),
                         ),
 
@@ -373,7 +375,7 @@ class _LendingDetailView extends StatelessWidget {
                       if (collections.isNotEmpty) ...[
                         const SizedBox(height: 24),
                         Text(
-                          'سجل التحصيلات',
+                          context.l10n.collectionHistory,
                           style: AppTypography.labelLarge,
                         ),
                         const SizedBox(height: 12),
@@ -423,8 +425,8 @@ class _LendingDetailView extends StatelessWidget {
                                             const SizedBox(width: 4),
                                             Text(
                                               collection.toSavings
-                                                  ? 'إلى المدخرات'
-                                                  : 'إلى الرصيد',
+                                                  ? context.l10n.toSavings
+                                                  : context.l10n.toBalance,
                                               style: AppTypography.bodySmall
                                                   .copyWith(
                                                 color: AppColors.textSecondary,
@@ -486,14 +488,12 @@ class _LendingDetailView extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('حذف السلفة'),
-        content: const Text(
-          'سيتم حذف السلفة وجميع الاسترجاعات المرتبطة بها. هل تريد المتابعة؟',
-        ),
+        title: Text(context.l10n.deleteLendingTitle),
+        content: Text(context.l10n.deleteLendingBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('إلغاء'),
+            child: Text(context.l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -504,7 +504,7 @@ class _LendingDetailView extends StatelessWidget {
               backgroundColor: AppColors.negative,
               foregroundColor: Colors.white,
             ),
-            child: const Text('حذف'),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),
@@ -556,13 +556,14 @@ class _CollectionDialogState extends State<_CollectionDialog> {
   String? _errorText;
 
   void _handleSubmit() {
+    final l10n = context.l10n;
     final amount = int.tryParse(widget.amountController.text);
     if (amount == null || amount <= 0) {
-      setState(() => _errorText = 'أدخل مبلغاً صحيحاً');
+      setState(() => _errorText = l10n.enterValidAmount);
       return;
     }
     if (amount > widget.maxAmount) {
-      setState(() => _errorText = 'المبلغ يتجاوز المتبقي (${widget.maxAmount.toDZDString()})');
+      setState(() => _errorText = l10n.amountExceedsRemaining(widget.maxAmount.toDZDString(symbol: l10n.currencySymbol)));
       return;
     }
     widget.onSubmit(amount, _toSavings);
@@ -570,14 +571,15 @@ class _CollectionDialogState extends State<_CollectionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AlertDialog(
-      title: const Text('تسجيل تحصيل'),
+      title: Text(l10n.addCollection),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'المبلغ المتبقي: ${widget.maxAmount.toDZDString()}',
+            l10n.remainingAmountLabel(widget.maxAmount.toDZDString(symbol: l10n.currencySymbol)),
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -591,14 +593,14 @@ class _CollectionDialogState extends State<_CollectionDialog> {
               if (_errorText != null) setState(() => _errorText = null);
             },
             decoration: InputDecoration(
-              hintText: 'المبلغ المحصّل',
-              suffixText: 'دج',
+              hintText: l10n.collectedAmountHint,
+              suffixText: l10n.currencySymbol,
               errorText: _errorText,
             ),
           ),
           const SizedBox(height: 16),
           Text(
-            'إضافة المبلغ إلى',
+            l10n.addAmountTo,
             style: AppTypography.labelLarge,
           ),
           const SizedBox(height: 8),
@@ -635,7 +637,7 @@ class _CollectionDialogState extends State<_CollectionDialog> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'الرصيد',
+                          l10n.balance,
                           style: AppTypography.labelSmall.copyWith(
                             color: !_toSavings
                                 ? AppColors.primary
@@ -682,7 +684,7 @@ class _CollectionDialogState extends State<_CollectionDialog> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'المدخرات',
+                          l10n.savings,
                           style: AppTypography.labelSmall.copyWith(
                             color: _toSavings
                                 ? AppColors.primary
@@ -704,11 +706,11 @@ class _CollectionDialogState extends State<_CollectionDialog> {
       actions: [
         TextButton(
           onPressed: widget.onCancel,
-          child: const Text('إلغاء'),
+          child: Text(l10n.cancel),
         ),
         ElevatedButton(
           onPressed: _handleSubmit,
-          child: const Text('تسجيل'),
+          child: Text(l10n.register),
         ),
       ],
     );

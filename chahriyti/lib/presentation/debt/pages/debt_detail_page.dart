@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/debt_cubit.dart';
@@ -46,8 +47,8 @@ class _DebtDetailView extends StatelessWidget {
       listener: (context, state) {
         if (state is DebtDeleted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم حذف الدين بنجاح'),
+            SnackBar(
+              content: Text(context.l10n.debtDeletedMsg),
               backgroundColor: AppColors.positive,
             ),
           );
@@ -57,13 +58,13 @@ class _DebtDetailView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'تفاصيل الدين',
+            context.l10n.debtDetails,
             style: AppTypography.headlineSmall,
           ),
           actions: [
             IconButton(
               icon: const Icon(Icons.edit_outlined),
-              tooltip: 'تعديل',
+              tooltip: context.l10n.edit,
               onPressed: () async {
                 final cubit = context.read<DebtCubit>();
                 final currentState = cubit.state;
@@ -81,7 +82,7 @@ class _DebtDetailView extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.delete_outline, color: AppColors.negative),
-              tooltip: 'حذف',
+              tooltip: context.l10n.delete,
               onPressed: () => _showDeleteConfirmation(context),
             ),
           ],
@@ -119,7 +120,7 @@ class _DebtDetailView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'اسم الدائن',
+                            context.l10n.creditorName,
                             style: AppTypography.labelLarge.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -148,14 +149,14 @@ class _DebtDetailView extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  'المبلغ الإجمالي',
+                                  context.l10n.totalAmount,
                                   style: AppTypography.labelSmall.copyWith(
                                     color: AppColors.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'دج ${debt.totalAmount}',
+                                  '${debt.totalAmount} ${context.l10n.currencySymbol}',
                                   style: AppTypography.labelLarge,
                                 ),
                               ],
@@ -176,14 +177,14 @@ class _DebtDetailView extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  'المبلغ المدفوع',
+                                  context.l10n.paidAmount,
                                   style: AppTypography.labelSmall.copyWith(
                                     color: AppColors.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'دج ${debt.paidAmount}',
+                                  '${debt.paidAmount} ${context.l10n.currencySymbol}',
                                   style: AppTypography.labelLarge.copyWith(
                                     color: AppColors.positive,
                                   ),
@@ -204,7 +205,7 @@ class _DebtDetailView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'التقدم',
+                              context.l10n.progress,
                               style: AppTypography.labelLarge,
                             ),
                             Text(
@@ -247,14 +248,14 @@ class _DebtDetailView extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            'المبلغ المتبقي',
+                            context.l10n.remainingAmount,
                             style: AppTypography.labelLarge.copyWith(
                               color: AppColors.textSecondary,
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'دج ${debt.remainingAmount}',
+                            '${debt.remainingAmount} ${context.l10n.currencySymbol}',
                             style: AppTypography.headlineSmall.copyWith(
                               color: AppColors.warning,
                             ),
@@ -267,7 +268,7 @@ class _DebtDetailView extends StatelessWidget {
                     // Notes
                     if (debt.notes != null && debt.notes!.isNotEmpty) ...[
                       Text(
-                        'ملاحظات',
+                        context.l10n.notes,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
@@ -295,7 +296,7 @@ class _DebtDetailView extends StatelessWidget {
                             _showAddPaymentDialog(context, debt.id, debt.remainingAmount);
                           },
                           icon: const Icon(Icons.add),
-                          label: const Text('إضافة سداد'),
+                          label: Text(context.l10n.addPayment),
                         ),
                       ),
                   ],
@@ -339,13 +340,12 @@ class _DebtDetailView extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('حذف الدين'),
-        content: const Text(
-            'سيتم حذف الدين وجميع المدفوعات المرتبطة به. هل تريد المتابعة؟'),
+        title: Text(context.l10n.deleteDebtTitle),
+        content: Text(context.l10n.deleteDebtBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('إلغاء'),
+            child: Text(context.l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -359,7 +359,7 @@ class _DebtDetailView extends StatelessWidget {
               backgroundColor: AppColors.negative,
               foregroundColor: Colors.white,
             ),
-            child: const Text('حذف'),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),
@@ -389,8 +389,8 @@ class _DebtDetailView extends StatelessWidget {
                 if (amount > balance + savingsBalance) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('الرصيد والمدخرات غير كافية'),
+                      SnackBar(
+                        content: Text(context.l10n.insufficientFunds),
                         backgroundColor: AppColors.negative,
                       ),
                     );
@@ -494,8 +494,9 @@ class _PaymentDialogState extends State<_PaymentDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AlertDialog(
-      title: const Text('إضافة سداد'),
+      title: Text(l10n.addPayment),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -506,8 +507,8 @@ class _PaymentDialogState extends State<_PaymentDialog> {
               if (_errorText != null) setState(() => _errorText = null);
             },
             decoration: InputDecoration(
-              hintText: 'المبلغ (بالدينار)',
-              suffixText: 'دج',
+              hintText: l10n.amountInDZD,
+              suffixText: l10n.currencySymbol,
               errorText: _errorText,
             ),
           ),
@@ -531,22 +532,22 @@ class _PaymentDialogState extends State<_PaymentDialog> {
       actions: [
         TextButton(
           onPressed: widget.onCancel,
-          child: const Text('إلغاء'),
+          child: Text(l10n.cancel),
         ),
         ElevatedButton(
           onPressed: () {
             final amount = int.tryParse(widget.amountController.text);
             if (amount == null || amount <= 0) {
-              setState(() => _errorText = 'أدخل مبلغاً صحيحاً');
+              setState(() => _errorText = l10n.enterValidAmount);
               return;
             }
             if (amount > widget.maxAmount) {
-              setState(() => _errorText = 'المبلغ يتجاوز المتبقي (${widget.maxAmount} دج)');
+              setState(() => _errorText = l10n.amountExceedsRemaining('${widget.maxAmount}'));
               return;
             }
             widget.onSubmit(amount, _fromSavings);
           },
-          child: const Text('إضافة'),
+          child: Text(l10n.add),
         ),
       ],
     );

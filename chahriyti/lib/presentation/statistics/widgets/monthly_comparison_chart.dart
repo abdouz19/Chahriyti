@@ -1,7 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../application/use_cases/statistics/get_monthly_comparison_use_case.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
@@ -16,14 +18,14 @@ class MonthlyComparisonChart extends StatefulWidget {
 
 class _MonthlyComparisonChartState extends State<MonthlyComparisonChart> {
   int _touchedIndex = -1;
+  String _locale = 'ar';
 
-  static const _arabicMonths = [
-    'جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان',
-    'جويلية', 'أوت', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
-  ];
+  String _monthName(int month) =>
+      DateFormat('MMM', _locale).format(DateTime(2024, month));
 
   @override
   Widget build(BuildContext context) {
+    _locale = Localizations.localeOf(context).languageCode;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -34,14 +36,14 @@ class _MonthlyComparisonChartState extends State<MonthlyComparisonChart> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('مقارنة الأشهر', style: AppTypography.headlineSmall),
+          Text(context.l10n.monthlyComparisonTitle, style: AppTypography.headlineSmall),
           const SizedBox(height: 20),
           if (widget.comparisons.length < 2)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Center(
                 child: Text(
-                  'بيانات غير كافية للمقارنة',
+                  context.l10n.insufficientDataForComparison,
                   style: AppTypography.bodyMedium
                       .copyWith(color: AppColors.textSecondary),
                 ),
@@ -85,11 +87,11 @@ class _MonthlyComparisonChartState extends State<MonthlyComparisonChart> {
             final amount = rod.toY.toInt();
             final month = comps[groupIndex].month;
             return BarTooltipItem(
-              '${_arabicMonths[month.month - 1]}\n',
+              '${_monthName(month.month)}\n',
               AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
               children: [
                 TextSpan(
-                  text: '${_formatAmount(amount)} دج',
+                  text: '${_formatAmount(amount)} ${context.l10n.currencySymbol}',
                   style: AppTypography.labelMedium
                       .copyWith(color: AppColors.textPrimary),
                 ),
@@ -110,7 +112,7 @@ class _MonthlyComparisonChartState extends State<MonthlyComparisonChart> {
               return Padding(
                 padding: const EdgeInsets.only(top: 6),
                 child: Text(
-                  _arabicMonths[month.month - 1],
+                  _monthName(month.month),
                   style: AppTypography.bodySmall.copyWith(
                     color: AppColors.textSecondary,
                     fontSize: 10,

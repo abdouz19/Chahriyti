@@ -5,11 +5,13 @@ class CreateDebtRequest {
   final String creditorName;
   final int totalAmount; // in centimes
   final String? notes;
+  final bool isSpent;
 
   CreateDebtRequest({
     required this.creditorName,
     required this.totalAmount,
     this.notes,
+    this.isSpent = false,
   });
 }
 
@@ -34,6 +36,7 @@ class CreateDebtUseCase {
       totalAmount: request.totalAmount,
       notes: request.notes,
       cycleId: cycle?.id,
+      isSpent: request.isSpent,
     );
 
     return debtId;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -15,10 +14,11 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<double> _lottieOpacity;
+  late final Animation<double> _logoOpacity;
   late final Animation<Offset> _titleSlide;
   late final Animation<double> _titleOpacity;
-  late final Animation<double> _taglineOpacity;
+  late final Animation<double> _bodyOpacity;
+  late final Animation<double> _boldOpacity;
   late final Animation<double> _buttonOpacity;
 
   @override
@@ -29,7 +29,7 @@ class _SplashPageState extends State<SplashPage>
       duration: const Duration(milliseconds: 800),
     );
 
-    _lottieOpacity = Tween<double>(begin: 0, end: 1).animate(
+    _logoOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.0, 0.25, curve: Curves.easeIn),
@@ -42,28 +42,35 @@ class _SplashPageState extends State<SplashPage>
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.25, 0.625, curve: Curves.easeOut),
+        curve: const Interval(0.25, 0.55, curve: Curves.easeOut),
       ),
     );
 
     _titleOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.25, 0.625, curve: Curves.easeIn),
+        curve: const Interval(0.25, 0.55, curve: Curves.easeIn),
       ),
     );
 
-    _taglineOpacity = Tween<double>(begin: 0, end: 1).animate(
+    _bodyOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.5, 0.75, curve: Curves.easeIn),
+        curve: const Interval(0.45, 0.7, curve: Curves.easeIn),
+      ),
+    );
+
+    _boldOpacity = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.6, 0.8, curve: Curves.easeIn),
       ),
     );
 
     _buttonOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.625, 1.0, curve: Curves.easeIn),
+        curve: const Interval(0.75, 1.0, curve: Curves.easeIn),
       ),
     );
 
@@ -88,11 +95,10 @@ class _SplashPageState extends State<SplashPage>
             children: [
               const Spacer(flex: 2),
               FadeTransition(
-                opacity: _lottieOpacity,
-                child: Lottie.asset(
-                  'assets/animations/welcome.json',
-                  width: 120,
-                  height: 120,
+                opacity: _logoOpacity,
+                child: Image.asset(
+                  'assets/icons/CHAHRIYTI 512.png',
+                  width: 110,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -102,33 +108,48 @@ class _SplashPageState extends State<SplashPage>
                 child: FadeTransition(
                   opacity: _titleOpacity,
                   child: Text(
-                    'شهريتي',
+                    'أهلاً بك في شهريتي',
                     textAlign: TextAlign.center,
                     style: AppTypography.headlineLarge.copyWith(
                       color: AppColors.primary,
-                      fontSize: 36,
+                      fontSize: 30,
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 16),
               FadeTransition(
-                opacity: _taglineOpacity,
+                opacity: _bodyOpacity,
                 child: Text(
-                  'قبل ما تزيد في راتبك، لازم تعرف وين راه يروح.',
+                  'أغلب الناس يعرفون كم يقبضون... لكن القليل فقط يعرفون أين يذهب مالهم.',
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.textSecondary,
-                    height: 1.7,
+                    height: 1.8,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              FadeTransition(
+                opacity: _boldOpacity,
+                child: Text(
+                  'اليوم بدأت خطوة مختلفة.',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.bodyLarge.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
               const Spacer(flex: 3),
               FadeTransition(
                 opacity: _buttonOpacity,
-                child: ElevatedButton(
-                  onPressed: () => context.go('/onboarding/value'),
-                  child: const Text('ابدأ الآن'),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => context.go('/onboarding/exclusive'),
+                    child: const Text('ابدأ الآن'),
+                  ),
                 ),
               ),
               const SizedBox(height: 32),

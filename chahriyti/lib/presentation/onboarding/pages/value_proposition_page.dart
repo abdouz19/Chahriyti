@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -17,13 +16,16 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
   late final AnimationController _controller;
 
   static const _benefits = [
-    'تتبع مصاريفك اليومية بسهولة',
-    'معرفة رصيدك المتبقي في أي لحظة',
-    'حساب المبلغ الآمن للصرف يومياً',
-    'إحصائيات ذكية لعاداتك المالية',
-    'تحديات أسبوعية لتوفير أكثر',
-    'إدارة ديونك وأهدافك الادخارية',
-    'تنبيهات ذكية قبل نفاد الرصيد',
+    'ستعرف رصيدك الحقيقي في أي لحظة',
+    'ستسجل مصاريفك بسهولة ودون تعقيد',
+    'ستكتشف أين يذهب راتبك فعليًا',
+    'ستراقب تقدم أهدافك المالية خطوة بخطوة',
+    'ستتابع ديونك وسلفك دون نسيان',
+    'ستحدد سقفًا يوميًا آمنًا للمصاريف',
+    'ستبني مدخراتك بشكل تدريجي ومنظم',
+    'ستسجل مصادر دخلك الإضافية',
+    'ستتابع إحصائياتك المالية بوضوح',
+    'ستتخذ قرارات مالية مبنية على أرقام حقيقية لا على التخمين',
   ];
 
   @override
@@ -45,37 +47,21 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('مزايا شهريتي'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => context.go('/'),
-        ),
-      ),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
                 children: [
-                  const SizedBox(height: 8),
-                  // Lottie animation
-                  Center(
-                    child: Lottie.asset(
-                      'assets/animations/features.json',
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
                   // Title
                   Text(
-                    'ماذا ستستفيد من شهريتي؟',
+                    'من الآن فصاعدًا...',
                     textAlign: TextAlign.center,
                     style: AppTypography.headlineMedium.copyWith(
                       color: AppColors.primary,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -122,7 +108,7 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
                         ),
                       ),
                       child: Text(
-                        '"المال الذي لا تديره، يديرك"',
+                        '"الأرقام التي لا تُقاس لا يمكن تحسينها."',
                         textAlign: TextAlign.center,
                         style: AppTypography.bodyLarge.copyWith(
                           color: AppColors.primary,
@@ -143,7 +129,7 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.go('/onboarding/salary'),
+                  onPressed: () => context.go('/onboarding/cta'),
                   child: const Text('متابعة'),
                 ),
               ),

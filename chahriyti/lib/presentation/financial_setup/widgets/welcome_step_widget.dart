@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
@@ -23,13 +24,13 @@ class WelcomeStepWidget extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            'إعداد وضعك المالي',
+            context.l10n.financialSetupTitle,
             style: AppTypography.headlineLarge,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           Text(
-            'سيستغرق دقيقتين فقط.\nيمكنك التعديل لاحقًا في أي وقت.',
+            context.l10n.financialSetupSubtitle,
             style: AppTypography.bodyLarge.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -40,7 +41,7 @@ class WelcomeStepWidget extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: onStart,
-              child: const Text('ابدأ'),
+              child: Text(context.l10n.start),
             ),
           ),
           const SizedBox(height: 32),

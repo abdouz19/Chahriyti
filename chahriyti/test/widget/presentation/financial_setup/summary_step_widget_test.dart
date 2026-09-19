@@ -24,6 +24,8 @@ void main() {
             savings: savings,
             debts: debts ?? [],
             lendings: lendings ?? [],
+            salarySplit: 0,
+            salaryAmount: 50000,
             onEditStep: onEditStep ?? (_) {},
             onConfirm: onConfirm ?? () {},
             onBack: onBack ?? () {},

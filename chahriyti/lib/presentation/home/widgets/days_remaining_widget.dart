@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/extensions/l10n_extension.dart';
 
 class DaysRemainingWidget extends StatelessWidget {
   final int daysRemaining;
@@ -41,7 +42,7 @@ class DaysRemainingWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  isSalaryDay ? 'يوم الراتب!' : 'الأيام المتبقية',
+                  isSalaryDay ? context.l10n.salaryDayExclamation : context.l10n.daysRemainingLabel,
                   style: AppTypography.labelSmall.copyWith(
                     color:
                         isSalaryDay ? AppColors.positive : AppColors.primary,
@@ -53,7 +54,7 @@ class DaysRemainingWidget extends StatelessWidget {
             const SizedBox(height: 8),
             if (isSalaryDay)
               Text(
-                'يوم الراتب!',
+                context.l10n.salaryDayExclamation,
                 style: AppTypography.amountLarge.copyWith(
                   color: AppColors.positive,
                 ),
@@ -71,7 +72,7 @@ class DaysRemainingWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'يوم',
+                    context.l10n.dayUnit,
                     style: AppTypography.labelMedium.copyWith(
                       color: AppColors.primary,
                     ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
+import '../../../core/extensions/category_l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/constants/categories.dart';
@@ -21,6 +24,7 @@ class ExpenseHistoryPage extends StatelessWidget {
       create: (_) => HistoryCubit(
         expenseRepository: Injection.expenseRepository,
         cycleRepository: Injection.cycleRepository,
+        deleteExpenseUseCase: Injection.deleteExpenseUseCase,
       )..loadExpenses(),
       child: const _ExpenseHistoryView(),
     );
@@ -34,10 +38,11 @@ class _ExpenseHistoryView extends StatefulWidget {
   State<_ExpenseHistoryView> createState() => _ExpenseHistoryViewState();
 }
 
-String _categoryLabel(String category) {
+String _categoryLabel(String category, BuildContext context) {
+  if (category.startsWith('custom_')) return 'فئة مخصصة';
   return ExpenseCategory.values
       .firstWhere((c) => c.name == category, orElse: () => ExpenseCategory.other)
-      .arabicLabel;
+      .localizedLabel(context);
 }
 
 class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
@@ -71,7 +76,7 @@ class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'سجل المصاريف',
+          context.l10n.expenseHistory,
           style: AppTypography.headlineSmall,
         ),
       ),
@@ -115,7 +120,7 @@ class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
                     ElevatedButton(
                       onPressed: () =>
                           context.read<HistoryCubit>().loadExpenses(),
-                      child: const Text('إعادة المحاولة'),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -129,10 +134,10 @@ class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
           final isLoadingMore = state is HistoryLoadingMore;
 
           if (expenses.isEmpty) {
-            return const EmptyStateWidget(
+            return EmptyStateWidget(
               illustrationPath: 'assets/illustrations/empty_history.svg',
-              title: 'لا توجد مصاريف مسجلة',
-              subtitle: 'ستظهر هنا المصاريف التي تسجلها',
+              title: context.l10n.noSavingsYet,
+              subtitle: '',
             );
           }
 
@@ -207,7 +212,7 @@ class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
                 ),
               )
             : Text(
-                'تحميل المزيد',
+                context.l10n.loadMore,
                 style: AppTypography.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
@@ -222,10 +227,10 @@ class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
   ) async {
     final confirmed = await ConfirmationDialog.show(
       context,
-      title: 'حذف المصروف',
-      message: 'هل تريد حذف "${expense.itemName.isNotEmpty ? expense.itemName : _categoryLabel(expense.category)}"؟',
-      confirmLabel: 'حذف',
-      cancelLabel: 'إلغاء',
+      title: context.l10n.deleteExpense,
+      message: 'هل تريد حذف "${expense.itemName.isNotEmpty ? expense.itemName : _categoryLabel(expense.category, context)}"؟',
+      confirmLabel: context.l10n.delete,
+      cancelLabel: context.l10n.cancel,
       confirmColor: AppColors.negative,
     );
 
@@ -249,6 +254,7 @@ class _ExpenseRow extends StatelessWidget {
   });
 
   IconData _categoryIcon(String category) {
+    if (category.startsWith('custom_')) return Icons.label_outline_rounded;
     switch (category) {
       case 'essentials':
         return Icons.shopping_basket_rounded;
@@ -261,25 +267,9 @@ class _ExpenseRow extends StatelessWidget {
     }
   }
 
-  String _formatDateArabicMonth(DateTime date) {
-    final arabicMonths = [
-      'جانفي',
-      'فيفري',
-      'مارس',
-      'أفريل',
-      'ماي',
-      'جوان',
-      'جويلية',
-      'أوت',
-      'سبتمبر',
-      'أكتوبر',
-      'نوفمبر',
-      'ديسمبر'
-    ];
-    final day = date.day;
-    final month = arabicMonths[date.month - 1];
-    final year = date.year;
-    return '$day $month $year';
+  String _formatDate(DateTime date, BuildContext context) {
+    final locale = Localizations.localeOf(context).languageCode;
+    return DateFormat('d MMMM yyyy', locale).format(date);
   }
 
   @override
@@ -317,14 +307,14 @@ class _ExpenseRow extends StatelessWidget {
                   Text(
                     expense.itemName.isNotEmpty
                         ? expense.itemName
-                        : _categoryLabel(expense.category),
+                        : _categoryLabel(expense.category, context),
                     style: AppTypography.labelMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    _formatDateArabicMonth(expense.createdAt),
+                    _formatDate(expense.createdAt, context),
                     style: AppTypography.bodySmall,
                   ),
                 ],

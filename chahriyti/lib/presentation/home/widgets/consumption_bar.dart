@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/extensions/l10n_extension.dart';
 
 class ConsumptionBar extends StatelessWidget {
   final double consumptionPercent;
@@ -36,7 +37,7 @@ class ConsumptionBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'نسبة الاستهلاك',
+                    context.l10n.consumptionRate,
                     style: AppTypography.labelSmall,
                   ),
                   Text(

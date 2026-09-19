@@ -8,6 +8,7 @@ import '../cubits/financial_setup_state.dart';
 import '../widgets/balance_step_widget.dart';
 import '../widgets/debts_step_widget.dart';
 import '../widgets/lendings_step_widget.dart';
+import '../widgets/salary_split_step_widget.dart';
 import '../widgets/savings_step_widget.dart';
 import '../widgets/summary_step_widget.dart';
 import '../widgets/welcome_step_widget.dart';
@@ -20,7 +21,7 @@ class FinancialSetupPage extends StatelessWidget {
     return BlocConsumer<FinancialSetupCubit, FinancialSetupState>(
       listener: (context, state) {
         if (state is FinancialSetupCompleted) {
-          context.go('/onboarding/salary');
+          context.go('/home');
         } else if (state is FinancialSetupError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -105,11 +106,25 @@ class FinancialSetupPage extends StatelessWidget {
           onSkip: cubit.nextFromLendings,
           onBack: cubit.goBack,
         ),
+      FinancialSetupSalarySplit(
+        :final salaryAmount,
+        :final currentAllocation,
+      ) =>
+        SalarySplitStepWidget(
+          key: const ValueKey('salary_split'),
+          salaryAmount: salaryAmount,
+          initialAllocation: currentAllocation,
+          onNext: cubit.setSalarySplit,
+          onSkip: cubit.skipSalarySplit,
+          onBack: cubit.goBack,
+        ),
       FinancialSetupSummary(
         :final balance,
         :final savings,
         :final debts,
         :final lendings,
+        :final salarySplit,
+        :final salaryAmount,
       ) =>
         SummaryStepWidget(
           key: const ValueKey('summary'),
@@ -117,6 +132,8 @@ class FinancialSetupPage extends StatelessWidget {
           savings: savings,
           debts: debts,
           lendings: lendings,
+          salarySplit: salarySplit,
+          salaryAmount: salaryAmount,
           onEditStep: cubit.editFromSummary,
           onConfirm: cubit.confirm,
           onBack: cubit.goBack,

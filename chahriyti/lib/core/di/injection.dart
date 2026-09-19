@@ -1,4 +1,5 @@
 import '../../infrastructure/database/app_database.dart';
+import '../../infrastructure/database/daos/custom_categories_dao.dart';
 import '../../infrastructure/database/daos/users_dao.dart';
 import '../../infrastructure/database/daos/cycles_dao.dart';
 import '../../infrastructure/database/daos/expenses_dao.dart';
@@ -9,8 +10,10 @@ import '../../infrastructure/database/daos/insights_dao.dart';
 import '../../infrastructure/database/daos/challenges_dao.dart';
 import '../../infrastructure/database/daos/lendings_dao.dart';
 import '../../infrastructure/database/daos/savings_dao.dart';
+import '../../infrastructure/repositories/custom_category_repository_impl.dart';
 import '../../infrastructure/repositories/lending_repository_impl.dart';
 import '../../infrastructure/repositories/savings_repository_impl.dart';
+import '../../domain/repositories/custom_category_repository.dart';
 import '../../domain/repositories/lending_repository.dart';
 import '../../domain/repositories/savings_repository.dart';
 import '../../application/use_cases/savings/get_savings_balance_use_case.dart';
@@ -52,7 +55,10 @@ import '../../application/use_cases/expense/add_expense_use_case.dart';
 import '../../application/use_cases/expense/edit_expense_use_case.dart';
 import '../../application/use_cases/expense/delete_expense_use_case.dart';
 import '../../application/use_cases/expense/get_expenses_use_case.dart';
+import '../../application/use_cases/expense/manage_custom_categories_use_case.dart';
+import '../../application/use_cases/expense/get_item_suggestions_use_case.dart';
 import '../../application/use_cases/income/add_income_use_case.dart';
+import '../../application/use_cases/income/get_income_suggestions_use_case.dart';
 import '../../application/use_cases/debt/add_debt_payment_use_case.dart';
 import '../../application/use_cases/debt/calculate_remaining_balance_use_case.dart';
 import '../../application/use_cases/debt/create_debt_use_case.dart';
@@ -115,6 +121,7 @@ abstract final class Injection {
   static late final ChallengesDao _challengesDao;
   static late final SavingsDao _savingsDao;
   static late final LendingsDao _lendingsDao;
+  static late final CustomCategoriesDao _customCategoriesDao;
 
   // Repositories
   static late final UserRepository userRepository;
@@ -127,6 +134,7 @@ abstract final class Injection {
   static late final ChallengeRepository challengeRepository;
   static late final SavingsRepository savingsRepository;
   static late final LendingRepository lendingRepository;
+  static late final CustomCategoryRepository customCategoryRepository;
 
   // Services
   static DeviceInfoService get deviceInfoService => _deviceInfoService;
@@ -154,11 +162,16 @@ abstract final class Injection {
   static late final EditExpenseUseCase editExpenseUseCase;
   static late final DeleteExpenseUseCase deleteExpenseUseCase;
   static late final GetExpensesUseCase getExpensesUseCase;
+  static late final GetCustomCategoriesUseCase getCustomCategoriesUseCase;
+  static late final CreateCustomCategoryUseCase createCustomCategoryUseCase;
+  static late final DeleteCustomCategoryUseCase deleteCustomCategoryUseCase;
+  static late final GetItemSuggestionsUseCase getItemSuggestionsUseCase;
 
   // Use Cases — Income
   static late final AddIncomeUseCase addIncomeUseCase;
   static late final UpdateIncomeUseCase updateIncomeUseCase;
   static late final DeleteIncomeUseCase deleteIncomeUseCase;
+  static late final GetIncomeSuggestionsUseCase getIncomeSuggestionsUseCase;
 
   // Use Cases — Debt
   static late final CreateDebtUseCase createDebtUseCase;
@@ -269,6 +282,7 @@ abstract final class Injection {
     _challengesDao = ChallengesDao(_database);
     _savingsDao = SavingsDao(_database);
     _lendingsDao = LendingsDao(_database);
+    _customCategoriesDao = CustomCategoriesDao(_database);
 
     // Services
     _deviceInfoService = DeviceInfoService();
@@ -287,6 +301,7 @@ abstract final class Injection {
     challengeRepository = ChallengeRepositoryImpl(_challengesDao);
     savingsRepository = SavingsRepositoryImpl(_savingsDao);
     lendingRepository = LendingRepositoryImpl(_lendingsDao);
+    customCategoryRepository = CustomCategoryRepositoryImpl(_customCategoriesDao);
 
     // Use Cases — Onboarding
     setupSalaryUseCase = SetupSalaryUseCase(userRepository, cycleRepository);
@@ -365,6 +380,12 @@ abstract final class Injection {
     deleteLendingUseCase = DeleteLendingUseCase(lendingRepository);
     updateLendingUseCase = UpdateLendingUseCase(lendingRepository);
 
+    // Use Cases — Custom Categories
+    getCustomCategoriesUseCase = GetCustomCategoriesUseCase(customCategoryRepository);
+    createCustomCategoryUseCase = CreateCustomCategoryUseCase(customCategoryRepository);
+    deleteCustomCategoryUseCase = DeleteCustomCategoryUseCase(customCategoryRepository);
+    getItemSuggestionsUseCase = GetItemSuggestionsUseCase(_expensesDao);
+
     // Use Cases — Expense
     addExpenseUseCase = AddExpenseUseCase(
       expenseRepository,
@@ -379,6 +400,7 @@ abstract final class Injection {
     addIncomeUseCase = AddIncomeUseCase(incomeRepository, savingsRepository);
     updateIncomeUseCase = UpdateIncomeUseCase(incomeRepository);
     deleteIncomeUseCase = DeleteIncomeUseCase(incomeRepository);
+    getIncomeSuggestionsUseCase = GetIncomeSuggestionsUseCase(_incomesDao);
 
     // Use Cases — Debt
     createDebtUseCase = CreateDebtUseCase(debtRepository, cycleRepository);
@@ -406,6 +428,7 @@ abstract final class Injection {
     // Use Cases — Statistics
     getCategoryBreakdownUseCase = GetCategoryBreakdownUseCase(
       expenseRepository: expenseRepository,
+      customCategoryRepository: customCategoryRepository,
     );
     getMonthlyComparisonUseCase = GetMonthlyComparisonUseCase(
       cycleRepository: cycleRepository,

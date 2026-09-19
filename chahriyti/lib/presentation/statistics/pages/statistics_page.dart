@@ -6,6 +6,7 @@ import '../../../application/use_cases/statistics/get_financial_classification_u
 import '../../../application/use_cases/statistics/get_monthly_comparison_use_case.dart';
 import '../../../application/use_cases/statistics/get_spending_trend_use_case.dart';
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../shared/widgets/loading_shimmer.dart';
@@ -24,6 +25,7 @@ class StatisticsPage extends StatelessWidget {
       create: (_) => StatisticsCubit(
         getCategoryBreakdown: GetCategoryBreakdownUseCase(
           expenseRepository: Injection.expenseRepository,
+          customCategoryRepository: Injection.customCategoryRepository,
         ),
         getMonthlyComparison: GetMonthlyComparisonUseCase(
           cycleRepository: Injection.cycleRepository,
@@ -43,7 +45,7 @@ class StatisticsPage extends StatelessWidget {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           title: Text(
-            'الإحصائيات',
+            context.l10n.statisticsTitle,
             style: AppTypography.headlineSmall.copyWith(color: Colors.white),
           ),
           backgroundColor: AppColors.primary,
@@ -101,7 +103,7 @@ class StatisticsPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () =>
                   context.read<StatisticsCubit>().loadStatistics(),
-              child: const Text('إعادة المحاولة'),
+              child: Text(context.l10n.retry),
             ),
           ],
         ),

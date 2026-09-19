@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/debt_entity.dart';
@@ -11,6 +12,8 @@ class SummaryStepWidget extends StatelessWidget {
   final int savings;
   final List<DebtEntity> debts;
   final List<LendingEntity> lendings;
+  final int salarySplit;
+  final int salaryAmount;
   final ValueChanged<int> onEditStep;
   final VoidCallback onConfirm;
   final VoidCallback onBack;
@@ -21,6 +24,8 @@ class SummaryStepWidget extends StatelessWidget {
     required this.savings,
     required this.debts,
     required this.lendings,
+    required this.salarySplit,
+    required this.salaryAmount,
     required this.onEditStep,
     required this.onConfirm,
     required this.onBack,
@@ -33,12 +38,12 @@ class SummaryStepWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SetupProgressBar(currentStep: 6, totalSteps: 6),
+          const SetupProgressBar(currentStep: 7, totalSteps: 7),
           const SizedBox(height: 24),
-          Text('ملخص وضعك المالي', style: AppTypography.headlineMedium),
+          Text(context.l10n.summaryStepTitle, style: AppTypography.headlineMedium),
           const SizedBox(height: 8),
           Text(
-            'تحقق من البيانات قبل التأكيد.',
+            context.l10n.summaryStepDesc,
             style: AppTypography.bodyMedium.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -49,41 +54,51 @@ class SummaryStepWidget extends StatelessWidget {
               children: [
                 _SummaryCard(
                   icon: Icons.account_balance_wallet,
-                  label: 'الرصيد',
-                  value: '$balance دج',
+                  label: context.l10n.balanceSummaryLabel,
+                  value: '$balance ${context.l10n.currencySymbol}',
                   valueColor: AppColors.primary,
                   onEdit: () => onEditStep(1),
                 ),
                 const SizedBox(height: 8),
                 _SummaryCard(
                   icon: Icons.savings,
-                  label: 'المدخرات',
-                  value: '$savings دج',
+                  label: context.l10n.savingsSummaryLabel,
+                  value: '$savings ${context.l10n.currencySymbol}',
                   valueColor: AppColors.positive,
                   onEdit: () => onEditStep(2),
                 ),
                 const SizedBox(height: 8),
                 _SummaryListCard(
                   icon: Icons.trending_down,
-                  label: 'الديون',
+                  label: context.l10n.debtsSummaryLabel,
                   items: debts
                       .map((d) =>
-                          '${d.creditorName}: ${d.totalAmount} دج${d.isSpent ? '' : ' (في الرصيد)'}')
+                          '${d.creditorName}: ${d.totalAmount} ${context.l10n.currencySymbol}${d.isSpent ? '' : ' (${context.l10n.inBalance})'}')
                       .toList(),
-                  emptyText: 'لا توجد ديون',
+                  emptyText: context.l10n.noDebts,
                   valueColor: AppColors.negative,
                   onEdit: () => onEditStep(3),
                 ),
                 const SizedBox(height: 8),
                 _SummaryListCard(
                   icon: Icons.trending_up,
-                  label: 'السلفات',
+                  label: context.l10n.lendingsSummaryLabel,
                   items: lendings
-                      .map((l) => '${l.borrowerName}: ${l.totalAmount} دج')
+                      .map((l) => '${l.borrowerName}: ${l.totalAmount} ${context.l10n.currencySymbol}')
                       .toList(),
-                  emptyText: 'لا توجد سلفات',
+                  emptyText: context.l10n.noLendings,
                   valueColor: AppColors.positive,
                   onEdit: () => onEditStep(4),
+                ),
+                const SizedBox(height: 8),
+                _SummaryCard(
+                  icon: Icons.pie_chart,
+                  label: context.l10n.salarySplitSummaryLabel,
+                  value: salarySplit > 0
+                      ? '$salarySplit ${context.l10n.currencySymbol} / $salaryAmount ${context.l10n.currencySymbol}'
+                      : context.l10n.noSalarySplit,
+                  valueColor: AppColors.primary,
+                  onEdit: () => onEditStep(5),
                 ),
               ],
             ),
@@ -93,7 +108,7 @@ class SummaryStepWidget extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: onConfirm,
-              child: const Text('تأكيد وبدء الاستخدام'),
+              child: Text(context.l10n.confirmAndStart),
             ),
           ),
         ],

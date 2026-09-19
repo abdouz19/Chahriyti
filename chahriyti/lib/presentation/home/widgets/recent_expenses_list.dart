@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/categories.dart';
+import '../../../core/extensions/category_l10n_extension.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/expense_entity.dart';
@@ -24,10 +26,10 @@ class RecentExpensesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (expenses.isEmpty) {
-      return const EmptyStateWidget(
+      return EmptyStateWidget(
         illustrationPath: 'assets/illustrations/empty_expenses.svg',
-        title: 'لا توجد مصاريف',
-        subtitle: 'ابدأ بتسجيل مصاريفك اليومية',
+        title: context.l10n.noExpenses,
+        subtitle: context.l10n.startRecordingExpenses,
       );
     }
 
@@ -37,7 +39,7 @@ class RecentExpensesList extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Text(
-            'آخر المصاريف',
+            context.l10n.recentExpenses,
             style: AppTypography.labelMedium,
           ),
         ),
@@ -78,7 +80,7 @@ class RecentExpensesList extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Center(
                     child: Text(
-                      'عرض الكل',
+                      context.l10n.viewAll,
                       style: AppTypography.labelMedium.copyWith(
                         color: AppColors.primary,
                       ),
@@ -115,7 +117,7 @@ class _ExpenseRow extends StatelessWidget {
             if (onEdit != null)
               ListTile(
                 leading: const Icon(Icons.edit_outlined),
-                title: const Text('تعديل'),
+                title: Text(context.l10n.edit),
                 onTap: () {
                   Navigator.pop(context);
                   onEdit!(expense);
@@ -124,7 +126,7 @@ class _ExpenseRow extends StatelessWidget {
             if (onDelete != null)
               ListTile(
                 leading: Icon(Icons.delete_outline, color: AppColors.negative),
-                title: Text('حذف', style: TextStyle(color: AppColors.negative)),
+                title: Text(context.l10n.delete, style: TextStyle(color: AppColors.negative)),
                 onTap: () {
                   Navigator.pop(context);
                   onDelete!(expense);
@@ -136,9 +138,11 @@ class _ExpenseRow extends StatelessWidget {
     );
   }
 
+  bool get _isCustomCategory => expense.category.startsWith('custom_');
+
   @override
   Widget build(BuildContext context) {
-    final category = _categoryFromString(expense.category);
+    final category = _isCustomCategory ? null : _categoryFromString(expense.category);
 
     return GestureDetector(
       onLongPress: (onEdit != null || onDelete != null)
@@ -155,11 +159,14 @@ class _ExpenseRow extends StatelessWidget {
                 color: AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                _categoryIcon(category),
-                color: AppColors.primary,
-                size: 20,
-              ),
+              child: _isCustomCategory
+                  ? const Icon(Icons.label_outline_rounded,
+                      color: AppColors.primary, size: 20)
+                  : Icon(
+                      _categoryIcon(category!),
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -169,12 +176,14 @@ class _ExpenseRow extends StatelessWidget {
                   Text(
                     expense.itemName.isNotEmpty
                         ? expense.itemName
-                        : _categoryFromString(expense.category).arabicLabel,
+                        : (_isCustomCategory
+                            ? 'فئة مخصصة'
+                            : _categoryFromString(expense.category).localizedLabel(context)),
                     style: AppTypography.bodyMedium,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    _relativeDate(expense.createdAt),
+                    _relativeDate(expense.createdAt, context),
                     style: AppTypography.bodySmall,
                   ),
                 ],
@@ -221,17 +230,16 @@ class _ExpenseRow extends StatelessWidget {
     }
   }
 
-  static String _relativeDate(DateTime date) {
+  static String _relativeDate(DateTime date, BuildContext context) {
     final now = DateTime.now();
     final diff = now.difference(date);
-    const lfm = '\u202A'; // Left-to-Right embedding
-    const pdf = '\u202C'; // Pop Directional Formatting
+    final l10n = context.l10n;
 
-    if (diff.inMinutes < 1) return 'الآن';
-    if (diff.inMinutes < 60) return 'منذ $lfm${diff.inMinutes}$pdf دقيقة';
-    if (diff.inHours < 24) return 'منذ $lfm${diff.inHours}$pdf ساعة';
-    if (diff.inDays == 1) return 'أمس';
-    if (diff.inDays < 7) return 'منذ $lfm${diff.inDays}$pdf أيام';
-    return 'منذ $lfm${diff.inDays ~/ 7}$pdf أسبوع';
+    if (diff.inMinutes < 1) return l10n.timeNow;
+    if (diff.inMinutes < 60) return l10n.timeMinutesAgo(diff.inMinutes);
+    if (diff.inHours < 24) return l10n.timeHoursAgo(diff.inHours);
+    if (diff.inDays == 1) return l10n.timeYesterday;
+    if (diff.inDays < 7) return l10n.timeDaysAgo(diff.inDays);
+    return l10n.timeWeeksAgo(diff.inDays ~/ 7);
   }
 }

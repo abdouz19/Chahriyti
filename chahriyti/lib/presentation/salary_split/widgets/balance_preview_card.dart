@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -31,21 +32,21 @@ class BalancePreviewCard extends StatelessWidget {
         children: [
           // Total salary
           _Row(
-            label: 'الراتب الكلي',
+            label: context.l10n.totalSalaryLabel,
             amount: salaryAmount,
             color: AppColors.textPrimary,
           ),
           const Divider(height: 24),
           // Savings allocation
           _Row(
-            label: 'المبلغ للادخار',
+            label: context.l10n.savingsAllocationLabel,
             amount: allocationAmount,
             color: AppColors.primary,
           ),
           const SizedBox(height: 12),
           // Remaining balance
           _Row(
-            label: 'الرصيد المتبقي',
+            label: context.l10n.remainingBalanceLabel,
             amount: remainingBalance,
             color: isFullAllocation ? AppColors.negative : AppColors.positive,
             isBold: true,
@@ -71,7 +72,7 @@ class BalancePreviewCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'رصيدك الحالي سيكون 0 دج',
+                      context.l10n.balanceWillBeZeroWarning,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.warning,
                         fontWeight: FontWeight.w600,
@@ -115,7 +116,7 @@ class _Row extends StatelessWidget {
                 ),
         ),
         Text(
-          amount.toDZDString(),
+          amount.toDZDString(symbol: context.l10n.currencySymbol),
           style: (isBold ? AppTypography.amountMedium : AppTypography.amountSmall)
               .copyWith(color: color),
         ),

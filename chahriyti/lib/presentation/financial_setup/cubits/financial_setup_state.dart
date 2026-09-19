@@ -29,17 +29,30 @@ final class FinancialSetupLendings extends FinancialSetupState {
   const FinancialSetupLendings({required this.lendings});
 }
 
+final class FinancialSetupSalarySplit extends FinancialSetupState {
+  final int salaryAmount;
+  final int currentAllocation;
+  const FinancialSetupSalarySplit({
+    required this.salaryAmount,
+    this.currentAllocation = 0,
+  });
+}
+
 final class FinancialSetupSummary extends FinancialSetupState {
   final int balance;
   final int savings;
   final List<DebtEntity> debts;
   final List<LendingEntity> lendings;
+  final int salarySplit;
+  final int salaryAmount;
 
   const FinancialSetupSummary({
     required this.balance,
     required this.savings,
     required this.debts,
     required this.lendings,
+    required this.salarySplit,
+    required this.salaryAmount,
   });
 }
 

@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
+import '../../../core/extensions/l10n_extension.dart';
 
 class ExpensesCard extends StatelessWidget {
   final int expenses;
@@ -41,7 +42,7 @@ class ExpensesCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'المصاريف',
+                  context.l10n.expensesLabel,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.negative,
                   ),
@@ -58,7 +59,7 @@ class ExpensesCard extends StatelessWidget {
             if (savingsAmount > 0) ...[
               const SizedBox(height: 6),
               Text(
-                'من المدخرات هذه الدورة: ${savingsAmount.toDZDString()}',
+                context.l10n.expensesSavingsThisCycle(savingsAmount.toDZDString(symbol: context.l10n.currencySymbol)),
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.negative.withValues(alpha: 0.65),
                 ),

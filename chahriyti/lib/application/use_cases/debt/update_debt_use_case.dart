@@ -5,12 +5,14 @@ class UpdateDebtRequest {
   final String? creditorName;
   final int? totalAmount; // in centimes
   final String? notes;
+  final bool? isSpent;
 
   UpdateDebtRequest({
     required this.id,
     this.creditorName,
     this.totalAmount,
     this.notes,
+    this.isSpent,
   });
 }
 
@@ -31,6 +33,7 @@ class UpdateDebtUseCase {
       creditorName: request.creditorName,
       totalAmount: request.totalAmount,
       notes: request.notes,
+      isSpent: request.isSpent,
     );
   }
 }

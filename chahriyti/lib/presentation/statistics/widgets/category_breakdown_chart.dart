@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../../application/use_cases/statistics/get_category_breakdown_use_case.dart';
 import '../../../core/constants/categories.dart';
+import '../../../core/extensions/category_l10n_extension.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -31,12 +33,33 @@ class _CategoryBreakdownChartState extends State<CategoryBreakdownChart> {
     'other':       Color(0xFF94A3B8),
   };
 
-  Color _colorFor(String key) =>
-      _categoryColors[key] ?? const Color(0xFF94A3B8);
+  static const List<Color> _customPalette = [
+    Color(0xFF14B8A6),
+    Color(0xFFEC4899),
+    Color(0xFF84CC16),
+    Color(0xFFF97316),
+    Color(0xFF7C3AED),
+    Color(0xFF0EA5E9),
+    Color(0xFFD97706),
+    Color(0xFF059669),
+  ];
 
-  String _arabicLabel(String key) {
+  Color _colorFor(String key) {
+    if (_categoryColors.containsKey(key)) return _categoryColors[key]!;
+    if (key.startsWith('custom_')) {
+      final id = int.tryParse(key.replaceFirst('custom_', '')) ?? 0;
+      return _customPalette[id % _customPalette.length];
+    }
+    return const Color(0xFF94A3B8);
+  }
+
+  String _localizedCategoryLabel(String key, BuildContext context) {
+    // Custom category — use display name from result
+    final displayName = widget.breakdown.displayNames[key];
+    if (displayName != null) return displayName;
+    // Built-in
     for (final c in ExpenseCategory.values) {
-      if (c.name == key) return c.arabicLabel;
+      if (c.name == key) return c.localizedLabel(context);
     }
     return key;
   }
@@ -57,14 +80,14 @@ class _CategoryBreakdownChartState extends State<CategoryBreakdownChart> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('توزيع المصاريف', style: AppTypography.headlineSmall),
+          Text(context.l10n.categoryBreakdownTitle, style: AppTypography.headlineSmall),
           const SizedBox(height: 20),
           if (percentages.isEmpty)
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Text(
-                  'لا توجد مصاريف بعد',
+                  context.l10n.noExpensesYet,
                   style: AppTypography.bodyMedium
                       .copyWith(color: AppColors.textSecondary),
                 ),
@@ -101,7 +124,7 @@ class _CategoryBreakdownChartState extends State<CategoryBreakdownChart> {
                       color: color,
                       radius: isTouched ? 65 : 55,
                       title: isTouched
-                          ? amount.toDZDString()
+                          ? amount.toDZDString(symbol: context.l10n.currencySymbol)
                           : (pct >= 5
                               ? '${pct.toStringAsFixed(0)}%'
                               : ''),
@@ -119,14 +142,14 @@ class _CategoryBreakdownChartState extends State<CategoryBreakdownChart> {
               ),
             ),
             const SizedBox(height: 16),
-            _buildLegend(keys),
+            _buildLegend(keys, context),
           ],
         ],
       ),
     );
   }
 
-  Widget _buildLegend(List<String> keys) {
+  Widget _buildLegend(List<String> keys, BuildContext context) {
     return Wrap(
       spacing: 16,
       runSpacing: 8,
@@ -144,7 +167,7 @@ class _CategoryBreakdownChartState extends State<CategoryBreakdownChart> {
             ),
             const SizedBox(width: 5),
             Text(
-              _arabicLabel(key),
+              _localizedCategoryLabel(key, context),
               style: AppTypography.bodySmall
                   .copyWith(color: AppColors.textPrimary),
             ),

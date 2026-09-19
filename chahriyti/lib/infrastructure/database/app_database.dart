@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'tables/additional_incomes_table.dart';
+import 'tables/custom_categories_table.dart';
 import 'tables/debt_payments_table.dart';
 import 'tables/debts_table.dart';
 import 'tables/expenses_table.dart';
@@ -36,6 +37,7 @@ part 'app_database.g.dart';
   SavingsHistory,
   Lendings,
   LendingCollections,
+  CustomCategories,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -43,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -110,6 +112,14 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 12) {
             await m.addColumn(debts, debts.isSpent);
+          }
+          if (from < 13) {
+            await m.create(customCategories);
+          }
+          if (from < 14) {
+            // Recreate custom_categories with icon_code_point (int) replacing emoji (text)
+            await customStatement('DROP TABLE IF EXISTS custom_categories');
+            await m.create(customCategories);
           }
         },
         beforeOpen: (details) async {

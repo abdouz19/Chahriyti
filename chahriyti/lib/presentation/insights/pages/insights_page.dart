@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../shared/widgets/classification_badge.dart';
@@ -35,7 +36,7 @@ class _InsightsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'البصائر المالية',
+          context.l10n.financialInsights,
           style: AppTypography.headlineSmall,
         ),
       ),
@@ -62,7 +63,7 @@ class _InsightsView extends StatelessWidget {
                   // Leaks section
                   if (state.leaks.isNotEmpty) ...[
                     Text(
-                      'التسربات المالية',
+                      context.l10n.financialLeaks,
                       style: AppTypography.headlineSmall,
                     ),
                     const SizedBox(height: 12),
@@ -74,7 +75,7 @@ class _InsightsView extends StatelessWidget {
                   // Trends section
                   if (state.trends.isNotEmpty) ...[
                     Text(
-                      'الاتجاهات الشهرية',
+                      context.l10n.monthlyTrends,
                       style: AppTypography.headlineSmall,
                     ),
                     const SizedBox(height: 12),
@@ -98,12 +99,12 @@ class _InsightsView extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'لا توجد بصائر حالياً',
+                              context.l10n.noInsightsYet,
                               style: AppTypography.headlineSmall,
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'سيتم عرض التسربات والاتجاهات عند توفر بيانات كافية',
+                              context.l10n.insightsEmptyDesc,
                               style: AppTypography.bodyMedium.copyWith(
                                 color: AppColors.textSecondary,
                               ),

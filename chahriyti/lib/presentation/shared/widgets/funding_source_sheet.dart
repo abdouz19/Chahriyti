@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -94,10 +95,10 @@ class _FundingSourceSheetState extends State<_FundingSourceSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('مصدر الدفع', style: AppTypography.headlineSmall),
+          Text(context.l10n.paymentSource, style: AppTypography.headlineSmall),
           const SizedBox(height: 4),
           Text(
-            'الإجمالي: ${widget.amount.toDZDString()}',
+            '${context.l10n.totalLabel}: ${widget.amount.toDZDString(symbol: context.l10n.currencySymbol)}',
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -107,7 +108,7 @@ class _FundingSourceSheetState extends State<_FundingSourceSheet> {
           // Balance row
           _SourceRow(
             icon: Icons.account_balance_wallet_rounded,
-            label: 'من الرصيد',
+            label: context.l10n.fromBalance,
             available: widget.availableBalance,
             amount: _balanceAmount,
             color: AppColors.positive,
@@ -117,7 +118,7 @@ class _FundingSourceSheetState extends State<_FundingSourceSheet> {
           // Savings row
           _SourceRow(
             icon: Icons.savings_rounded,
-            label: 'من المدخرات',
+            label: context.l10n.fromSavings,
             available: widget.availableSavings,
             amount: _savingsAmount,
             color: AppColors.primary,
@@ -222,7 +223,7 @@ class _SourceRow extends StatelessWidget {
             children: [
               Text(label, style: AppTypography.labelSmall),
               Text(
-                'متاح: ${available.toDZDString()}',
+                '${context.l10n.availableLabel}: ${available.toDZDString(symbol: context.l10n.currencySymbol)}',
                 style: AppTypography.bodySmall
                     .copyWith(color: AppColors.textSecondary),
               ),
@@ -230,7 +231,7 @@ class _SourceRow extends StatelessWidget {
           ),
         ),
         Text(
-          amount.toDZDString(),
+          amount.toDZDString(symbol: context.l10n.currencySymbol),
           style: AppTypography.labelLarge.copyWith(color: color),
         ),
       ],

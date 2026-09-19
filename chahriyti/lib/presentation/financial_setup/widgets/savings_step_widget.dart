@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import 'amount_input_field.dart';
@@ -58,15 +59,15 @@ class _SavingsStepWidgetState extends State<SavingsStepWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SetupProgressBar(currentStep: 3, totalSteps: 6),
+            const SetupProgressBar(currentStep: 3, totalSteps: 7),
             const SizedBox(height: 32),
             Text(
-              'المال المُدّخر للمستقبل؟',
+              context.l10n.savingsStepTitle,
               style: AppTypography.headlineMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              'صندوق الطوارئ، أهداف الادخار، أو أي مبلغ جانبي.',
+              context.l10n.savingsStepDesc,
               style: AppTypography.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -74,11 +75,11 @@ class _SavingsStepWidgetState extends State<SavingsStepWidget> {
             const SizedBox(height: 24),
             AmountInputField(
               controller: _controller,
-              hintText: 'مثال: 10000',
+              hintText: context.l10n.amountHint,
               validator: (v) {
                 if (v == null || v.isEmpty) return null;
                 final val = AmountInputField.parse(v);
-                if (val != null && val < 0) return 'المبلغ غير صالح';
+                if (val != null && val < 0) return context.l10n.invalidAmount;
                 return null;
               },
             ),
@@ -88,14 +89,14 @@ class _SavingsStepWidgetState extends State<SavingsStepWidget> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: widget.onSkip,
-                    child: const Text('تخطي'),
+                    child: Text(context.l10n.skip),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: _submit,
-                    child: const Text('التالي'),
+                    child: Text(context.l10n.next),
                   ),
                 ),
               ],

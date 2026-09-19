@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/activation_cubit.dart';
@@ -41,7 +42,7 @@ class _LicenseKeyDialogState extends State<LicenseKeyDialog> {
           Navigator.of(context).pop();
           // The parent page BlocListener handles navigation to /home
         } else if (state is ActivationAlreadyUsed) {
-          setState(() => _errorText = 'هذا الترخيص مستخدم على جهاز آخر');
+          setState(() => _errorText = context.l10n.licenseAlreadyUsed);
         } else if (state is ActivationNetworkError) {
           setState(() => _errorText = state.message);
         } else if (state is ActivationError) {
@@ -79,7 +80,7 @@ class _LicenseKeyDialogState extends State<LicenseKeyDialog> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'إدخال مفتاح التفعيل',
+                        context.l10n.enterActivationKey,
                         style: AppTypography.headlineSmall,
                       ),
                     ),
@@ -117,10 +118,10 @@ class _LicenseKeyDialogState extends State<LicenseKeyDialog> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'المفتاح مطلوب';
+                      return context.l10n.keyRequired;
                     }
                     if (value.trim().length < 10) {
-                      return 'المفتاح غير مكتمل';
+                      return context.l10n.keyIncomplete;
                     }
                     return null;
                   },
@@ -156,7 +157,7 @@ class _LicenseKeyDialogState extends State<LicenseKeyDialog> {
                                     strokeWidth: 2.5,
                                   ),
                                 )
-                              : const Text('تفعيل'),
+                              : Text(context.l10n.activate),
                         ),
                         const SizedBox(height: 8),
                         TextButton(
@@ -164,7 +165,7 @@ class _LicenseKeyDialogState extends State<LicenseKeyDialog> {
                               ? null
                               : () => Navigator.of(context).pop(),
                           child: Text(
-                            'إلغاء',
+                            context.l10n.cancel,
                             style: AppTypography.labelMedium.copyWith(
                               color: AppColors.textSecondary,
                             ),

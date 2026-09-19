@@ -4,6 +4,7 @@ import '../../../application/use_cases/financial_setup/add_initial_debt_use_case
 import '../../../application/use_cases/financial_setup/add_initial_lending_use_case.dart';
 import '../../../application/use_cases/financial_setup/complete_financial_setup_use_case.dart';
 import '../../../application/use_cases/financial_setup/delete_initial_debt_use_case.dart';
+import '../../../application/use_cases/savings/deposit_salary_split_use_case.dart';
 import '../../../application/use_cases/financial_setup/delete_initial_lending_use_case.dart';
 import '../../../application/use_cases/financial_setup/edit_initial_debt_use_case.dart';
 import '../../../application/use_cases/financial_setup/edit_initial_lending_use_case.dart';
@@ -11,6 +12,7 @@ import '../../../application/use_cases/financial_setup/get_financial_setup_step_
 import '../../../application/use_cases/financial_setup/get_setup_summary_use_case.dart';
 import '../../../application/use_cases/financial_setup/set_initial_balance_use_case.dart';
 import '../../../application/use_cases/financial_setup/set_initial_savings_use_case.dart';
+import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/debt_repository.dart';
 import '../../../domain/repositories/lending_repository.dart';
 import '../../../domain/repositories/user_repository.dart';
@@ -28,13 +30,16 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
   final DeleteInitialLendingUseCase _deleteLendingUseCase;
   final CompleteFinancialSetupUseCase _completeUseCase;
   final GetSetupSummaryUseCase _getSummaryUseCase;
+  final DepositSalarySplitUseCase _depositSalarySplitUseCase;
   final UserRepository _userRepository;
+  final CycleRepository _cycleRepository;
   final DebtRepository _debtRepository;
   final LendingRepository _lendingRepository;
 
   // Cached wizard data for back navigation
   int _cachedBalance = 0;
   int _cachedSavings = 0;
+  int _cachedSalarySplit = 0;
 
   FinancialSetupCubit({
     required GetFinancialSetupStepUseCase getStepUseCase,
@@ -48,7 +53,9 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
     required DeleteInitialLendingUseCase deleteLendingUseCase,
     required CompleteFinancialSetupUseCase completeUseCase,
     required GetSetupSummaryUseCase getSummaryUseCase,
+    required DepositSalarySplitUseCase depositSalarySplitUseCase,
     required UserRepository userRepository,
+    required CycleRepository cycleRepository,
     required DebtRepository debtRepository,
     required LendingRepository lendingRepository,
   })  : _getStepUseCase = getStepUseCase,
@@ -62,7 +69,9 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
         _deleteLendingUseCase = deleteLendingUseCase,
         _completeUseCase = completeUseCase,
         _getSummaryUseCase = getSummaryUseCase,
+        _depositSalarySplitUseCase = depositSalarySplitUseCase,
         _userRepository = userRepository,
+        _cycleRepository = cycleRepository,
         _debtRepository = debtRepository,
         _lendingRepository = lendingRepository,
         super(const FinancialSetupWelcome());
@@ -93,6 +102,12 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
         final lendings = await _lendingRepository.getActiveLendings();
         emit(FinancialSetupLendings(lendings: lendings));
       case 5:
+        final salaryAmount = await _getSalaryAmount();
+        emit(FinancialSetupSalarySplit(
+          salaryAmount: salaryAmount,
+          currentAllocation: _cachedSalarySplit,
+        ));
+      case 6:
         await _loadSummary();
       default:
         emit(const FinancialSetupWelcome());
@@ -238,16 +253,46 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
     if (user != null) {
       await _userRepository.updateFinancialSetupStep(user.id, 5);
     }
+    final salaryAmount = await _getSalaryAmount();
+    emit(FinancialSetupSalarySplit(
+      salaryAmount: salaryAmount,
+      currentAllocation: _cachedSalarySplit,
+    ));
+  }
+
+  Future<int> _getSalaryAmount() async {
+    final user = await _userRepository.getUser();
+    return user?.monthlySalary ?? 0;
+  }
+
+  Future<void> setSalarySplit(int amount) async {
+    _cachedSalarySplit = amount;
+    final user = await _userRepository.getUser();
+    if (user != null) {
+      await _userRepository.updateFinancialSetupStep(user.id, 6);
+    }
+    await _loadSummary();
+  }
+
+  Future<void> skipSalarySplit() async {
+    _cachedSalarySplit = 0;
+    final user = await _userRepository.getUser();
+    if (user != null) {
+      await _userRepository.updateFinancialSetupStep(user.id, 6);
+    }
     await _loadSummary();
   }
 
   Future<void> _loadSummary() async {
     final summary = await _getSummaryUseCase();
+    final salaryAmount = await _getSalaryAmount();
     emit(FinancialSetupSummary(
       balance: summary.balance,
       savings: summary.savings,
       debts: summary.debts,
       lendings: summary.lendings,
+      salarySplit: _cachedSalarySplit,
+      salaryAmount: salaryAmount,
     ));
   }
 
@@ -258,6 +303,17 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
   Future<void> confirm() async {
     emit(const FinancialSetupLoading());
     try {
+      // Deposit salary split before completing setup so the cycle's
+      // salarySplitAmount is set for the balance calculation.
+      if (_cachedSalarySplit > 0) {
+        final cycle = await _cycleRepository.getActiveCycle();
+        if (cycle != null) {
+          await _depositSalarySplitUseCase(
+            cycleId: cycle.id,
+            amount: _cachedSalarySplit,
+          );
+        }
+      }
       await _completeUseCase();
       emit(const FinancialSetupCompleted());
     } catch (_) {
@@ -276,9 +332,15 @@ class FinancialSetupCubit extends Cubit<FinancialSetupState> {
     } else if (currentState is FinancialSetupLendings) {
       final debts = await _debtRepository.getActiveDebts();
       emit(FinancialSetupDebts(debts: debts));
-    } else if (currentState is FinancialSetupSummary) {
+    } else if (currentState is FinancialSetupSalarySplit) {
       final lendings = await _lendingRepository.getActiveLendings();
       emit(FinancialSetupLendings(lendings: lendings));
+    } else if (currentState is FinancialSetupSummary) {
+      final salaryAmount = await _getSalaryAmount();
+      emit(FinancialSetupSalarySplit(
+        salaryAmount: salaryAmount,
+        currentAllocation: _cachedSalarySplit,
+      ));
     }
   }
 }

@@ -25,6 +25,8 @@ import '../../goal/pages/goal_detail_page.dart';
 import '../../goal/pages/goals_list_page.dart';
 import '../../history/pages/expense_history_page.dart';
 import '../../onboarding/cubits/onboarding_cubit.dart';
+import '../../onboarding/pages/onboarding_cta_page.dart';
+import '../../onboarding/pages/onboarding_exclusive_page.dart';
 import '../../onboarding/pages/salary_setup_page.dart';
 import '../../onboarding/pages/splash_page.dart';
 import '../../onboarding/pages/value_proposition_page.dart';
@@ -52,7 +54,9 @@ abstract final class AppRouter {
       if (user == null) {
         const onboardingPaths = [
           '/',
+          '/onboarding/exclusive',
           '/onboarding/value',
+          '/onboarding/cta',
           '/onboarding/salary',
           '/onboarding/income',
           '/salary-split',
@@ -132,8 +136,16 @@ abstract final class AppRouter {
         ),
       ),
       GoRoute(
+        path: '/onboarding/exclusive',
+        builder: (context, state) => const OnboardingExclusivePage(),
+      ),
+      GoRoute(
         path: '/onboarding/value',
         builder: (context, state) => const ValuePropositionPage(),
+      ),
+      GoRoute(
+        path: '/onboarding/cta',
+        builder: (context, state) => const OnboardingCtaPage(),
       ),
 
       // ── Activation ─────────────────────────────────────────────────

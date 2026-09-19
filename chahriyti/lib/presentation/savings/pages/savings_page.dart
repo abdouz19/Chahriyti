@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
@@ -53,10 +54,10 @@ class _SavingsView extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (sheetContext) => _TransferSheet(
-        title: 'إيداع في المدخرات',
-        subtitle: 'الرصيد المتاح',
+        title: context.l10n.depositToSavings,
+        subtitle: context.l10n.availableBalance,
         availableAmount: availableBalance,
-        confirmLabel: 'تأكيد الإيداع',
+        confirmLabel: context.l10n.confirmDeposit,
         accentColor: AppColors.primary,
         onConfirm: (amount) async {
           Navigator.of(sheetContext).pop();
@@ -89,10 +90,10 @@ class _SavingsView extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (sheetContext) => _TransferSheet(
-        title: 'سحب للرصيد',
-        subtitle: 'المدخرات المتاحة',
+        title: context.l10n.withdrawToBalance,
+        subtitle: context.l10n.availableSavings,
         availableAmount: savingsBalance,
-        confirmLabel: 'تأكيد السحب',
+        confirmLabel: context.l10n.confirmWithdrawal,
         accentColor: AppColors.positive,
         onConfirm: (amount) async {
           Navigator.of(sheetContext).pop();
@@ -115,7 +116,7 @@ class _SavingsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'المدخرات',
+          context.l10n.savingsTitle,
           style: AppTypography.headlineSmall,
         ),
       ),
@@ -130,7 +131,7 @@ class _SavingsView extends StatelessWidget {
             foregroundColor: Colors.white,
             icon: const Icon(Icons.arrow_upward_rounded),
             label: Text(
-              'سحب للرصيد',
+              context.l10n.withdrawToBalance,
               style: AppTypography.labelSmall.copyWith(color: Colors.white),
             ),
           ),
@@ -142,7 +143,7 @@ class _SavingsView extends StatelessWidget {
             foregroundColor: Colors.white,
             icon: const Icon(Icons.arrow_downward_rounded),
             label: Text(
-              'إيداع من الرصيد',
+              context.l10n.depositFromBalance,
               style: AppTypography.labelSmall.copyWith(color: Colors.white),
             ),
           ),
@@ -181,7 +182,7 @@ class _SavingsView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'إجمالي المدخرات',
+                              context.l10n.totalSavings,
                               style: AppTypography.bodyMedium.copyWith(
                                 color: AppColors.textSecondary,
                               ),
@@ -204,7 +205,7 @@ class _SavingsView extends StatelessWidget {
                           vertical: 8,
                         ),
                         child: Text(
-                          'سجل العمليات',
+                          context.l10n.transactionHistory,
                           style: AppTypography.labelLarge,
                         ),
                       ),
@@ -226,14 +227,14 @@ class _SavingsView extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
-                                  'لا توجد عمليات ادخار بعد',
+                                  context.l10n.noSavingsYet,
                                   style: AppTypography.bodyLarge.copyWith(
                                     color: AppColors.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'سيتم إضافة المدخرات تلقائياً عند انتهاء الدورة المالية',
+                                  context.l10n.savingsAutoHint,
                                   style: AppTypography.bodySmall.copyWith(
                                     color: AppColors.textSecondary,
                                   ),
@@ -295,7 +296,7 @@ class _SavingsView extends StatelessWidget {
                       onPressed: () {
                         context.read<SavingsCubit>().loadSavings();
                       },
-                      child: const Text('إعادة المحاولة'),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -366,7 +367,7 @@ class _TransferSheetState extends State<_TransferSheet> {
             Text(widget.title, style: AppTypography.headlineSmall),
             const SizedBox(height: 4),
             Text(
-              '${widget.subtitle}: ${widget.availableAmount.toDZDString()}',
+              '${widget.subtitle}: ${widget.availableAmount.toDZDString(symbol: context.l10n.currencySymbol)}',
               style: AppTypography.bodySmall.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -378,8 +379,8 @@ class _TransferSheetState extends State<_TransferSheet> {
               autofocus: true,
               textAlign: TextAlign.right,
               decoration: InputDecoration(
-                labelText: 'المبلغ',
-                suffixText: 'دج',
+                labelText: context.l10n.amount,
+                suffixText: context.l10n.currencySymbol,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -390,8 +391,8 @@ class _TransferSheetState extends State<_TransferSheet> {
               ),
               validator: (v) {
                 final n = int.tryParse((v ?? '').replaceAll(',', ''));
-                if (n == null || n <= 0) return 'أدخل مبلغاً صحيحاً';
-                if (n > widget.availableAmount) return 'المبلغ يتجاوز المتاح';
+                if (n == null || n <= 0) return context.l10n.enterValidAmount;
+                if (n > widget.availableAmount) return context.l10n.amountExceedsAvailable;
                 return null;
               },
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/debt_entity.dart';
@@ -22,6 +23,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
   late final TextEditingController _amountController;
   late final TextEditingController _notesController;
   late final GlobalKey<FormState> _formKey;
+  bool _isSpent = false;
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
       _creditorController.text = widget.initialDebt!.creditorName;
       _amountController.text = widget.initialDebt!.totalAmount.toString();
       _notesController.text = widget.initialDebt!.notes ?? '';
+      _isSpent = widget.initialDebt!.isSpent;
     }
   }
 
@@ -52,7 +55,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
     final amount = int.tryParse(_amountController.text);
     if (amount == null || amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('أدخل مبلغاً صحيحاً')),
+        SnackBar(content: Text(context.l10n.enterValidAmount)),
       );
       return;
     }
@@ -63,12 +66,14 @@ class _AddDebtPageState extends State<AddDebtPage> {
         creditorName: _creditorController.text,
         totalAmount: amount,
         notes: _notesController.text.isEmpty ? null : _notesController.text,
+        isSpent: _isSpent,
       );
     } else {
       cubit.createDebt(
         creditorName: _creditorController.text,
         totalAmount: amount,
         notes: _notesController.text.isEmpty ? null : _notesController.text,
+        isSpent: _isSpent,
       );
     }
   }
@@ -90,8 +95,8 @@ class _AddDebtPageState extends State<AddDebtPage> {
           state.whenOrNull(
             debtCreated: (_) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('تم إنشاء الدين بنجاح'),
+                SnackBar(
+                  content: Text(context.l10n.debtCreated),
                   backgroundColor: AppColors.positive,
                 ),
               );
@@ -99,8 +104,8 @@ class _AddDebtPageState extends State<AddDebtPage> {
             },
             debtUpdated: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('تم تعديل الدين بنجاح'),
+                SnackBar(
+                  content: Text(context.l10n.debtUpdated),
                   backgroundColor: AppColors.positive,
                 ),
               );
@@ -119,7 +124,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              widget.initialDebt != null ? 'تعديل الدين' : 'دين جديد',
+              widget.initialDebt != null ? context.l10n.editDebt : context.l10n.newDebt,
               style: AppTypography.headlineSmall,
             ),
           ),
@@ -141,56 +146,98 @@ class _AddDebtPageState extends State<AddDebtPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'اسم الدائن',
+                        context.l10n.creditorName,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _creditorController,
-                        decoration: const InputDecoration(
-                          hintText: 'مثال: محمد أحمد',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.creditorNameHint,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'اسم الدائن مطلوب';
+                            return context.l10n.creditorNameRequired;
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'المبلغ الكلي للدين',
+                        context.l10n.totalDebtAmount,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          hintText: 'أدخل المبلغ',
-                          suffixText: 'دج',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.enterAmount,
+                          suffixText: context.l10n.currencySymbol,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'المبلغ مطلوب';
+                            return context.l10n.amountRequired;
                           }
                           if (int.tryParse(value) == null) {
-                            return 'أدخل رقماً صحيحاً';
+                            return context.l10n.enterNumber;
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'ملاحظات (اختياري)',
+                        context.l10n.notesOptional,
                         style: AppTypography.labelLarge,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _notesController,
                         maxLines: 3,
-                        decoration: const InputDecoration(
-                          hintText: 'أضف ملاحظات عن الدين...',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.addDebtNoteHint,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    context.l10n.debtIsSpentQuestion,
+                                    style: AppTypography.labelLarge,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    _isSpent
+                                        ? context.l10n.debtIsSpentDesc
+                                        : context.l10n.debtNotSpentDesc,
+                                    style: AppTypography.bodySmall.copyWith(
+                                      color: _isSpent
+                                          ? AppColors.negative
+                                          : AppColors.positive,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Switch(
+                              value: _isSpent,
+                              onChanged: (v) => setState(() => _isSpent = v),
+                              activeThumbColor: AppColors.primary,
+                              activeTrackColor: AppColors.primary.withValues(alpha: 0.4),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -200,8 +247,8 @@ class _AddDebtPageState extends State<AddDebtPage> {
                           onPressed: () => _submit(context, cubit),
                           child: Text(
                             widget.initialDebt != null
-                                ? 'حفظ التعديل'
-                                : 'حفظ الدين',
+                                ? context.l10n.saveEdit
+                                : context.l10n.saveDebt,
                           ),
                         ),
                       ),
