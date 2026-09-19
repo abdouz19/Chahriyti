@@ -23,6 +23,32 @@ class CompleteFinancialSetupUseCase {
     final user = await _userRepository.getUser();
     if (user == null) throw StateError('No user found');
 
+    // Safety net: ensure an active cycle exists (handles cross-month activation
+    // and post-reset flows where no cycle was created yet).
+    var existingCycle = await _cycleRepository.getActiveCycle();
+    if (existingCycle == null) {
+      final now = DateTime.now();
+      final salaryDay = user.salaryDay;
+      final thisMonthLastDay = DateTime(now.year, now.month + 1, 0).day;
+      final effectiveDay =
+          salaryDay > thisMonthLastDay ? thisMonthLastDay : salaryDay;
+      final startDate = DateTime(now.year, now.month, effectiveDay);
+      final cycleStart = startDate.isAfter(now)
+          ? DateTime(now.year, now.month - 1, effectiveDay)
+          : startDate;
+      final nm = cycleStart.month == 12 ? 1 : cycleStart.month + 1;
+      final ny = cycleStart.month == 12 ? cycleStart.year + 1 : cycleStart.year;
+      final nextLastDay = DateTime(ny, nm + 1, 0).day;
+      final nextEffDay = salaryDay > nextLastDay ? nextLastDay : salaryDay;
+      final cycleEnd =
+          DateTime(ny, nm, nextEffDay).subtract(const Duration(days: 1));
+      await _cycleRepository.createCycle(
+        startDate: cycleStart,
+        endDate: cycleEnd,
+        salaryAmount: user.monthlySalary,
+      );
+    }
+
     final initialBalance = user.initialBalance;
     if (initialBalance != null) {
       final cycle = await _cycleRepository.getActiveCycle();
