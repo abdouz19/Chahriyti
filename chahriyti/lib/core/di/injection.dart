@@ -462,7 +462,6 @@ abstract final class Injection {
     resetAppDataUseCase = ResetAppDataUseCase(
       _database,
       userRepository,
-      cycleRepository,
     );
 
     // Use Cases — Challenge

@@ -48,7 +48,7 @@ class _SettingsView extends StatelessWidget {
                 backgroundColor: AppColors.positive,
               ),
             );
-            context.go('/home');
+            context.go('/financial-setup');
           } else if (state is SettingsError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
