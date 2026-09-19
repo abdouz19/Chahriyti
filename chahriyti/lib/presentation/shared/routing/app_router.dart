@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../application/use_cases/activation/compose_whatsapp_message_use_case.dart';
 import '../../../application/use_cases/activation/get_device_id_use_case.dart';
 import '../../../application/use_cases/activation/validate_license_use_case.dart';
-import '../../../application/use_cases/onboarding/add_initial_income_use_case.dart';
 import '../../../application/use_cases/onboarding/setup_salary_use_case.dart';
 import '../../../core/di/injection.dart';
 import '../../../domain/entities/expense_entity.dart';
@@ -25,14 +24,14 @@ import '../../goal/pages/goal_detail_page.dart';
 import '../../goal/pages/goals_list_page.dart';
 import '../../history/pages/expense_history_page.dart';
 import '../../onboarding/cubits/onboarding_cubit.dart';
-import '../../onboarding/pages/onboarding_cta_page.dart';
-import '../../onboarding/pages/onboarding_exclusive_page.dart';
-import '../../onboarding/pages/salary_setup_page.dart';
 import '../../onboarding/pages/splash_page.dart';
-import '../../onboarding/pages/value_proposition_page.dart';
+import '../../onboarding/pages/profile_page.dart';
+import '../../onboarding/pages/age_group_page.dart';
+import '../../onboarding/pages/financial_profile_page.dart';
+import '../../onboarding/pages/goals_page.dart';
+import '../../onboarding/pages/celebration_page.dart';
 import '../../home/pages/home_page.dart';
 import '../../income/pages/add_income_page.dart';
-import '../../onboarding/pages/additional_income_page.dart';
 import '../../salary_split/pages/salary_split_page.dart';
 import '../../lending/pages/add_lending_page.dart';
 import '../../lending/pages/lending_detail_page.dart';
@@ -54,12 +53,11 @@ abstract final class AppRouter {
       if (user == null) {
         const onboardingPaths = [
           '/',
-          '/onboarding/exclusive',
-          '/onboarding/value',
-          '/onboarding/cta',
-          '/onboarding/salary',
-          '/onboarding/income',
-          '/salary-split',
+          '/onboarding/profile',
+          '/onboarding/age',
+          '/onboarding/financial',
+          '/onboarding/goals',
+          '/onboarding/welcome',
         ];
 
         return onboardingPaths.contains(path) ? null : '/';
@@ -98,54 +96,39 @@ abstract final class AppRouter {
         builder: (context, state) => const SplashPage(),
       ),
 
-      // ── Onboarding ─────────────────────────────────────────────────
-      GoRoute(
-        path: '/onboarding/salary',
-        builder: (context, state) => BlocProvider(
+      // ── Onboarding (new flow) ───────────────────────────────────────
+      ShellRoute(
+        builder: (context, state, child) => BlocProvider(
           create: (_) => OnboardingCubit(
             setupSalaryUseCase: SetupSalaryUseCase(
               Injection.userRepository,
               Injection.cycleRepository,
             ),
-            addInitialIncomeUseCase: AddInitialIncomeUseCase(
-              Injection.cycleRepository,
-              Injection.incomeRepository,
-            ),
-            depositSalarySplitUseCase: Injection.depositSalarySplitUseCase,
-            cycleRepository: Injection.cycleRepository,
-          )..start(),
-          child: const SalarySetupPage(),
-        ),
-      ),
-      GoRoute(
-        path: '/onboarding/income',
-        builder: (context, state) => BlocProvider(
-          create: (_) => OnboardingCubit(
-            setupSalaryUseCase: SetupSalaryUseCase(
-              Injection.userRepository,
-              Injection.cycleRepository,
-            ),
-            addInitialIncomeUseCase: AddInitialIncomeUseCase(
-              Injection.cycleRepository,
-              Injection.incomeRepository,
-            ),
-            depositSalarySplitUseCase: Injection.depositSalarySplitUseCase,
-            cycleRepository: Injection.cycleRepository,
           ),
-          child: const AdditionalIncomePage(),
+          child: child,
         ),
-      ),
-      GoRoute(
-        path: '/onboarding/exclusive',
-        builder: (context, state) => const OnboardingExclusivePage(),
-      ),
-      GoRoute(
-        path: '/onboarding/value',
-        builder: (context, state) => const ValuePropositionPage(),
-      ),
-      GoRoute(
-        path: '/onboarding/cta',
-        builder: (context, state) => const OnboardingCtaPage(),
+        routes: [
+          GoRoute(
+            path: '/onboarding/profile',
+            builder: (context, state) => const ProfilePage(),
+          ),
+          GoRoute(
+            path: '/onboarding/age',
+            builder: (context, state) => const AgeGroupPage(),
+          ),
+          GoRoute(
+            path: '/onboarding/financial',
+            builder: (context, state) => const FinancialProfilePage(),
+          ),
+          GoRoute(
+            path: '/onboarding/goals',
+            builder: (context, state) => const GoalsPage(),
+          ),
+          GoRoute(
+            path: '/onboarding/welcome',
+            builder: (context, state) => const CelebrationPage(),
+          ),
+        ],
       ),
 
       // ── Activation ─────────────────────────────────────────────────

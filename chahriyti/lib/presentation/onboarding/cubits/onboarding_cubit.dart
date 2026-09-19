@@ -1,9 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../application/use_cases/onboarding/setup_salary_use_case.dart';
-import '../../../application/use_cases/onboarding/add_initial_income_use_case.dart';
-import '../../../application/use_cases/savings/deposit_salary_split_use_case.dart';
-import '../../../domain/repositories/cycle_repository.dart';
 
 // ---------------------------------------------------------------------------
 // States
@@ -13,34 +10,25 @@ sealed class OnboardingState {
   const OnboardingState();
 }
 
-final class OnboardingInitial extends OnboardingState {
-  const OnboardingInitial();
+final class OnboardingProfile extends OnboardingState {
+  const OnboardingProfile();
 }
 
-final class OnboardingSalaryInput extends OnboardingState {
-  const OnboardingSalaryInput();
+final class OnboardingAgeGroup extends OnboardingState {
+  const OnboardingAgeGroup();
 }
 
-final class OnboardingIncomeInput extends OnboardingState {
-  const OnboardingIncomeInput();
+final class OnboardingFinancial extends OnboardingState {
+  const OnboardingFinancial();
 }
 
-final class OnboardingValueProposition extends OnboardingState {
-  const OnboardingValueProposition();
+final class OnboardingGoals extends OnboardingState {
+  const OnboardingGoals();
 }
 
-final class OnboardingCompleted extends OnboardingState {
-  const OnboardingCompleted();
-}
-
-final class OnboardingSalarySplit extends OnboardingState {
-  final int cycleId;
-  final int salaryAmount;
-
-  const OnboardingSalarySplit({
-    required this.cycleId,
-    required this.salaryAmount,
-  });
+final class OnboardingCelebration extends OnboardingState {
+  final String firstName;
+  const OnboardingCelebration({required this.firstName});
 }
 
 final class OnboardingLoading extends OnboardingState {
@@ -52,97 +40,130 @@ final class OnboardingError extends OnboardingState {
   const OnboardingError(this.message);
 }
 
+final class OnboardingDone extends OnboardingState {
+  const OnboardingDone();
+}
+
+// ---------------------------------------------------------------------------
+// Legacy state aliases (kept for backward compatibility with dead-code pages)
+// ---------------------------------------------------------------------------
+
+// ignore: unused_element
+final class OnboardingSalarySplit extends OnboardingState {
+  final int cycleId;
+  final int salaryAmount;
+  const OnboardingSalarySplit({required this.cycleId, required this.salaryAmount});
+}
+
+// ignore: unused_element
+final class OnboardingIncomeInput extends OnboardingState {
+  const OnboardingIncomeInput();
+}
+
+// ignore: unused_element
+final class OnboardingValueProposition extends OnboardingState {
+  const OnboardingValueProposition();
+}
+
 // ---------------------------------------------------------------------------
 // Cubit
 // ---------------------------------------------------------------------------
 
 class OnboardingCubit extends Cubit<OnboardingState> {
   final SetupSalaryUseCase _setupSalaryUseCase;
-  final AddInitialIncomeUseCase _addInitialIncomeUseCase;
-  final DepositSalarySplitUseCase _depositSalarySplitUseCase;
-  final CycleRepository _cycleRepository;
 
-  OnboardingCubit({
-    required SetupSalaryUseCase setupSalaryUseCase,
-    required AddInitialIncomeUseCase addInitialIncomeUseCase,
-    required DepositSalarySplitUseCase depositSalarySplitUseCase,
-    required CycleRepository cycleRepository,
-  })  : _setupSalaryUseCase = setupSalaryUseCase,
-        _addInitialIncomeUseCase = addInitialIncomeUseCase,
-        _depositSalarySplitUseCase = depositSalarySplitUseCase,
-        _cycleRepository = cycleRepository,
-        super(const OnboardingInitial());
+  // Internal fields (in-memory only)
+  String _name = '';
+  String _phone = '';
+  int _wilayaCode = 16;
+  // ignore: unused_field
+  String? _ageGroup;
+  int _salary = 0;
+  int _salaryDay = 1;
+  // ignore: unused_field
+  String? _maritalStatus;
+  // ignore: unused_field
+  bool? _tracksExpenses;
+  // ignore: unused_field
+  List<String> _goals = [];
 
-  void start() => emit(const OnboardingSalaryInput());
+  OnboardingCubit({required SetupSalaryUseCase setupSalaryUseCase})
+      : _setupSalaryUseCase = setupSalaryUseCase,
+        super(const OnboardingProfile());
 
+  void start() => emit(const OnboardingProfile());
+
+  void submitProfile({
+    required String name,
+    required String phone,
+    required int wilayaCode,
+  }) {
+    _name = name;
+    _phone = phone;
+    _wilayaCode = wilayaCode;
+    emit(const OnboardingAgeGroup());
+  }
+
+  void submitAgeGroup(String? ageGroup) {
+    _ageGroup = ageGroup;
+    emit(const OnboardingFinancial());
+  }
+
+  void submitFinancial({
+    required int salary,
+    required int salaryDay,
+    String? maritalStatus,
+    bool? tracksExpenses,
+  }) {
+    _salary = salary;
+    _salaryDay = salaryDay;
+    _maritalStatus = maritalStatus;
+    _tracksExpenses = tracksExpenses;
+    emit(const OnboardingGoals());
+  }
+
+  void submitGoals(List<String> goals) {
+    _goals = goals;
+    emit(OnboardingCelebration(firstName: _name.split(' ').first));
+  }
+
+  // Legacy stub methods (kept for backward compatibility with dead-code pages)
+  // ignore: unused_element
   Future<void> setSalary({
     required int monthlySalary,
     required int salaryDay,
     required String fullName,
     required String phoneNumber,
     required int wilayaCode,
-  }) async {
+  }) async {}
+
+  // ignore: unused_element
+  Future<void> addIncome({
+    required String description,
+    required int amount,
+  }) async {}
+
+  // ignore: unused_element
+  void skipIncome() {}
+
+  // ignore: unused_element
+  void skipSalarySplit() {}
+
+  Future<void> complete() async {
     emit(const OnboardingLoading());
     try {
       await _setupSalaryUseCase(
-        monthlySalary: monthlySalary,
-        salaryDay: salaryDay,
-        fullName: fullName,
-        phoneNumber: phoneNumber,
-        wilayaCode: wilayaCode,
+        monthlySalary: _salary,
+        salaryDay: _salaryDay,
+        fullName: _name,
+        phoneNumber: _phone,
+        wilayaCode: _wilayaCode,
       );
-      final cycle = await _cycleRepository.getActiveCycle();
-      if (cycle != null) {
-        emit(OnboardingSalarySplit(
-          cycleId: cycle.id,
-          salaryAmount: cycle.salaryAmount,
-        ));
-      } else {
-        emit(const OnboardingIncomeInput());
-      }
+      emit(const OnboardingDone());
     } on ArgumentError catch (e) {
       emit(OnboardingError(e.message.toString()));
     } catch (_) {
       emit(const OnboardingError('حدث خطأ غير متوقع، يرجى المحاولة مجدداً'));
     }
   }
-
-  Future<void> addIncome({
-    required String description,
-    required int amount,
-  }) async {
-    emit(const OnboardingLoading());
-    try {
-      await _addInitialIncomeUseCase(
-        description: description,
-        amount: amount,
-      );
-      emit(const OnboardingValueProposition());
-    } on ArgumentError catch (e) {
-      emit(OnboardingError(e.message.toString()));
-    } catch (_) {
-      emit(const OnboardingError('فشل في إضافة المداخيل الإضافية'));
-    }
-  }
-
-  Future<void> applySalarySplit(int amount) async {
-    if (state is! OnboardingSalarySplit) return;
-    final splitState = state as OnboardingSalarySplit;
-    emit(const OnboardingLoading());
-    try {
-      await _depositSalarySplitUseCase(
-        cycleId: splitState.cycleId,
-        amount: amount,
-      );
-      emit(const OnboardingIncomeInput());
-    } catch (_) {
-      emit(const OnboardingError('حدث خطأ في تقسيم الراتب'));
-    }
-  }
-
-  void skipSalarySplit() => emit(const OnboardingIncomeInput());
-
-  void skipIncome() => emit(const OnboardingValueProposition());
-
-  void complete() => emit(const OnboardingCompleted());
 }
