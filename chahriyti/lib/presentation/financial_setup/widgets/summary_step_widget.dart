@@ -12,8 +12,6 @@ class SummaryStepWidget extends StatelessWidget {
   final int savings;
   final List<DebtEntity> debts;
   final List<LendingEntity> lendings;
-  final int salarySplit;
-  final int salaryAmount;
   final ValueChanged<int> onEditStep;
   final VoidCallback onConfirm;
   final VoidCallback onBack;
@@ -24,8 +22,6 @@ class SummaryStepWidget extends StatelessWidget {
     required this.savings,
     required this.debts,
     required this.lendings,
-    required this.salarySplit,
-    required this.salaryAmount,
     required this.onEditStep,
     required this.onConfirm,
     required this.onBack,
@@ -38,7 +34,7 @@ class SummaryStepWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SetupProgressBar(currentStep: 7, totalSteps: 7),
+          const SetupProgressBar(currentStep: 6, totalSteps: 6),
           const SizedBox(height: 24),
           Text(context.l10n.summaryStepTitle, style: AppTypography.headlineMedium),
           const SizedBox(height: 8),
@@ -89,16 +85,6 @@ class SummaryStepWidget extends StatelessWidget {
                   emptyText: context.l10n.noLendings,
                   valueColor: AppColors.positive,
                   onEdit: () => onEditStep(4),
-                ),
-                const SizedBox(height: 8),
-                _SummaryCard(
-                  icon: Icons.pie_chart,
-                  label: context.l10n.salarySplitSummaryLabel,
-                  value: salarySplit > 0
-                      ? '$salarySplit ${context.l10n.currencySymbol} / $salaryAmount ${context.l10n.currencySymbol}'
-                      : context.l10n.noSalarySplit,
-                  valueColor: AppColors.primary,
-                  onEdit: () => onEditStep(5),
                 ),
               ],
             ),

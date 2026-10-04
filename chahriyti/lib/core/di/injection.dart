@@ -224,7 +224,6 @@ abstract final class Injection {
         completeUseCase: completeFinancialSetupUseCase,
         getSummaryUseCase: getSetupSummaryUseCase,
         userRepository: userRepository,
-        cycleRepository: cycleRepository,
         debtRepository: debtRepository,
         lendingRepository: lendingRepository,
       );

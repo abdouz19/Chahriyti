@@ -38,9 +38,9 @@ class IncomesDao extends DatabaseAccessor<AppDatabase> with _$IncomesDaoMixin {
     return result.read(sum) ?? 0;
   }
 
-  Future<void> updateIncome({required int id, required String description}) async {
+  Future<void> updateIncome({required int id, required String description, required int amount}) async {
     await (update(additionalIncomes)..where((t) => t.id.equals(id))).write(
-      AdditionalIncomesCompanion(description: Value(description)),
+      AdditionalIncomesCompanion(description: Value(description), amount: Value(amount)),
     );
   }
 

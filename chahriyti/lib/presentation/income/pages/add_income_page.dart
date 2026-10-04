@@ -104,6 +104,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
 
   @override
   void dispose() {
+    _descCtrl?.removeListener(_onDescChanged);
     _amountController.dispose();
     super.dispose();
   }
@@ -124,52 +125,14 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
   void _onDescChanged() => _description = _descCtrl?.text ?? '';
 
   Future<void> _showEditDialog(AdditionalIncomeEntity income) async {
-    final controller = TextEditingController(text: income.description);
     final cubit = context.read<IncomeCubit>();
-    final confirmed = await showDialog<bool>(
+    final result = await showDialog<(String, int)>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.card,
-        title: Text(context.l10n.editIncomeTitle, style: AppTypography.headlineSmall),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: AppTypography.bodyLarge,
-          decoration: InputDecoration(
-            hintText: context.l10n.incomeSource,
-            hintStyle:
-                AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.border),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.primary, width: 2),
-            ),
-            filled: true,
-            fillColor: AppColors.background,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(ctx.l10n.cancel,
-                style:
-                    AppTypography.labelMedium.copyWith(color: AppColors.textSecondary)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(ctx.l10n.save,
-                style: AppTypography.labelMedium.copyWith(color: AppColors.primary)),
-          ),
-        ],
-      ),
+      builder: (ctx) => _EditIncomeDialog(income: income),
     );
-    if (confirmed == true && controller.text.trim().isNotEmpty) {
-      cubit.updateIncome(income.id, controller.text.trim());
+    if (result != null) {
+      cubit.updateIncome(income.id, result.$1, result.$2);
     }
-    controller.dispose();
   }
 
   Future<void> _showDeleteConfirmation(AdditionalIncomeEntity income) async {
@@ -535,6 +498,108 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
           ),
         ),
       ),
+    );
+  }
+}
+
+// ─── Edit Income Dialog ─────────────────────────────────────────────────────
+
+class _EditIncomeDialog extends StatefulWidget {
+  final AdditionalIncomeEntity income;
+  const _EditIncomeDialog({required this.income});
+
+  @override
+  State<_EditIncomeDialog> createState() => _EditIncomeDialogState();
+}
+
+class _EditIncomeDialogState extends State<_EditIncomeDialog> {
+  late final TextEditingController _descController;
+  late final TextEditingController _amountController;
+
+  @override
+  void initState() {
+    super.initState();
+    _descController = TextEditingController(text: widget.income.description);
+    _amountController = TextEditingController(text: widget.income.amount.toString());
+  }
+
+  @override
+  void dispose() {
+    _descController.dispose();
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    final desc = _descController.text.trim();
+    final amount = int.tryParse(_amountController.text.replaceAll(',', '').trim()) ?? 0;
+    if (desc.isEmpty || amount <= 0) return;
+    Navigator.of(context).pop((desc, amount));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide(color: AppColors.border),
+    );
+    final focusedBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide(color: AppColors.primary, width: 2),
+    );
+    return AlertDialog(
+      backgroundColor: AppColors.card,
+      title: Text(context.l10n.editIncomeTitle, style: AppTypography.headlineSmall),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _descController,
+            autofocus: true,
+            style: AppTypography.bodyLarge,
+            decoration: InputDecoration(
+              hintText: context.l10n.incomeSource,
+              hintStyle: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+              border: border,
+              focusedBorder: focusedBorder,
+              filled: true,
+              fillColor: AppColors.background,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _amountController,
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.right,
+            style: AppTypography.bodyLarge,
+            decoration: InputDecoration(
+              hintText: context.l10n.amount,
+              hintStyle: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+              suffixText: context.l10n.currencySymbol,
+              border: border,
+              focusedBorder: focusedBorder,
+              filled: true,
+              fillColor: AppColors.background,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(null),
+          child: Text(
+            context.l10n.cancel,
+            style: AppTypography.labelMedium.copyWith(color: AppColors.textSecondary),
+          ),
+        ),
+        TextButton(
+          onPressed: _save,
+          child: Text(
+            context.l10n.save,
+            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          ),
+        ),
+      ],
     );
   }
 }

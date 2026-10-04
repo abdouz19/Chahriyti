@@ -59,7 +59,7 @@ class _SavingsStepWidgetState extends State<SavingsStepWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SetupProgressBar(currentStep: 3, totalSteps: 7),
+            const SetupProgressBar(currentStep: 3, totalSteps: 6),
             const SizedBox(height: 32),
             Text(
               context.l10n.savingsStepTitle,

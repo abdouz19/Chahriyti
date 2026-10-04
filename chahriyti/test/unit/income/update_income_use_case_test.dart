@@ -7,6 +7,7 @@ import 'package:chahriyti/domain/repositories/income_repository.dart';
 class FakeIncomeRepository implements IncomeRepository {
   int? lastUpdatedId;
   String? lastUpdatedDescription;
+  int? lastUpdatedAmount;
 
   @override
   Future<AdditionalIncomeEntity> addIncome({
@@ -34,9 +35,10 @@ class FakeIncomeRepository implements IncomeRepository {
 
   @override
   Future<void> updateIncome(
-      {required int id, required String description}) async {
+      {required int id, required String description, required int amount}) async {
     lastUpdatedId = id;
     lastUpdatedDescription = description;
+    lastUpdatedAmount = amount;
   }
 
   @override
@@ -54,22 +56,23 @@ void main() {
 
   test('empty description throws ArgumentError', () async {
     expect(
-      () => useCase.call(id: 1, description: ''),
+      () => useCase.call(id: 1, description: '', amount: 1000),
       throwsA(isA<ArgumentError>()),
     );
   });
 
   test('whitespace-only description throws ArgumentError', () async {
     expect(
-      () => useCase.call(id: 1, description: '   '),
+      () => useCase.call(id: 1, description: '   ', amount: 1000),
       throwsA(isA<ArgumentError>()),
     );
   });
 
   test('valid description passes and trims whitespace', () async {
-    await useCase.call(id: 5, description: '  راتب شهري  ');
+    await useCase.call(id: 5, description: '  راتب شهري  ', amount: 5000);
 
     expect(repository.lastUpdatedId, 5);
     expect(repository.lastUpdatedDescription, 'راتب شهري');
+    expect(repository.lastUpdatedAmount, 5000);
   });
 }

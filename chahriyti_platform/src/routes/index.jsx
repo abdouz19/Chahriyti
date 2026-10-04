@@ -27,6 +27,11 @@ const BatchGeneratePage = lazy(() =>
   import('../features/pool/pages/BatchGeneratePage').then(m => ({ default: m.BatchGeneratePage }))
 );
 
+// Lazy-loaded pages — Leads
+const LeadsPage = lazy(() =>
+  import('../features/leads/pages/LeadsPage').then(m => ({ default: m.LeadsPage }))
+);
+
 /** Loading fallback for lazy-loaded routes */
 function PageLoader() {
   return (
@@ -66,6 +71,7 @@ export const router = createBrowserRouter([
       { index: true, element: <LazyPage><AdminDashboardPage /></LazyPage> },
       { path: 'pool', element: <LazyPage><LicensePoolPage /></LazyPage> },
       { path: 'pool/generate', element: <LazyPage><BatchGeneratePage /></LazyPage> },
+      { path: 'leads', element: <LazyPage><LeadsPage /></LazyPage> },
     ],
   },
 

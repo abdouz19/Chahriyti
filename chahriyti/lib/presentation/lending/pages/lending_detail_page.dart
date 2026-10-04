@@ -512,14 +512,12 @@ class _LendingDetailView extends StatelessWidget {
   }
 
   void _showAddCollectionDialog(BuildContext context, int maxAmount) {
-    final amountController = TextEditingController();
     final cubit = context.read<LendingCubit>();
 
     showDialog(
       context: context,
       builder: (dialogContext) => _CollectionDialog(
         maxAmount: maxAmount,
-        amountController: amountController,
         onSubmit: (amount, toSavings) {
           Navigator.pop(dialogContext);
           cubit.addCollection(
@@ -536,13 +534,11 @@ class _LendingDetailView extends StatelessWidget {
 
 class _CollectionDialog extends StatefulWidget {
   final int maxAmount;
-  final TextEditingController amountController;
   final void Function(int amount, bool toSavings) onSubmit;
   final VoidCallback onCancel;
 
   const _CollectionDialog({
     required this.maxAmount,
-    required this.amountController,
     required this.onSubmit,
     required this.onCancel,
   });
@@ -552,12 +548,25 @@ class _CollectionDialog extends StatefulWidget {
 }
 
 class _CollectionDialogState extends State<_CollectionDialog> {
+  late final TextEditingController _amountController;
   bool _toSavings = false;
   String? _errorText;
 
+  @override
+  void initState() {
+    super.initState();
+    _amountController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+
   void _handleSubmit() {
     final l10n = context.l10n;
-    final amount = int.tryParse(widget.amountController.text);
+    final amount = int.tryParse(_amountController.text);
     if (amount == null || amount <= 0) {
       setState(() => _errorText = l10n.enterValidAmount);
       return;
@@ -586,7 +595,7 @@ class _CollectionDialogState extends State<_CollectionDialog> {
           ),
           const SizedBox(height: 12),
           TextField(
-            controller: widget.amountController,
+            controller: _amountController,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (_) {

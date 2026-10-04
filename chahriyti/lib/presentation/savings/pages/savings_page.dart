@@ -7,6 +7,7 @@ import '../../../core/di/injection.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../domain/entities/savings_history_entity.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
 import '../cubits/savings_cubit.dart';
@@ -31,6 +32,7 @@ class SavingsPage extends StatelessWidget {
           debtRepository: Injection.debtRepository,
           lendingRepository: Injection.lendingRepository,
         ),
+        Injection.savingsRepository,
       )..loadSavings(),
       child: const _SavingsView(),
     );
@@ -39,6 +41,64 @@ class SavingsPage extends StatelessWidget {
 
 class _SavingsView extends StatelessWidget {
   const _SavingsView();
+
+  Future<void> _confirmDelete(BuildContext context, int id) async {
+    final cubit = context.read<SavingsCubit>();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('حذف العملية'),
+        content: const Text('هل أنت متأكد من حذف هذه العملية؟ لا يمكن التراجع.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('إلغاء'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.negative),
+            child: const Text('حذف'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      final error = await cubit.deleteTransaction(id);
+      if (error != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error), backgroundColor: AppColors.negative),
+        );
+      }
+    }
+  }
+
+  Future<void> _showEditSheet(BuildContext context, SavingsHistoryEntity record) async {
+    final cubit = context.read<SavingsCubit>();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => _EditTransactionSheet(
+        record: record,
+        onConfirm: (amount, description) async {
+          Navigator.of(sheetContext).pop();
+          final error = await cubit.editTransaction(
+            record.id,
+            amount: amount,
+            description: description,
+          );
+          if (error != null && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(error), backgroundColor: AppColors.negative),
+            );
+          }
+        },
+      ),
+    );
+  }
 
   Future<void> _showDepositSheet(BuildContext context) async {
     final cubit = context.read<SavingsCubit>();
@@ -249,7 +309,12 @@ class _SavingsView extends StatelessWidget {
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            return SavingsHistoryItem(record: history[index]);
+                            final record = history[index];
+                            return SavingsHistoryItem(
+                              record: record,
+                              onDelete: () => _confirmDelete(context, record.id),
+                              onEdit: () => _showEditSheet(context, record),
+                            );
                           },
                           childCount: history.length,
                         ),
@@ -419,6 +484,107 @@ class _TransferSheetState extends State<_TransferSheet> {
                         ),
                       )
                     : Text(widget.confirmLabel),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EditTransactionSheet extends StatefulWidget {
+  final SavingsHistoryEntity record;
+  final Future<void> Function(int amount, String description) onConfirm;
+
+  const _EditTransactionSheet({required this.record, required this.onConfirm});
+
+  @override
+  State<_EditTransactionSheet> createState() => _EditTransactionSheetState();
+}
+
+class _EditTransactionSheetState extends State<_EditTransactionSheet> {
+  late final TextEditingController _amountController;
+  late final TextEditingController _descController;
+  final _formKey = GlobalKey<FormState>();
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController = TextEditingController(text: widget.record.amount.toString());
+    _descController = TextEditingController(text: widget.record.description);
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _descController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    final amount = int.tryParse(_amountController.text.replaceAll(',', '')) ?? 0;
+    setState(() => _loading = true);
+    await widget.onConfirm(amount, _descController.text.trim());
+    if (mounted) setState(() => _loading = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 24,
+        right: 24,
+        top: 24,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('تعديل العملية', style: AppTypography.headlineSmall),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _descController,
+              decoration: const InputDecoration(labelText: 'الوصف'),
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'الوصف مطلوب' : null,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _amountController,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.right,
+              decoration: const InputDecoration(
+                labelText: 'المبلغ',
+                suffixText: 'دج',
+              ),
+              validator: (v) {
+                final n = int.tryParse((v ?? '').replaceAll(',', ''));
+                if (n == null || n <= 0) return 'أدخل مبلغاً صحيحاً';
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: _loading ? null : _submit,
+                child: _loading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : const Text('حفظ'),
               ),
             ),
           ],

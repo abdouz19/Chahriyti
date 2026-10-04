@@ -56,4 +56,15 @@ class SavingsDao extends DatabaseAccessor<AppDatabase>
       (update(savingsHistory)
             ..where((t) => t.relatedDebtPaymentId.equals(debtPaymentId)))
           .write(SavingsHistoryCompanion(amount: Value(newAmount)));
+
+  Future<void> deleteById(int id) =>
+      (delete(savingsHistory)..where((t) => t.id.equals(id))).go();
+
+  Future<void> updateById(int id, {required int amount, required String description}) =>
+      (update(savingsHistory)..where((t) => t.id.equals(id))).write(
+        SavingsHistoryCompanion(
+          amount: Value(amount),
+          description: Value(description),
+        ),
+      );
 }

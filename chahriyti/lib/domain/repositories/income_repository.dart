@@ -17,6 +17,6 @@ abstract class IncomeRepository {
 
   Future<int> getTotalIncomeForCycle(int cycleId);
 
-  Future<void> updateIncome({required int id, required String description});
+  Future<void> updateIncome({required int id, required String description, required int amount});
   Future<void> deleteIncome(int id);
 }

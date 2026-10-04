@@ -51,7 +51,7 @@ class CelebrationPage extends StatelessWidget {
                               : null;
                           return Text(
                             firstName != null
-                                ? '🎉 أهلاً بك يا $firstName!'
+                                ? 'أهلاً بك يا $firstName!'
                                 : 'أهلاً بك في شهريتي!',
                             style: AppTypography.headlineMedium.copyWith(
                               color: AppColors.primary,
@@ -64,7 +64,7 @@ class CelebrationPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '❤️ شهريتي سعيدة بانضمامك',
+                        'شهريتي سعيدة بانضمامك',
                         style: AppTypography.bodyLarge.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -94,7 +94,7 @@ class CelebrationPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        '🇩🇿 شهريتي — الرفيق الأول للموظف الجزائري',
+                        'شهريتي — الرفيق الأول للموظف الجزائري',
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -129,7 +129,7 @@ class CelebrationPage extends StatelessWidget {
                                       strokeWidth: 2.5,
                                     ),
                                   )
-                                : const Text('🔑 لدي كود التفعيل'),
+                                : const Text('لدي كود التفعيل'),
                           ),
                         );
                       },

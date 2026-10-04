@@ -1,12 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../core/constants/wilayas.dart';
 import '../../../core/di/injection.dart';
@@ -24,6 +21,14 @@ class ActivationPage extends StatefulWidget {
 }
 
 class _ActivationPageState extends State<ActivationPage> {
+  late final Future _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = Injection.userRepository.getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ActivationCubit, ActivationState>(
@@ -107,8 +112,8 @@ class _ActivationPageState extends State<ActivationPage> {
                   _buildUserInfoSection(context),
                   const SizedBox(height: 16),
                   _buildLicenseSection(context, state),
-                  const SizedBox(height: 24),
-                  _buildBuyLink(context),
+                  // const SizedBox(height: 24),
+                  // _buildBuyLink(context),
                 ],
               );
             },
@@ -120,7 +125,7 @@ class _ActivationPageState extends State<ActivationPage> {
 
   Widget _buildUserInfoSection(BuildContext context) {
     return FutureBuilder(
-      future: Injection.userRepository.getUser(),
+      future: _userFuture,
       builder: (context, snapshot) {
         final user = snapshot.data;
         if (user == null) {
@@ -347,62 +352,6 @@ class _ActivationPageState extends State<ActivationPage> {
     );
   }
 
-  Future<void> _openStore() async {
-    try {
-      final response = await http.get(Uri.parse(
-        'https://us-central1-chahriyati.cloudfunctions.net/getAppConfig',
-      ));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final url = data['data']?['storeUrl'] as String?;
-        if (url != null && url.isNotEmpty && mounted) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => _StoreWebViewPage(
-                url: url,
-                title: context.l10n.getChahriyti,
-              ),
-            ),
-          );
-          return;
-        }
-      }
-    } catch (_) {}
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.cannotOpenPage)),
-      );
-    }
-  }
-
-  Widget _buildBuyLink(BuildContext context) {
-    return GestureDetector(
-      onTap: _openStore,
-      child: Center(
-        child: RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-            style: AppTypography.bodySmall.copyWith(
-              color: AppColors.textSecondary,
-            ),
-            children: [
-              TextSpan(text: context.l10n.buyBookLink),
-              TextSpan(
-                text: context.l10n.buyBookLinkHere,
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.primary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _openQrScanner(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -584,45 +533,6 @@ class _QrScannerSheetState extends State<_QrScannerSheet> {
           ),
         ],
       ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Store WebView Page
-// ---------------------------------------------------------------------------
-
-class _StoreWebViewPage extends StatefulWidget {
-  final String url;
-  final String title;
-  const _StoreWebViewPage({required this.url, required this.title});
-
-  @override
-  State<_StoreWebViewPage> createState() => _StoreWebViewPageState();
-}
-
-class _StoreWebViewPageState extends State<_StoreWebViewPage> {
-  late final WebViewController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(widget.url));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: WebViewWidget(controller: _controller),
     );
   }
 }

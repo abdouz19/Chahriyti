@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1073994248977",
+    "project_id": "chahriyati",
+    "storage_bucket": "chahriyati.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073994248977:android:d4db7ac97f1c2e67cb52b0",
+        "android_client_info": {
+          "package_name": "com.chahriyti.dz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABLJYRApcYTwp7T1VY-B8BWHrmbKrZRa4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

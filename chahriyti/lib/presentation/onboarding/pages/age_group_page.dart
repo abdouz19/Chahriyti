@@ -40,6 +40,8 @@ class _AgeGroupPageState extends State<AgeGroupPage>
       curve: Curves.easeIn,
     );
     _animController.forward();
+    final saved = context.read<OnboardingCubit>().ageGroup;
+    if (saved != null) _selectedAge = saved;
   }
 
   @override
@@ -61,7 +63,15 @@ class _AgeGroupPageState extends State<AgeGroupPage>
         body: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: IconButton(
+                  onPressed: () => context.go('/onboarding/profile'),
+                  icon: const Icon(Icons.arrow_back_ios_rounded),
+                  color: AppColors.textSecondary,
+                ),
+              ),
               const OnboardingProgressDots(currentStep: 2),
               Expanded(
                 child: FadeTransition(

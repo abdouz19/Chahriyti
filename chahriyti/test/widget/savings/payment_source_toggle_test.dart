@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:chahriyti/l10n/app_localizations.dart';
 import 'package:chahriyti/presentation/shared/widgets/payment_source_toggle.dart';
 
 void main() {
@@ -11,6 +12,9 @@ void main() {
     ValueChanged<bool>? onChanged,
   }) {
     return MaterialApp(
+      locale: const Locale('ar'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: PaymentSourceToggle(
           currentBalance: currentBalance,

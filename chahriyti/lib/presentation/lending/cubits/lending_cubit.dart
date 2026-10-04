@@ -113,6 +113,7 @@ class LendingCubit extends Cubit<LendingState> {
     required int amount,
     bool fromSavings = false,
     int savingsAmount = 0,
+    bool forgotten = false,
     String? notes,
   }) async {
     emit(const LendingState.loading());
@@ -122,6 +123,7 @@ class LendingCubit extends Cubit<LendingState> {
         amount: amount,
         fromSavings: fromSavings,
         savingsAmount: savingsAmount,
+        forgotten: forgotten,
         notes: notes,
       );
       emit(LendingState.lendingCreated(lending));

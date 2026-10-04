@@ -38,6 +38,19 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    final cubit = context.read<OnboardingCubit>();
+    if (cubit.salary > 0) {
+      _salaryController.text = cubit.salary.toString();
+      _salaryDay = cubit.salaryDay;
+      _useCustomDay = cubit.salaryDay != 1;
+      _maritalStatus = cubit.maritalStatus;
+      _tracksExpenses = cubit.tracksExpenses;
+    }
+  }
+
+  @override
   void dispose() {
     _salaryController.dispose();
     super.dispose();
@@ -63,9 +76,9 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
           _salaryController.text.replaceAll(',', '').trim(),
         ) ??
         0;
-    if (salary <= 0) {
+    if (salary < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('يجب إدخال راتب صحيح أكبر من صفر')),
+        const SnackBar(content: Text('الراتب لا يمكن أن يكون سالباً')),
       );
       return;
     }
@@ -90,7 +103,15 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
         body: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: IconButton(
+                  onPressed: () => context.go('/onboarding/age'),
+                  icon: const Icon(Icons.arrow_back_ios_rounded),
+                  color: AppColors.textSecondary,
+                ),
+              ),
               const OnboardingProgressDots(currentStep: 3),
               Expanded(
                 child: SingleChildScrollView(

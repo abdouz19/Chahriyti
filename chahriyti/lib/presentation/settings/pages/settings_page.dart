@@ -555,6 +555,7 @@ class _SettingsView extends StatelessWidget {
       isScrollControlled: true,
       builder: (_) => _EditSalarySheet(
         initialSalary: state.salary,
+        salaryDay: state.salaryDay,
         onSave: (newSalary) {
           cubit.updateSalary(newSalary);
         },
@@ -627,7 +628,7 @@ class _SettingsView extends StatelessWidget {
                       const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textSecondary),
                       const SizedBox(width: 6),
                       Text(
-                        sheetContext.l10n.appliesFromNextCycle,
+                        _formatNextCycleDate(state.salaryDay),
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -707,12 +708,29 @@ class _SectionCard extends StatelessWidget {
   }
 }
 
+String _formatNextCycleDate(int salaryDay) {
+  final now = DateTime.now();
+  DateTime next = DateTime(now.year, now.month, salaryDay.clamp(1, 28));
+  if (!now.isBefore(next)) {
+    next = now.month == 12
+        ? DateTime(now.year + 1, 1, salaryDay.clamp(1, 28))
+        : DateTime(now.year, now.month + 1, salaryDay.clamp(1, 28));
+  }
+  const months = [
+    'جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان',
+    'جويلية', 'أوت', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+  ];
+  return 'سيُطبَّق بدءاً من ${next.day} ${months[next.month - 1]} ${next.year}';
+}
+
 class _EditSalarySheet extends StatefulWidget {
   final int initialSalary;
+  final int salaryDay;
   final void Function(int) onSave;
 
   const _EditSalarySheet({
     required this.initialSalary,
+    required this.salaryDay,
     required this.onSave,
   });
 
@@ -777,7 +795,7 @@ class _EditSalarySheetState extends State<_EditSalarySheet> {
                   const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textSecondary),
                   const SizedBox(width: 6),
                   Text(
-                    context.l10n.appliesFromNextCycle,
+                    _formatNextCycleDate(widget.salaryDay),
                     style: AppTypography.bodySmall.copyWith(
                       color: AppColors.textSecondary,
                     ),

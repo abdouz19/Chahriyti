@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:chahriyti/domain/entities/debt_entity.dart';
+import 'package:chahriyti/l10n/app_localizations.dart';
 import 'package:chahriyti/presentation/financial_setup/widgets/debts_step_widget.dart';
 
 void main() {
@@ -15,6 +16,9 @@ void main() {
     VoidCallback? onBack,
   }) {
     return MaterialApp(
+      locale: const Locale('ar'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: Directionality(
           textDirection: TextDirection.rtl,

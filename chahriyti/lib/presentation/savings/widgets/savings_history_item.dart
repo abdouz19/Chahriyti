@@ -8,8 +8,15 @@ import '../../shared/widgets/money_text.dart';
 
 class SavingsHistoryItem extends StatelessWidget {
   final SavingsHistoryEntity record;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
-  const SavingsHistoryItem({super.key, required this.record});
+  const SavingsHistoryItem({
+    super.key,
+    required this.record,
+    this.onEdit,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +72,42 @@ class SavingsHistoryItem extends StatelessWidget {
             color: color,
             showSign: true,
           ),
+          if (onEdit != null || onDelete != null)
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert_rounded,
+                  size: 20, color: AppColors.textSecondary),
+              padding: EdgeInsets.zero,
+              itemBuilder: (_) => [
+                if (onEdit != null)
+                  const PopupMenuItem(
+                    value: 'edit',
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit_rounded, size: 18),
+                        SizedBox(width: 8),
+                        Text('تعديل'),
+                      ],
+                    ),
+                  ),
+                if (onDelete != null)
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_outline_rounded,
+                            size: 18, color: AppColors.negative),
+                        const SizedBox(width: 8),
+                        Text('حذف',
+                            style: TextStyle(color: AppColors.negative)),
+                      ],
+                    ),
+                  ),
+              ],
+              onSelected: (value) {
+                if (value == 'edit') onEdit?.call();
+                if (value == 'delete') onDelete?.call();
+              },
+            ),
         ],
       ),
     );

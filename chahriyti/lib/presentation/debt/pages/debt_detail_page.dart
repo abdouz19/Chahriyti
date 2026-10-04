@@ -43,7 +43,7 @@ class _DebtDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DebtCubit, DebtState>(
+    return BlocConsumer<DebtCubit, DebtState>(
       listener: (context, state) {
         if (state is DebtDeleted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -55,40 +55,44 @@ class _DebtDetailView extends StatelessWidget {
           Navigator.pop(context);
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            context.l10n.debtDetails,
-            style: AppTypography.headlineSmall,
+      builder: (context, state) {
+        final canDelete = state is DebtLoaded ? state.debt.paidAmount == 0 : true;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              context.l10n.debtDetails,
+              style: AppTypography.headlineSmall,
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit_outlined),
+                tooltip: context.l10n.edit,
+                onPressed: () async {
+                  final cubit = context.read<DebtCubit>();
+                  final currentState = cubit.state;
+                  if (currentState is DebtLoaded) {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            AddDebtPage(initialDebt: currentState.debt),
+                      ),
+                    );
+                    cubit.loadDebtById(debtId);
+                  }
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: canDelete ? AppColors.negative : AppColors.textSecondary,
+                ),
+                tooltip: context.l10n.delete,
+                onPressed: canDelete ? () => _showDeleteConfirmation(context) : null,
+              ),
+            ],
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.edit_outlined),
-              tooltip: context.l10n.edit,
-              onPressed: () async {
-                final cubit = context.read<DebtCubit>();
-                final currentState = cubit.state;
-                if (currentState is DebtLoaded) {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          AddDebtPage(initialDebt: currentState.debt),
-                    ),
-                  );
-                  cubit.loadDebtById(debtId);
-                }
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.delete_outline, color: AppColors.negative),
-              tooltip: context.l10n.delete,
-              onPressed: () => _showDeleteConfirmation(context),
-            ),
-          ],
-        ),
-        body: BlocBuilder<DebtCubit, DebtState>(
-          builder: (context, state) {
+          body: Builder(builder: (context) {
             if (state is DebtLoading) {
               return const Center(
                 child: CircularProgressIndicator(color: AppColors.primary),
@@ -329,9 +333,9 @@ class _DebtDetailView extends StatelessWidget {
             }
 
             return const SizedBox.shrink();
-          },
-        ),
-      ),
+          }),
+        );
+      },
     );
   }
 
@@ -367,7 +371,6 @@ class _DebtDetailView extends StatelessWidget {
   }
 
   void _showAddPaymentDialog(BuildContext context, int debtId, int remainingAmount) {
-    final amountController = TextEditingController();
     final debtCubit = context.read<DebtCubit>();
 
     showDialog(
@@ -378,7 +381,6 @@ class _DebtDetailView extends StatelessWidget {
         builder: (_, snapshot) {
           final savingsBalance = snapshot.data ?? 0;
           return _PaymentDialog(
-            amountController: amountController,
             savingsBalance: savingsBalance,
             maxAmount: remainingAmount,
             onSubmit: (amount, fromSavings) async {
@@ -470,14 +472,12 @@ class _DebtDetailView extends StatelessWidget {
 }
 
 class _PaymentDialog extends StatefulWidget {
-  final TextEditingController amountController;
   final int savingsBalance;
   final int maxAmount;
   final void Function(int amount, bool fromSavings) onSubmit;
   final VoidCallback onCancel;
 
   const _PaymentDialog({
-    required this.amountController,
     required this.savingsBalance,
     required this.maxAmount,
     required this.onSubmit,
@@ -489,8 +489,23 @@ class _PaymentDialog extends StatefulWidget {
 }
 
 class _PaymentDialogState extends State<_PaymentDialog> {
+  late final TextEditingController _amountController;
+  late final Future<int> _balanceFuture;
   bool _fromSavings = false;
   String? _errorText;
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController = TextEditingController();
+    _balanceFuture = _getCurrentBalance();
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -501,7 +516,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: widget.amountController,
+            controller: _amountController,
             keyboardType: TextInputType.number,
             onChanged: (_) {
               if (_errorText != null) setState(() => _errorText = null);
@@ -515,7 +530,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
           if (widget.savingsBalance > 0) ...[
             const SizedBox(height: 16),
             FutureBuilder<int>(
-              future: _getCurrentBalance(),
+              future: _balanceFuture,
               initialData: 0,
               builder: (context, snapshot) {
                 return PaymentSourceToggle(
@@ -536,7 +551,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            final amount = int.tryParse(widget.amountController.text);
+            final amount = int.tryParse(_amountController.text);
             if (amount == null || amount <= 0) {
               setState(() => _errorText = l10n.enterValidAmount);
               return;

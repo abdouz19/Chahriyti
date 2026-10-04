@@ -22,6 +22,7 @@ class CreateLendingUseCase {
     required int amount,
     bool fromSavings = false,
     int savingsAmount = 0,
+    bool forgotten = false,
     String? notes,
   }) async {
     if (borrowerName.trim().isEmpty) throw ArgumentError('اسم المقترض مطلوب');
@@ -29,6 +30,18 @@ class CreateLendingUseCase {
 
     final cycle = await _cycleRepository.getActiveCycle();
     if (cycle == null) throw StateError('لا توجد دورة مالية نشطة');
+
+    // Forgotten: record only, no deduction from balance or savings
+    if (forgotten) {
+      return _lendingRepository.createLending(
+        borrowerName: borrowerName.trim(),
+        totalAmount: amount,
+        fromSavings: true,
+        savingsAmount: 0,
+        cycleId: cycle.id,
+        notes: notes?.trim(),
+      );
+    }
 
     final effectiveSavingsAmount = fromSavings ? amount : savingsAmount.clamp(0, amount);
 

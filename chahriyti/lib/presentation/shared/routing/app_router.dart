@@ -8,6 +8,7 @@ import '../../../application/use_cases/activation/get_device_id_use_case.dart';
 import '../../../application/use_cases/activation/validate_license_use_case.dart';
 import '../../../application/use_cases/onboarding/setup_salary_use_case.dart';
 import '../../../core/di/injection.dart';
+import '../../../infrastructure/services/lead_storage.dart';
 import '../../../domain/entities/expense_entity.dart';
 import '../../activation/cubits/activation_cubit.dart';
 import '../../activation/pages/activation_page.dart';
@@ -49,8 +50,13 @@ abstract final class AppRouter {
       // Check if user exists
       final user = await Injection.userRepository.getUser();
 
-      // No user: allow splash and onboarding routes
+      // No user: check if profile was saved → skip to celebration, else normal onboarding
       if (user == null) {
+        final savedProfile = await const LeadStorage().load();
+        if (savedProfile != null) {
+          return path == '/onboarding/welcome' ? null : '/onboarding/welcome';
+        }
+
         const onboardingPaths = [
           '/',
           '/onboarding/profile',

@@ -5,6 +5,7 @@ import '../../../application/use_cases/savings/withdraw_to_balance_use_case.dart
 import '../../../application/use_cases/savings/get_savings_balance_use_case.dart';
 import '../../../application/use_cases/savings/get_savings_history_use_case.dart';
 import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dart';
+import '../../../domain/repositories/savings_repository.dart';
 import 'savings_state.dart';
 
 class SavingsCubit extends Cubit<SavingsState> {
@@ -13,6 +14,7 @@ class SavingsCubit extends Cubit<SavingsState> {
   final DepositFromBalanceUseCase _depositFromBalance;
   final WithdrawToBalanceUseCase _withdrawToBalance;
   final GetDashboardDataUseCase _getDashboardData;
+  final SavingsRepository _savingsRepo;
 
   static const _pageSize = 10;
   bool _isLoadingMore = false;
@@ -23,6 +25,7 @@ class SavingsCubit extends Cubit<SavingsState> {
     this._depositFromBalance,
     this._withdrawToBalance,
     this._getDashboardData,
+    this._savingsRepo,
   ) : super(const SavingsState.loading());
 
   Future<void> loadSavings() async {
@@ -59,6 +62,27 @@ class SavingsCubit extends Cubit<SavingsState> {
   Future<String?> withdraw(int amount) async {
     try {
       await _withdrawToBalance(amount: amount);
+      await loadSavings();
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String?> deleteTransaction(int id) async {
+    try {
+      await _savingsRepo.deleteTransaction(id);
+      await loadSavings();
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String?> editTransaction(int id, {required int amount, required String description}) async {
+    if (amount <= 0) return 'المبلغ يجب أن يكون أكبر من صفر';
+    try {
+      await _savingsRepo.updateTransaction(id, amount: amount, description: description);
       await loadSavings();
       return null;
     } catch (e) {

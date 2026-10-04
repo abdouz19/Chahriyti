@@ -4,6 +4,7 @@ export const COLLECTIONS = {
   CLIENTS: 'clients',
   STATS: 'stats',
   LICENSES: 'licenses',
+  LEADS: 'leads',
 };
 
 // User roles

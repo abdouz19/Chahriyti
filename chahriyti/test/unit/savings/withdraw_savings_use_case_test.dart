@@ -61,6 +61,10 @@ class FakeSavingsRepository implements SavingsRepository {
       int debtPaymentId, int newAmount) async {}
   @override
   Future<void> createInitialDeposit({required int amount}) async {}
+  @override
+  Future<void> deleteTransaction(int id) async {}
+  @override
+  Future<void> updateTransaction(int id, {required int amount, required String description}) async {}
 }
 
 void main() {

@@ -61,8 +61,8 @@ class IncomeRepositoryImpl implements IncomeRepository {
       _dao.getTotalIncomeForCycle(cycleId);
 
   @override
-  Future<void> updateIncome({required int id, required String description}) async {
-    await _dao.updateIncome(id: id, description: description);
+  Future<void> updateIncome({required int id, required String description, required int amount}) async {
+    await _dao.updateIncome(id: id, description: description, amount: amount);
   }
 
   @override

@@ -29,7 +29,9 @@ class _AddLendingPageState extends State<AddLendingPage> {
   late final TextEditingController _notesController;
   late final GlobalKey<FormState> _formKey;
   bool _fromSavings = false;
+  bool _forgotten = false;
   int _savingsBalance = 0;
+  Future<int>? _balanceFuture;
 
   @override
   void initState() {
@@ -39,6 +41,7 @@ class _AddLendingPageState extends State<AddLendingPage> {
     _notesController = TextEditingController();
     _formKey = GlobalKey<FormState>();
     _loadSavingsBalance();
+    _balanceFuture = _getCurrentBalance();
     if (widget.initialLending != null) {
       _borrowerController.text = widget.initialLending!.borrowerName;
       _amountController.text = widget.initialLending!.totalAmount.toString();
@@ -74,6 +77,17 @@ class _AddLendingPageState extends State<AddLendingPage> {
 
     if (widget.initialLending != null) {
       await _submitEdit(context, cubit, amount);
+      return;
+    }
+
+    // Forgotten lending: record only, no deduction
+    if (_forgotten) {
+      cubit.createLending(
+        borrowerName: _borrowerController.text,
+        amount: amount,
+        forgotten: true,
+        notes: _notesController.text.isEmpty ? null : _notesController.text,
+      );
       return;
     }
 
@@ -339,23 +353,63 @@ class _AddLendingPageState extends State<AddLendingPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
-                      // Payment source toggle (hidden in edit mode)
                       if (widget.initialLending == null) ...[
-                        FutureBuilder<int>(
-                          future: _getCurrentBalance(),
-                          initialData: 0,
-                          builder: (context, snapshot) {
-                            return PaymentSourceToggle(
-                              currentBalance: snapshot.data ?? 0,
-                              savingsBalance: _savingsBalance,
-                              fromSavings: _fromSavings,
-                              onChanged: (value) {
-                                setState(() => _fromSavings = value);
-                              },
-                            );
-                          },
+                        const SizedBox(height: 16),
+                        // Forgotten toggle
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: _forgotten
+                                ? AppColors.warning.withValues(alpha: 0.08)
+                                : AppColors.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: _forgotten ? AppColors.warning : AppColors.border,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'سلفة منسية (لا تُخصم من الرصيد)',
+                                  style: AppTypography.bodySmall.copyWith(
+                                    color: _forgotten
+                                        ? AppColors.warning
+                                        : AppColors.textSecondary,
+                                  ),
+                                ),
+                              ),
+                              Switch.adaptive(
+                                value: _forgotten,
+                                activeTrackColor: AppColors.warning.withValues(alpha: 0.5),
+                                activeThumbColor: AppColors.warning,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _forgotten = value;
+                                    if (value) _fromSavings = false;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
                         ),
+                        const SizedBox(height: 16),
+                        // Payment source toggle (hidden when forgotten)
+                        if (!_forgotten)
+                          FutureBuilder<int>(
+                            future: _balanceFuture,
+                            initialData: 0,
+                            builder: (context, snapshot) {
+                              return PaymentSourceToggle(
+                                currentBalance: snapshot.data ?? 0,
+                                savingsBalance: _savingsBalance,
+                                fromSavings: _fromSavings,
+                                onChanged: (value) {
+                                  setState(() => _fromSavings = value);
+                                },
+                              );
+                            },
+                          ),
                         const SizedBox(height: 20),
                       ],
                       Text(

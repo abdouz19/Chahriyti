@@ -98,9 +98,9 @@ class IncomeCubit extends Cubit<IncomeState> {
     }
   }
 
-  Future<void> updateIncome(int id, String description) async {
+  Future<void> updateIncome(int id, String description, int amount) async {
     try {
-      await _updateIncome.call(id: id, description: description);
+      await _updateIncome.call(id: id, description: description, amount: amount);
       emit(IncomeUpdated());
     } on ArgumentError catch (e) {
       emit(IncomeError(e.message.toString()));

@@ -98,6 +98,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   @override
   void dispose() {
+    _itemCtrl?.removeListener(_onItemChanged);
     _amountController.dispose();
     _notesController.dispose();
     super.dispose();

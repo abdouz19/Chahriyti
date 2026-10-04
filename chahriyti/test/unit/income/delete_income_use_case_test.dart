@@ -34,7 +34,7 @@ class FakeIncomeRepository implements IncomeRepository {
 
   @override
   Future<void> updateIncome(
-      {required int id, required String description}) async {}
+      {required int id, required String description, required int amount}) async {}
 
   @override
   Future<void> deleteIncome(int id) async {

@@ -6,6 +6,7 @@ import '../../../core/constants/wilayas.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
+import '../widgets/commune_picker_sheet.dart';
 import '../widgets/onboarding_progress_dots.dart';
 import '../widgets/wilaya_picker_sheet.dart';
 
@@ -22,6 +23,20 @@ class _ProfilePageState extends State<ProfilePage> {
   final _phoneController = TextEditingController();
   int _wilayaCode = 16;
   Wilaya? _selectedWilaya;
+  String? _selectedCommune;
+
+  @override
+  void initState() {
+    super.initState();
+    final cubit = context.read<OnboardingCubit>();
+    if (cubit.name.isNotEmpty) {
+      _nameController.text = cubit.name;
+      _phoneController.text = cubit.phone;
+      _wilayaCode = cubit.wilayaCode;
+      _selectedWilaya = Wilayas.all.where((w) => w.code == cubit.wilayaCode).firstOrNull;
+      _selectedCommune = cubit.commune;
+    }
+  }
 
   @override
   void dispose() {
@@ -40,6 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
           setState(() {
             _selectedWilaya = wilaya;
             _wilayaCode = wilaya.code;
+            _selectedCommune = null; // reset commune on wilaya change
           });
         },
       ),
@@ -59,16 +75,27 @@ class _ProfilePageState extends State<ProfilePage> {
       );
       return;
     }
-    if (_phoneController.text.trim().isEmpty) {
+    if (_selectedCommune == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('رقم الهاتف مطلوب')),
+        const SnackBar(content: Text('يرجى اختيار البلدية')),
+      );
+      return;
+    }
+    final phone = _phoneController.text.trim();
+    final phoneValid = RegExp(r'^0[567]\d{8}$').hasMatch(phone);
+    if (!phoneValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('رقم الهاتف غير صحيح — أدخل رقماً جزائرياً صحيحاً (05X / 06X / 07X)'),
+        ),
       );
       return;
     }
     context.read<OnboardingCubit>().submitProfile(
           name: _nameController.text.trim(),
-          phone: _phoneController.text.trim(),
+          phone: phone,
           wilayaCode: _wilayaCode,
+          commune: _selectedCommune,
         );
   }
 
@@ -97,7 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         const SizedBox(height: 24),
                         Text(
-                          'لنجهّز شهريتي لك ✨',
+                          'لنجهّز شهريتي لك ',
                           style: AppTypography.headlineMedium.copyWith(
                             color: AppColors.primary,
                             fontWeight: FontWeight.bold,
@@ -173,6 +200,62 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                         ),
+                        // Commune picker (visible only after wilaya selected)
+                        if (_selectedWilaya != null) ...[
+                          const SizedBox(height: 20),
+                          Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              'البلدية',
+                              style: AppTypography.labelMedium,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (_) => CommunePickerSheet(
+                                  wilayaCode: _wilayaCode,
+                                  onSelected: (commune) {
+                                    setState(() => _selectedCommune = commune);
+                                  },
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _selectedCommune ?? 'اختر بلديتك',
+                                    style: AppTypography.bodyMedium.copyWith(
+                                      color: _selectedCommune != null
+                                          ? AppColors.textPrimary
+                                          : AppColors.textSecondary,
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 20),
                         // Phone field
                         Align(

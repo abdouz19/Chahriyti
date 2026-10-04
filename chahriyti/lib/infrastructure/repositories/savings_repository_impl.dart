@@ -102,6 +102,13 @@ class SavingsRepositoryImpl implements SavingsRepository {
       _dao.updateAmountByRelatedDebtPaymentId(debtPaymentId, newAmount);
 
   @override
+  Future<void> deleteTransaction(int id) => _dao.deleteById(id);
+
+  @override
+  Future<void> updateTransaction(int id, {required int amount, required String description}) =>
+      _dao.updateById(id, amount: amount, description: description);
+
+  @override
   Future<void> createInitialDeposit({required int amount}) async {
     await _dao.insertRecord(
       SavingsHistoryCompanion(

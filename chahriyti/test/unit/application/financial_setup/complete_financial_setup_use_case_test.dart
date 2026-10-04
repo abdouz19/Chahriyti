@@ -69,8 +69,18 @@ class FakeCycleRepository implements CycleRepository {
     required DateTime endDate,
     required int salaryAmount,
     int salarySplitAmount = 0,
-  }) async =>
-      throw UnimplementedError();
+  }) async {
+    final cycle = FinancialCycleEntity(
+      id: 1,
+      startDate: startDate,
+      endDate: endDate,
+      salaryAmount: salaryAmount,
+      salarySplitAmount: salarySplitAmount,
+      isActive: true,
+    );
+    _activeCycle = cycle;
+    return cycle;
+  }
 
   @override
   Future<FinancialCycleEntity?> getCycleById(int id) async => null;
@@ -139,7 +149,7 @@ class FakeIncomeRepository implements IncomeRepository {
   Future<int> getTotalIncomeForCycle(int cycleId) async => 0;
 
   @override
-  Future<void> updateIncome({required int id, required String description}) async {}
+  Future<void> updateIncome({required int id, required String description, required int amount}) async {}
 
   @override
   Future<void> deleteIncome(int id) async {}
@@ -394,14 +404,15 @@ void main() {
     expect(expenseRepo.lastAmount, isNull);
   });
 
-  test('no adjustment when no active cycle', () async {
+  test('creates cycle and applies adjustment when no active cycle', () async {
+    // salary=80k, user has 50k → delta=-30k → expense of 30k
     userRepo.setUser(_user(initialBalance: 50000));
     cycleRepo.setActiveCycle(null);
 
     await useCase.call();
 
+    expect(expenseRepo.lastAmount, 30000);
     expect(incomeRepo.lastAmount, isNull);
-    expect(expenseRepo.lastAmount, isNull);
   });
 
   test('offsets initial lendings so post-setup balance equals initialBalance', () async {

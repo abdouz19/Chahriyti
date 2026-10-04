@@ -34,7 +34,7 @@ class DebtsStepWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SetupProgressBar(currentStep: 4, totalSteps: 7),
+          const SetupProgressBar(currentStep: 4, totalSteps: 6),
           const SizedBox(height: 32),
           Text(context.l10n.debtsStepTitle, style: AppTypography.headlineMedium),
           const SizedBox(height: 8),

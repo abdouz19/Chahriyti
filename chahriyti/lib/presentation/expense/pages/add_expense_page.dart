@@ -161,7 +161,7 @@ class _CategoryStep extends StatelessWidget {
   }
 }
 
-class _FormStep extends StatelessWidget {
+class _FormStep extends StatefulWidget {
   final bool isSaving;
   final int savingsBalance;
   final bool fromSavings;
@@ -185,34 +185,45 @@ class _FormStep extends StatelessWidget {
   });
 
   @override
+  State<_FormStep> createState() => _FormStepState();
+}
+
+class _FormStepState extends State<_FormStep> {
+  late final Future<int> _balanceFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _balanceFuture = Injection.cycleRepository.getActiveCycle().then(
+          (cycle) => cycle != null ? _getCurrentBalance(cycle.id) : 0,
+        );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (savingsBalance > 0 && onFromSavingsChanged != null) ...[
+          if (widget.savingsBalance > 0 && widget.onFromSavingsChanged != null) ...[
             FutureBuilder<int>(
-              future: Injection.cycleRepository.getActiveCycle().then(
-                    (cycle) => cycle != null
-                        ? _getCurrentBalance(cycle.id)
-                        : 0,
-                  ),
+              future: _balanceFuture,
               initialData: 0,
               builder: (ctx, snapshot) {
                 return PaymentSourceToggle(
                   currentBalance: snapshot.data ?? 0,
-                  savingsBalance: savingsBalance,
-                  fromSavings: fromSavings,
-                  onChanged: onFromSavingsChanged!,
+                  savingsBalance: widget.savingsBalance,
+                  fromSavings: widget.fromSavings,
+                  onChanged: widget.onFromSavingsChanged!,
                 );
               },
             ),
             const SizedBox(height: 16),
           ],
           ExpenseForm(
-            isSaving: isSaving,
-            category: category,
+            isSaving: widget.isSaving,
+            category: widget.category,
             onSave: ({required String itemName, required int amount, String? notes}) async {
               await _handleSave(
                 context: context,
@@ -234,8 +245,8 @@ class _FormStep extends StatelessWidget {
     String? notes,
   }) async {
     // All-from-savings toggle selected
-    if (fromSavings) {
-      if (amount > savingsBalance) {
+    if (widget.fromSavings) {
+      if (amount > widget.savingsBalance) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(context.l10n.insufficientSavings)),
@@ -243,7 +254,7 @@ class _FormStep extends StatelessWidget {
         }
         return;
       }
-      onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: 0);
+      widget.onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: 0);
       return;
     }
 
@@ -251,7 +262,7 @@ class _FormStep extends StatelessWidget {
     final cycle = await Injection.cycleRepository.getActiveCycle();
     final balance = cycle != null ? await _getCurrentBalance(cycle.id) : 0;
 
-    if (amount > balance + savingsBalance) {
+    if (amount > balance + widget.savingsBalance) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(context.l10n.insufficientFunds)),
@@ -266,15 +277,15 @@ class _FormStep extends StatelessWidget {
         context,
         amount: amount,
         availableBalance: balance,
-        availableSavings: savingsBalance,
+        availableSavings: widget.savingsBalance,
       );
       if (result == null || !context.mounted) return;
-      onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: result.savingsAmount);
+      widget.onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: result.savingsAmount);
       return;
     }
 
     // Balance is sufficient
-    onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: 0);
+    widget.onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: 0);
   }
 
   Future<int> _getCurrentBalance(int cycleId) async {

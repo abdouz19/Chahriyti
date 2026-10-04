@@ -23,4 +23,6 @@ abstract class SavingsRepository {
       int expenseId, int newAmount);
   Future<void> updateWithdrawalAmountByDebtPaymentId(
       int debtPaymentId, int newAmount);
+  Future<void> deleteTransaction(int id);
+  Future<void> updateTransaction(int id, {required int amount, required String description});
 }

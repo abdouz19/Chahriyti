@@ -168,7 +168,7 @@ class FakeIncomeRepository implements IncomeRepository {
           DateTime startDate, DateTime endDate) async =>
       [];
   @override
-  Future<void> updateIncome({required int id, required String description}) async {}
+  Future<void> updateIncome({required int id, required String description, required int amount}) async {}
   @override
   Future<void> deleteIncome(int id) async {}
 }
@@ -238,6 +238,10 @@ class FakeSavingsRepository implements SavingsRepository {
   @override
   Future<void> updateWithdrawalAmountByDebtPaymentId(
       int debtPaymentId, int newAmount) async {}
+  @override
+  Future<void> deleteTransaction(int id) async {}
+  @override
+  Future<void> updateTransaction(int id, {required int amount, required String description}) async {}
 }
 
 class FakeCustomCategoryRepository implements CustomCategoryRepository {

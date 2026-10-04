@@ -68,6 +68,14 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Leads: unauthenticated app users submit before activation. Admin/manager can read/update.
+    match /leads/{leadId} {
+      allow create: if true;
+      allow read: if isAdmin() || isManager();
+      allow update: if isAdmin() || isManager();
+      allow delete: if false;
+    }
+
     // Deny all other access
     match /{document=**} {
       allow read, write: if false;

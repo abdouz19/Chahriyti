@@ -7,6 +7,7 @@ import {
   startAfter,
   getDocs,
   getDoc,
+  updateDoc,
   doc,
   onSnapshot,
 } from 'firebase/firestore';
@@ -103,6 +104,39 @@ export async function getLicenseByKey(licenseKey) {
   } catch (error) {
     throw new Error('Failed to look up license.');
   }
+}
+
+// ---------------------------------------------------------------------------
+// Leads
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch paginated leads ordered by submittedAt desc.
+ */
+export async function getLeads({ pageSize = PAGE_SIZE, lastDoc: lastDocCursor, status } = {}) {
+  try {
+    const constraints = [];
+    const colRef = collection(db, COLLECTIONS.LEADS);
+
+    if (status) constraints.push(where('status', '==', status));
+    constraints.push(orderBy('submittedAt', 'desc'));
+    constraints.push(limit(pageSize + 1));
+    if (lastDocCursor) constraints.push(startAfter(lastDocCursor));
+
+    const snap = await getDocs(query(colRef, ...constraints));
+    const hasMore = snap.docs.length > pageSize;
+    const docs = snap.docs.slice(0, pageSize).map((d) => ({ id: d.id, ...d.data() }));
+    return { docs, hasMore, lastDoc: snap.docs[pageSize - 1] ?? null };
+  } catch (error) {
+    throw new Error('Failed to fetch leads.');
+  }
+}
+
+/**
+ * Update a lead's status field.
+ */
+export async function updateLeadStatus(leadId, status) {
+  await updateDoc(doc(db, COLLECTIONS.LEADS, leadId), { status });
 }
 
 /**

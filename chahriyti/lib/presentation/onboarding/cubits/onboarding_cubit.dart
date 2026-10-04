@@ -1,6 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../application/use_cases/onboarding/setup_salary_use_case.dart';
+import '../../../infrastructure/services/lead_service.dart';
+import '../../../infrastructure/services/lead_storage.dart';
 
 // ---------------------------------------------------------------------------
 // States
@@ -71,24 +74,40 @@ final class OnboardingValueProposition extends OnboardingState {
 
 class OnboardingCubit extends Cubit<OnboardingState> {
   final SetupSalaryUseCase _setupSalaryUseCase;
+  final LeadService _leadService;
+  final LeadStorage _leadStorage;
 
-  // Internal fields (in-memory only)
+  // In-memory fields — populated during the forward flow
   String _name = '';
   String _phone = '';
   int _wilayaCode = 16;
-  // ignore: unused_field
+  String? _commune;
   String? _ageGroup;
   int _salary = 0;
   int _salaryDay = 1;
-  // ignore: unused_field
   String? _maritalStatus;
-  // ignore: unused_field
   bool? _tracksExpenses;
-  // ignore: unused_field
   List<String> _goals = [];
 
-  OnboardingCubit({required SetupSalaryUseCase setupSalaryUseCase})
-      : _setupSalaryUseCase = setupSalaryUseCase,
+  // Getters for pre-filling forms on back navigation
+  String get name => _name;
+  String get phone => _phone;
+  int get wilayaCode => _wilayaCode;
+  String? get commune => _commune;
+  String? get ageGroup => _ageGroup;
+  int get salary => _salary;
+  int get salaryDay => _salaryDay;
+  String? get maritalStatus => _maritalStatus;
+  bool? get tracksExpenses => _tracksExpenses;
+  List<String> get goals => List.unmodifiable(_goals);
+
+  OnboardingCubit({
+    required SetupSalaryUseCase setupSalaryUseCase,
+    LeadService? leadService,
+    LeadStorage? leadStorage,
+  })  : _setupSalaryUseCase = setupSalaryUseCase,
+        _leadService = leadService ?? LeadService(),
+        _leadStorage = leadStorage ?? const LeadStorage(),
         super(const OnboardingProfile());
 
   void start() => emit(const OnboardingProfile());
@@ -97,10 +116,12 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     required String name,
     required String phone,
     required int wilayaCode,
+    String? commune,
   }) {
     _name = name;
     _phone = phone;
     _wilayaCode = wilayaCode;
+    _commune = commune;
     emit(const OnboardingAgeGroup());
   }
 
@@ -122,12 +143,53 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     emit(const OnboardingGoals());
   }
 
-  void submitGoals(List<String> goals) {
+  /// Goals "التالي": submit to Firestore + save profile locally.
+  Future<void> submitGoals(List<String> goals) async {
     _goals = goals;
-    emit(OnboardingCelebration(firstName: _name.split(' ').first));
+    emit(const OnboardingLoading());
+    try {
+      String? fcmToken;
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken();
+      } catch (_) {
+        // APNs not configured or permission denied — token stays null
+      }
+
+      // Save locally first — must succeed
+      await _leadStorage.save(
+        name: _name,
+        phone: _phone,
+        wilayaCode: _wilayaCode,
+        salary: _salary,
+        salaryDay: _salaryDay,
+      );
+
+      // Submit to Firestore — non-fatal if it fails
+      try {
+        await _leadService.submitLead(
+          name: _name,
+          phone: _phone,
+          wilayaCode: _wilayaCode,
+          commune: _commune,
+          ageGroup: _ageGroup,
+          salary: _salary,
+          salaryDay: _salaryDay,
+          maritalStatus: _maritalStatus,
+          tracksExpenses: _tracksExpenses,
+          goals: _goals,
+          fcmToken: fcmToken,
+        );
+      } catch (_) {
+        // Firestore submission failed — user still proceeds to celebration
+      }
+
+      emit(OnboardingCelebration(firstName: _name.split(' ').first));
+    } catch (_) {
+      emit(const OnboardingError('تعذّر حفظ بياناتك، تحقق من الاتصال وحاول مجدداً'));
+    }
   }
 
-  // Legacy stub methods (kept for backward compatibility with dead-code pages)
+  // Legacy stub methods
   // ignore: unused_element
   Future<void> setSalary({
     required int monthlySalary,
@@ -138,10 +200,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   }) async {}
 
   // ignore: unused_element
-  Future<void> addIncome({
-    required String description,
-    required int amount,
-  }) async {}
+  Future<void> addIncome({required String description, required int amount}) async {}
 
   // ignore: unused_element
   void skipIncome() {}
@@ -149,16 +208,37 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   // ignore: unused_element
   void skipSalarySplit() {}
 
+  /// Celebration "لدي كود التفعيل": create local DB user then go to activation.
+  /// Uses in-memory data in the forward flow, falls back to storage on reopen.
   Future<void> complete() async {
     emit(const OnboardingLoading());
     try {
+      String name = _name;
+      String phone = _phone;
+      int wilayaCode = _wilayaCode;
+      int salary = _salary;
+      int salaryDay = _salaryDay;
+
+      // Reopen case: cubit is fresh, load from storage
+      if (name.isEmpty) {
+        final stored = await _leadStorage.load();
+        if (stored != null) {
+          name = stored['name'] as String? ?? '';
+          phone = stored['phone'] as String? ?? '';
+          wilayaCode = stored['wilayaCode'] as int? ?? 16;
+          salary = stored['salary'] as int? ?? 0;
+          salaryDay = stored['salaryDay'] as int? ?? 1;
+        }
+      }
+
       await _setupSalaryUseCase(
-        monthlySalary: _salary,
-        salaryDay: _salaryDay,
-        fullName: _name,
-        phoneNumber: _phone,
-        wilayaCode: _wilayaCode,
+        monthlySalary: salary,
+        salaryDay: salaryDay,
+        fullName: name,
+        phoneNumber: phone,
+        wilayaCode: wilayaCode,
       );
+      await _leadStorage.clear();
       emit(const OnboardingDone());
     } on ArgumentError catch (e) {
       emit(OnboardingError(e.message.toString()));

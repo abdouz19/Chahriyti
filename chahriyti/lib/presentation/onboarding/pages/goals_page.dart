@@ -18,6 +18,12 @@ class GoalsPage extends StatefulWidget {
 class _GoalsPageState extends State<GoalsPage> {
   final Set<String> _selected = {};
 
+  @override
+  void initState() {
+    super.initState();
+    _selected.addAll(context.read<OnboardingCubit>().goals);
+  }
+
   static const _goals = [
     'معرفة رصيدي الحقيقي في أي لحظة',
     'تسجيل مصاريفي بسهولة',
@@ -33,18 +39,35 @@ class _GoalsPageState extends State<GoalsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OnboardingCubit, OnboardingState>(
+    return BlocConsumer<OnboardingCubit, OnboardingState>(
       listener: (context, state) {
         if (state is OnboardingCelebration) {
           context.go('/onboarding/welcome');
+        } else if (state is OnboardingError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       },
-      child: Scaffold(
+      builder: (context, state) {
+        final isLoading = state is OnboardingLoading;
+        return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: IconButton(
+                  onPressed: () => context.go('/onboarding/financial'),
+                  icon: const Icon(Icons.arrow_back_ios_rounded),
+                  color: AppColors.textSecondary,
+                ),
+              ),
               const OnboardingProgressDots(currentStep: 4),
               Expanded(
                 child: SingleChildScrollView(
@@ -103,17 +126,29 @@ class _GoalsPageState extends State<GoalsPage> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => context
-                        .read<OnboardingCubit>()
-                        .submitGoals(_selected.toList()),
-                    child: const Text('التالي'),
+                    onPressed: isLoading
+                        ? null
+                        : () => context
+                            .read<OnboardingCubit>()
+                            .submitGoals(_selected.toList()),
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 22,
+                            width: 22,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2.5,
+                            ),
+                          )
+                        : const Text('التالي'),
                   ),
                 ),
               ),
             ],
           ),
         ),
-      ),
+      );
+      },
     );
   }
 }

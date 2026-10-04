@@ -57,7 +57,7 @@ class _BalanceStepWidgetState extends State<BalanceStepWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SetupProgressBar(currentStep: 2, totalSteps: 7),
+            const SetupProgressBar(currentStep: 2, totalSteps: 6),
             const SizedBox(height: 32),
             Text(
               context.l10n.balanceStepTitle,
