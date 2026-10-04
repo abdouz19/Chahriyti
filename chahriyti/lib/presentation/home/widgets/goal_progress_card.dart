@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/savings_goal_entity.dart';
@@ -31,7 +32,7 @@ class GoalProgressCard extends StatelessWidget {
           onTap: onViewAll,
           child: Center(
             child: Text(
-              'عرض الكل',
+              context.l10n.viewAll,
               style: AppTypography.labelMedium.copyWith(
                 color: AppColors.primary,
               ),
