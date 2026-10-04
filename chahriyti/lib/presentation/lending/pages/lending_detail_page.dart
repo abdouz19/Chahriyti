@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import '../../../core/extensions/string_extensions.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -307,7 +308,7 @@ class _LendingDetailView extends StatelessWidget {
                               size: 16, color: AppColors.textSecondary),
                           const SizedBox(width: 8),
                           Text(
-                            dateFormat.format(lending.createdAt),
+                            dateFormat.format(lending.createdAt).toLatinDigits(),
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -405,7 +406,8 @@ class _LendingDetailView extends StatelessWidget {
                                       children: [
                                         Text(
                                           dateFormat
-                                              .format(collection.createdAt),
+                                              .format(collection.createdAt)
+                                              .toLatinDigits(),
                                           style:
                                               AppTypography.bodySmall.copyWith(
                                             color: AppColors.textSecondary,

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import '../../../core/extensions/string_extensions.dart';
 import '../../../core/extensions/category_l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -274,7 +275,7 @@ class _ExpenseRow extends StatelessWidget {
 
   String _formatDate(DateTime date, BuildContext context) {
     final locale = Localizations.localeOf(context).languageCode;
-    return DateFormat('d MMMM yyyy', locale).format(date);
+    return DateFormat('d MMMM yyyy', locale).format(date).toLatinDigits();
   }
 
   @override

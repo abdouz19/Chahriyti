@@ -14,6 +14,7 @@ import '../../../application/use_cases/statistics/get_spending_insights_use_case
 import '../../../application/use_cases/statistics/get_spending_trend_use_case.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import '../../../core/extensions/string_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../shared/widgets/loading_shimmer.dart';
@@ -296,7 +297,7 @@ class _FilterBar extends StatelessWidget {
     if (filter != StatisticsFilter.custom) return '';
     final locale = Localizations.localeOf(context).languageCode;
     final fmt = DateFormat('d MMM', locale);
-    return '${fmt.format(dateRange.start)} – ${fmt.format(dateRange.end)}';
+    return '${fmt.format(dateRange.start).toLatinDigits()} – ${fmt.format(dateRange.end).toLatinDigits()}';
   }
 
   @override
