@@ -42,7 +42,7 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
       initialDate: DateTime(now.year, now.month, _salaryDay.clamp(1, 28)),
       firstDate: DateTime(now.year, now.month, 1),
       lastDate: DateTime(now.year, now.month, 28),
-      helpText: 'اختر يوم استلام الراتب',
+      helpText: context.l10n.salarySetupPickDayHelp,
       locale: const Locale('ar'),
     );
     if (picked != null) {
@@ -93,7 +93,7 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('إعداد الحساب'),
+          title: Text(context.l10n.salarySetupTitle),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () => context.go('/onboarding/value'),
@@ -107,20 +107,20 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
               children: [
                 _SectionCard(
                   children: [
-                    _buildLabel('الاسم الكامل'),
+                    _buildLabel(context.l10n.salarySetupFullName),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _nameController,
                       textAlign: TextAlign.start,
                       textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        hintText: 'مثال: محمد أمين',
+                      decoration: InputDecoration(
+                        hintText: context.l10n.salarySetupNameHint,
                       ),
                       validator: (v) =>
-                          (v == null || v.trim().isEmpty) ? 'الاسم مطلوب' : null,
+                          (v == null || v.trim().isEmpty) ? context.l10n.salarySetupNameRequired : null,
                     ),
                     const SizedBox(height: 16),
-                    _buildLabel('رقم الهاتف'),
+                    _buildLabel(context.l10n.salarySetupPhone),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _phoneController,
@@ -131,11 +131,11 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
                         hintText: '0550000000',
                       ),
                       validator: (v) => (v == null || v.trim().isEmpty)
-                          ? 'رقم الهاتف مطلوب'
+                          ? context.l10n.salarySetupPhoneRequired
                           : null,
                     ),
                     const SizedBox(height: 16),
-                    _buildLabel('الولاية'),
+                    _buildLabel(context.l10n.salarySetupWilaya),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<int>(
                       initialValue: _selectedWilayaCode,
@@ -159,7 +159,7 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
                 const SizedBox(height: 16),
                 _SectionCard(
                   children: [
-                    _buildLabel('الراتب الشهري'),
+                    _buildLabel(context.l10n.salarySetupSalary),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _salaryController,
@@ -167,14 +167,14 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: InputDecoration(
-                        hintText: 'مثال: 50000',
+                        hintText: context.l10n.salarySetupSalaryHint,
                         suffixText: context.l10n.currencySymbol,
                       ),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'الراتب مطلوب';
+                        if (v == null || v.isEmpty) return context.l10n.salarySetupSalaryRequired;
                         final val = int.tryParse(v.replaceAll(',', ''));
                         if (val == null || val <= 0) {
-                          return 'يجب أن يكون الراتب أكبر من صفر';
+                          return context.l10n.salarySetupSalaryPositive;
                         }
                         return null;
                       },
@@ -184,12 +184,12 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
                 const SizedBox(height: 16),
                 _SectionCard(
                   children: [
-                    _buildLabel('تاريخ استلام الراتب'),
+                    _buildLabel(context.l10n.salarySetupSalaryDay),
                     const SizedBox(height: 12),
                     Row(
                       children: [
                         _DayChip(
-                          label: 'أول الشهر (اليوم 1)',
+                          label: context.l10n.salarySetupFirstOfMonth,
                           selected: !_useCustomDay,
                           onTap: () => setState(() {
                             _useCustomDay = false;
@@ -198,7 +198,7 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
                         ),
                         const SizedBox(width: 12),
                         _DayChip(
-                          label: 'تاريخ محدد',
+                          label: context.l10n.salarySetupSpecificDate,
                           selected: _useCustomDay,
                           onTap: () async {
                             setState(() => _useCustomDay = true);
@@ -230,7 +230,7 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'يوم $_salaryDay من كل شهر',
+                                context.l10n.salarySetupDayOfMonth(_salaryDay),
                                 textAlign: TextAlign.start,
                                 style: AppTypography.bodyMedium.copyWith(
                                   color: AppColors.primary,
@@ -259,7 +259,7 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
                                 strokeWidth: 2.5,
                               ),
                             )
-                          : const Text('التالي'),
+                          : Text(context.l10n.next),
                     );
                   },
                 ),

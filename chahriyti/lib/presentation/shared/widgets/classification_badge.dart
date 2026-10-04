@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../application/use_cases/insights/calculate_financial_classification_use_case.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
@@ -89,7 +90,7 @@ class ClassificationBadge extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'معدل الادخار: ${savingsRate.toStringAsFixed(1)}%',
+                      context.l10n.savingsRateShort(savingsRate.toStringAsFixed(1)),
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                       ),

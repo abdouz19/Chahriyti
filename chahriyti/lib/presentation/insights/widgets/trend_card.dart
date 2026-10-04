@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../application/use_cases/insights/generate_spending_trends_use_case.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../shared/widgets/money_text.dart';
@@ -122,7 +123,7 @@ class TrendCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'الشهر الماضي',
+                      context.l10n.lastMonth,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -143,7 +144,7 @@ class TrendCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'هذا الشهر',
+                      context.l10n.thisMonth,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                       ),

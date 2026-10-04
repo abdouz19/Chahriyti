@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
@@ -17,25 +18,26 @@ class GoalsPage extends StatefulWidget {
 
 class _GoalsPageState extends State<GoalsPage> {
   final Set<String> _selected = {};
+  late List<String> _goals;
 
   @override
   void initState() {
     super.initState();
     _selected.addAll(context.read<OnboardingCubit>().goals);
+    final l = context.l10n;
+    _goals = [
+      l.goal1,
+      l.goal2,
+      l.goal3,
+      l.goal4,
+      l.goal5,
+      l.goal6,
+      l.goal7,
+      l.goal8,
+      l.goal9,
+      l.goal10,
+    ];
   }
-
-  static const _goals = [
-    'معرفة رصيدي الحقيقي في أي لحظة',
-    'تسجيل مصاريفي بسهولة',
-    'معرفة أين يذهب راتبي',
-    'التخطيط لأهدافي المالية خطوة بخطوة',
-    'متابعة ديوني والتزاماتي دون نسيان',
-    'تحديد سقف يومي آمن للمصاريف',
-    'بناء مدخراتي بشكل تدريجي ومنظم',
-    'تسجيل مصادر دخلي الإضافية',
-    'متابعة إحصائياتي المالية بوضوح',
-    'اتخاذ قرارات مالية مبنية على أرقامي الحقيقية',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +79,7 @@ class _GoalsPageState extends State<GoalsPage> {
                     children: [
                       const SizedBox(height: 24),
                       Text(
-                        'لماذا تريد استعمال شهريتي؟',
+                        context.l10n.goalsPageTitle,
                         style: AppTypography.headlineMedium.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
@@ -86,7 +88,7 @@ class _GoalsPageState extends State<GoalsPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'اختر كل ما ينطبق عليك',
+                        context.l10n.goalsPageSubtitle,
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -140,7 +142,7 @@ class _GoalsPageState extends State<GoalsPage> {
                               strokeWidth: 2.5,
                             ),
                           )
-                        : const Text('التالي'),
+                        : Text(context.l10n.next),
                   ),
                 ),
               ),

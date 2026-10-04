@@ -19,8 +19,8 @@ class SavingsBalanceHistoryChart extends StatelessWidget {
     return DateFormat('MMM', locale).format(date);
   }
 
-  String _fmt(int amount) {
-    if (amount >= 1000000) return '${(amount / 1000000).toStringAsFixed(1)}م';
+  String _fmt(int amount, BuildContext context) {
+    if (amount >= 1000000) return '${(amount / 1000000).toStringAsFixed(1)}${context.l10n.amountMillionShort}';
     if (amount >= 1000) return '${(amount / 1000).toStringAsFixed(0)}k';
     return amount.toString();
   }
@@ -122,7 +122,7 @@ class SavingsBalanceHistoryChart extends StatelessWidget {
             getTitlesWidget: (value, _) {
               if (value == 0) return const SizedBox.shrink();
               return Text(
-                _fmt(value.toInt()),
+                _fmt(value.toInt(), context),
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.textSecondary,
                   fontSize: 10,
@@ -179,7 +179,7 @@ class SavingsBalanceHistoryChart extends StatelessWidget {
               AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
               children: [
                 TextSpan(
-                  text: '${_fmt(pt.balance)} $symbol',
+                  text: '${_fmt(pt.balance, context)} $symbol',
                   style: AppTypography.labelMedium.copyWith(
                     color: _lineColor,
                     fontWeight: FontWeight.w700,

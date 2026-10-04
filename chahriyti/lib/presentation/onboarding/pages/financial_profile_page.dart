@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
@@ -22,24 +23,22 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
   bool _useCustomDay = false;
   String? _maritalStatus;
   bool? _tracksExpenses;
-
-  static const _maritalOptions = [
-    'أعزب',
-    'متزوج',
-    'متزوج ولدي طفل واحد',
-    'متزوج ولدي طفلان',
-    'متزوج ولدي 3 أطفال',
-    'متزوج ولدي 4 أطفال أو أكثر',
-  ];
-
-  static const _expenseOptions = [
-    'نعم، أكتب مصاريفي وأتابعها',
-    'لا، لا أكتب مصاريفي',
-  ];
+  late List<String> _maritalOptions;
+  late List<String> _expenseOptions;
 
   @override
   void initState() {
     super.initState();
+    final l = context.l10n;
+    _maritalOptions = [
+      l.financialProfileSingle,
+      l.financialProfileMarried,
+      l.financialProfileMarried1Child,
+      l.financialProfileMarried2Children,
+      l.financialProfileMarried3Children,
+      l.financialProfileMarried4PlusChildren,
+    ];
+    _expenseOptions = [l.financialProfileTracksYes, l.financialProfileTracksNo];
     final cubit = context.read<OnboardingCubit>();
     if (cubit.salary > 0) {
       _salaryController.text = cubit.salary.toString();
@@ -63,7 +62,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
       initialDate: DateTime(now.year, now.month, _salaryDay.clamp(1, 28)),
       firstDate: DateTime(now.year, now.month, 1),
       lastDate: DateTime(now.year, now.month, 28),
-      helpText: 'اختر يوم استلام الراتب',
+      helpText: context.l10n.salarySetupPickDayHelp,
       locale: const Locale('ar'),
     );
     if (picked != null) {
@@ -78,7 +77,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
         0;
     if (salary < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الراتب لا يمكن أن يكون سالباً')),
+        SnackBar(content: Text(context.l10n.financialProfileSalaryNegative)),
       );
       return;
     }
@@ -121,7 +120,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                     children: [
                       const SizedBox(height: 24),
                       Text(
-                        'أخبرنا عن وضعك المالي',
+                        context.l10n.financialProfileTitle,
                         style: AppTypography.headlineMedium.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
@@ -130,7 +129,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                       const SizedBox(height: 32),
                       // Salary
                       Text(
-                        'كم يبلغ راتبك الشهري؟',
+                        context.l10n.financialProfileSalaryQuestion,
                         style: AppTypography.labelMedium,
                       ),
                       const SizedBox(height: 8),
@@ -140,22 +139,22 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: '50,000',
-                          suffixText: 'دج',
+                          suffixText: context.l10n.currencySymbol,
                         ),
                       ),
                       const SizedBox(height: 16),
                       // Salary day
                       Text(
-                        'متى تستلم راتبك؟',
+                        context.l10n.financialProfileSalaryDayQuestion,
                         style: AppTypography.labelMedium,
                       ),
                       const SizedBox(height: 8),
                       Row(
                         children: [
                           _DayChip(
-                            label: 'أول الشهر',
+                            label: context.l10n.financialProfileStartOfMonth,
                             selected: !_useCustomDay,
                             onTap: () => setState(() {
                               _useCustomDay = false;
@@ -164,7 +163,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                           ),
                           const SizedBox(width: 12),
                           _DayChip(
-                            label: 'تاريخ محدد',
+                            label: context.l10n.financialProfileCustomDay,
                             selected: _useCustomDay,
                             onTap: () async {
                               setState(() => _useCustomDay = true);
@@ -196,7 +195,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'يوم $_salaryDay من كل شهر',
+                                  context.l10n.financialProfileDayOfMonth(_salaryDay),
                                   style: AppTypography.bodyMedium.copyWith(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.w600,
@@ -212,7 +211,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                       const SizedBox(height: 20),
                       // Marital status
                       Text(
-                        'ما هي حالتك الاجتماعية؟',
+                        context.l10n.financialProfileMaritalQuestion,
                         style: AppTypography.labelMedium,
                       ),
                       const SizedBox(height: 12),
@@ -236,7 +235,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                       const SizedBox(height: 20),
                       // Expense tracking
                       Text(
-                        'هل تكتب مصاريفك وتتابعها؟',
+                        context.l10n.financialProfileExpenseTrackQuestion,
                         style: AppTypography.labelMedium,
                       ),
                       const SizedBox(height: 12),
@@ -268,7 +267,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _submit,
-                    child: const Text('التالي'),
+                    child: Text(context.l10n.next),
                   ),
                 ),
               ),

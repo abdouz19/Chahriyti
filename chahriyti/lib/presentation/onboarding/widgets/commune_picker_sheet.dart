@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/communes.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
@@ -76,12 +77,12 @@ class _CommunePickerSheetState extends State<CommunePickerSheet> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('اختر بلديتك', style: AppTypography.headlineSmall),
+                Text(context.l10n.chooseCommune, style: AppTypography.headlineSmall),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _search,
                   decoration: InputDecoration(
-                    hintText: 'ابحث عن بلديتك...',
+                    hintText: context.l10n.searchCommune,
                     prefixIcon: const Icon(Icons.search_rounded),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,

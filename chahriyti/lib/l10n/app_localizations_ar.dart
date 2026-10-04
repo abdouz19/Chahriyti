@@ -1322,4 +1322,619 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get forecastFromLabel => 'من';
+
+  @override
+  String get customCategory => 'فئة مخصصة';
+
+  @override
+  String weekChallenge(int n) {
+    return 'تحدي الأسبوع $n';
+  }
+
+  @override
+  String get challengeCompleted => 'مكتمل';
+
+  @override
+  String get deleteOperation => 'حذف العملية';
+
+  @override
+  String get deleteOperationConfirm =>
+      'هل أنت متأكد من حذف هذه العملية؟ لا يمكن التراجع.';
+
+  @override
+  String get editOperation => 'تعديل العملية';
+
+  @override
+  String get descriptionLabel => 'الوصف';
+
+  @override
+  String get descriptionRequired => 'الوصف مطلوب';
+
+  @override
+  String get chooseWilaya => 'اختر ولايتك';
+
+  @override
+  String get searchWilaya => 'ابحث عن ولايتك...';
+
+  @override
+  String get chooseCommune => 'اختر بلديتك';
+
+  @override
+  String get searchCommune => 'ابحث عن بلديتك...';
+
+  @override
+  String get salarySplitTitle => 'تقسيم الراتب';
+
+  @override
+  String get salarySplitQuestion => 'كم تريد أن تدخر من راتبك؟';
+
+  @override
+  String get salarySplitDesc =>
+      'حدد المبلغ الذي تريد تحويله مباشرة إلى المدخرات';
+
+  @override
+  String get forgottenLending => 'سلفة منسية (لا تُخصم من الرصيد)';
+
+  @override
+  String get classificationTitle => 'تصنيفك المالي';
+
+  @override
+  String get classificationExplanationTitle => 'شرح التصنيف';
+
+  @override
+  String get classificationImprovementTitle => 'كيفية التحسين';
+
+  @override
+  String get classificationStatsTitle => 'إحصائياتك';
+
+  @override
+  String get explanationLegendary =>
+      'أنت في أعلى المستويات! تدير أموالك بكفاءة عالية وتحقق أهدافك المالية.';
+
+  @override
+  String get explanationSmart => 'تتخذ قرارات مالية ذكية وتحقق معدل ادخار جيد.';
+
+  @override
+  String get explanationBalanced =>
+      'إدارتك للمصاريف متوازنة. استمر في المراقبة الدقيقة.';
+
+  @override
+  String get explanationSpendthrift =>
+      'تصرف أسرع من اللازم. حاول تقليل المصاريف الاختيارية.';
+
+  @override
+  String get explanationDanger =>
+      'تحتاج إلى التحكم بأفضل طريقة. احذر من نفاد الرصيد.';
+
+  @override
+  String get explanationEarlyBankruptcy =>
+      'أنفقت أكثر من دخلك. تحرك الآن لإصلاح الوضع!';
+
+  @override
+  String get suggestionLegendary => 'الحفاظ على المستوى الحالي';
+
+  @override
+  String get suggestionSmart => 'زيادة معدل الادخار';
+
+  @override
+  String get suggestionBalanced => 'المحافظة على التوازن';
+
+  @override
+  String get suggestionSpendthrift => 'التحكم في الإنفاق';
+
+  @override
+  String get suggestionDanger => 'خفض الإنفاق بشكل حتمي';
+
+  @override
+  String get suggestionEarlyBankruptcy => 'تصرف سريع ضروري';
+
+  @override
+  String get tipInvestSurplus => 'استثمر فائض أموالك';
+
+  @override
+  String get tipHelpOthers => 'ساعد الآخرين مالياً';
+
+  @override
+  String get tipShareExperience => 'شارك تجربتك مع من تحب';
+
+  @override
+  String get tipReduceOptional => 'قلل المصاريف الاختيارية';
+
+  @override
+  String get tipFindExtraIncome => 'ابحث عن مصادر دخل إضافية';
+
+  @override
+  String get tipTrackWeekly => 'راقب الإنفاق أسبوعياً';
+
+  @override
+  String get tipWatchExcess => 'راقب المصاريف الزائدة';
+
+  @override
+  String get tipPlanEmergency => 'خطط لفترات الطوارئ';
+
+  @override
+  String get tipSetClearGoals => 'حدد أهداف مالية واضحة';
+
+  @override
+  String get tipListBeforeShopping => 'ضع قائمة للمشتريات قبل التسوق';
+
+  @override
+  String get tipAvoidImpulse => 'تجنب الشراء العشوائي';
+
+  @override
+  String get tipSetDailyBudget => 'حدد ميزانية يومية';
+
+  @override
+  String get tipStopUnnecessary => 'أوقف المشتريات غير الضرورية';
+
+  @override
+  String get tipReviewDaily => 'راجع كل مصروف يومي';
+
+  @override
+  String get tipSeekHelp => 'اطلب مساعدة مالية إن لزم';
+
+  @override
+  String get tipEssentialOnly => 'حدد المصاريف الحتمية فقط';
+
+  @override
+  String get tipFindExtraIncome2 => 'ابحث عن مصادر دخل إضافية';
+
+  @override
+  String get tipRestructureBudget => 'أعد هيكلة ميزانيتك كاملة';
+
+  @override
+  String get canSave => 'يمكنك توفير: ';
+
+  @override
+  String transactions(int count) {
+    return '$count معاملة';
+  }
+
+  @override
+  String get lastMonth => 'الشهر الماضي';
+
+  @override
+  String get thisMonth => 'هذا الشهر';
+
+  @override
+  String savingsRateShort(String rate) {
+    return '$rate% معدل الادخار';
+  }
+
+  @override
+  String get deleteCategory => 'حذف الفئة';
+
+  @override
+  String deleteCategoryConfirm(String name) {
+    return 'هل تريد حذف فئة \"$name\"؟';
+  }
+
+  @override
+  String get newCategory => 'فئة جديدة';
+
+  @override
+  String get addCustomCategory => 'إضافة فئة مخصصة';
+
+  @override
+  String get categoryName => 'اسم الفئة';
+
+  @override
+  String get categoryNameHint => 'مثال: رياضة، حيوانات أليفة...';
+
+  @override
+  String get chooseIcon => 'اختر أيقونة';
+
+  @override
+  String get hintEssentials => 'مثال: خبز، دجاج، ماء، دواء...';
+
+  @override
+  String get hintHomeFamily => 'مثال: أدوات منزلية، هدية، مصروف البيت...';
+
+  @override
+  String get hintLuxuries => 'مثال: قهوة، تيشيرت، ترفيه...';
+
+  @override
+  String get hintHealth => 'مثال: كشف طبي، دواء، تحاليل...';
+
+  @override
+  String get hintTransport => 'مثال: وقود، تاكسي، تذكرة...';
+
+  @override
+  String get hintClothing => 'مثال: قميص، حذاء، بنطلون...';
+
+  @override
+  String get hintRestaurants => 'مثال: بيتزا، برغر، قهوة...';
+
+  @override
+  String get hintEducation => 'مثال: كتاب، دروس خصوصية، دورة...';
+
+  @override
+  String get hintDefault => 'مثال: صف ما اشتريته...';
+
+  @override
+  String get editExpenseTitle => 'تعديل المصروف';
+
+  @override
+  String get expenseNotFound => 'لم يتم العثور على المصروف';
+
+  @override
+  String get unexpectedError => 'حدث خطأ غير متوقع';
+
+  @override
+  String insufficientBalanceDetail(int balance, int savings) {
+    return 'رصيدك الحالي $balance دج والمدخرات $savings دج — لا يكفي لإتمام هذا المبلغ';
+  }
+
+  @override
+  String get allFromBalance => 'كل من الرصيد';
+
+  @override
+  String get allFromSavings => 'كل من المدخرات';
+
+  @override
+  String get payFromLabel => 'ادفع من';
+
+  @override
+  String get currentBalanceLabel => 'الرصيد الحالي';
+
+  @override
+  String get savingsLabel => 'المدخرات';
+
+  @override
+  String get splashWelcome => 'أهلاً بك في شهريتي';
+
+  @override
+  String get splashBody =>
+      'أغلب الناس يعرفون كم يقبضون... لكن القليل فقط يعرفون أين يذهب مالهم.';
+
+  @override
+  String get splashBold => 'اليوم بدأت خطوة مختلفة.';
+
+  @override
+  String get startNow => 'ابدأ الآن';
+
+  @override
+  String get valuePropFromNow => 'من الآن فصاعدًا...';
+
+  @override
+  String get valuePropContinue => 'متابعة';
+
+  @override
+  String get valuePropQuote2 => '\"الأرقام التي لا تُقاس لا يمكن تحسينها.\"';
+
+  @override
+  String get vp1 => 'ستعرف رصيدك الحقيقي في أي لحظة';
+
+  @override
+  String get vp2 => 'ستسجل مصاريفك بسهولة ودون تعقيد';
+
+  @override
+  String get vp3 => 'ستكتشف أين يذهب راتبك فعليًا';
+
+  @override
+  String get vp4 => 'ستراقب تقدم أهدافك المالية خطوة بخطوة';
+
+  @override
+  String get vp5 => 'ستتابع ديونك وسلفك دون نسيان';
+
+  @override
+  String get vp6 => 'ستحدد سقفًا يوميًا آمنًا للمصاريف';
+
+  @override
+  String get vp7 => 'ستبني مدخراتك بشكل تدريجي ومنظم';
+
+  @override
+  String get vp8 => 'ستسجل مصادر دخلك الإضافية';
+
+  @override
+  String get vp9 => 'ستتابع إحصائياتك المالية بوضوح';
+
+  @override
+  String get vp10 => 'ستتخذ قرارات مالية مبنية على أرقام حقيقية لا على التخمين';
+
+  @override
+  String get exclusiveSkip => 'تخطي';
+
+  @override
+  String get exclusiveHeading => 'أنت الآن ضمن القلة';
+
+  @override
+  String get exclusiveBody1 =>
+      'معظم الناس يؤجلون تنظيم أموالهم إلى الشهر القادم.';
+
+  @override
+  String get exclusiveBody2 => 'ثم إلى الشهر الذي بعده.';
+
+  @override
+  String get exclusiveBody3 => 'ثم تمر سنوات دون تغيير.';
+
+  @override
+  String get exclusiveHighlight =>
+      'تحميلك لهذا التطبيق يعني أنك قررت أن تبدأ اليوم.';
+
+  @override
+  String get exclusiveContinue => 'متابعة';
+
+  @override
+  String get profileSetupTitle => 'لنجهّز شهريتي لك';
+
+  @override
+  String get profileSetupSubtitle =>
+      'أدخل بعض المعلومات البسيطة لنبدأ إعداد تجربتك الشخصية';
+
+  @override
+  String get profileNameQuestion => 'كيف تحب أن نناديك؟';
+
+  @override
+  String get profileNameHint => 'اكتب اسمك الكامل';
+
+  @override
+  String get profileWhereQuestion => 'أين تقيم؟';
+
+  @override
+  String get profileWilayaPlaceholder => 'اختر ولايتك';
+
+  @override
+  String get profileCommuneLabel => 'البلدية';
+
+  @override
+  String get profileCommunePlaceholder => 'اختر بلديتك';
+
+  @override
+  String get profilePhoneLabel => 'رقم الهاتف';
+
+  @override
+  String get profilePrivacyNote =>
+      'نستخدم هذه المعلومات لإنشاء حسابك وحفظ بياناتك وتأمين الوصول إلى التطبيق.';
+
+  @override
+  String get profileSubmitButton => 'لنبدأ';
+
+  @override
+  String get profileNameRequired => 'الاسم مطلوب';
+
+  @override
+  String get profileWilayaRequired => 'يرجى اختيار الولاية';
+
+  @override
+  String get profileCommuneRequired => 'يرجى اختيار البلدية';
+
+  @override
+  String get profilePhoneInvalid =>
+      'رقم الهاتف غير صحيح — أدخل رقماً جزائرياً صحيحاً (05X / 06X / 07X)';
+
+  @override
+  String get ageGroupFewKnow => 'قليل يعرفون أين يذهب مالهم.';
+
+  @override
+  String get ageGroupDifferentStep => 'اليوم بدأت خطوة مختلفة.';
+
+  @override
+  String get ageGroupQuestion => 'في أي فئة عمرية تقع؟';
+
+  @override
+  String get age20to30 => 'من 20 إلى 30 سنة';
+
+  @override
+  String get age31to40 => 'من 31 إلى 40 سنة';
+
+  @override
+  String get age41to50 => 'من 41 إلى 50 سنة';
+
+  @override
+  String get ageOver50 => 'أكثر من 50 سنة';
+
+  @override
+  String celebrationWelcomeWithName(String name) {
+    return 'أهلاً بك يا $name!';
+  }
+
+  @override
+  String get celebrationWelcome => 'أهلاً بك في شهريتي!';
+
+  @override
+  String get celebrationTagline => 'شهريتي سعيدة بانضمامك';
+
+  @override
+  String get celebrationBody =>
+      'لقد أصبحنا الآن على تواصل معك. سنتواصل معك قريباً لمساعدتك وإتمام خطوات حصولك على شهريتي.';
+
+  @override
+  String get celebrationFooter => 'شهريتي — الرفيق الأول للموظف الجزائري';
+
+  @override
+  String get celebrationActivateButton => 'لدي كود التفعيل';
+
+  @override
+  String get financialProfileTitle => 'أخبرنا عن وضعك المالي';
+
+  @override
+  String get financialProfileSalaryQuestion => 'كم يبلغ راتبك الشهري؟';
+
+  @override
+  String get financialProfileSalaryDayQuestion => 'متى تستلم راتبك؟';
+
+  @override
+  String get financialProfileStartOfMonth => 'أول الشهر';
+
+  @override
+  String get financialProfileCustomDay => 'تاريخ محدد';
+
+  @override
+  String financialProfileDayOfMonth(int day) {
+    return 'يوم $day من كل شهر';
+  }
+
+  @override
+  String get financialProfileMaritalQuestion => 'ما هي حالتك الاجتماعية؟';
+
+  @override
+  String get financialProfileSingle => 'أعزب';
+
+  @override
+  String get financialProfileMarried => 'متزوج';
+
+  @override
+  String get financialProfileMarried1Child => 'متزوج ولدي طفل واحد';
+
+  @override
+  String get financialProfileMarried2Children => 'متزوج ولدي طفلان';
+
+  @override
+  String get financialProfileMarried3Children => 'متزوج ولدي 3 أطفال';
+
+  @override
+  String get financialProfileMarried4PlusChildren =>
+      'متزوج ولدي 4 أطفال أو أكثر';
+
+  @override
+  String get financialProfileExpenseTrackQuestion =>
+      'هل تكتب مصاريفك وتتابعها؟';
+
+  @override
+  String get financialProfileTracksYes => 'نعم، أكتب مصاريفي وأتابعها';
+
+  @override
+  String get financialProfileTracksNo => 'لا، لا أكتب مصاريفي';
+
+  @override
+  String get financialProfileSalaryNegative => 'الراتب لا يمكن أن يكون سالباً';
+
+  @override
+  String get goalsPageTitle => 'لماذا تريد استعمال شهريتي؟';
+
+  @override
+  String get goalsPageSubtitle => 'اختر كل ما ينطبق عليك';
+
+  @override
+  String get goal1 => 'معرفة رصيدي الحقيقي في أي لحظة';
+
+  @override
+  String get goal2 => 'تسجيل مصاريفي بسهولة';
+
+  @override
+  String get goal3 => 'معرفة أين يذهب راتبي';
+
+  @override
+  String get goal4 => 'التخطيط لأهدافي المالية خطوة بخطوة';
+
+  @override
+  String get goal5 => 'متابعة ديوني والتزاماتي دون نسيان';
+
+  @override
+  String get goal6 => 'تحديد سقف يومي آمن للمصاريف';
+
+  @override
+  String get goal7 => 'بناء مدخراتي بشكل تدريجي ومنظم';
+
+  @override
+  String get goal8 => 'تسجيل مصادر دخلي الإضافية';
+
+  @override
+  String get goal9 => 'متابعة إحصائياتي المالية بوضوح';
+
+  @override
+  String get goal10 => 'اتخاذ قرارات مالية مبنية على أرقامي الحقيقية';
+
+  @override
+  String get salarySetupTitle => 'إعداد الحساب';
+
+  @override
+  String get salarySetupFullName => 'الاسم الكامل';
+
+  @override
+  String get salarySetupNameHint => 'مثال: محمد أمين';
+
+  @override
+  String get salarySetupNameRequired => 'الاسم مطلوب';
+
+  @override
+  String get salarySetupPhone => 'رقم الهاتف';
+
+  @override
+  String get salarySetupPhoneRequired => 'رقم الهاتف مطلوب';
+
+  @override
+  String get salarySetupWilaya => 'الولاية';
+
+  @override
+  String get salarySetupSalary => 'الراتب الشهري';
+
+  @override
+  String get salarySetupSalaryHint => 'مثال: 50000';
+
+  @override
+  String get salarySetupSalaryRequired => 'الراتب مطلوب';
+
+  @override
+  String get salarySetupSalaryPositive => 'يجب أن يكون الراتب أكبر من صفر';
+
+  @override
+  String get salarySetupSalaryDay => 'تاريخ استلام الراتب';
+
+  @override
+  String get salarySetupFirstOfMonth => 'أول الشهر (اليوم 1)';
+
+  @override
+  String get salarySetupSpecificDate => 'تاريخ محدد';
+
+  @override
+  String salarySetupDayOfMonth(int day) {
+    return 'يوم $day من كل شهر';
+  }
+
+  @override
+  String get salarySetupPickDayHelp => 'اختر يوم استلام الراتب';
+
+  @override
+  String get amountInputHint => 'مثال: 50000';
+
+  @override
+  String appliesFromDate(int day, String month, int year) {
+    return 'سيُطبَّق بدءاً من $day $month $year';
+  }
+
+  @override
+  String get monthJan => 'جانفي';
+
+  @override
+  String get monthFeb => 'فيفري';
+
+  @override
+  String get monthMar => 'مارس';
+
+  @override
+  String get monthApr => 'أفريل';
+
+  @override
+  String get monthMay => 'ماي';
+
+  @override
+  String get monthJun => 'جوان';
+
+  @override
+  String get monthJul => 'جويلية';
+
+  @override
+  String get monthAug => 'أوت';
+
+  @override
+  String get monthSep => 'سبتمبر';
+
+  @override
+  String get monthOct => 'أكتوبر';
+
+  @override
+  String get monthNov => 'نوفمبر';
+
+  @override
+  String get monthDec => 'ديسمبر';
+
+  @override
+  String deleteExpenseNamed(String name) {
+    return 'هل تريد حذف \"$name\"؟';
+  }
+
+  @override
+  String get amountMillionShort => 'م';
 }

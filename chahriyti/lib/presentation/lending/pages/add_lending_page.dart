@@ -371,7 +371,7 @@ class _AddLendingPageState extends State<AddLendingPage> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  'سلفة منسية (لا تُخصم من الرصيد)',
+                                  context.l10n.forgottenLending,
                                   style: AppTypography.bodySmall.copyWith(
                                     color: _forgotten
                                         ? AppColors.warning

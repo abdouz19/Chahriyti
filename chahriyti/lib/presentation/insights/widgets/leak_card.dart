@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../application/use_cases/insights/detect_financial_leaks_use_case.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../shared/widgets/money_text.dart';
@@ -82,7 +83,7 @@ class LeakCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${leak.transactionCount} معاملة',
+                        context.l10n.transactions(leak.transactionCount),
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -129,7 +130,7 @@ class LeakCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'يمكنك توفير: ',
+                      context.l10n.canSave,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                       ),

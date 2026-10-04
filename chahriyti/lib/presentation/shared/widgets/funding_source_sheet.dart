@@ -148,12 +148,12 @@ class _FundingSourceSheetState extends State<_FundingSourceSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'كل من الرصيد',
+                  context.l10n.allFromBalance,
                   style: AppTypography.bodySmall
                       .copyWith(color: AppColors.textSecondary),
                 ),
                 Text(
-                  'كل من المدخرات',
+                  context.l10n.allFromSavings,
                   style: AppTypography.bodySmall
                       .copyWith(color: AppColors.textSecondary),
                 ),
@@ -179,7 +179,7 @@ class _FundingSourceSheetState extends State<_FundingSourceSheet> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text('تأكيد'),
+              child: Text(context.l10n.confirm),
             ),
           ),
         ],

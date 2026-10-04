@@ -66,12 +66,12 @@ class _SalarySplitStepWidgetState extends State<SalarySplitStepWidget> {
           const SetupProgressBar(currentStep: 6, totalSteps: 7),
           const SizedBox(height: 32),
           Text(
-            'كم تريد أن تدخر من راتبك؟',
+            context.l10n.salarySplitQuestion,
             style: AppTypography.headlineMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            'حدد المبلغ الذي تريد تحويله مباشرة إلى المدخرات.',
+            context.l10n.salarySplitDesc,
             style: AppTypography.bodyMedium.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -119,14 +119,14 @@ class _SalarySplitStepWidgetState extends State<SalarySplitStepWidget> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: widget.onSkip,
-                  child: const Text('تخطي'),
+                  child: Text(context.l10n.skip),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton(
                   onPressed: () => widget.onNext(_allocation),
-                  child: const Text('التالي'),
+                  child: Text(context.l10n.next),
                 ),
               ),
             ],

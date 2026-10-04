@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../shared/widgets/classification_badge.dart';
@@ -35,7 +36,7 @@ class _ClassificationDetailView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'تصنيفك المالي',
+          context.l10n.classificationTitle,
           style: AppTypography.headlineSmall,
         ),
       ),
@@ -59,25 +60,25 @@ class _ClassificationDetailView extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'شرح التصنيف',
+                    context.l10n.classificationExplanationTitle,
                     style: AppTypography.headlineSmall,
                   ),
                   const SizedBox(height: 12),
-                  _buildExplanation(state.classification),
+                  _buildExplanation(context, state.classification),
                   const SizedBox(height: 24),
                   Text(
-                    'كيفية التحسين',
+                    context.l10n.classificationImprovementTitle,
                     style: AppTypography.headlineSmall,
                   ),
                   const SizedBox(height: 12),
-                  _buildImprovement(state.classification),
+                  _buildImprovement(context, state.classification),
                   const SizedBox(height: 24),
                   Text(
-                    'إحصائياتك',
+                    context.l10n.classificationStatsTitle,
                     style: AppTypography.headlineSmall,
                   ),
                   const SizedBox(height: 12),
-                  _buildStats(state),
+                  _buildStats(context, state),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -114,30 +115,27 @@ class _ClassificationDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildExplanation(classification) {
+  Widget _buildExplanation(BuildContext context, classification) {
+    final l = context.l10n;
     String explanation;
     switch (classification) {
       case 'legendarySaver':
-        explanation =
-            'أنت في أعلى المستويات! تدير أموالك بكفاءة عالية وتحقق أهدافك المالية.';
+        explanation = l.explanationLegendary;
         break;
       case 'smartSaver':
-        explanation = 'تتخذ قرارات مالية ذكية وتحقق معدل ادخار جيد.';
+        explanation = l.explanationSmart;
         break;
       case 'balanced':
-        explanation =
-            'إدارتك للمصاريف متوازنة. استمر في المراقبة الدقيقة.';
+        explanation = l.explanationBalanced;
         break;
       case 'spendthrift':
-        explanation = 'تصرف أسرع من اللازم. حاول تقليل المصاريف الاختيارية.';
+        explanation = l.explanationSpendthrift;
         break;
       case 'danger':
-        explanation =
-            'تحتاج إلى التحكم بأفضل طريقة. احذر من نفاد الرصيد.';
+        explanation = l.explanationDanger;
         break;
       case 'earlyBankruptcy':
-        explanation =
-            'أنفقت أكثر من دخلك. تحرك الآن لإصلاح الوضع!';
+        explanation = l.explanationEarlyBankruptcy;
         break;
       default:
         explanation = '';
@@ -157,58 +155,35 @@ class _ClassificationDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildImprovement(classification) {
+  Widget _buildImprovement(BuildContext context, classification) {
+    final l = context.l10n;
     String? suggestion;
     List<String> tips = [];
 
     switch (classification) {
       case 'legendarySaver':
-        suggestion = 'الحفاظ على المستوى الحالي';
-        tips = [
-          'استثمر فائض أموالك',
-          'ساعد الآخرين مالياً',
-          'شارك تجربتك مع من تحب',
-        ];
+        suggestion = l.suggestionLegendary;
+        tips = [l.tipInvestSurplus, l.tipHelpOthers, l.tipShareExperience];
         break;
       case 'smartSaver':
-        suggestion = 'زيادة معدل الادخار';
-        tips = [
-          'قلل المصاريف الاختيارية',
-          'ابحث عن مصادر دخل إضافية',
-          'راقب الإنفاق أسبوعياً',
-        ];
+        suggestion = l.suggestionSmart;
+        tips = [l.tipReduceOptional, l.tipFindExtraIncome, l.tipTrackWeekly];
         break;
       case 'balanced':
-        suggestion = 'المحافظة على التوازن';
-        tips = [
-          'راقب المصاريف الزائدة',
-          'خطط لفترات الطوارئ',
-          'حدد أهداف مالية واضحة',
-        ];
+        suggestion = l.suggestionBalanced;
+        tips = [l.tipWatchExcess, l.tipPlanEmergency, l.tipSetClearGoals];
         break;
       case 'spendthrift':
-        suggestion = 'التحكم في الإنفاق';
-        tips = [
-          'ضع قائمة للمشتريات قبل التسوق',
-          'تجنب الشراء العشوائي',
-          'حدد ميزانية يومية',
-        ];
+        suggestion = l.suggestionSpendthrift;
+        tips = [l.tipListBeforeShopping, l.tipAvoidImpulse, l.tipSetDailyBudget];
         break;
       case 'danger':
-        suggestion = 'خفض الإنفاق بشكل حتمي';
-        tips = [
-          'أوقف المشتريات غير الضرورية',
-          'راجع كل مصروف يومي',
-          'اطلب مساعدة مالية إن لزم',
-        ];
+        suggestion = l.suggestionDanger;
+        tips = [l.tipStopUnnecessary, l.tipReviewDaily, l.tipSeekHelp];
         break;
       case 'earlyBankruptcy':
-        suggestion = 'تصرف سريع ضروري';
-        tips = [
-          'حدد المصاريف الحتمية فقط',
-          'ابحث عن مصادر دخل إضافية',
-          'أعد هيكلة ميزانيتك كاملة',
-        ];
+        suggestion = l.suggestionEarlyBankruptcy;
+        tips = [l.tipEssentialOnly, l.tipFindExtraIncome2, l.tipRestructureBudget];
         break;
     }
 
@@ -255,7 +230,7 @@ class _ClassificationDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildStats(ClassificationLoaded state) {
+  Widget _buildStats(BuildContext context, ClassificationLoaded state) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -269,7 +244,7 @@ class _ClassificationDetailView extends StatelessWidget {
           Column(
             children: [
               Text(
-                'معدل الادخار',
+                context.l10n.savingsRateLabel,
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.textSecondary,
                 ),

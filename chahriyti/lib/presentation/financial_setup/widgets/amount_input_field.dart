@@ -30,7 +30,7 @@ class AmountInputField extends StatelessWidget {
         FilteringTextInputFormatter.digitsOnly,
       ],
       decoration: InputDecoration(
-        hintText: hintText ?? 'مثال: 50000',
+        hintText: hintText ?? context.l10n.amountInputHint,
         suffixText: context.l10n.currencySymbol,
       ),
       validator: validator,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/wilayas.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
@@ -72,14 +73,14 @@ class _WilayaPickerSheetState extends State<WilayaPickerSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'اختر ولايتك',
+                  context.l10n.chooseWilaya,
                   style: AppTypography.headlineSmall,
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _search,
                   decoration: InputDecoration(
-                    hintText: 'ابحث عن ولايتك...',
+                    hintText: context.l10n.searchWilaya,
                     prefixIcon: const Icon(Icons.search_rounded),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,

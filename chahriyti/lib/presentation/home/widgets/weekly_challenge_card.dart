@@ -43,7 +43,7 @@ class WeeklyChallengeCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'تحدي الأسبوع ${data.weekNumber}',
+                  context.l10n.weekChallenge(data.weekNumber),
                   style: AppTypography.labelLarge,
                 ),
                 const Spacer(),
@@ -59,7 +59,7 @@ class WeeklyChallengeCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    data.isCompleted ? 'مكتمل' : 'قيد التقدم',
+                    data.isCompleted ? context.l10n.challengeCompleted : context.l10n.inProgress,
                     style: AppTypography.labelSmall.copyWith(
                       color: data.isCompleted
                           ? AppColors.positive

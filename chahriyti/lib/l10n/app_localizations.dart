@@ -2619,6 +2619,1164 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'of'**
   String get forecastFromLabel;
+
+  /// No description provided for @customCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom category'**
+  String get customCategory;
+
+  /// No description provided for @weekChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Week {n} Challenge'**
+  String weekChallenge(int n);
+
+  /// No description provided for @challengeCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get challengeCompleted;
+
+  /// No description provided for @deleteOperation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Transaction'**
+  String get deleteOperation;
+
+  /// No description provided for @deleteOperationConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this transaction? This cannot be undone.'**
+  String get deleteOperationConfirm;
+
+  /// No description provided for @editOperation.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Transaction'**
+  String get editOperation;
+
+  /// No description provided for @descriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get descriptionLabel;
+
+  /// No description provided for @descriptionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Description is required'**
+  String get descriptionRequired;
+
+  /// No description provided for @chooseWilaya.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your wilaya'**
+  String get chooseWilaya;
+
+  /// No description provided for @searchWilaya.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for your wilaya...'**
+  String get searchWilaya;
+
+  /// No description provided for @chooseCommune.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your commune'**
+  String get chooseCommune;
+
+  /// No description provided for @searchCommune.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for your commune...'**
+  String get searchCommune;
+
+  /// No description provided for @salarySplitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary Split'**
+  String get salarySplitTitle;
+
+  /// No description provided for @salarySplitQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How much do you want to save from your salary?'**
+  String get salarySplitQuestion;
+
+  /// No description provided for @salarySplitDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Set the amount to transfer directly to savings'**
+  String get salarySplitDesc;
+
+  /// No description provided for @forgottenLending.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgotten lending (no deduction from balance)'**
+  String get forgottenLending;
+
+  /// No description provided for @classificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Financial Classification'**
+  String get classificationTitle;
+
+  /// No description provided for @classificationExplanationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Classification Explanation'**
+  String get classificationExplanationTitle;
+
+  /// No description provided for @classificationImprovementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to Improve'**
+  String get classificationImprovementTitle;
+
+  /// No description provided for @classificationStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Statistics'**
+  String get classificationStatsTitle;
+
+  /// No description provided for @explanationLegendary.
+  ///
+  /// In en, this message translates to:
+  /// **'You are at the highest level! You manage your money efficiently and achieve your financial goals.'**
+  String get explanationLegendary;
+
+  /// No description provided for @explanationSmart.
+  ///
+  /// In en, this message translates to:
+  /// **'You make smart financial decisions and achieve a good savings rate.'**
+  String get explanationSmart;
+
+  /// No description provided for @explanationBalanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Your expense management is balanced. Keep monitoring carefully.'**
+  String get explanationBalanced;
+
+  /// No description provided for @explanationSpendthrift.
+  ///
+  /// In en, this message translates to:
+  /// **'You spend faster than necessary. Try to reduce optional expenses.'**
+  String get explanationSpendthrift;
+
+  /// No description provided for @explanationDanger.
+  ///
+  /// In en, this message translates to:
+  /// **'You need to take better control. Beware of running out of balance.'**
+  String get explanationDanger;
+
+  /// No description provided for @explanationEarlyBankruptcy.
+  ///
+  /// In en, this message translates to:
+  /// **'You have spent more than your income. Act now to fix the situation!'**
+  String get explanationEarlyBankruptcy;
+
+  /// No description provided for @suggestionLegendary.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain the current level'**
+  String get suggestionLegendary;
+
+  /// No description provided for @suggestionSmart.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase your savings rate'**
+  String get suggestionSmart;
+
+  /// No description provided for @suggestionBalanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain balance'**
+  String get suggestionBalanced;
+
+  /// No description provided for @suggestionSpendthrift.
+  ///
+  /// In en, this message translates to:
+  /// **'Control your spending'**
+  String get suggestionSpendthrift;
+
+  /// No description provided for @suggestionDanger.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce spending drastically'**
+  String get suggestionDanger;
+
+  /// No description provided for @suggestionEarlyBankruptcy.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick action required'**
+  String get suggestionEarlyBankruptcy;
+
+  /// No description provided for @tipInvestSurplus.
+  ///
+  /// In en, this message translates to:
+  /// **'Invest your surplus money'**
+  String get tipInvestSurplus;
+
+  /// No description provided for @tipHelpOthers.
+  ///
+  /// In en, this message translates to:
+  /// **'Help others financially'**
+  String get tipHelpOthers;
+
+  /// No description provided for @tipShareExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your experience with loved ones'**
+  String get tipShareExperience;
+
+  /// No description provided for @tipReduceOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce optional expenses'**
+  String get tipReduceOptional;
+
+  /// No description provided for @tipFindExtraIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Find additional income sources'**
+  String get tipFindExtraIncome;
+
+  /// No description provided for @tipTrackWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor spending weekly'**
+  String get tipTrackWeekly;
+
+  /// No description provided for @tipWatchExcess.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch excess expenses'**
+  String get tipWatchExcess;
+
+  /// No description provided for @tipPlanEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan for emergency periods'**
+  String get tipPlanEmergency;
+
+  /// No description provided for @tipSetClearGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Set clear financial goals'**
+  String get tipSetClearGoals;
+
+  /// No description provided for @tipListBeforeShopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a list before shopping'**
+  String get tipListBeforeShopping;
+
+  /// No description provided for @tipAvoidImpulse.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid impulse buying'**
+  String get tipAvoidImpulse;
+
+  /// No description provided for @tipSetDailyBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a daily budget'**
+  String get tipSetDailyBudget;
+
+  /// No description provided for @tipStopUnnecessary.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop unnecessary purchases'**
+  String get tipStopUnnecessary;
+
+  /// No description provided for @tipReviewDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Review every daily expense'**
+  String get tipReviewDaily;
+
+  /// No description provided for @tipSeekHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Seek financial help if needed'**
+  String get tipSeekHelp;
+
+  /// No description provided for @tipEssentialOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Identify essential expenses only'**
+  String get tipEssentialOnly;
+
+  /// No description provided for @tipFindExtraIncome2.
+  ///
+  /// In en, this message translates to:
+  /// **'Find additional income sources'**
+  String get tipFindExtraIncome2;
+
+  /// No description provided for @tipRestructureBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Restructure your entire budget'**
+  String get tipRestructureBudget;
+
+  /// No description provided for @canSave.
+  ///
+  /// In en, this message translates to:
+  /// **'You can save: '**
+  String get canSave;
+
+  /// No description provided for @transactions.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} transactions'**
+  String transactions(int count);
+
+  /// No description provided for @lastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Last month'**
+  String get lastMonth;
+
+  /// No description provided for @thisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get thisMonth;
+
+  /// No description provided for @savingsRateShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{rate}% savings rate'**
+  String savingsRateShort(String rate);
+
+  /// No description provided for @deleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Category'**
+  String get deleteCategory;
+
+  /// No description provided for @deleteCategoryConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete the \"{name}\" category?'**
+  String deleteCategoryConfirm(String name);
+
+  /// No description provided for @newCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'New Category'**
+  String get newCategory;
+
+  /// No description provided for @addCustomCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Custom Category'**
+  String get addCustomCategory;
+
+  /// No description provided for @categoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Category name'**
+  String get categoryName;
+
+  /// No description provided for @categoryNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Sports, Pets...'**
+  String get categoryNameHint;
+
+  /// No description provided for @chooseIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an icon'**
+  String get chooseIcon;
+
+  /// No description provided for @hintEssentials.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. bread, chicken, water, medicine...'**
+  String get hintEssentials;
+
+  /// No description provided for @hintHomeFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. household items, gift, household expense...'**
+  String get hintHomeFamily;
+
+  /// No description provided for @hintLuxuries.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. coffee, t-shirt, entertainment...'**
+  String get hintLuxuries;
+
+  /// No description provided for @hintHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. medical visit, medicine, lab tests...'**
+  String get hintHealth;
+
+  /// No description provided for @hintTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. fuel, taxi, ticket...'**
+  String get hintTransport;
+
+  /// No description provided for @hintClothing.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. shirt, shoes, pants...'**
+  String get hintClothing;
+
+  /// No description provided for @hintRestaurants.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. pizza, burger, coffee...'**
+  String get hintRestaurants;
+
+  /// No description provided for @hintEducation.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. book, tutoring, course...'**
+  String get hintEducation;
+
+  /// No description provided for @hintDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. describe what you bought...'**
+  String get hintDefault;
+
+  /// No description provided for @editExpenseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Expense'**
+  String get editExpenseTitle;
+
+  /// No description provided for @expenseNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense not found'**
+  String get expenseNotFound;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred'**
+  String get unexpectedError;
+
+  /// No description provided for @insufficientBalanceDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current balance is {balance} DA and savings {savings} DA — insufficient for this amount'**
+  String insufficientBalanceDetail(int balance, int savings);
+
+  /// No description provided for @allFromBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'All from balance'**
+  String get allFromBalance;
+
+  /// No description provided for @allFromSavings.
+  ///
+  /// In en, this message translates to:
+  /// **'All from savings'**
+  String get allFromSavings;
+
+  /// No description provided for @payFromLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay from'**
+  String get payFromLabel;
+
+  /// No description provided for @currentBalanceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current balance'**
+  String get currentBalanceLabel;
+
+  /// No description provided for @savingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings'**
+  String get savingsLabel;
+
+  /// No description provided for @splashWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Chahriyti'**
+  String get splashWelcome;
+
+  /// No description provided for @splashBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Most people know how much they earn... but few know where their money goes.'**
+  String get splashBody;
+
+  /// No description provided for @splashBold.
+  ///
+  /// In en, this message translates to:
+  /// **'Today you took a different step.'**
+  String get splashBold;
+
+  /// No description provided for @startNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Now'**
+  String get startNow;
+
+  /// No description provided for @valuePropFromNow.
+  ///
+  /// In en, this message translates to:
+  /// **'From now on...'**
+  String get valuePropFromNow;
+
+  /// No description provided for @valuePropContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get valuePropContinue;
+
+  /// No description provided for @valuePropQuote2.
+  ///
+  /// In en, this message translates to:
+  /// **'\"What gets measured gets improved.\"'**
+  String get valuePropQuote2;
+
+  /// No description provided for @vp1.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll know your real balance at any moment'**
+  String get vp1;
+
+  /// No description provided for @vp2.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll record your expenses easily without complexity'**
+  String get vp2;
+
+  /// No description provided for @vp3.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll discover where your salary actually goes'**
+  String get vp3;
+
+  /// No description provided for @vp4.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll monitor your financial goals step by step'**
+  String get vp4;
+
+  /// No description provided for @vp5.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll track your debts and loans without forgetting'**
+  String get vp5;
+
+  /// No description provided for @vp6.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll set a safe daily spending limit'**
+  String get vp6;
+
+  /// No description provided for @vp7.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll build your savings gradually and systematically'**
+  String get vp7;
+
+  /// No description provided for @vp8.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll record your additional income sources'**
+  String get vp8;
+
+  /// No description provided for @vp9.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll monitor your financial statistics clearly'**
+  String get vp9;
+
+  /// No description provided for @vp10.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll make financial decisions based on real numbers, not guesswork'**
+  String get vp10;
+
+  /// No description provided for @exclusiveSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get exclusiveSkip;
+
+  /// No description provided for @exclusiveHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'You are among the few'**
+  String get exclusiveHeading;
+
+  /// No description provided for @exclusiveBody1.
+  ///
+  /// In en, this message translates to:
+  /// **'Most people postpone organizing their finances to next month.'**
+  String get exclusiveBody1;
+
+  /// No description provided for @exclusiveBody2.
+  ///
+  /// In en, this message translates to:
+  /// **'Then the month after.'**
+  String get exclusiveBody2;
+
+  /// No description provided for @exclusiveBody3.
+  ///
+  /// In en, this message translates to:
+  /// **'Then years pass without change.'**
+  String get exclusiveBody3;
+
+  /// No description provided for @exclusiveHighlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading this app means you decided to start today.'**
+  String get exclusiveHighlight;
+
+  /// No description provided for @exclusiveContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get exclusiveContinue;
+
+  /// No description provided for @profileSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s set up Chahriyti for you'**
+  String get profileSetupTitle;
+
+  /// No description provided for @profileSetupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter some basic information to start setting up your personal experience'**
+  String get profileSetupSubtitle;
+
+  /// No description provided for @profileNameQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like us to call you?'**
+  String get profileNameQuestion;
+
+  /// No description provided for @profileNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your full name'**
+  String get profileNameHint;
+
+  /// No description provided for @profileWhereQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Where do you live?'**
+  String get profileWhereQuestion;
+
+  /// No description provided for @profileWilayaPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your wilaya'**
+  String get profileWilayaPlaceholder;
+
+  /// No description provided for @profileCommuneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Commune'**
+  String get profileCommuneLabel;
+
+  /// No description provided for @profileCommunePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your commune'**
+  String get profileCommunePlaceholder;
+
+  /// No description provided for @profilePhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get profilePhoneLabel;
+
+  /// No description provided for @profilePrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'We use this information to create your account, save your data and secure access to the app.'**
+  String get profilePrivacyNote;
+
+  /// No description provided for @profileSubmitButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s start'**
+  String get profileSubmitButton;
+
+  /// No description provided for @profileNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get profileNameRequired;
+
+  /// No description provided for @profileWilayaRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a wilaya'**
+  String get profileWilayaRequired;
+
+  /// No description provided for @profileCommuneRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a commune'**
+  String get profileCommuneRequired;
+
+  /// No description provided for @profilePhoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid phone number — enter a valid Algerian number (05X / 06X / 07X)'**
+  String get profilePhoneInvalid;
+
+  /// No description provided for @ageGroupFewKnow.
+  ///
+  /// In en, this message translates to:
+  /// **'Few people know where their money goes.'**
+  String get ageGroupFewKnow;
+
+  /// No description provided for @ageGroupDifferentStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Today you took a different step.'**
+  String get ageGroupDifferentStep;
+
+  /// No description provided for @ageGroupQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Which age group do you fall into?'**
+  String get ageGroupQuestion;
+
+  /// No description provided for @age20to30.
+  ///
+  /// In en, this message translates to:
+  /// **'20 to 30 years'**
+  String get age20to30;
+
+  /// No description provided for @age31to40.
+  ///
+  /// In en, this message translates to:
+  /// **'31 to 40 years'**
+  String get age31to40;
+
+  /// No description provided for @age41to50.
+  ///
+  /// In en, this message translates to:
+  /// **'41 to 50 years'**
+  String get age41to50;
+
+  /// No description provided for @ageOver50.
+  ///
+  /// In en, this message translates to:
+  /// **'Over 50 years'**
+  String get ageOver50;
+
+  /// No description provided for @celebrationWelcomeWithName.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, {name}!'**
+  String celebrationWelcomeWithName(String name);
+
+  /// No description provided for @celebrationWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Chahriyti!'**
+  String get celebrationWelcome;
+
+  /// No description provided for @celebrationTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Chahriyti is happy to have you'**
+  String get celebrationTagline;
+
+  /// No description provided for @celebrationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We are now in contact with you. We will reach out soon to help you and complete the steps to get Chahriyti.'**
+  String get celebrationBody;
+
+  /// No description provided for @celebrationFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Chahriyti — The first companion for the Algerian employee'**
+  String get celebrationFooter;
+
+  /// No description provided for @celebrationActivateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'I have the activation code'**
+  String get celebrationActivateButton;
+
+  /// No description provided for @financialProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about your financial situation'**
+  String get financialProfileTitle;
+
+  /// No description provided for @financialProfileSalaryQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is your monthly salary?'**
+  String get financialProfileSalaryQuestion;
+
+  /// No description provided for @financialProfileSalaryDayQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'When do you receive your salary?'**
+  String get financialProfileSalaryDayQuestion;
+
+  /// No description provided for @financialProfileStartOfMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Start of month'**
+  String get financialProfileStartOfMonth;
+
+  /// No description provided for @financialProfileCustomDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Specific date'**
+  String get financialProfileCustomDay;
+
+  /// No description provided for @financialProfileDayOfMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} of every month'**
+  String financialProfileDayOfMonth(int day);
+
+  /// No description provided for @financialProfileMaritalQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is your marital status?'**
+  String get financialProfileMaritalQuestion;
+
+  /// No description provided for @financialProfileSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'Single'**
+  String get financialProfileSingle;
+
+  /// No description provided for @financialProfileMarried.
+  ///
+  /// In en, this message translates to:
+  /// **'Married'**
+  String get financialProfileMarried;
+
+  /// No description provided for @financialProfileMarried1Child.
+  ///
+  /// In en, this message translates to:
+  /// **'Married with 1 child'**
+  String get financialProfileMarried1Child;
+
+  /// No description provided for @financialProfileMarried2Children.
+  ///
+  /// In en, this message translates to:
+  /// **'Married with 2 children'**
+  String get financialProfileMarried2Children;
+
+  /// No description provided for @financialProfileMarried3Children.
+  ///
+  /// In en, this message translates to:
+  /// **'Married with 3 children'**
+  String get financialProfileMarried3Children;
+
+  /// No description provided for @financialProfileMarried4PlusChildren.
+  ///
+  /// In en, this message translates to:
+  /// **'Married with 4 or more children'**
+  String get financialProfileMarried4PlusChildren;
+
+  /// No description provided for @financialProfileExpenseTrackQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you write down and track your expenses?'**
+  String get financialProfileExpenseTrackQuestion;
+
+  /// No description provided for @financialProfileTracksYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I write down and track my expenses'**
+  String get financialProfileTracksYes;
+
+  /// No description provided for @financialProfileTracksNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No, I don\'t write down my expenses'**
+  String get financialProfileTracksNo;
+
+  /// No description provided for @financialProfileSalaryNegative.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary cannot be negative'**
+  String get financialProfileSalaryNegative;
+
+  /// No description provided for @goalsPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why do you want to use Chahriyti?'**
+  String get goalsPageTitle;
+
+  /// No description provided for @goalsPageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all that apply'**
+  String get goalsPageSubtitle;
+
+  /// No description provided for @goal1.
+  ///
+  /// In en, this message translates to:
+  /// **'Know my real balance at any moment'**
+  String get goal1;
+
+  /// No description provided for @goal2.
+  ///
+  /// In en, this message translates to:
+  /// **'Record my expenses easily'**
+  String get goal2;
+
+  /// No description provided for @goal3.
+  ///
+  /// In en, this message translates to:
+  /// **'Know where my salary goes'**
+  String get goal3;
+
+  /// No description provided for @goal4.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan my financial goals step by step'**
+  String get goal4;
+
+  /// No description provided for @goal5.
+  ///
+  /// In en, this message translates to:
+  /// **'Track my debts and obligations without forgetting'**
+  String get goal5;
+
+  /// No description provided for @goal6.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a safe daily spending limit'**
+  String get goal6;
+
+  /// No description provided for @goal7.
+  ///
+  /// In en, this message translates to:
+  /// **'Build my savings gradually and systematically'**
+  String get goal7;
+
+  /// No description provided for @goal8.
+  ///
+  /// In en, this message translates to:
+  /// **'Record my additional income sources'**
+  String get goal8;
+
+  /// No description provided for @goal9.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor my financial statistics clearly'**
+  String get goal9;
+
+  /// No description provided for @goal10.
+  ///
+  /// In en, this message translates to:
+  /// **'Make financial decisions based on my real numbers'**
+  String get goal10;
+
+  /// No description provided for @salarySetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Setup'**
+  String get salarySetupTitle;
+
+  /// No description provided for @salarySetupFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get salarySetupFullName;
+
+  /// No description provided for @salarySetupNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Mohammed Amine'**
+  String get salarySetupNameHint;
+
+  /// No description provided for @salarySetupNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get salarySetupNameRequired;
+
+  /// No description provided for @salarySetupPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get salarySetupPhone;
+
+  /// No description provided for @salarySetupPhoneRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number is required'**
+  String get salarySetupPhoneRequired;
+
+  /// No description provided for @salarySetupWilaya.
+  ///
+  /// In en, this message translates to:
+  /// **'Wilaya'**
+  String get salarySetupWilaya;
+
+  /// No description provided for @salarySetupSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly salary'**
+  String get salarySetupSalary;
+
+  /// No description provided for @salarySetupSalaryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 50000'**
+  String get salarySetupSalaryHint;
+
+  /// No description provided for @salarySetupSalaryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary is required'**
+  String get salarySetupSalaryRequired;
+
+  /// No description provided for @salarySetupSalaryPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary must be greater than zero'**
+  String get salarySetupSalaryPositive;
+
+  /// No description provided for @salarySetupSalaryDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary receipt date'**
+  String get salarySetupSalaryDay;
+
+  /// No description provided for @salarySetupFirstOfMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'First of month (Day 1)'**
+  String get salarySetupFirstOfMonth;
+
+  /// No description provided for @salarySetupSpecificDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Specific date'**
+  String get salarySetupSpecificDate;
+
+  /// No description provided for @salarySetupDayOfMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} of every month'**
+  String salarySetupDayOfMonth(int day);
+
+  /// No description provided for @salarySetupPickDayHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose salary receipt day'**
+  String get salarySetupPickDayHelp;
+
+  /// No description provided for @amountInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 50000'**
+  String get amountInputHint;
+
+  /// No description provided for @appliesFromDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Will apply starting from {day} {month} {year}'**
+  String appliesFromDate(int day, String month, int year);
+
+  /// No description provided for @monthJan.
+  ///
+  /// In en, this message translates to:
+  /// **'January'**
+  String get monthJan;
+
+  /// No description provided for @monthFeb.
+  ///
+  /// In en, this message translates to:
+  /// **'February'**
+  String get monthFeb;
+
+  /// No description provided for @monthMar.
+  ///
+  /// In en, this message translates to:
+  /// **'March'**
+  String get monthMar;
+
+  /// No description provided for @monthApr.
+  ///
+  /// In en, this message translates to:
+  /// **'April'**
+  String get monthApr;
+
+  /// No description provided for @monthMay.
+  ///
+  /// In en, this message translates to:
+  /// **'May'**
+  String get monthMay;
+
+  /// No description provided for @monthJun.
+  ///
+  /// In en, this message translates to:
+  /// **'June'**
+  String get monthJun;
+
+  /// No description provided for @monthJul.
+  ///
+  /// In en, this message translates to:
+  /// **'July'**
+  String get monthJul;
+
+  /// No description provided for @monthAug.
+  ///
+  /// In en, this message translates to:
+  /// **'August'**
+  String get monthAug;
+
+  /// No description provided for @monthSep.
+  ///
+  /// In en, this message translates to:
+  /// **'September'**
+  String get monthSep;
+
+  /// No description provided for @monthOct.
+  ///
+  /// In en, this message translates to:
+  /// **'October'**
+  String get monthOct;
+
+  /// No description provided for @monthNov.
+  ///
+  /// In en, this message translates to:
+  /// **'November'**
+  String get monthNov;
+
+  /// No description provided for @monthDec.
+  ///
+  /// In en, this message translates to:
+  /// **'December'**
+  String get monthDec;
+
+  /// No description provided for @deleteExpenseNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"?'**
+  String deleteExpenseNamed(String name);
+
+  /// Abbreviation for million in chart axis labels
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
+  String get amountMillionShort;
 }
 
 class _AppLocalizationsDelegate

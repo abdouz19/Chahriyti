@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final String title;
   final String message;
-  final String confirmLabel;
-  final String cancelLabel;
+  final String? confirmLabel;
+  final String? cancelLabel;
   final Color? confirmColor;
 
   const ConfirmationDialog({
     super.key,
     required this.title,
     required this.message,
-    this.confirmLabel = 'نعم',
-    this.cancelLabel = 'إلغاء',
+    this.confirmLabel,
+    this.cancelLabel,
     this.confirmColor,
   });
 
@@ -22,8 +23,8 @@ class ConfirmationDialog extends StatelessWidget {
     BuildContext context, {
     required String title,
     required String message,
-    String confirmLabel = 'نعم',
-    String cancelLabel = 'إلغاء',
+    String? confirmLabel,
+    String? cancelLabel,
     Color? confirmColor,
   }) async {
     final result = await showDialog<bool>(
@@ -41,6 +42,8 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final confirm = confirmLabel ?? context.l10n.yes;
+    final cancel = cancelLabel ?? context.l10n.cancel;
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -64,11 +67,11 @@ class ConfirmationDialog extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: confirmColor ?? AppColors.primary,
           ),
-          child: Text(confirmLabel),
+          child: Text(confirm),
         ),
         OutlinedButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text(cancelLabel),
+          child: Text(cancel),
         ),
       ],
     );

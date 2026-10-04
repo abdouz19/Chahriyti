@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/savings_history_entity.dart';
@@ -57,7 +58,7 @@ class SavingsHistoryItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _formatDate(record.createdAt),
+                  _formatDate(record.createdAt, context),
                   style: AppTypography.bodySmall.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -79,13 +80,13 @@ class SavingsHistoryItem extends StatelessWidget {
               padding: EdgeInsets.zero,
               itemBuilder: (_) => [
                 if (onEdit != null)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'edit',
                     child: Row(
                       children: [
-                        Icon(Icons.edit_rounded, size: 18),
-                        SizedBox(width: 8),
-                        Text('تعديل'),
+                        const Icon(Icons.edit_rounded, size: 18),
+                        const SizedBox(width: 8),
+                        Text(context.l10n.edit),
                       ],
                     ),
                   ),
@@ -94,11 +95,11 @@ class SavingsHistoryItem extends StatelessWidget {
                     value: 'delete',
                     child: Row(
                       children: [
-                        Icon(Icons.delete_outline_rounded,
+                        const Icon(Icons.delete_outline_rounded,
                             size: 18, color: AppColors.negative),
                         const SizedBox(width: 8),
-                        Text('حذف',
-                            style: TextStyle(color: AppColors.negative)),
+                        Text(context.l10n.delete,
+                            style: const TextStyle(color: AppColors.negative)),
                       ],
                     ),
                   ),
@@ -113,11 +114,13 @@ class SavingsHistoryItem extends StatelessWidget {
     );
   }
 
-  static String _formatDate(DateTime date) {
-    const arabicMonths = [
-      'جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان',
-      'جويلية', 'أوت', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+  static String _formatDate(DateTime date, BuildContext context) {
+    final l = context.l10n;
+    final months = [
+      l.monthJan, l.monthFeb, l.monthMar, l.monthApr,
+      l.monthMay, l.monthJun, l.monthJul, l.monthAug,
+      l.monthSep, l.monthOct, l.monthNov, l.monthDec,
     ];
-    return '${date.day} ${arabicMonths[date.month - 1]} ${date.year}';
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 }

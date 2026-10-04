@@ -31,26 +31,27 @@ class ExpenseForm extends StatefulWidget {
     this.category,
   });
 
-  static String hintForCategory(String? category) {
+  static String hintForCategory(String? category, BuildContext context) {
+    final l = context.l10n;
     switch (category) {
       case 'essentials':
-        return 'مثال: خبز، دجاج، ماء، دواء...';
+        return l.hintEssentials;
       case 'homeFamily':
-        return 'مثال: أدوات منزلية، هدية، مصروف البيت...';
+        return l.hintHomeFamily;
       case 'luxuries':
-        return 'مثال: قهوة، تيشيرت، ترفيه...';
+        return l.hintLuxuries;
       case 'health':
-        return 'مثال: كشف طبي، دواء، تحاليل...';
+        return l.hintHealth;
       case 'transport':
-        return 'مثال: وقود، تاكسي، تذكرة...';
+        return l.hintTransport;
       case 'clothing':
-        return 'مثال: قميص، حذاء، بنطلون...';
+        return l.hintClothing;
       case 'restaurants':
-        return 'مثال: بيتزا، برغر، قهوة...';
+        return l.hintRestaurants;
       case 'education':
-        return 'مثال: كتاب، دروس خصوصية، دورة...';
+        return l.hintEducation;
       default:
-        return 'مثال: صف ما اشتريته...';
+        return l.hintDefault;
     }
   }
 
@@ -177,7 +178,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 textInputAction: TextInputAction.next,
                 style: AppTypography.bodyLarge,
                 decoration: InputDecoration(
-                  hintText: ExpenseForm.hintForCategory(widget.category),
+                  hintText: ExpenseForm.hintForCategory(widget.category, ctx),
                 ),
                 validator: (_) => null, // item name is optional
               );

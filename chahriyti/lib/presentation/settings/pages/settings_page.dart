@@ -628,7 +628,7 @@ class _SettingsView extends StatelessWidget {
                       const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textSecondary),
                       const SizedBox(width: 6),
                       Text(
-                        _formatNextCycleDate(state.salaryDay),
+                        _formatNextCycleDate(sheetContext, state.salaryDay),
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -708,7 +708,7 @@ class _SectionCard extends StatelessWidget {
   }
 }
 
-String _formatNextCycleDate(int salaryDay) {
+String _formatNextCycleDate(BuildContext context, int salaryDay) {
   final now = DateTime.now();
   DateTime next = DateTime(now.year, now.month, salaryDay.clamp(1, 28));
   if (!now.isBefore(next)) {
@@ -716,11 +716,13 @@ String _formatNextCycleDate(int salaryDay) {
         ? DateTime(now.year + 1, 1, salaryDay.clamp(1, 28))
         : DateTime(now.year, now.month + 1, salaryDay.clamp(1, 28));
   }
-  const months = [
-    'جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان',
-    'جويلية', 'أوت', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+  final l = context.l10n;
+  final months = [
+    l.monthJan, l.monthFeb, l.monthMar, l.monthApr,
+    l.monthMay, l.monthJun, l.monthJul, l.monthAug,
+    l.monthSep, l.monthOct, l.monthNov, l.monthDec,
   ];
-  return 'سيُطبَّق بدءاً من ${next.day} ${months[next.month - 1]} ${next.year}';
+  return l.appliesFromDate(next.day, months[next.month - 1], next.year);
 }
 
 class _EditSalarySheet extends StatefulWidget {
@@ -795,7 +797,7 @@ class _EditSalarySheetState extends State<_EditSalarySheet> {
                   const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textSecondary),
                   const SizedBox(width: 6),
                   Text(
-                    _formatNextCycleDate(widget.salaryDay),
+                    _formatNextCycleDate(context, widget.salaryDay),
                     style: AppTypography.bodySmall.copyWith(
                       color: AppColors.textSecondary,
                     ),

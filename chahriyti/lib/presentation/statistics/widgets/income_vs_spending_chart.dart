@@ -113,7 +113,7 @@ class _IncomeVsSpendingChartState extends State<IncomeVsSpendingChart> {
                   ),
                 ),
                 TextSpan(
-                  text: '${_fmt(amount)} ${context.l10n.currencySymbol}',
+                  text: '${_fmt(amount, context)} ${context.l10n.currencySymbol}',
                   style: AppTypography.labelMedium.copyWith(color: AppColors.textPrimary),
                 ),
               ],
@@ -149,7 +149,7 @@ class _IncomeVsSpendingChartState extends State<IncomeVsSpendingChart> {
             getTitlesWidget: (value, _) {
               if (value == 0) return const SizedBox.shrink();
               return Text(
-                _fmt(value.toInt()),
+                _fmt(value.toInt(), context),
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.textSecondary,
                   fontSize: 10,
@@ -196,8 +196,8 @@ class _IncomeVsSpendingChartState extends State<IncomeVsSpendingChart> {
     );
   }
 
-  String _fmt(int amount) {
-    if (amount >= 1000000) return '${(amount / 1000000).toStringAsFixed(1)}م';
+  String _fmt(int amount, BuildContext context) {
+    if (amount >= 1000000) return '${(amount / 1000000).toStringAsFixed(1)}${context.l10n.amountMillionShort}';
     if (amount >= 1000) return '${(amount / 1000).toStringAsFixed(0)}k';
     return amount.toString();
   }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../application/use_cases/expense/edit_expense_use_case.dart';
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/expense_entity.dart';
@@ -89,7 +90,7 @@ class EditExpenseCubit extends Cubit<EditExpenseState> {
       );
       emit(EditExpenseReady(expense));
     } catch (e) {
-      emit(const EditExpenseError('لم يتم العثور على المصروف'));
+      emit(const EditExpenseError('expenseNotFound'));
     }
   }
 
@@ -111,7 +112,7 @@ class EditExpenseCubit extends Cubit<EditExpenseState> {
 
         if (amount > effectiveBalance + savingsBalance) {
           emit(EditExpenseError(
-            'رصيدك الحالي $balance دج والمدخرات $savingsBalance دج — لا يكفي لإتمام هذا المبلغ',
+            'insufficientBalance:$balance:$savingsBalance',
           ));
           return;
         }
@@ -173,7 +174,7 @@ class EditExpenseCubit extends Cubit<EditExpenseState> {
     } on StateError catch (e) {
       emit(EditExpenseError(e.message));
     } catch (_) {
-      emit(const EditExpenseError('حدث خطأ غير متوقع'));
+      emit(const EditExpenseError('unexpectedError'));
     }
   }
 
@@ -245,7 +246,7 @@ class _EditExpenseView extends StatelessWidget {
         } else if (state is EditExpenseError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content: Text(_localizeError(context, state.message)),
               backgroundColor: AppColors.negative,
             ),
           );
@@ -269,7 +270,7 @@ class _EditExpenseView extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              'تعديل المصروف',
+              context.l10n.editExpenseTitle,
               style: AppTypography.headlineSmall,
             ),
             leading: const CloseButton(),
@@ -280,6 +281,19 @@ class _EditExpenseView extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _localizeError(BuildContext context, String message) {
+    final l = context.l10n;
+    if (message == 'expenseNotFound') return l.expenseNotFound;
+    if (message == 'unexpectedError') return l.unexpectedError;
+    if (message.startsWith('insufficientBalance:')) {
+      final parts = message.split(':');
+      final balance = int.tryParse(parts.elementAtOrNull(1) ?? '') ?? 0;
+      final savings = int.tryParse(parts.elementAtOrNull(2) ?? '') ?? 0;
+      return l.insufficientBalanceDetail(balance, savings);
+    }
+    return message;
   }
 
   Widget _buildBody(BuildContext context, EditExpenseState state) {
@@ -305,7 +319,7 @@ class _EditExpenseView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                state.message,
+                _localizeError(context, state.message),
                 style: AppTypography.bodyLarge,
                 textAlign: TextAlign.start,
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
@@ -27,7 +28,7 @@ class PaymentSourceToggle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'ادفع من',
+          context.l10n.payFromLabel,
           style: AppTypography.labelMedium.copyWith(
             color: AppColors.textSecondary,
           ),
@@ -37,7 +38,7 @@ class PaymentSourceToggle extends StatelessWidget {
           children: [
             Expanded(
               child: _SourceOption(
-                label: 'الرصيد الحالي',
+                label: context.l10n.currentBalanceLabel,
                 amount: currentBalance,
                 isSelected: !fromSavings,
                 onTap: () => onChanged(false),
@@ -46,7 +47,7 @@ class PaymentSourceToggle extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: _SourceOption(
-                label: 'المدخرات',
+                label: context.l10n.savingsLabel,
                 amount: savingsBalance,
                 isSelected: fromSavings,
                 onTap: () => onChanged(true),

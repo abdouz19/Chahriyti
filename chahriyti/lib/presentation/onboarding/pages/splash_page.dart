@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
@@ -108,7 +109,7 @@ class _SplashPageState extends State<SplashPage>
                 child: FadeTransition(
                   opacity: _titleOpacity,
                   child: Text(
-                    'أهلاً بك في شهريتي',
+                    context.l10n.splashWelcome,
                     textAlign: TextAlign.center,
                     style: AppTypography.headlineLarge.copyWith(
                       color: AppColors.primary,
@@ -121,7 +122,7 @@ class _SplashPageState extends State<SplashPage>
               FadeTransition(
                 opacity: _bodyOpacity,
                 child: Text(
-                  'أغلب الناس يعرفون كم يقبضون... لكن القليل فقط يعرفون أين يذهب مالهم.',
+                  context.l10n.splashBody,
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.textSecondary,
@@ -133,7 +134,7 @@ class _SplashPageState extends State<SplashPage>
               FadeTransition(
                 opacity: _boldOpacity,
                 child: Text(
-                  'اليوم بدأت خطوة مختلفة.',
+                  context.l10n.splashBold,
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyLarge.copyWith(
                     color: AppColors.primary,
@@ -148,7 +149,7 @@ class _SplashPageState extends State<SplashPage>
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => context.go('/onboarding/profile'),
-                    child: const Text('ابدأ الآن'),
+                    child: Text(context.l10n.startNow),
                   ),
                 ),
               ),

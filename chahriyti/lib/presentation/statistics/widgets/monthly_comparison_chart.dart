@@ -19,6 +19,7 @@ class MonthlyComparisonChart extends StatefulWidget {
 class _MonthlyComparisonChartState extends State<MonthlyComparisonChart> {
   int _touchedIndex = -1;
   String _locale = 'ar';
+  String _millionShort = 'م';
 
   String _monthName(int month) =>
       DateFormat('MMM', _locale).format(DateTime(2024, month));
@@ -26,6 +27,7 @@ class _MonthlyComparisonChartState extends State<MonthlyComparisonChart> {
   @override
   Widget build(BuildContext context) {
     _locale = Localizations.localeOf(context).languageCode;
+    _millionShort = context.l10n.amountMillionShort;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -168,7 +170,7 @@ class _MonthlyComparisonChartState extends State<MonthlyComparisonChart> {
   }
 
   String _formatAmount(int amount) {
-    if (amount >= 1000000) return '${(amount / 1000000).toStringAsFixed(1)}م';
+    if (amount >= 1000000) return '${(amount / 1000000).toStringAsFixed(1)}$_millionShort';
     if (amount >= 1000) return '${(amount / 1000).toStringAsFixed(0)}k';
     return amount.toString();
   }

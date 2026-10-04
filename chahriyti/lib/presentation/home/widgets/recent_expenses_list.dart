@@ -177,7 +177,7 @@ class _ExpenseRow extends StatelessWidget {
                     expense.itemName.isNotEmpty
                         ? expense.itemName
                         : (_isCustomCategory
-                            ? 'فئة مخصصة'
+                            ? context.l10n.customCategory
                             : _categoryFromString(expense.category).localizedLabel(context)),
                     style: AppTypography.bodyMedium,
                     overflow: TextOverflow.ellipsis,

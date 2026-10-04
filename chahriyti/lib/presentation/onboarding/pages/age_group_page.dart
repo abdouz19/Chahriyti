@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
@@ -20,13 +21,7 @@ class _AgeGroupPageState extends State<AgeGroupPage>
   String? _selectedAge;
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
-
-  static const _ageOptions = [
-    'من 20 إلى 30 سنة',
-    'من 31 إلى 40 سنة',
-    'من 41 إلى 50 سنة',
-    'أكثر من 50 سنة',
-  ];
+  late List<String> _ageOptions;
 
   @override
   void initState() {
@@ -40,6 +35,8 @@ class _AgeGroupPageState extends State<AgeGroupPage>
       curve: Curves.easeIn,
     );
     _animController.forward();
+    final l = context.l10n;
+    _ageOptions = [l.age20to30, l.age31to40, l.age41to50, l.ageOver50];
     final saved = context.read<OnboardingCubit>().ageGroup;
     if (saved != null) _selectedAge = saved;
   }
@@ -83,7 +80,7 @@ class _AgeGroupPageState extends State<AgeGroupPage>
                       children: [
                         const SizedBox(height: 32),
                         Text(
-                          'قليل يعرفون أين يذهب مالهم.',
+                          context.l10n.ageGroupFewKnow,
                           style: AppTypography.headlineMedium.copyWith(
                             color: AppColors.textPrimary,
                             fontWeight: FontWeight.w700,
@@ -92,7 +89,7 @@ class _AgeGroupPageState extends State<AgeGroupPage>
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'اليوم بدأت خطوة مختلفة.',
+                          context.l10n.ageGroupDifferentStep,
                           style: AppTypography.bodyLarge.copyWith(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w600,
@@ -103,7 +100,7 @@ class _AgeGroupPageState extends State<AgeGroupPage>
                         Align(
                           alignment: AlignmentDirectional.centerStart,
                           child: Text(
-                            'في أي فئة عمرية تقع؟',
+                            context.l10n.ageGroupQuestion,
                             style: AppTypography.labelLarge,
                             textAlign: TextAlign.start,
                           ),
@@ -139,7 +136,7 @@ class _AgeGroupPageState extends State<AgeGroupPage>
                     onPressed: () => context
                         .read<OnboardingCubit>()
                         .submitAgeGroup(_selectedAge),
-                    child: const Text('ابدأ الآن'),
+                    child: Text(context.l10n.startNow),
                   ),
                 ),
               ),

@@ -39,7 +39,7 @@ class _ExpenseHistoryView extends StatefulWidget {
 }
 
 String _categoryLabel(String category, BuildContext context) {
-  if (category.startsWith('custom_')) return 'فئة مخصصة';
+  if (category.startsWith('custom_')) return context.l10n.customCategory;
   return ExpenseCategory.values
       .firstWhere((c) => c.name == category, orElse: () => ExpenseCategory.other)
       .localizedLabel(context);
@@ -229,7 +229,11 @@ class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
     final confirmed = await ConfirmationDialog.show(
       context,
       title: context.l10n.deleteExpense,
-      message: 'هل تريد حذف "${expense.itemName.isNotEmpty ? expense.itemName : _categoryLabel(expense.category, context)}"؟',
+      message: context.l10n.deleteExpenseNamed(
+        expense.itemName.isNotEmpty
+            ? expense.itemName
+            : _categoryLabel(expense.category, context),
+      ),
       confirmLabel: context.l10n.delete,
       cancelLabel: context.l10n.cancel,
       confirmColor: AppColors.negative,

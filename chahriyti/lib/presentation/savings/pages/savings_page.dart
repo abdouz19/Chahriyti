@@ -47,17 +47,17 @@ class _SavingsView extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('حذف العملية'),
-        content: const Text('هل أنت متأكد من حذف هذه العملية؟ لا يمكن التراجع.'),
+        title: Text(ctx.l10n.deleteOperation),
+        content: Text(ctx.l10n.deleteOperationConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('إلغاء'),
+            child: Text(ctx.l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
             style: TextButton.styleFrom(foregroundColor: AppColors.negative),
-            child: const Text('حذف'),
+            child: Text(ctx.l10n.delete),
           ),
         ],
       ),
@@ -546,26 +546,26 @@ class _EditTransactionSheetState extends State<_EditTransactionSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('تعديل العملية', style: AppTypography.headlineSmall),
+            Text(context.l10n.editOperation, style: AppTypography.headlineSmall),
             const SizedBox(height: 20),
             TextFormField(
               controller: _descController,
-              decoration: const InputDecoration(labelText: 'الوصف'),
+              decoration: InputDecoration(labelText: context.l10n.descriptionLabel),
               validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'الوصف مطلوب' : null,
+                  (v == null || v.trim().isEmpty) ? context.l10n.descriptionRequired : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _amountController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.right,
-              decoration: const InputDecoration(
-                labelText: 'المبلغ',
-                suffixText: 'دج',
+              decoration: InputDecoration(
+                labelText: context.l10n.amount,
+                suffixText: context.l10n.currencySymbol,
               ),
               validator: (v) {
                 final n = int.tryParse((v ?? '').replaceAll(',', ''));
-                if (n == null || n <= 0) return 'أدخل مبلغاً صحيحاً';
+                if (n == null || n <= 0) return context.l10n.enterValidAmount;
                 return null;
               },
             ),
@@ -584,7 +584,7 @@ class _EditTransactionSheetState extends State<_EditTransactionSheet> {
                           strokeWidth: 2,
                         ),
                       )
-                    : const Text('حفظ'),
+                    : Text(context.l10n.save),
               ),
             ),
           ],

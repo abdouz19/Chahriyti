@@ -87,7 +87,7 @@ class _SalarySplitViewState extends State<_SalarySplitView> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              'تقسيم الراتب',
+              context.l10n.salarySplitTitle,
               style: AppTypography.headlineSmall,
             ),
             automaticallyImplyLeading: !widget.isAutoEntry,
@@ -99,13 +99,13 @@ class _SalarySplitViewState extends State<_SalarySplitView> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'كم تريد أن تدخر من راتبك؟',
+                  context.l10n.salarySplitQuestion,
                   style: AppTypography.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'حدد المبلغ الذي تريد تحويله مباشرة إلى المدخرات',
+                  context.l10n.salarySplitDesc,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -195,7 +195,7 @@ class _SalarySplitViewState extends State<_SalarySplitView> {
                               ),
                             )
                           : Text(
-                              'تأكيد',
+                              context.l10n.confirm,
                               style: AppTypography.labelLarge
                                   .copyWith(color: Colors.white),
                             ),
@@ -209,7 +209,7 @@ class _SalarySplitViewState extends State<_SalarySplitView> {
                     context.read<SalarySplitCubit>().skip();
                   },
                   child: Text(
-                    'تخطي',
+                    context.l10n.skip,
                     style: AppTypography.labelMedium.copyWith(
                       color: AppColors.textSecondary,
                     ),

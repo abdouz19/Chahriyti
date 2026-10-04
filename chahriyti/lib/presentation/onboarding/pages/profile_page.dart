@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/wilayas.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
@@ -65,19 +66,19 @@ class _ProfilePageState extends State<ProfilePage> {
   void _submit() {
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الاسم مطلوب')),
+        SnackBar(content: Text(context.l10n.profileNameRequired)),
       );
       return;
     }
     if (_selectedWilaya == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('يرجى اختيار الولاية')),
+        SnackBar(content: Text(context.l10n.profileWilayaRequired)),
       );
       return;
     }
     if (_selectedCommune == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('يرجى اختيار البلدية')),
+        SnackBar(content: Text(context.l10n.profileCommuneRequired)),
       );
       return;
     }
@@ -85,8 +86,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final phoneValid = RegExp(r'^0[567]\d{8}$').hasMatch(phone);
     if (!phoneValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('رقم الهاتف غير صحيح — أدخل رقماً جزائرياً صحيحاً (05X / 06X / 07X)'),
+        SnackBar(
+          content: Text(context.l10n.profilePhoneInvalid),
         ),
       );
       return;
@@ -124,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         const SizedBox(height: 24),
                         Text(
-                          'لنجهّز شهريتي لك ',
+                          context.l10n.profileSetupTitle,
                           style: AppTypography.headlineMedium.copyWith(
                             color: AppColors.primary,
                             fontWeight: FontWeight.bold,
@@ -133,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'أدخل بعض المعلومات البسيطة لنبدأ إعداد تجربتك الشخصية',
+                          context.l10n.profileSetupSubtitle,
                           style: AppTypography.bodyMedium.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -144,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Align(
                           alignment: AlignmentDirectional.centerStart,
                           child: Text(
-                            'كيف تحب أن نناديك؟',
+                            context.l10n.profileNameQuestion,
                             style: AppTypography.labelMedium,
                           ),
                         ),
@@ -152,8 +153,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         TextFormField(
                           controller: _nameController,
                           textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            hintText: 'اكتب اسمك الكامل',
+                          decoration: InputDecoration(
+                            hintText: context.l10n.profileNameHint,
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -161,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Align(
                           alignment: AlignmentDirectional.centerStart,
                           child: Text(
-                            'أين تقيم؟',
+                            context.l10n.profileWhereQuestion,
                             style: AppTypography.labelMedium,
                           ),
                         ),
@@ -185,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Text(
                                   _selectedWilaya != null
                                       ? '${_selectedWilaya!.code} - ${_selectedWilaya!.arabicName}'
-                                      : 'اختر ولايتك',
+                                      : context.l10n.profileWilayaPlaceholder,
                                   style: AppTypography.bodyMedium.copyWith(
                                     color: _selectedWilaya != null
                                         ? AppColors.textPrimary
@@ -206,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Align(
                             alignment: AlignmentDirectional.centerStart,
                             child: Text(
-                              'البلدية',
+                              context.l10n.profileCommuneLabel,
                               style: AppTypography.labelMedium,
                             ),
                           ),
@@ -240,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    _selectedCommune ?? 'اختر بلديتك',
+                                    _selectedCommune ?? context.l10n.profileCommunePlaceholder,
                                     style: AppTypography.bodyMedium.copyWith(
                                       color: _selectedCommune != null
                                           ? AppColors.textPrimary
@@ -261,7 +262,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Align(
                           alignment: AlignmentDirectional.centerStart,
                           child: Text(
-                            'رقم الهاتف',
+                            context.l10n.profilePhoneLabel,
                             style: AppTypography.labelMedium,
                           ),
                         ),
@@ -285,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             const SizedBox(width: 4),
                             Flexible(
                               child: Text(
-                                'نستخدم هذه المعلومات لإنشاء حسابك وحفظ بياناتك وتأمين الوصول إلى التطبيق.',
+                                context.l10n.profilePrivacyNote,
                                 style: AppTypography.bodySmall,
                               ),
                             ),
@@ -303,7 +304,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _submit,
-                      child: const Text('لنبدأ'),
+                      child: Text(context.l10n.profileSubmitButton),
                     ),
                   ),
                 ),

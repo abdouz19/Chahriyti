@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
@@ -55,7 +56,7 @@ class _OnboardingExclusivePageState extends State<OnboardingExclusivePage>
                   child: TextButton(
                     onPressed: () => context.go('/onboarding/value'),
                     child: Text(
-                      'تخطي',
+                      context.l10n.exclusiveSkip,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -75,7 +76,7 @@ class _OnboardingExclusivePageState extends State<OnboardingExclusivePage>
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
-                  'أنت الآن ضمن القلة',
+                  context.l10n.exclusiveHeading,
                   textAlign: TextAlign.center,
                   style: AppTypography.headlineMedium.copyWith(
                     color: AppColors.primary,
@@ -91,7 +92,7 @@ class _OnboardingExclusivePageState extends State<OnboardingExclusivePage>
                 child: Column(
                   children: [
                     Text(
-                      'معظم الناس يؤجلون تنظيم أموالهم إلى الشهر القادم.',
+                      context.l10n.exclusiveBody1,
                       textAlign: TextAlign.center,
                       style: AppTypography.bodyLarge.copyWith(
                         color: AppColors.textSecondary,
@@ -100,7 +101,7 @@ class _OnboardingExclusivePageState extends State<OnboardingExclusivePage>
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'ثم إلى الشهر الذي بعده.',
+                      context.l10n.exclusiveBody2,
                       textAlign: TextAlign.center,
                       style: AppTypography.bodyLarge.copyWith(
                         color: AppColors.textSecondary,
@@ -109,7 +110,7 @@ class _OnboardingExclusivePageState extends State<OnboardingExclusivePage>
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'ثم تمر سنوات دون تغيير.',
+                      context.l10n.exclusiveBody3,
                       textAlign: TextAlign.center,
                       style: AppTypography.bodyLarge.copyWith(
                         color: AppColors.textSecondary,
@@ -136,7 +137,7 @@ class _OnboardingExclusivePageState extends State<OnboardingExclusivePage>
                     ),
                   ),
                   child: Text(
-                    'تحميلك لهذا التطبيق يعني أنك قررت أن تبدأ اليوم.',
+                    context.l10n.exclusiveHighlight,
                     textAlign: TextAlign.center,
                     style: AppTypography.bodyLarge.copyWith(
                       color: AppColors.primary,
@@ -154,7 +155,7 @@ class _OnboardingExclusivePageState extends State<OnboardingExclusivePage>
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => context.go('/onboarding/value'),
-                    child: const Text('متابعة'),
+                    child: Text(context.l10n.exclusiveContinue),
                   ),
                 ),
               ),

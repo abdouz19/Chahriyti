@@ -1344,4 +1344,627 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get forecastFromLabel => 'sur';
+
+  @override
+  String get customCategory => 'Custom category';
+
+  @override
+  String weekChallenge(int n) {
+    return 'Week $n Challenge';
+  }
+
+  @override
+  String get challengeCompleted => 'Completed';
+
+  @override
+  String get deleteOperation => 'Delete Transaction';
+
+  @override
+  String get deleteOperationConfirm =>
+      'Are you sure you want to delete this transaction? This cannot be undone.';
+
+  @override
+  String get editOperation => 'Edit Transaction';
+
+  @override
+  String get descriptionLabel => 'Description';
+
+  @override
+  String get descriptionRequired => 'Description is required';
+
+  @override
+  String get chooseWilaya => 'Choose your wilaya';
+
+  @override
+  String get searchWilaya => 'Search for your wilaya...';
+
+  @override
+  String get chooseCommune => 'Choose your commune';
+
+  @override
+  String get searchCommune => 'Search for your commune...';
+
+  @override
+  String get salarySplitTitle => 'Salary Split';
+
+  @override
+  String get salarySplitQuestion =>
+      'How much do you want to save from your salary?';
+
+  @override
+  String get salarySplitDesc =>
+      'Set the amount to transfer directly to savings';
+
+  @override
+  String get forgottenLending =>
+      'Forgotten lending (no deduction from balance)';
+
+  @override
+  String get classificationTitle => 'Your Financial Classification';
+
+  @override
+  String get classificationExplanationTitle => 'Classification Explanation';
+
+  @override
+  String get classificationImprovementTitle => 'How to Improve';
+
+  @override
+  String get classificationStatsTitle => 'Your Statistics';
+
+  @override
+  String get explanationLegendary =>
+      'You are at the highest level! You manage your money efficiently and achieve your financial goals.';
+
+  @override
+  String get explanationSmart =>
+      'You make smart financial decisions and achieve a good savings rate.';
+
+  @override
+  String get explanationBalanced =>
+      'Your expense management is balanced. Keep monitoring carefully.';
+
+  @override
+  String get explanationSpendthrift =>
+      'You spend faster than necessary. Try to reduce optional expenses.';
+
+  @override
+  String get explanationDanger =>
+      'You need to take better control. Beware of running out of balance.';
+
+  @override
+  String get explanationEarlyBankruptcy =>
+      'You have spent more than your income. Act now to fix the situation!';
+
+  @override
+  String get suggestionLegendary => 'Maintain the current level';
+
+  @override
+  String get suggestionSmart => 'Increase your savings rate';
+
+  @override
+  String get suggestionBalanced => 'Maintain balance';
+
+  @override
+  String get suggestionSpendthrift => 'Control your spending';
+
+  @override
+  String get suggestionDanger => 'Reduce spending drastically';
+
+  @override
+  String get suggestionEarlyBankruptcy => 'Quick action required';
+
+  @override
+  String get tipInvestSurplus => 'Invest your surplus money';
+
+  @override
+  String get tipHelpOthers => 'Help others financially';
+
+  @override
+  String get tipShareExperience => 'Share your experience with loved ones';
+
+  @override
+  String get tipReduceOptional => 'Reduce optional expenses';
+
+  @override
+  String get tipFindExtraIncome => 'Find additional income sources';
+
+  @override
+  String get tipTrackWeekly => 'Monitor spending weekly';
+
+  @override
+  String get tipWatchExcess => 'Watch excess expenses';
+
+  @override
+  String get tipPlanEmergency => 'Plan for emergency periods';
+
+  @override
+  String get tipSetClearGoals => 'Set clear financial goals';
+
+  @override
+  String get tipListBeforeShopping => 'Make a list before shopping';
+
+  @override
+  String get tipAvoidImpulse => 'Avoid impulse buying';
+
+  @override
+  String get tipSetDailyBudget => 'Set a daily budget';
+
+  @override
+  String get tipStopUnnecessary => 'Stop unnecessary purchases';
+
+  @override
+  String get tipReviewDaily => 'Review every daily expense';
+
+  @override
+  String get tipSeekHelp => 'Seek financial help if needed';
+
+  @override
+  String get tipEssentialOnly => 'Identify essential expenses only';
+
+  @override
+  String get tipFindExtraIncome2 => 'Find additional income sources';
+
+  @override
+  String get tipRestructureBudget => 'Restructure your entire budget';
+
+  @override
+  String get canSave => 'You can save: ';
+
+  @override
+  String transactions(int count) {
+    return '$count transactions';
+  }
+
+  @override
+  String get lastMonth => 'Last month';
+
+  @override
+  String get thisMonth => 'This month';
+
+  @override
+  String savingsRateShort(String rate) {
+    return '$rate% savings rate';
+  }
+
+  @override
+  String get deleteCategory => 'Delete Category';
+
+  @override
+  String deleteCategoryConfirm(String name) {
+    return 'Do you want to delete the \"$name\" category?';
+  }
+
+  @override
+  String get newCategory => 'New Category';
+
+  @override
+  String get addCustomCategory => 'Add Custom Category';
+
+  @override
+  String get categoryName => 'Category name';
+
+  @override
+  String get categoryNameHint => 'e.g. Sports, Pets...';
+
+  @override
+  String get chooseIcon => 'Choose an icon';
+
+  @override
+  String get hintEssentials => 'e.g. bread, chicken, water, medicine...';
+
+  @override
+  String get hintHomeFamily =>
+      'e.g. household items, gift, household expense...';
+
+  @override
+  String get hintLuxuries => 'e.g. coffee, t-shirt, entertainment...';
+
+  @override
+  String get hintHealth => 'e.g. medical visit, medicine, lab tests...';
+
+  @override
+  String get hintTransport => 'e.g. fuel, taxi, ticket...';
+
+  @override
+  String get hintClothing => 'e.g. shirt, shoes, pants...';
+
+  @override
+  String get hintRestaurants => 'e.g. pizza, burger, coffee...';
+
+  @override
+  String get hintEducation => 'e.g. book, tutoring, course...';
+
+  @override
+  String get hintDefault => 'e.g. describe what you bought...';
+
+  @override
+  String get editExpenseTitle => 'Edit Expense';
+
+  @override
+  String get expenseNotFound => 'Expense not found';
+
+  @override
+  String get unexpectedError => 'An unexpected error occurred';
+
+  @override
+  String insufficientBalanceDetail(int balance, int savings) {
+    return 'Your current balance is $balance DA and savings $savings DA — insufficient for this amount';
+  }
+
+  @override
+  String get allFromBalance => 'All from balance';
+
+  @override
+  String get allFromSavings => 'All from savings';
+
+  @override
+  String get payFromLabel => 'Pay from';
+
+  @override
+  String get currentBalanceLabel => 'Current balance';
+
+  @override
+  String get savingsLabel => 'Savings';
+
+  @override
+  String get splashWelcome => 'Welcome to Chahriyti';
+
+  @override
+  String get splashBody =>
+      'Most people know how much they earn... but few know where their money goes.';
+
+  @override
+  String get splashBold => 'Today you took a different step.';
+
+  @override
+  String get startNow => 'Start Now';
+
+  @override
+  String get valuePropFromNow => 'From now on...';
+
+  @override
+  String get valuePropContinue => 'Continue';
+
+  @override
+  String get valuePropQuote2 => '\"What gets measured gets improved.\"';
+
+  @override
+  String get vp1 => 'You\'ll know your real balance at any moment';
+
+  @override
+  String get vp2 => 'You\'ll record your expenses easily without complexity';
+
+  @override
+  String get vp3 => 'You\'ll discover where your salary actually goes';
+
+  @override
+  String get vp4 => 'You\'ll monitor your financial goals step by step';
+
+  @override
+  String get vp5 => 'You\'ll track your debts and loans without forgetting';
+
+  @override
+  String get vp6 => 'You\'ll set a safe daily spending limit';
+
+  @override
+  String get vp7 => 'You\'ll build your savings gradually and systematically';
+
+  @override
+  String get vp8 => 'You\'ll record your additional income sources';
+
+  @override
+  String get vp9 => 'You\'ll monitor your financial statistics clearly';
+
+  @override
+  String get vp10 =>
+      'You\'ll make financial decisions based on real numbers, not guesswork';
+
+  @override
+  String get exclusiveSkip => 'Skip';
+
+  @override
+  String get exclusiveHeading => 'You are among the few';
+
+  @override
+  String get exclusiveBody1 =>
+      'Most people postpone organizing their finances to next month.';
+
+  @override
+  String get exclusiveBody2 => 'Then the month after.';
+
+  @override
+  String get exclusiveBody3 => 'Then years pass without change.';
+
+  @override
+  String get exclusiveHighlight =>
+      'Downloading this app means you decided to start today.';
+
+  @override
+  String get exclusiveContinue => 'Continue';
+
+  @override
+  String get profileSetupTitle => 'Let\'s set up Chahriyti for you';
+
+  @override
+  String get profileSetupSubtitle =>
+      'Enter some basic information to start setting up your personal experience';
+
+  @override
+  String get profileNameQuestion => 'What would you like us to call you?';
+
+  @override
+  String get profileNameHint => 'Write your full name';
+
+  @override
+  String get profileWhereQuestion => 'Where do you live?';
+
+  @override
+  String get profileWilayaPlaceholder => 'Choose your wilaya';
+
+  @override
+  String get profileCommuneLabel => 'Commune';
+
+  @override
+  String get profileCommunePlaceholder => 'Choose your commune';
+
+  @override
+  String get profilePhoneLabel => 'Phone number';
+
+  @override
+  String get profilePrivacyNote =>
+      'We use this information to create your account, save your data and secure access to the app.';
+
+  @override
+  String get profileSubmitButton => 'Let\'s start';
+
+  @override
+  String get profileNameRequired => 'Name is required';
+
+  @override
+  String get profileWilayaRequired => 'Please select a wilaya';
+
+  @override
+  String get profileCommuneRequired => 'Please select a commune';
+
+  @override
+  String get profilePhoneInvalid =>
+      'Invalid phone number — enter a valid Algerian number (05X / 06X / 07X)';
+
+  @override
+  String get ageGroupFewKnow => 'Few people know where their money goes.';
+
+  @override
+  String get ageGroupDifferentStep => 'Today you took a different step.';
+
+  @override
+  String get ageGroupQuestion => 'Which age group do you fall into?';
+
+  @override
+  String get age20to30 => '20 to 30 years';
+
+  @override
+  String get age31to40 => '31 to 40 years';
+
+  @override
+  String get age41to50 => '41 to 50 years';
+
+  @override
+  String get ageOver50 => 'Over 50 years';
+
+  @override
+  String celebrationWelcomeWithName(String name) {
+    return 'Welcome, $name!';
+  }
+
+  @override
+  String get celebrationWelcome => 'Welcome to Chahriyti!';
+
+  @override
+  String get celebrationTagline => 'Chahriyti is happy to have you';
+
+  @override
+  String get celebrationBody =>
+      'We are now in contact with you. We will reach out soon to help you and complete the steps to get Chahriyti.';
+
+  @override
+  String get celebrationFooter =>
+      'Chahriyti — The first companion for the Algerian employee';
+
+  @override
+  String get celebrationActivateButton => 'I have the activation code';
+
+  @override
+  String get financialProfileTitle => 'Tell us about your financial situation';
+
+  @override
+  String get financialProfileSalaryQuestion => 'What is your monthly salary?';
+
+  @override
+  String get financialProfileSalaryDayQuestion =>
+      'When do you receive your salary?';
+
+  @override
+  String get financialProfileStartOfMonth => 'Start of month';
+
+  @override
+  String get financialProfileCustomDay => 'Specific date';
+
+  @override
+  String financialProfileDayOfMonth(int day) {
+    return 'Day $day of every month';
+  }
+
+  @override
+  String get financialProfileMaritalQuestion => 'What is your marital status?';
+
+  @override
+  String get financialProfileSingle => 'Single';
+
+  @override
+  String get financialProfileMarried => 'Married';
+
+  @override
+  String get financialProfileMarried1Child => 'Married with 1 child';
+
+  @override
+  String get financialProfileMarried2Children => 'Married with 2 children';
+
+  @override
+  String get financialProfileMarried3Children => 'Married with 3 children';
+
+  @override
+  String get financialProfileMarried4PlusChildren =>
+      'Married with 4 or more children';
+
+  @override
+  String get financialProfileExpenseTrackQuestion =>
+      'Do you write down and track your expenses?';
+
+  @override
+  String get financialProfileTracksYes =>
+      'Yes, I write down and track my expenses';
+
+  @override
+  String get financialProfileTracksNo => 'No, I don\'t write down my expenses';
+
+  @override
+  String get financialProfileSalaryNegative => 'Salary cannot be negative';
+
+  @override
+  String get goalsPageTitle => 'Why do you want to use Chahriyti?';
+
+  @override
+  String get goalsPageSubtitle => 'Select all that apply';
+
+  @override
+  String get goal1 => 'Know my real balance at any moment';
+
+  @override
+  String get goal2 => 'Record my expenses easily';
+
+  @override
+  String get goal3 => 'Know where my salary goes';
+
+  @override
+  String get goal4 => 'Plan my financial goals step by step';
+
+  @override
+  String get goal5 => 'Track my debts and obligations without forgetting';
+
+  @override
+  String get goal6 => 'Set a safe daily spending limit';
+
+  @override
+  String get goal7 => 'Build my savings gradually and systematically';
+
+  @override
+  String get goal8 => 'Record my additional income sources';
+
+  @override
+  String get goal9 => 'Monitor my financial statistics clearly';
+
+  @override
+  String get goal10 => 'Make financial decisions based on my real numbers';
+
+  @override
+  String get salarySetupTitle => 'Account Setup';
+
+  @override
+  String get salarySetupFullName => 'Full name';
+
+  @override
+  String get salarySetupNameHint => 'e.g. Mohammed Amine';
+
+  @override
+  String get salarySetupNameRequired => 'Name is required';
+
+  @override
+  String get salarySetupPhone => 'Phone number';
+
+  @override
+  String get salarySetupPhoneRequired => 'Phone number is required';
+
+  @override
+  String get salarySetupWilaya => 'Wilaya';
+
+  @override
+  String get salarySetupSalary => 'Monthly salary';
+
+  @override
+  String get salarySetupSalaryHint => 'e.g. 50000';
+
+  @override
+  String get salarySetupSalaryRequired => 'Salary is required';
+
+  @override
+  String get salarySetupSalaryPositive => 'Salary must be greater than zero';
+
+  @override
+  String get salarySetupSalaryDay => 'Salary receipt date';
+
+  @override
+  String get salarySetupFirstOfMonth => 'First of month (Day 1)';
+
+  @override
+  String get salarySetupSpecificDate => 'Specific date';
+
+  @override
+  String salarySetupDayOfMonth(int day) {
+    return 'Day $day of every month';
+  }
+
+  @override
+  String get salarySetupPickDayHelp => 'Choose salary receipt day';
+
+  @override
+  String get amountInputHint => 'e.g. 50000';
+
+  @override
+  String appliesFromDate(int day, String month, int year) {
+    return 'Will apply starting from $day $month $year';
+  }
+
+  @override
+  String get monthJan => 'January';
+
+  @override
+  String get monthFeb => 'February';
+
+  @override
+  String get monthMar => 'March';
+
+  @override
+  String get monthApr => 'April';
+
+  @override
+  String get monthMay => 'May';
+
+  @override
+  String get monthJun => 'June';
+
+  @override
+  String get monthJul => 'July';
+
+  @override
+  String get monthAug => 'August';
+
+  @override
+  String get monthSep => 'September';
+
+  @override
+  String get monthOct => 'October';
+
+  @override
+  String get monthNov => 'November';
+
+  @override
+  String get monthDec => 'December';
+
+  @override
+  String deleteExpenseNamed(String name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get amountMillionShort => 'M';
 }

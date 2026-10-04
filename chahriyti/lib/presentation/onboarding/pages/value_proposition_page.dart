@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 
@@ -15,18 +16,7 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
-  static const _benefits = [
-    'ستعرف رصيدك الحقيقي في أي لحظة',
-    'ستسجل مصاريفك بسهولة ودون تعقيد',
-    'ستكتشف أين يذهب راتبك فعليًا',
-    'ستراقب تقدم أهدافك المالية خطوة بخطوة',
-    'ستتابع ديونك وسلفك دون نسيان',
-    'ستحدد سقفًا يوميًا آمنًا للمصاريف',
-    'ستبني مدخراتك بشكل تدريجي ومنظم',
-    'ستسجل مصادر دخلك الإضافية',
-    'ستتابع إحصائياتك المالية بوضوح',
-    'ستتخذ قرارات مالية مبنية على أرقام حقيقية لا على التخمين',
-  ];
+  late List<String> _benefits;
 
   @override
   void initState() {
@@ -35,6 +25,11 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..forward();
+    final l = context.l10n;
+    _benefits = [
+      l.vp1, l.vp2, l.vp3, l.vp4, l.vp5,
+      l.vp6, l.vp7, l.vp8, l.vp9, l.vp10,
+    ];
   }
 
   @override
@@ -56,7 +51,7 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
                 children: [
                   // Title
                   Text(
-                    'من الآن فصاعدًا...',
+                    context.l10n.valuePropFromNow,
                     textAlign: TextAlign.center,
                     style: AppTypography.headlineMedium.copyWith(
                       color: AppColors.primary,
@@ -108,7 +103,7 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
                         ),
                       ),
                       child: Text(
-                        '"الأرقام التي لا تُقاس لا يمكن تحسينها."',
+                        context.l10n.valuePropQuote2,
                         textAlign: TextAlign.center,
                         style: AppTypography.bodyLarge.copyWith(
                           color: AppColors.primary,
@@ -130,7 +125,7 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => context.go('/onboarding/cta'),
-                  child: const Text('متابعة'),
+                  child: Text(context.l10n.valuePropContinue),
                 ),
               ),
             ),

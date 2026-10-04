@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
@@ -51,8 +52,8 @@ class CelebrationPage extends StatelessWidget {
                               : null;
                           return Text(
                             firstName != null
-                                ? 'أهلاً بك يا $firstName!'
-                                : 'أهلاً بك في شهريتي!',
+                                ? context.l10n.celebrationWelcomeWithName(firstName)
+                                : context.l10n.celebrationWelcome,
                             style: AppTypography.headlineMedium.copyWith(
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold,
@@ -64,7 +65,7 @@ class CelebrationPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'شهريتي سعيدة بانضمامك',
+                        context.l10n.celebrationTagline,
                         style: AppTypography.bodyLarge.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -83,7 +84,7 @@ class CelebrationPage extends StatelessWidget {
                           ),
                           padding: const EdgeInsets.all(16),
                           child: Text(
-                            'لقد أصبحنا الآن على تواصل معك. سنتواصل معك قريباً لمساعدتك وإتمام خطوات حصولك على شهريتي.',
+                            context.l10n.celebrationBody,
                             style: AppTypography.bodyMedium.copyWith(
                               color: AppColors.primary,
                               height: 1.7,
@@ -94,7 +95,7 @@ class CelebrationPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'شهريتي — الرفيق الأول للموظف الجزائري',
+                        context.l10n.celebrationFooter,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -129,7 +130,7 @@ class CelebrationPage extends StatelessWidget {
                                       strokeWidth: 2.5,
                                     ),
                                   )
-                                : const Text('لدي كود التفعيل'),
+                                : Text(context.l10n.celebrationActivateButton),
                           ),
                         );
                       },

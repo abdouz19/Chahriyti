@@ -18,7 +18,7 @@ class ChahriytiApp extends StatelessWidget {
       child: BlocBuilder<LocaleCubit, LocaleState>(
         builder: (context, localeState) {
           return MaterialApp.router(
-            title: 'شهريتي',
+            title: 'Chahriyti',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             locale: localeState.locale,

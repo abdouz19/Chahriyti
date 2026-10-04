@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/categories.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/category_l10n_extension.dart';
+import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/custom_category_entity.dart';
@@ -59,17 +60,17 @@ class _CategoryGridState extends State<CategoryGrid> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('حذف الفئة'),
-        content: Text('هل تريد حذف فئة "${cat.name}"؟'),
+        title: Text(ctx.l10n.deleteCategory),
+        content: Text(ctx.l10n.deleteCategoryConfirm(cat.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('إلغاء'),
+            child: Text(ctx.l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: AppColors.negative),
-            child: const Text('حذف'),
+            child: Text(ctx.l10n.delete),
           ),
         ],
       ),
@@ -245,7 +246,7 @@ class _AddCategoryCard extends StatelessWidget {
                 size: 40, color: AppColors.primary.withValues(alpha: 0.6)),
             const SizedBox(height: 8),
             Text(
-              'فئة جديدة',
+              context.l10n.newCategory,
               style: AppTypography.labelLarge.copyWith(
                 color: AppColors.primary.withValues(alpha: 0.7),
               ),
@@ -315,19 +316,19 @@ class _AddCustomCategorySheetState extends State<_AddCustomCategorySheet> {
             ),
           ),
           const SizedBox(height: 20),
-          Text('إضافة فئة مخصصة', style: AppTypography.headlineSmall),
+          Text(context.l10n.addCustomCategory, style: AppTypography.headlineSmall),
           const SizedBox(height: 20),
-          Text('اسم الفئة', style: AppTypography.labelLarge),
+          Text(context.l10n.categoryName, style: AppTypography.labelLarge),
           const SizedBox(height: 8),
           TextFormField(
             controller: _nameController,
             autofocus: true,
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (_) => _submit(),
-            decoration: const InputDecoration(hintText: 'مثال: رياضة، حيوانات أليفة...'),
+            decoration: InputDecoration(hintText: context.l10n.categoryNameHint),
           ),
           const SizedBox(height: 20),
-          Text('اختر أيقونة', style: AppTypography.labelLarge),
+          Text(context.l10n.chooseIcon, style: AppTypography.labelLarge),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -364,7 +365,7 @@ class _AddCustomCategorySheetState extends State<_AddCustomCategorySheet> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _submit,
-              child: const Text('إضافة'),
+              child: Text(context.l10n.add),
             ),
           ),
         ],

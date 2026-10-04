@@ -161,7 +161,7 @@ class SpendingTrendChart extends StatelessWidget {
               if (spot.barIndex == 1) return null; // skip budget line tooltip
               final amount = spot.y.toInt();
               return LineTooltipItem(
-                '${l10n.dayN(spot.x.toInt())}\n${_formatAmount(amount)} ${l10n.currencySymbol}',
+                '${l10n.dayN(spot.x.toInt())}\n${_formatAmount(amount, l10n)} ${l10n.currencySymbol}',
                 AppTypography.bodySmall.copyWith(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
@@ -174,9 +174,9 @@ class SpendingTrendChart extends StatelessWidget {
     );
   }
 
-  String _formatAmount(int amount) {
+  String _formatAmount(int amount, AppLocalizations l10n) {
     if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}م';
+      return '${(amount / 1000000).toStringAsFixed(1)}${l10n.amountMillionShort}';
     } else if (amount >= 1000) {
       return '${(amount / 1000).toStringAsFixed(0)}k';
     }
