@@ -14,6 +14,7 @@ import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
 import '../cubits/lending_cubit.dart';
 import '../cubits/lending_state.dart';
+import '../widgets/delta_adjustment_sheet.dart';
 import 'add_lending_page.dart';
 
 class LendingDetailPage extends StatelessWidget {
@@ -107,7 +108,7 @@ class _LendingDetailView extends StatelessWidget {
               },
             ),
             IconButton(
-              onPressed: () => _showDeleteConfirmation(context),
+              onPressed: () => _handleDelete(context),
               icon: Icon(
                 Icons.delete_outline,
                 color: AppColors.negative,
@@ -485,8 +486,53 @@ class _LendingDetailView extends StatelessWidget {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context) {
+  Future<void> _handleDelete(BuildContext context) async {
+    final currentState = context.read<LendingCubit>().state;
+    if (currentState is! LendingLoaded) return;
+
+    final lending = currentState.lending;
     final cubit = context.read<LendingCubit>();
+
+    // Fully collected → simple confirm dialog, no routing needed
+    if (lending.remainingAmount == 0) {
+      _showSimpleDeleteConfirmation(context, cubit);
+      return;
+    }
+
+    // Fetch balances for display
+    final cycleId = lending.cycleId ?? 0;
+    final currentBalance = await _computeBalance(cycleId);
+    final savingsBalance = await Injection.getSavingsBalanceUseCase();
+
+    if (!context.mounted) return;
+    final l10n = context.l10n;
+    final source = await showModalBottomSheet<LendingDeltaSource>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => LendingDeltaAdjustmentSheet(
+        delta: lending.remainingAmount,
+        isIncrease: false,
+        title: l10n.lendingDeleteWhereTitle,
+        description: l10n.lendingDeleteWhereDesc(lending.remainingAmount),
+        currentBalance: currentBalance,
+        savingsBalance: savingsBalance,
+      ),
+    );
+    if (source == null || !context.mounted) return;
+
+    // Move remaining to savings before deleting
+    // (lending deletion auto-returns remainingAmount to balance;
+    //  deposit moves it from balance → savings)
+    if (source == LendingDeltaSource.savings) {
+      await Injection.depositFromBalanceUseCase(amount: lending.remainingAmount);
+    }
+    // balance/forgotten: balance formula auto-adjusts on delete, no extra ops
+
+    if (!context.mounted) return;
+    cubit.deleteLending(lendingId);
+  }
+
+  void _showSimpleDeleteConfirmation(BuildContext context, LendingCubit cubit) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -511,6 +557,31 @@ class _LendingDetailView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<int> _computeBalance(int cycleId) async {
+    final totalExpenses =
+        await Injection.expenseRepository.getTotalExpenses(cycleId);
+    final totalIncome =
+        await Injection.incomeRepository.getTotalIncomeForCycle(cycleId);
+    final totalDebtPayments =
+        await Injection.debtRepository.getTotalDebtPaymentsForCycle(cycleId);
+    final totalDebtsCreated =
+        await Injection.debtRepository.getTotalDebtsCreatedForCycle(cycleId);
+    final totalLendings =
+        await Injection.lendingRepository.getTotalLendingsFromBalanceForCycle(cycleId);
+    final totalCollections =
+        await Injection.lendingRepository.getTotalCollectionsToBalanceForCycle(cycleId);
+    final cycle = await Injection.cycleRepository.getCycleById(cycleId);
+    if (cycle == null) return 0;
+    return cycle.salaryAmount -
+        cycle.salarySplitAmount +
+        totalIncome +
+        totalDebtsCreated -
+        totalExpenses -
+        totalDebtPayments -
+        totalLendings +
+        totalCollections;
   }
 
   void _showAddCollectionDialog(BuildContext context, int maxAmount) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
@@ -13,6 +12,7 @@ import '../../shared/widgets/funding_source_sheet.dart';
 import '../../../application/use_cases/lending/update_lending_use_case.dart';
 import '../cubits/lending_cubit.dart';
 import '../cubits/lending_state.dart';
+import '../widgets/delta_adjustment_sheet.dart';
 
 class AddLendingPage extends StatefulWidget {
   final int cycleId;
@@ -164,12 +164,19 @@ class _AddLendingPageState extends State<AddLendingPage> {
     await _loadSavingsBalance();
 
     if (!context.mounted) return;
-    final source = await showModalBottomSheet<_DeltaSource>(
+    final l10n = context.l10n;
+    final source = await showModalBottomSheet<LendingDeltaSource>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => _DeltaAdjustmentSheet(
+      builder: (_) => LendingDeltaAdjustmentSheet(
         delta: delta.abs(),
         isIncrease: delta > 0,
+        title: delta > 0
+            ? l10n.lendingDeltaIncreaseTitle
+            : l10n.lendingDeltaDecreaseTitle,
+        description: delta > 0
+            ? l10n.lendingDeltaIncreaseDesc(delta.abs())
+            : l10n.lendingDeltaDecreaseDesc(delta.abs()),
         currentBalance: currentBalance,
         savingsBalance: _savingsBalance,
       ),
@@ -185,7 +192,7 @@ class _AddLendingPageState extends State<AddLendingPage> {
     ));
 
     // Financial side-effects
-    if (source == _DeltaSource.savings) {
+    if (source == LendingDeltaSource.savings) {
       if (delta > 0) {
         // Extra lent money came from savings → withdraw delta from savings
         await Injection.withdrawSavingsUseCase(
@@ -440,149 +447,3 @@ class _AddLendingPageState extends State<AddLendingPage> {
   }
 }
 
-// ─── Delta adjustment ────────────────────────────────────────────────────────
-
-enum _DeltaSource { balance, savings, forgotten }
-
-class _DeltaAdjustmentSheet extends StatelessWidget {
-  final int delta;
-  final bool isIncrease;
-  final int currentBalance;
-  final int savingsBalance;
-
-  const _DeltaAdjustmentSheet({
-    required this.delta,
-    required this.isIncrease,
-    required this.currentBalance,
-    required this.savingsBalance,
-  });
-
-  static String _fmt(int amount) {
-    return '${NumberFormat('#,###', 'en_US').format(amount)} DA';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final canAffordBalance = !isIncrease || currentBalance >= delta;
-    final canAffordSavings = !isIncrease || savingsBalance >= delta;
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              isIncrease ? l10n.lendingDeltaIncreaseTitle : l10n.lendingDeltaDecreaseTitle,
-              style: AppTypography.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              isIncrease
-                  ? l10n.lendingDeltaIncreaseDesc(delta)
-                  : l10n.lendingDeltaDecreaseDesc(delta),
-              style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 24),
-            _SheetOption(
-              icon: Icons.account_balance_wallet_outlined,
-              label: isIncrease ? l10n.fromCurrentBalance : l10n.toCurrentBalance,
-              subtitle: isIncrease
-                  ? '${l10n.available}: ${_fmt(currentBalance)}'
-                  : '${l10n.currentBalance}: ${_fmt(currentBalance)}',
-              color: AppColors.primary,
-              enabled: canAffordBalance,
-              onTap: () => Navigator.pop(context, _DeltaSource.balance),
-            ),
-            const SizedBox(height: 12),
-            _SheetOption(
-              icon: Icons.savings_outlined,
-              label: isIncrease ? l10n.fromSavings : l10n.toSavings,
-              subtitle: isIncrease
-                  ? '${l10n.available}: ${_fmt(savingsBalance)}'
-                  : '${l10n.savingsBalance}: ${_fmt(savingsBalance)}',
-              color: AppColors.positive,
-              enabled: canAffordSavings,
-              onTap: () => Navigator.pop(context, _DeltaSource.savings),
-            ),
-            const SizedBox(height: 12),
-            _SheetOption(
-              icon: Icons.history_outlined,
-              label: l10n.forgottenAdjustment,
-              color: AppColors.warning,
-              onTap: () => Navigator.pop(context, _DeltaSource.forgotten),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SheetOption extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String? subtitle;
-  final Color color;
-  final bool enabled;
-  final VoidCallback onTap;
-
-  const _SheetOption({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-    this.subtitle,
-    this.enabled = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final effectiveColor = enabled ? color : AppColors.textSecondary;
-    return InkWell(
-      onTap: enabled ? onTap : null,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: effectiveColor.withValues(alpha: enabled ? 0.08 : 0.04),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: effectiveColor.withValues(alpha: 0.25)),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: effectiveColor, size: 22),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: AppTypography.labelLarge.copyWith(color: effectiveColor),
-                  ),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle!,
-                      style: AppTypography.bodySmall.copyWith(
-                        color: enabled
-                            ? effectiveColor.withValues(alpha: 0.7)
-                            : AppColors.textSecondary.withValues(alpha: 0.5),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            if (enabled)
-              Icon(Icons.arrow_forward_ios_rounded, color: effectiveColor, size: 14)
-            else
-              Icon(Icons.block_rounded, color: effectiveColor, size: 16),
-          ],
-        ),
-      ),
-    );
-  }
-}

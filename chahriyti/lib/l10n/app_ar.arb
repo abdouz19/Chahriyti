@@ -153,6 +153,8 @@
   "fromCurrentBalance": "من الرصيد الحالي",
   "toCurrentBalance": "إلى الرصيد الحالي",
   "forgottenAdjustment": "منسي (بدون تتبع)",
+  "lendingDeleteWhereTitle": "أين يذهب المبلغ المتبقي؟",
+  "lendingDeleteWhereDesc": "مبلغ {delta} دج لم يُسترجع بعد. اختر وجهته.",
 
   "savingsTitle": "المدخرات",
   "withdrawToBalance": "سحب للرصيد",

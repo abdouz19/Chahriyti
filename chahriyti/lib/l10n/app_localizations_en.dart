@@ -453,6 +453,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgottenAdjustment => 'Forgotten (no tracking)';
 
   @override
+  String get lendingDeleteWhereTitle => 'Where does the remaining amount go?';
+
+  @override
+  String lendingDeleteWhereDesc(int delta) {
+    return 'There is $delta DA still outstanding. Choose where to return it.';
+  }
+
+  @override
   String get savingsTitle => 'Savings';
 
   @override

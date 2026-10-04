@@ -449,6 +449,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get forgottenAdjustment => 'منسي (بدون تتبع)';
 
   @override
+  String get lendingDeleteWhereTitle => 'أين يذهب المبلغ المتبقي؟';
+
+  @override
+  String lendingDeleteWhereDesc(int delta) {
+    return 'مبلغ $delta دج لم يُسترجع بعد. اختر وجهته.';
+  }
+
+  @override
   String get savingsTitle => 'المدخرات';
 
   @override

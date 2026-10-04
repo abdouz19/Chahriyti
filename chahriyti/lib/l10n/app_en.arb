@@ -302,6 +302,10 @@
   "@toCurrentBalance": {},
   "forgottenAdjustment": "Forgotten (no tracking)",
   "@forgottenAdjustment": {},
+  "lendingDeleteWhereTitle": "Where does the remaining amount go?",
+  "@lendingDeleteWhereTitle": {},
+  "lendingDeleteWhereDesc": "There is {delta} DA still outstanding. Choose where to return it.",
+  "@lendingDeleteWhereDesc": { "placeholders": { "delta": { "type": "int" } } },
 
   "savingsTitle": "Savings",
   "@savingsTitle": {},

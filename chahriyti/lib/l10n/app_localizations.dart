@@ -964,6 +964,18 @@ abstract class AppLocalizations {
   /// **'Forgotten (no tracking)'**
   String get forgottenAdjustment;
 
+  /// No description provided for @lendingDeleteWhereTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where does the remaining amount go?'**
+  String get lendingDeleteWhereTitle;
+
+  /// No description provided for @lendingDeleteWhereDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'There is {delta} DA still outstanding. Choose where to return it.'**
+  String lendingDeleteWhereDesc(int delta);
+
   /// No description provided for @savingsTitle.
   ///
   /// In en, this message translates to:
