@@ -147,69 +147,76 @@ class _AddLendingPageState extends State<AddLendingPage> {
     final lending = widget.initialLending!;
     final delta = newAmount - lending.totalAmount;
 
-    if (delta > 0) {
+    // Only name/notes changed — no financial adjustment needed
+    if (delta == 0) {
+      cubit.updateLending(
+        id: lending.id,
+        borrowerName: _borrowerController.text,
+        notes: _notesController.text.isEmpty ? null : _notesController.text,
+        totalAmount: newAmount,
+      );
+      return;
+    }
+
+    // Ask where the delta comes from / goes to
+    if (!context.mounted) return;
+    final source = await showModalBottomSheet<_DeltaSource>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => _DeltaAdjustmentSheet(delta: delta.abs(), isIncrease: delta > 0),
+    );
+    if (source == null || !context.mounted) return;
+
+    // Validate before executing
+    if (delta > 0 && source == _DeltaSource.balance) {
       final balance = await _getCurrentBalance();
-      // Effective balance = current balance + original amount freed up (if from balance)
-      final effectiveBalance = balance + (lending.fromSavings ? 0 : lending.totalAmount);
-
-      if (delta > effectiveBalance) {
-        await _loadSavingsBalance();
-        if (!context.mounted) return;
-
-        if (newAmount > effectiveBalance + _savingsBalance) {
+      if (delta > balance) {
+        if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(context.l10n.insufficientFunds),
-              backgroundColor: AppColors.negative,
-            ),
-          );
-          return;
-        }
-
-        final result = await showFundingSourceSheet(
-          context,
-          amount: newAmount,
-          availableBalance: effectiveBalance,
-          availableSavings: _savingsBalance,
-        );
-        if (result == null || !context.mounted) return;
-
-        // Update lending
-        await Injection.updateLendingUseCase(UpdateLendingRequest(
-          id: lending.id,
-          borrowerName: _borrowerController.text,
-          notes: _notesController.text.isEmpty ? null : _notesController.text,
-          totalAmount: newAmount,
-        ));
-
-        // Handle savings withdrawal delta
-        final newSavingsAmount = result.savingsAmount;
-        final oldSavingsAmount = lending.savingsAmount;
-        if (newSavingsAmount > 0) {
-          if (oldSavingsAmount > 0) {
-            // Replace old record
-            await Injection.savingsRepository.deleteWithdrawalByLendingId(lending.id);
-          }
-          await Injection.withdrawSavingsUseCase(
-            amount: newSavingsAmount,
-            description: _borrowerController.text,
-            lendingId: lending.id,
+            SnackBar(content: Text(context.l10n.insufficientFunds), backgroundColor: AppColors.negative),
           );
         }
-
-        if (!context.mounted) return;
-        cubit.loadLendingById(lending.id);
+        return;
+      }
+    }
+    if (delta > 0 && source == _DeltaSource.savings) {
+      await _loadSavingsBalance();
+      if (delta > _savingsBalance) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.l10n.insufficientSavings), backgroundColor: AppColors.negative),
+          );
+        }
         return;
       }
     }
 
-    // Delta fits in balance (or is reduction) — update directly
-    cubit.updateLending(
+    // Update lending record
+    await Injection.updateLendingUseCase(UpdateLendingRequest(
       id: lending.id,
       borrowerName: _borrowerController.text,
       notes: _notesController.text.isEmpty ? null : _notesController.text,
       totalAmount: newAmount,
-    );
+    ));
+
+    // Financial side-effects
+    if (source == _DeltaSource.savings) {
+      if (delta > 0) {
+        // Extra lent money came from savings → withdraw delta from savings
+        await Injection.withdrawSavingsUseCase(
+          amount: delta,
+          description: _borrowerController.text,
+        );
+      } else {
+        // Reduced lending amount goes to savings → deposit |delta|
+        await Injection.depositFromBalanceUseCase(amount: -delta);
+      }
+    }
+    // balance source: balance formula auto-adjusts; no extra ops
+    // forgotten source: no financial tracking; no extra ops
+
+    if (!context.mounted) return;
+    cubit.loadLendingById(lending.id);
   }
 
   Future<int> _getCurrentBalance() async {
@@ -442,6 +449,105 @@ class _AddLendingPageState extends State<AddLendingPage> {
               );
             },
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Delta adjustment ────────────────────────────────────────────────────────
+
+enum _DeltaSource { balance, savings, forgotten }
+
+class _DeltaAdjustmentSheet extends StatelessWidget {
+  final int delta;
+  final bool isIncrease;
+
+  const _DeltaAdjustmentSheet({required this.delta, required this.isIncrease});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              isIncrease ? l10n.lendingDeltaIncreaseTitle : l10n.lendingDeltaDecreaseTitle,
+              style: AppTypography.headlineSmall,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              isIncrease
+                  ? l10n.lendingDeltaIncreaseDesc(delta)
+                  : l10n.lendingDeltaDecreaseDesc(delta),
+              style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 24),
+            _SheetOption(
+              icon: Icons.account_balance_wallet_outlined,
+              label: isIncrease ? l10n.fromCurrentBalance : l10n.toCurrentBalance,
+              color: AppColors.primary,
+              onTap: () => Navigator.pop(context, _DeltaSource.balance),
+            ),
+            const SizedBox(height: 12),
+            _SheetOption(
+              icon: Icons.savings_outlined,
+              label: isIncrease ? l10n.fromSavings : l10n.toSavings,
+              color: AppColors.positive,
+              onTap: () => Navigator.pop(context, _DeltaSource.savings),
+            ),
+            const SizedBox(height: 12),
+            _SheetOption(
+              icon: Icons.history_outlined,
+              label: l10n.forgottenAdjustment,
+              color: AppColors.warning,
+              onTap: () => Navigator.pop(context, _DeltaSource.forgotten),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SheetOption extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _SheetOption({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withValues(alpha: 0.25)),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 22),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(label, style: AppTypography.labelLarge.copyWith(color: color)),
+            ),
+            Icon(Icons.arrow_forward_ios_rounded, color: color, size: 14),
+          ],
         ),
       ),
     );

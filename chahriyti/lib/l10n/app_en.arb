@@ -284,6 +284,24 @@
   "@lendingCreated": {},
   "lendingUpdated": "Lending updated successfully",
   "@lendingUpdated": {},
+  "lendingDeltaIncreaseTitle": "Where does the extra money come from?",
+  "@lendingDeltaIncreaseTitle": {},
+  "lendingDeltaIncreaseDesc": "The lending amount increased by {delta} DA. Where does this extra amount come from?",
+  "@lendingDeltaIncreaseDesc": {
+    "placeholders": { "delta": { "type": "int" } }
+  },
+  "lendingDeltaDecreaseTitle": "Where should the difference go?",
+  "@lendingDeltaDecreaseTitle": {},
+  "lendingDeltaDecreaseDesc": "The lending amount decreased by {delta} DA. Where should this amount go?",
+  "@lendingDeltaDecreaseDesc": {
+    "placeholders": { "delta": { "type": "int" } }
+  },
+  "fromCurrentBalance": "From current balance",
+  "@fromCurrentBalance": {},
+  "toCurrentBalance": "To current balance",
+  "@toCurrentBalance": {},
+  "forgottenAdjustment": "Forgotten (no tracking)",
+  "@forgottenAdjustment": {},
 
   "savingsTitle": "Savings",
   "@savingsTitle": {},

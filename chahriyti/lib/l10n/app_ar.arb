@@ -146,6 +146,13 @@
   "saveLending": "تسجيل السلفة",
   "lendingCreated": "تم تسجيل السلفة بنجاح",
   "lendingUpdated": "تم تعديل السلفة بنجاح",
+  "lendingDeltaIncreaseTitle": "من أين جاءت الزيادة؟",
+  "lendingDeltaIncreaseDesc": "مبلغ السلفة زاد بـ {delta} دج. من أين تأتي هذه الزيادة؟",
+  "lendingDeltaDecreaseTitle": "أين يذهب الفرق؟",
+  "lendingDeltaDecreaseDesc": "مبلغ السلفة نقص بـ {delta} دج. أين يذهب هذا المبلغ؟",
+  "fromCurrentBalance": "من الرصيد الحالي",
+  "toCurrentBalance": "إلى الرصيد الحالي",
+  "forgottenAdjustment": "منسي (بدون تتبع)",
 
   "savingsTitle": "المدخرات",
   "withdrawToBalance": "سحب للرصيد",

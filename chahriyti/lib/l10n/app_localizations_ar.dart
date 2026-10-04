@@ -424,6 +424,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lendingUpdated => 'تم تعديل السلفة بنجاح';
 
   @override
+  String get lendingDeltaIncreaseTitle => 'من أين جاءت الزيادة؟';
+
+  @override
+  String lendingDeltaIncreaseDesc(int delta) {
+    return 'مبلغ السلفة زاد بـ $delta دج. من أين تأتي هذه الزيادة؟';
+  }
+
+  @override
+  String get lendingDeltaDecreaseTitle => 'أين يذهب الفرق؟';
+
+  @override
+  String lendingDeltaDecreaseDesc(int delta) {
+    return 'مبلغ السلفة نقص بـ $delta دج. أين يذهب هذا المبلغ؟';
+  }
+
+  @override
+  String get fromCurrentBalance => 'من الرصيد الحالي';
+
+  @override
+  String get toCurrentBalance => 'إلى الرصيد الحالي';
+
+  @override
+  String get forgottenAdjustment => 'منسي (بدون تتبع)';
+
+  @override
   String get savingsTitle => 'المدخرات';
 
   @override

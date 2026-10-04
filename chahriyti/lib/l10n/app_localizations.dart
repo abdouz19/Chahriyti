@@ -922,6 +922,48 @@ abstract class AppLocalizations {
   /// **'Lending updated successfully'**
   String get lendingUpdated;
 
+  /// No description provided for @lendingDeltaIncreaseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where does the extra money come from?'**
+  String get lendingDeltaIncreaseTitle;
+
+  /// No description provided for @lendingDeltaIncreaseDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The lending amount increased by {delta} DA. Where does this extra amount come from?'**
+  String lendingDeltaIncreaseDesc(int delta);
+
+  /// No description provided for @lendingDeltaDecreaseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where should the difference go?'**
+  String get lendingDeltaDecreaseTitle;
+
+  /// No description provided for @lendingDeltaDecreaseDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The lending amount decreased by {delta} DA. Where should this amount go?'**
+  String lendingDeltaDecreaseDesc(int delta);
+
+  /// No description provided for @fromCurrentBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'From current balance'**
+  String get fromCurrentBalance;
+
+  /// No description provided for @toCurrentBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'To current balance'**
+  String get toCurrentBalance;
+
+  /// No description provided for @forgottenAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgotten (no tracking)'**
+  String get forgottenAdjustment;
+
   /// No description provided for @savingsTitle.
   ///
   /// In en, this message translates to:

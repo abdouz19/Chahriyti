@@ -430,6 +430,32 @@ class AppLocalizationsFr extends AppLocalizations {
   String get lendingUpdated => 'Prêt modifié avec succès';
 
   @override
+  String get lendingDeltaIncreaseTitle =>
+      'Where does the extra money come from?';
+
+  @override
+  String lendingDeltaIncreaseDesc(int delta) {
+    return 'The lending amount increased by $delta DA. Where does this extra amount come from?';
+  }
+
+  @override
+  String get lendingDeltaDecreaseTitle => 'Where should the difference go?';
+
+  @override
+  String lendingDeltaDecreaseDesc(int delta) {
+    return 'The lending amount decreased by $delta DA. Where should this amount go?';
+  }
+
+  @override
+  String get fromCurrentBalance => 'From current balance';
+
+  @override
+  String get toCurrentBalance => 'To current balance';
+
+  @override
+  String get forgottenAdjustment => 'Forgotten (no tracking)';
+
+  @override
   String get savingsTitle => 'Épargne';
 
   @override
