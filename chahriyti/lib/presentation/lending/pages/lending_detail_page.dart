@@ -584,13 +584,24 @@ class _LendingDetailView extends StatelessWidget {
         totalCollections;
   }
 
-  void _showAddCollectionDialog(BuildContext context, int maxAmount) {
+  Future<void> _showAddCollectionDialog(BuildContext context, int maxAmount) async {
     final cubit = context.read<LendingCubit>();
+
+    final currentState = cubit.state;
+    final cycleId = currentState is LendingLoaded
+        ? (currentState.lending.cycleId ?? 0)
+        : 0;
+    final currentBalance = await _computeBalance(cycleId);
+    final savingsBalance = await Injection.getSavingsBalanceUseCase();
+
+    if (!context.mounted) return;
 
     showDialog(
       context: context,
       builder: (dialogContext) => _CollectionDialog(
         maxAmount: maxAmount,
+        currentBalance: currentBalance,
+        savingsBalance: savingsBalance,
         onSubmit: (amount, toSavings) {
           Navigator.pop(dialogContext);
           cubit.addCollection(
@@ -607,11 +618,15 @@ class _LendingDetailView extends StatelessWidget {
 
 class _CollectionDialog extends StatefulWidget {
   final int maxAmount;
+  final int currentBalance;
+  final int savingsBalance;
   final void Function(int amount, bool toSavings) onSubmit;
   final VoidCallback onCancel;
 
   const _CollectionDialog({
     required this.maxAmount,
+    required this.currentBalance,
+    required this.savingsBalance,
     required this.onSubmit,
     required this.onCancel,
   });
@@ -729,6 +744,16 @@ class _CollectionDialogState extends State<_CollectionDialog> {
                                 : FontWeight.normal,
                           ),
                         ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${NumberFormat('#,###', 'en_US').format(widget.currentBalance)} ${l10n.currencySymbol}',
+                          style: AppTypography.bodySmall.copyWith(
+                            color: !_toSavings
+                                ? AppColors.primary.withValues(alpha: 0.75)
+                                : AppColors.textSecondary.withValues(alpha: 0.6),
+                            fontSize: 10,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -774,6 +799,16 @@ class _CollectionDialogState extends State<_CollectionDialog> {
                             fontWeight: _toSavings
                                 ? FontWeight.w600
                                 : FontWeight.normal,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${NumberFormat('#,###', 'en_US').format(widget.savingsBalance)} ${l10n.currencySymbol}',
+                          style: AppTypography.bodySmall.copyWith(
+                            color: _toSavings
+                                ? AppColors.primary.withValues(alpha: 0.75)
+                                : AppColors.textSecondary.withValues(alpha: 0.6),
+                            fontSize: 10,
                           ),
                         ),
                       ],
