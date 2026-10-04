@@ -859,6 +859,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get currentBalance => 'الرصيد الحالي';
 
   @override
+  String get savingsBalance => 'رصيد المدخرات';
+
+  @override
+  String get available => 'متاح';
+
+  @override
   String cycleBalance(String amount) {
     return 'رصيد الدورة: $amount';
   }

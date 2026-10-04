@@ -598,6 +598,10 @@
 
   "currentBalance": "Current Balance",
   "@currentBalance": {},
+  "savingsBalance": "Savings Balance",
+  "@savingsBalance": {},
+  "available": "Available",
+  "@available": {},
   "cycleBalance": "Cycle: {amount}",
   "@cycleBalance": { "placeholders": { "amount": { "type": "String" } } },
   "expensesLabel": "Expenses",

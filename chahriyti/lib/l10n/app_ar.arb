@@ -291,6 +291,8 @@
   "debtNotSpentDesc": "المبلغ لا يزال في رصيدك",
 
   "currentBalance": "الرصيد الحالي",
+  "savingsBalance": "رصيد المدخرات",
+  "available": "متاح",
   "cycleBalance": "رصيد الدورة: {amount}",
   "expensesLabel": "المصاريف",
   "expensesSavingsThisCycle": "من المدخرات هذه الدورة: {amount}",

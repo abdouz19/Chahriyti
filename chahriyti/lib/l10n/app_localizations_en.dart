@@ -864,6 +864,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get currentBalance => 'Current Balance';
 
   @override
+  String get savingsBalance => 'Savings Balance';
+
+  @override
+  String get available => 'Available';
+
+  @override
   String cycleBalance(String amount) {
     return 'Cycle: $amount';
   }

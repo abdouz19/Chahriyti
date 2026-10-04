@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
@@ -158,38 +159,22 @@ class _AddLendingPageState extends State<AddLendingPage> {
       return;
     }
 
-    // Ask where the delta comes from / goes to
+    // Pre-fetch both balances so the sheet can display and disable unavailable options
+    final currentBalance = await _getCurrentBalance();
+    await _loadSavingsBalance();
+
     if (!context.mounted) return;
     final source = await showModalBottomSheet<_DeltaSource>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => _DeltaAdjustmentSheet(delta: delta.abs(), isIncrease: delta > 0),
+      builder: (_) => _DeltaAdjustmentSheet(
+        delta: delta.abs(),
+        isIncrease: delta > 0,
+        currentBalance: currentBalance,
+        savingsBalance: _savingsBalance,
+      ),
     );
     if (source == null || !context.mounted) return;
-
-    // Validate before executing
-    if (delta > 0 && source == _DeltaSource.balance) {
-      final balance = await _getCurrentBalance();
-      if (delta > balance) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.insufficientFunds), backgroundColor: AppColors.negative),
-          );
-        }
-        return;
-      }
-    }
-    if (delta > 0 && source == _DeltaSource.savings) {
-      await _loadSavingsBalance();
-      if (delta > _savingsBalance) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.insufficientSavings), backgroundColor: AppColors.negative),
-          );
-        }
-        return;
-      }
-    }
 
     // Update lending record
     await Injection.updateLendingUseCase(UpdateLendingRequest(
@@ -462,12 +447,25 @@ enum _DeltaSource { balance, savings, forgotten }
 class _DeltaAdjustmentSheet extends StatelessWidget {
   final int delta;
   final bool isIncrease;
+  final int currentBalance;
+  final int savingsBalance;
 
-  const _DeltaAdjustmentSheet({required this.delta, required this.isIncrease});
+  const _DeltaAdjustmentSheet({
+    required this.delta,
+    required this.isIncrease,
+    required this.currentBalance,
+    required this.savingsBalance,
+  });
+
+  static String _fmt(int amount) {
+    return '${NumberFormat('#,###', 'en_US').format(amount)} DA';
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final canAffordBalance = !isIncrease || currentBalance >= delta;
+    final canAffordSavings = !isIncrease || savingsBalance >= delta;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
@@ -490,14 +488,22 @@ class _DeltaAdjustmentSheet extends StatelessWidget {
             _SheetOption(
               icon: Icons.account_balance_wallet_outlined,
               label: isIncrease ? l10n.fromCurrentBalance : l10n.toCurrentBalance,
+              subtitle: isIncrease
+                  ? '${l10n.available}: ${_fmt(currentBalance)}'
+                  : '${l10n.currentBalance}: ${_fmt(currentBalance)}',
               color: AppColors.primary,
+              enabled: canAffordBalance,
               onTap: () => Navigator.pop(context, _DeltaSource.balance),
             ),
             const SizedBox(height: 12),
             _SheetOption(
               icon: Icons.savings_outlined,
               label: isIncrease ? l10n.fromSavings : l10n.toSavings,
+              subtitle: isIncrease
+                  ? '${l10n.available}: ${_fmt(savingsBalance)}'
+                  : '${l10n.savingsBalance}: ${_fmt(savingsBalance)}',
               color: AppColors.positive,
+              enabled: canAffordSavings,
               onTap: () => Navigator.pop(context, _DeltaSource.savings),
             ),
             const SizedBox(height: 12),
@@ -517,7 +523,9 @@ class _DeltaAdjustmentSheet extends StatelessWidget {
 class _SheetOption extends StatelessWidget {
   final IconData icon;
   final String label;
+  final String? subtitle;
   final Color color;
+  final bool enabled;
   final VoidCallback onTap;
 
   const _SheetOption({
@@ -525,28 +533,53 @@ class _SheetOption extends StatelessWidget {
     required this.label,
     required this.color,
     required this.onTap,
+    this.subtitle,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final effectiveColor = enabled ? color : AppColors.textSecondary;
     return InkWell(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
+          color: effectiveColor.withValues(alpha: enabled ? 0.08 : 0.04),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.25)),
+          border: Border.all(color: effectiveColor.withValues(alpha: 0.25)),
         ),
         child: Row(
           children: [
-            Icon(icon, color: color, size: 22),
+            Icon(icon, color: effectiveColor, size: 22),
             const SizedBox(width: 14),
             Expanded(
-              child: Text(label, style: AppTypography.labelLarge.copyWith(color: color)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: AppTypography.labelLarge.copyWith(color: effectiveColor),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle!,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: enabled
+                            ? effectiveColor.withValues(alpha: 0.7)
+                            : AppColors.textSecondary.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded, color: color, size: 14),
+            if (enabled)
+              Icon(Icons.arrow_forward_ios_rounded, color: effectiveColor, size: 14)
+            else
+              Icon(Icons.block_rounded, color: effectiveColor, size: 16),
           ],
         ),
       ),

@@ -1738,6 +1738,18 @@ abstract class AppLocalizations {
   /// **'Current Balance'**
   String get currentBalance;
 
+  /// No description provided for @savingsBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings Balance'**
+  String get savingsBalance;
+
+  /// No description provided for @available.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get available;
+
   /// No description provided for @cycleBalance.
   ///
   /// In en, this message translates to:
