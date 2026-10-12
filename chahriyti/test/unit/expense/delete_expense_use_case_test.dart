@@ -45,6 +45,9 @@ class FakeCycleRepository implements CycleRepository {
 }
 
 class FakeExpenseRepository implements ExpenseRepository {
+
+  @override
+  Future<int> getSetupAdjustmentForCycle(int cycleId) async => 0;
   int? deletedId;
 
   @override
@@ -86,6 +89,32 @@ class FakeExpenseRepository implements ExpenseRepository {
 }
 
 class FakeSavingsRepository implements SavingsRepository {
+
+  @override
+  Future<void> createIncomeDeposit({
+    required int amount,
+    required String description,
+    required int cycleId,
+    required int incomeId,
+  }) async {}
+
+  @override
+  Future<void> updateDepositAmountByIncomeId(int incomeId, int amount) async {}
+
+  @override
+  Future<void> deleteDepositByIncomeId(int incomeId) async {}
+
+  @override
+  Future<SavingsHistoryEntity> createTransfer({
+    required bool toSavings,
+    required int amount,
+    required String description,
+    required int cycleId,
+  }) async =>
+      throw UnimplementedError();
+
+  @override
+  Future<int> getNetTransfersToBalanceForCycle(int cycleId) async => 0;
   int? reversedWithdrawalForExpenseId;
 
   @override

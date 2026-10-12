@@ -134,4 +134,8 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   @override
   Future<Map<String, int>> getExpensesByCategory(int cycleId) =>
       _dao.getExpensesByCategory(cycleId);
+
+  @override
+  Future<int> getSetupAdjustmentForCycle(int cycleId) =>
+      _dao.getSetupAdjustmentForCycle(cycleId);
 }

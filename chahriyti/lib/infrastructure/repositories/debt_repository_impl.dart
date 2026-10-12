@@ -20,6 +20,7 @@ class DebtRepositoryImpl implements DebtRepository {
         isFullyPaid: row.isFullyPaid,
         isSpent: row.isSpent,
         createdAt: row.createdAt,
+        cycleId: row.cycleId,
         notes: row.notes,
       );
 

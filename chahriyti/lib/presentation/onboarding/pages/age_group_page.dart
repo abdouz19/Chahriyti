@@ -35,10 +35,17 @@ class _AgeGroupPageState extends State<AgeGroupPage>
       curve: Curves.easeIn,
     );
     _animController.forward();
-    final l = context.l10n;
-    _ageOptions = [l.age20to30, l.age31to40, l.age41to50, l.ageOver50];
     final saved = context.read<OnboardingCubit>().ageGroup;
     if (saved != null) _selectedAge = saved;
+  }
+
+  // Translated texts: read here, not in initState (needs the localizations,
+  // and refreshes when the language changes)
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final l = context.l10n;
+    _ageOptions = [l.age20to30, l.age31to40, l.age41to50, l.ageOver50];
   }
 
   @override
@@ -130,14 +137,31 @@ class _AgeGroupPageState extends State<AgeGroupPage>
               // Bottom CTA
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => context
-                        .read<OnboardingCubit>()
-                        .submitAgeGroup(_selectedAge),
-                    child: Text(context.l10n.startNow),
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (!(_selectedAge != null))
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          context.l10n.completeAllFieldsHint,
+                          style: AppTypography.bodySmall
+                              .copyWith(color: AppColors.textSecondary),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _selectedAge == null
+                            ? null
+                            : () => context
+                                .read<OnboardingCubit>()
+                                .submitAgeGroup(_selectedAge),
+                        child: Text(context.l10n.startNow),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

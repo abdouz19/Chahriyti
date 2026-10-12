@@ -5,6 +5,7 @@ import '../../../domain/repositories/expense_repository.dart';
 import '../../../domain/repositories/income_repository.dart';
 import '../../../domain/repositories/lending_repository.dart';
 import '../../../domain/repositories/savings_repository.dart';
+import '../dashboard/cycle_balance.dart';
 
 class DepositCycleSavingsUseCase {
   final CycleRepository cycleRepository;
@@ -33,22 +34,28 @@ class DepositCycleSavingsUseCase {
     final totalExpenses = await expenseRepository.getTotalExpenses(cycleId);
     final totalDebtPayments =
         await debtRepository.getTotalDebtPaymentsForCycle(cycleId);
+    final totalDebtsCreated =
+        await debtRepository.getTotalDebtsCreatedForCycle(cycleId);
     final totalLendings = lendingRepository != null
         ? await lendingRepository!.getTotalLendingsFromBalanceForCycle(cycleId)
         : 0;
     final totalCollections = lendingRepository != null
         ? await lendingRepository!.getTotalCollectionsToBalanceForCycle(cycleId)
         : 0;
+    final netTransfers =
+        await savingsRepository.getNetTransfersToBalanceForCycle(cycleId);
 
-    // Balance = salary + additional income - expenses(not from savings) - debt payments(not from savings) - lendings from balance + collections to balance
-    // Note: getTotalExpenses and getTotalDebtPaymentsForCycle already filter out fromSavings=true
-    final remainingBalance = cycle.salaryAmount -
-        cycle.salarySplitAmount +
-        totalIncome -
-        totalExpenses -
-        totalDebtPayments -
-        totalLendings +
-        totalCollections;
+    // Same balance the dashboard shows, so the leftover saved matches it
+    final remainingBalance = cycleBalance(
+      cycle: cycle,
+      income: totalIncome,
+      debtsCreated: totalDebtsCreated,
+      expenses: totalExpenses,
+      debtPayments: totalDebtPayments,
+      lendingsFromBalance: totalLendings,
+      collectionsToBalance: totalCollections,
+      netTransfersToBalance: netTransfers,
+    );
 
     if (remainingBalance <= 0) return null;
 

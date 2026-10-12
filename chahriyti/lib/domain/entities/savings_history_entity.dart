@@ -8,6 +8,11 @@ enum SavingsTransactionType {
   withdrawal,
 }
 
+/// [initial]: savings entered at setup. [transfer]: manual move between
+/// balance and savings. [other]: created by an expense, lending, goal, etc.,
+/// and only changed from there.
+enum SavingsRecordKind { initial, transfer, other }
+
 @freezed
 abstract class SavingsHistoryEntity with _$SavingsHistoryEntity {
   const factory SavingsHistoryEntity({
@@ -20,6 +25,7 @@ abstract class SavingsHistoryEntity with _$SavingsHistoryEntity {
     int? relatedDebtPaymentId,
     int? relatedLendingId,
     required DateTime createdAt,
+    @Default(SavingsRecordKind.other) SavingsRecordKind kind,
   }) = _SavingsHistoryEntity;
 
   factory SavingsHistoryEntity.fromJson(Map<String, dynamic> json) =>

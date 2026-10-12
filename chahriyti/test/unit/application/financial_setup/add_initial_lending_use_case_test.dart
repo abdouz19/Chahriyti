@@ -51,6 +51,16 @@ class FakeLendingRepository implements LendingRepository {
   Future<void> deleteLending(int id) async => throw UnimplementedError();
 
   @override
+  Future<void> archiveLending(int id) async => throw UnimplementedError();
+
+  @override
+  Future<void> addBalanceAdjustment({
+    required int lendingId,
+    required int amount,
+    required int cycleId,
+  }) async => throw UnimplementedError();
+
+  @override
   Future<void> updateLending({
     required int id,
     String? borrowerName,
@@ -64,6 +74,7 @@ class FakeLendingRepository implements LendingRepository {
     required int lendingId,
     required int amount,
     bool toSavings = false,
+    int? cycleId,
   }) async =>
       throw UnimplementedError();
 

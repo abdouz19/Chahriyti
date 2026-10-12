@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -143,51 +144,57 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     emit(const OnboardingGoals());
   }
 
-  /// Goals "التالي": submit to Firestore + save profile locally.
+  /// Goals "التالي": sends the request and waits for the server. The order
+  /// screen ("we'll call you") only appears once the server has it; on
+  /// failure the user stays here with an error and can try again.
   Future<void> submitGoals(List<String> goals) async {
     _goals = goals;
     emit(const OnboardingLoading());
     try {
       String? fcmToken;
       try {
-        fcmToken = await FirebaseMessaging.instance.getToken();
-      } catch (_) {
-        // APNs not configured or permission denied — token stays null
-      }
+        // Optional, and can hang offline
+        fcmToken = await FirebaseMessaging.instance
+            .getToken()
+            .timeout(const Duration(seconds: 5));
+      } catch (_) {}
 
-      // Save locally first — must succeed
+      await _leadService.submitLead(
+        name: _name,
+        phone: _phone,
+        wilayaCode: _wilayaCode,
+        commune: _commune,
+        ageGroup: _ageGroup,
+        salary: _salary,
+        salaryDay: _salaryDay,
+        maritalStatus: _maritalStatus,
+        tracksExpenses: _tracksExpenses,
+        goals: _goals,
+        fcmToken: fcmToken,
+      );
+
+      // Saved only now: reopening the app returns to the order screen
       await _leadStorage.save(
         name: _name,
         phone: _phone,
         wilayaCode: _wilayaCode,
         salary: _salary,
         salaryDay: _salaryDay,
+        commune: _commune,
+        ageGroup: _ageGroup,
+        maritalStatus: _maritalStatus,
+        tracksExpenses: _tracksExpenses,
+        goals: _goals,
       );
-
-      // Submit to Firestore — non-fatal if it fails
-      try {
-        await _leadService.submitLead(
-          name: _name,
-          phone: _phone,
-          wilayaCode: _wilayaCode,
-          commune: _commune,
-          ageGroup: _ageGroup,
-          salary: _salary,
-          salaryDay: _salaryDay,
-          maritalStatus: _maritalStatus,
-          tracksExpenses: _tracksExpenses,
-          goals: _goals,
-          fcmToken: fcmToken,
-        );
-      } catch (_) {
-        // Firestore submission failed — user still proceeds to celebration
-      }
-
       emit(OnboardingCelebration(firstName: _name.split(' ').first));
-    } catch (_) {
-      emit(const OnboardingError('تعذّر حفظ بياناتك، تحقق من الاتصال وحاول مجدداً'));
+    } catch (e) {
+      debugPrint('📮 lead submission failed: $e');
+      emit(const OnboardingError(leadSendFailed));
     }
   }
+
+  /// Error code shown by the goals page in the user's language.
+  static const leadSendFailed = 'leadSendFailed';
 
   // Legacy stub methods
   // ignore: unused_element

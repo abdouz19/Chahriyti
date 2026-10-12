@@ -86,8 +86,8 @@ class _AddGoalPageState extends State<AddGoalPage> {
         Injection.getGoalsUseCase,
         Injection.updateGoalUseCase,
         Injection.deleteGoalUseCase,
-        withdrawSavingsUseCase: Injection.withdrawSavingsUseCase,
-        goalRepository: Injection.goalRepository,
+        purchaseGoalUseCase: Injection.purchaseGoalUseCase,
+        undoGoalPurchaseUseCase: Injection.undoGoalPurchaseUseCase,
         notificationService: Injection.notificationService,
       ),
       child: BlocListener<GoalCubit, GoalState>(

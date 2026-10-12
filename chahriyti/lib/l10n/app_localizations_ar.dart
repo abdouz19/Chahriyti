@@ -476,7 +476,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get savingsAutoHint =>
-      'سيتم إضافة المدخرات تلقائياً عند انتهاء الدورة المالية';
+      'سيتم إضافة المدخرات تلقائياً عند انتهاء الشهرية';
 
   @override
   String get depositToSavings => 'إيداع في المدخرات';
@@ -512,7 +512,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get monthlySalary => 'الراتب الشهري';
 
   @override
-  String get fromNextCycle => 'من الدورة القادمة';
+  String get fromNextCycle => 'من الشهرية القادمة';
 
   @override
   String get salaryDay => 'يوم استلام الراتب';
@@ -538,14 +538,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get savings => 'المدخرات';
 
   @override
-  String get manageCycle => 'إدارة الدورة المالية';
+  String get manageCycle => 'إدارة الشهرية';
 
   @override
   String get manageCycleDesc =>
-      'تبدأ الدورة تلقائياً في يوم استلام راتبك كل شهر';
+      'تبدأ الشهرية تلقائياً في يوم استلام راتبك كل شهر';
 
   @override
-  String get cycleHistory => 'سجل الدورات';
+  String get cycleHistory => 'سجل الشهريات';
 
   @override
   String get clearAllData => 'مسح كل البيانات';
@@ -573,14 +573,14 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get appliesFromNextCycle => 'سيُطبَّق من الدورة القادمة';
+  String get appliesFromNextCycle => 'سيُطبَّق من الشهرية القادمة';
 
   @override
   String get confirmEditSalaryDay => 'تأكيد تعديل يوم الراتب';
 
   @override
   String newSalaryDayConfirmBody(int day) {
-    return 'سيُطبَّق يوم الراتب الجديد (اليوم $day) ابتداءً من دورتك القادمة.\nالدورة الحالية لن تتأثر.';
+    return 'سيُطبَّق يوم الراتب الجديد (اليوم $day). شهريتك الحالية ستنتهي في اليوم السابق للراتب القادم.';
   }
 
   @override
@@ -593,14 +593,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get salaryRequired => 'الراتب مطلوب';
 
   @override
-  String get salaryMustBePositive => 'يجب أن يكون الراتب أكبر من صفر';
+  String get salaryMustBePositive => 'أدخل رقماً صحيحاً (0 أو أكثر)';
 
   @override
   String get confirmEditSalary => 'تأكيد تعديل الراتب';
 
   @override
   String newSalaryConfirmBody(int amount) {
-    return 'سيُطبَّق الراتب الجديد ($amount دج) ابتداءً من دورتك القادمة.\nالدورة الحالية لن تتأثر.';
+    return 'سيُطبَّق الراتب الجديد ($amount دج) ابتداءً من شهريتك القادمة.\nالشهرية الحالية لن تتأثر.';
   }
 
   @override
@@ -617,7 +617,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get resetWarningBody =>
-      'ستقوم بمسح جميع بياناتك المالية بما فيها:\n\n• جميع المصاريف\n• جميع الديون والمدفوعات\n• جميع الإقراضات\n• جميع الأهداف والمدخرات\n• سجل الدورات المالية\n\nسيتم الاحتفاظ فقط براتبك ويوم استلامه.\n\nهذا الإجراء لا يمكن التراجع عنه نهائياً.';
+      'ستقوم بمسح جميع بياناتك المالية بما فيها:\n\n• جميع المصاريف والمداخيل\n• جميع الديون والمدفوعات\n• جميع السلف\n• جميع الأهداف والمدخرات\n• الفئات المخصصة\n• سجل الشهريات\n\nسيتم الاحتفاظ بحسابك وتفعيلك، وراتبك ويوم استلامه.\n\nهذا الإجراء لا يمكن التراجع عنه نهائياً.';
 
   @override
   String get cannotBeUndone =>
@@ -762,16 +762,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get debtsLabel => 'الديون';
 
   @override
-  String get debtPaymentsThisCycle => 'مدفوعات هذه الدورة';
+  String get debtPaymentsThisCycle => 'مدفوعات هذه الشهرية';
 
   @override
-  String get fromSavingsThisCycle => 'من المدخرات هذه الدورة';
+  String get fromSavingsThisCycle => 'من المدخرات هذه الشهرية';
 
   @override
   String get lendingsLabel => 'السلف';
 
   @override
-  String get lendingsThisCycle => 'سلف هذه الدورة';
+  String get lendingsThisCycle => 'سلف هذه الشهرية';
 
   @override
   String get recordExpense => 'تسجيل مصروف';
@@ -855,13 +855,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get amountMustBePositive => 'المبلغ يجب أن يكون أكبر من صفر';
 
   @override
-  String get debtIsSpentQuestion => 'هل صرفت هذا المبلغ؟';
+  String get debtIsSpentQuestion => 'هل صرفت هذا المبلغ قبل تسجيله؟';
 
   @override
-  String get debtIsSpentDesc => 'المبلغ تم صرفه ولم يعد في رصيدك';
+  String get debtIsSpentDesc => 'صرفته مسبقاً، لن يُحسب في رصيدك';
 
   @override
-  String get debtNotSpentDesc => 'المبلغ لا يزال في رصيدك';
+  String get debtNotSpentDesc => 'المبلغ يُحسب في رصيدك، وتسجّل مصاريفه لاحقاً';
 
   @override
   String get currentBalance => 'الرصيد الحالي';
@@ -874,7 +874,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String cycleBalance(String amount) {
-    return 'رصيد الدورة: $amount';
+    return 'رصيد الشهرية: $amount';
   }
 
   @override
@@ -882,7 +882,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String expensesSavingsThisCycle(String amount) {
-    return 'من المدخرات هذه الدورة: $amount';
+    return 'من المدخرات هذه الشهرية: $amount';
   }
 
   @override
@@ -1239,7 +1239,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get noPreviousCycles => 'لا توجد دورات سابقة';
+  String get noPreviousCycles => 'لا توجد شهريات سابقة';
 
   @override
   String get salary => 'الراتب';
@@ -1322,7 +1322,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get savingsHistoryTitle => 'تاريخ رصيد التوفير';
 
   @override
-  String get savingsHistorySubtitle => 'تطور رصيدك الادخاري عبر الدورات';
+  String get savingsHistorySubtitle => 'تطور رصيدك الادخاري عبر الشهريات';
 
   @override
   String get filterWeek => 'أسبوع';
@@ -1348,7 +1348,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get perDayLabel => '/ يوم';
 
   @override
-  String get monthForecastTitle => 'توقع نهاية الدورة';
+  String get monthForecastTitle => 'توقع نهاية الشهرية';
 
   @override
   String get overBudgetLabel => 'فوق الميزانية';
@@ -1541,11 +1541,11 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get deleteCategory => 'حذف الفئة';
+  String get deleteCategory => 'إخفاء الفئة';
 
   @override
   String deleteCategoryConfirm(String name) {
-    return 'هل تريد حذف فئة \"$name\"؟';
+    return 'ستختفي \"$name\" من قائمة الفئات. المصاريف المسجّلة بها تبقى كما هي.';
   }
 
   @override
@@ -1772,7 +1772,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get celebrationWelcome => 'أهلاً بك في شهريتي!';
 
   @override
-  String get celebrationTagline => 'شهريتي سعيدة بانضمامك';
+  String get celebrationTagline => 'خطوة واحدة وتصبح متحكماً في راتبك';
 
   @override
   String get celebrationBody =>
@@ -1976,4 +1976,550 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get amountMillionShort => 'م';
+
+  @override
+  String debtImpactAdd(String amount) {
+    return 'سيُضاف $amount إلى رصيدك الحالي';
+  }
+
+  @override
+  String debtImpactDeduct(String amount) {
+    return 'سيُخصم $amount من رصيدك الحالي';
+  }
+
+  @override
+  String get debtImpactNone => 'بدون تأثير على رصيدك الحالي';
+
+  @override
+  String get debtImpactPastCycle =>
+      'هذا الدين من شهرية سابقة، تعديله لا يؤثر على رصيدك الحالي';
+
+  @override
+  String debtImpactInsufficientBalance(String balance, String amount) {
+    return 'رصيدك الحالي ($balance) لا يكفي لخصم $amount.';
+  }
+
+  @override
+  String get debtSpentDoubleCountHint =>
+      'إذا سجّلت مصاريف من هذا المبلغ، فهي مخصومة مسبقاً من رصيدك. لا تفعّل هذا الخيار.';
+
+  @override
+  String get debtConfirmEditTitle => 'تأكيد التعديل';
+
+  @override
+  String debtAmountBelowPaid(String paid) {
+    return 'المبلغ لا يمكن أن يكون أقل مما دفعته ($paid)';
+  }
+
+  @override
+  String lendingAmountBelowCollected(String collected) {
+    return 'المبلغ لا يمكن أن يكون أقل مما تم تحصيله ($collected)';
+  }
+
+  @override
+  String purchasePriceQuestion(String name) {
+    return 'كم دفعت فعلياً مقابل \"$name\"؟';
+  }
+
+  @override
+  String get purchaseDeductNote => 'سيُخصم هذا المبلغ من مدخراتك.';
+
+  @override
+  String purchasedFor(String amount) {
+    return 'تم الشراء بـ $amount';
+  }
+
+  @override
+  String get undoPurchase => 'إلغاء الشراء';
+
+  @override
+  String undoPurchaseBody(String amount) {
+    return 'سيُعاد $amount إلى مدخراتك ويعود الهدف نشطاً.';
+  }
+
+  @override
+  String get purchaseUndone => 'تم إلغاء الشراء';
+
+  @override
+  String get goalsShareSavingsNote =>
+      'مدخراتك مشتركة بين كل أهدافك. شراء هدف يُنقص تقدّم الأهداف الأخرى.';
+
+  @override
+  String get applySalaryToCurrentCycle => 'تطبيقه على الشهرية الحالية أيضاً';
+
+  @override
+  String get applySalaryToCurrentCycleDesc =>
+      'لتصحيح خطأ أو زيادة وصلت هذا الشهر';
+
+  @override
+  String newSalaryConfirmBodyNow(String amount) {
+    return 'سيُطبَّق الراتب الجديد ($amount) على الشهرية الحالية والشهريات القادمة.';
+  }
+
+  @override
+  String salaryDayChangeConfirmBody(String endDate, String startDate) {
+    return 'شهريتك الحالية ستنتهي يوم $endDate، وتبدأ شهريتك الجديدة يوم $startDate.';
+  }
+
+  @override
+  String get pastCycleExpenseLocked =>
+      'مصاريف الشهريات السابقة مغلقة ولا يمكن تعديلها';
+
+  @override
+  String get savDescInitial => 'رصيد الادخار الأولي';
+
+  @override
+  String get savDescDepositFromBalance => 'إيداع من الرصيد';
+
+  @override
+  String get savDescWithdrawToBalance => 'سحب للرصيد';
+
+  @override
+  String get savDescCycleEnd => 'ادخار نهاية الشهرية';
+
+  @override
+  String get savDescSalarySplit => 'تقسيم الراتب';
+
+  @override
+  String savDescGoalPurchase(String name) {
+    return 'شراء هدف - $name';
+  }
+
+  @override
+  String savDescGoalPurchaseUndo(String name) {
+    return 'إلغاء شراء هدف - $name';
+  }
+
+  @override
+  String savDescLending(String name) {
+    return 'سلفة - $name';
+  }
+
+  @override
+  String savDescLendingCollection(String name) {
+    return 'تحصيل سلفة - $name';
+  }
+
+  @override
+  String savDescLendingEdit(String name) {
+    return 'تعديل سلفة - $name';
+  }
+
+  @override
+  String savDescDebtPayment(String name) {
+    return 'سداد دين - $name';
+  }
+
+  @override
+  String savDescIncome(String name) {
+    return 'مدخول - $name';
+  }
+
+  @override
+  String savingsImpactAdd(String amount) {
+    return 'سيُضاف $amount إلى مدخراتك';
+  }
+
+  @override
+  String savingsImpactDeduct(String amount) {
+    return 'سيُخصم $amount من مدخراتك';
+  }
+
+  @override
+  String get savingsImpactNone => 'بدون تأثير على مدخراتك';
+
+  @override
+  String savingsImpactInsufficient(String balance, String amount) {
+    return 'مدخراتك ($balance) لا تكفي لخصم $amount.';
+  }
+
+  @override
+  String get incomeToBalanceTag => 'الرصيد';
+
+  @override
+  String get incomeToSavingsTag => 'المدخرات';
+
+  @override
+  String get openingBalance => 'رصيد أولي';
+
+  @override
+  String get statSectionThisCycle => 'هذه الشهرية';
+
+  @override
+  String get statSectionIncome => 'الدخل';
+
+  @override
+  String get statSectionSavings => 'الادخار';
+
+  @override
+  String get statRemainingThisCycle => 'المتبقي هذه الشهرية';
+
+  @override
+  String statSpentOfAvailable(String spent, String available) {
+    return 'صرفت $spent من $available';
+  }
+
+  @override
+  String get notifChannelName => 'التنبيهات المالية';
+
+  @override
+  String get notifChannelDesc => 'تنبيهات تتعلق بالميزانية والمصاريف';
+
+  @override
+  String get notifWelcomeTitle => 'أهلاً بك في شهريتي! 🎉';
+
+  @override
+  String get notifWelcomeBody =>
+      'التنبيهات مفعّلة — راح نذكّرك تسجّل مصاريفك ونعلمك قبل ما يكمل مالك 💪';
+
+  @override
+  String notifWeekTitle(int days) {
+    return '📅 $days يوم للراتب';
+  }
+
+  @override
+  String notifWeekBody(String amount) {
+    return 'اصرف مش أكثر من $amount في اليوم وتوصل بسلام 💪';
+  }
+
+  @override
+  String get notifWeekBodyTight =>
+      'الأيام الأخيرة — اصرف على الضروري بصح وتعدّاها!';
+
+  @override
+  String get notifExcellentTitle => '🏆 أداء ممتاز هذا الشهر!';
+
+  @override
+  String notifExcellentBody(int percent, String balance) {
+    return 'نصف الشهر عدى وما صرفتش غير $percent% — باقيلك $balance. واصل!';
+  }
+
+  @override
+  String get notifCycleSavedTitle => '✅ شهرية ناجحة!';
+
+  @override
+  String notifCycleSavedBody(String amount) {
+    return 'أحسنت! وفّرت $amount الشهر الفايت وانضافوا لمدخراتك.';
+  }
+
+  @override
+  String get notifCycleNewTitle => '🔄 شهرية جديدة بدات';
+
+  @override
+  String get notifCycleNewBody =>
+      'الشهر الجديد فرصة توفّر — ابدأ بالتخطيط من البداية!';
+
+  @override
+  String get notifDailyReminderTitle => 'سجّلت مصاريف اليوم؟ 📝';
+
+  @override
+  String get notifDailyReminderBody =>
+      'ما سجّلت حتى مصروف اليوم — دقيقة برك باش تعرف وين راه مالك.';
+
+  @override
+  String get notifSalaryDayTitle => '💰 جاك الراتب!';
+
+  @override
+  String get notifSalaryDayBody => 'قبل ما تصرف: قرّر شحال تخبّي هذا الشهر.';
+
+  @override
+  String get notificationsSetting => 'التنبيهات';
+
+  @override
+  String get notificationsSettingDesc =>
+      'تذكير يومي، يوم الراتب وتنبيهات الميزانية';
+
+  @override
+  String get notifOnTimeTitle => 'قد تصلك التذكيرات متأخرة';
+
+  @override
+  String get notifOnTimeDesc => 'فعّل «المنبّهات والتذكيرات» لتصلك في وقتها';
+
+  @override
+  String get notifOnTimeAction => 'تفعيل';
+
+  @override
+  String get notifPaceTitle => '⚠️ بهذا الريتم، مالك يكمل قبل الراتب';
+
+  @override
+  String notifPaceBody(String date, int days) {
+    return 'تكمل حوالي $date — $days يوم قبل الراتب. نقّص شوية باش توصل.';
+  }
+
+  @override
+  String notifGoalTitle(String name) {
+    return '🎉 تقدر تشري \"$name\"';
+  }
+
+  @override
+  String get notifGoalBody => 'مدخراتك وصلت للهدف. افتح شهريتي وسجّل الشراء.';
+
+  @override
+  String notifSalaryDayBodyWithDebt(String amount, String name) {
+    return 'قبل ما تصرف: قرّر شحال تخبّي، وما تنساش $amount لـ $name.';
+  }
+
+  @override
+  String get notifLendingTitle => '🤝 تذكير بالسلف';
+
+  @override
+  String notifLendingBodyOne(String name, String amount) {
+    return '$name مازال عندو $amount من عندك. الراتب خلص — وقت مناسب تفكّرو.';
+  }
+
+  @override
+  String notifLendingBodyMany(String name, int count, String amount) {
+    return '$name و$count آخرين عندهم $amount من عندك. وقت مناسب تفكّرهم.';
+  }
+
+  @override
+  String get securitySection => 'الأمان';
+
+  @override
+  String get appLockTitle => 'قفل التطبيق';
+
+  @override
+  String get appLockSubtitle => 'Face ID / البصمة / رمز الهاتف';
+
+  @override
+  String get appLockAfterLabel => 'القفل بعد';
+
+  @override
+  String get appLockImmediately => 'فوراً';
+
+  @override
+  String appLockAfterMinutes(int minutes) {
+    return '$minutes د';
+  }
+
+  @override
+  String get hideAmountsInNotifications => 'إخفاء المبالغ في التنبيهات';
+
+  @override
+  String get appLockNoDeviceLock => 'فعّل قفل الشاشة في إعدادات الهاتف أولاً';
+
+  @override
+  String get appLockReason => 'افتح شهريتي';
+
+  @override
+  String get appLockedTitle => 'شهريتي مقفلة';
+
+  @override
+  String get appLockedSubtitle => 'معلوماتك المالية محمية';
+
+  @override
+  String get appUnlock => 'فتح';
+
+  @override
+  String get tourNext => 'التالي';
+
+  @override
+  String get tourBack => 'رجوع';
+
+  @override
+  String get tourSkip => 'تخطّي';
+
+  @override
+  String get tourDone => 'يلّا نبداو';
+
+  @override
+  String tourStepOf(int current, int total) {
+    return '$current/$total';
+  }
+
+  @override
+  String get tourBalanceTitle => 'رصيدك الحالي';
+
+  @override
+  String get tourBalanceBody =>
+      'هذا المبلغ اللي باقي عندك تصرفو في هذه الشهرية. يتحدّث وحدو مع كل مصروف، مدخول، دين أو سلفة.';
+
+  @override
+  String get tourSpendingTitle => 'مصاريفك';
+
+  @override
+  String get tourSpendingBody =>
+      'مجموع اللي صرفتو في هذه الشهرية. تحت تلقى نسبة الاستهلاك والمصروف الآمن لكل يوم.';
+
+  @override
+  String get tourIncomeTitle => 'إضافة مدخول';
+
+  @override
+  String get tourIncomeBody =>
+      'جاك مال زيادة على الراتب؟ سجّلو من هنا، وتختار يروح للرصيد ولا للمدخرات.';
+
+  @override
+  String get tourAddExpenseTitle => 'سجّل مصروف';
+
+  @override
+  String get tourAddExpenseBody =>
+      'أهم زر في التطبيق: كل ما تشري حاجة، سجّلها هنا في ثواني باش تبقى مسيطر على مالك.';
+
+  @override
+  String get tourGoalsTitle => 'أهدافك';
+
+  @override
+  String get tourGoalsBody =>
+      'حدد حاجة تحب تشريها (تلفون، سيارة...) وشوف شحال باقيلك توصلها من مدخراتك.';
+
+  @override
+  String get tourDebtsTitle => 'الديون';
+
+  @override
+  String get tourDebtsBody =>
+      'المال اللي سلفوهولك. سجّلو وسدّدو على مراحل، وشهريتي تفكّرك يوم الراتب.';
+
+  @override
+  String get tourLendingsTitle => 'السلف';
+
+  @override
+  String get tourLendingsBody =>
+      'المال اللي سلفتو للناس. سجّل كل ما يرجعولك منو، وشهريتي تفكّرك بيه بعد الراتب.';
+
+  @override
+  String get tourStatsTitle => 'الإحصائيات';
+
+  @override
+  String get tourStatsBody =>
+      'شوف وين يروح مالك: حسب الفئات، الريتم اليومي، والتوقع لآخر الشهرية.';
+
+  @override
+  String get tourSavingsTitle => 'المدخرات';
+
+  @override
+  String get tourSavingsBody =>
+      'من الإعدادات ⚙️ تلقى مدخراتك: حط ولا اسحب المال بين الرصيد والمدخرات، وشوف السجل كامل.';
+
+  @override
+  String get tourCyclesTitle => 'الشهريات';
+
+  @override
+  String get tourCyclesBody =>
+      'كل شهرية تبدا يوم الراتب. من الإعدادات ⚙️ تبدّل الراتب ويومه، وتشوف الشهريات اللي فاتت.';
+
+  @override
+  String get tourLockTitle => 'قفل التطبيق';
+
+  @override
+  String get tourLockBody =>
+      'احمي مالك بـ Face ID ولا البصمة: الإعدادات ⚙️ ← الأمان.';
+
+  @override
+  String get offerLabel => 'طلبك';
+
+  @override
+  String get offerTitle => 'كتاب شهريتي + تفعيل التطبيق مدى الحياة';
+
+  @override
+  String get offerPriceNote => 'دفعة واحدة — بدون اشتراك شهري';
+
+  @override
+  String offerPerDay(String amount) {
+    return 'أي أقل من $amount في اليوم خلال سنة واحدة فقط';
+  }
+
+  @override
+  String get offerInclude1 => 'كتاب شهريتي المطبوع، يصلك إلى باب منزلك';
+
+  @override
+  String get offerInclude2 => 'تفعيل التطبيق على هاتفك مدى الحياة';
+
+  @override
+  String get offerInclude3 =>
+      'كل الميزات: الميزانية، الديون، السلف، الأهداف والإحصائيات';
+
+  @override
+  String get nextStepsTitle => 'ماذا يحدث الآن؟';
+
+  @override
+  String get nextStep1 => 'سنتصل بك قريباً لتأكيد طلبك';
+
+  @override
+  String get nextStep2 => 'نتفق معك خلال نفس المكالمة على تفاصيل التوصيل';
+
+  @override
+  String get nextStep3 => 'يصلك الكتاب مع كود التفعيل، وتبدأ رحلتك مع شهريتي';
+
+  @override
+  String get reassuranceKeepPhone =>
+      'لا شيء مطلوب منك الآن، فقط أبقِ هاتفك قريباً منك 📞';
+
+  @override
+  String get completeAllFieldsHint => 'أجب على كل الأسئلة للمتابعة';
+
+  @override
+  String get notifSpentNothingAction => 'ما صرفت والو اليوم';
+
+  @override
+  String get notifGoalTitleHidden => '🎉 مدخراتك وصلت لواحد من أهدافك';
+
+  @override
+  String get notifSalaryDayBodyWithDebtHidden =>
+      'قبل ما تصرف: قرّر شحال تخبّي، وما تنساش ديونك.';
+
+  @override
+  String get notifLendingBodyHidden =>
+      'عندك سلف لازم ترجعلك. الراتب خلص — وقت مناسب تفكّرهم.';
+
+  @override
+  String get notifInactiveTitle => 'شهريتك مازالت تستناك 👋';
+
+  @override
+  String get notifInactiveBody =>
+      'سجّل مصاريف الأيام اللي فاتت في دقيقة، وارجع تتحكم في مالك.';
+
+  @override
+  String get notifRemindersChannelName => 'التذكيرات اليومية';
+
+  @override
+  String get notifRemindersChannelDesc =>
+      'تذكير المساء، العد التنازلي للراتب والسلف';
+
+  @override
+  String get notifAskTitle => 'خلّي شهريتي تفكّرك';
+
+  @override
+  String get notifAskPoint1 => 'يوم الراتب: قرّر شحال تخبّي قبل ما تصرف';
+
+  @override
+  String get notifAskPoint2 => 'تذكير خفيف في الليل إذا ما سجّلتش مصاريفك';
+
+  @override
+  String get notifAskPoint3 => 'تنبيه قبل ما يكمل مالك قبل الراتب';
+
+  @override
+  String get notifAskEnable => 'فعّل التنبيهات';
+
+  @override
+  String get notifAskLater => 'ماشي دركا';
+
+  @override
+  String get leadSendFailed =>
+      'تعذّر إرسال طلبك. تحقق من اتصالك بالإنترنت ثم اضغط «التالي» مجدداً.';
+
+  @override
+  String get pastCyclesButton => 'الشهريات السابقة';
+
+  @override
+  String get pastCyclesEmptyHint =>
+      'عند انتهاء شهريتك الحالية، تجد ملخصها هنا.';
+
+  @override
+  String get pastCycleIncome => 'الدخل';
+
+  @override
+  String get pastCycleSpent => 'المصاريف';
+
+  @override
+  String get pastCycleSaved => 'ادّخرت';
+
+  @override
+  String pastCycleSavedShare(String percent) {
+    return '$percent% من دخلك';
+  }
+
+  @override
+  String statFirstCycleNote(String balance, String date, String salary) {
+    return 'شهريتك الأولى بدأت برصيد $balance يوم التسجيل. ابتداءً من $date، الحساب على راتبك $salary.';
+  }
 }

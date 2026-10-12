@@ -15,6 +15,7 @@ abstract class DebtEntity with _$DebtEntity {
     required bool isFullyPaid,
     @Default(true) bool isSpent,
     required DateTime createdAt,
+    int? cycleId,
     String? notes,
   }) = _DebtEntity;
 

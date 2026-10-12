@@ -12,6 +12,7 @@ class CustomCategoryRepositoryImpl implements CustomCategoryRepository {
         id: row.id,
         name: row.name,
         iconCodePoint: row.iconCodePoint,
+        isArchived: row.isArchived,
       );
 
   @override
@@ -32,5 +33,5 @@ class CustomCategoryRepositoryImpl implements CustomCategoryRepository {
   }
 
   @override
-  Future<void> delete(int id) => _dao.deleteById(id);
+  Future<void> delete(int id) => _dao.archiveById(id);
 }

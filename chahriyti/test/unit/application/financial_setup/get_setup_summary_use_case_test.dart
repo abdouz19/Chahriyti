@@ -166,6 +166,16 @@ class FakeLendingRepository implements LendingRepository {
   Future<void> deleteLending(int id) async {}
 
   @override
+  Future<void> archiveLending(int id) async {}
+
+  @override
+  Future<void> addBalanceAdjustment({
+    required int lendingId,
+    required int amount,
+    required int cycleId,
+  }) async {}
+
+  @override
   Future<void> updateLending({
     required int id,
     String? borrowerName,
@@ -178,6 +188,7 @@ class FakeLendingRepository implements LendingRepository {
     required int lendingId,
     required int amount,
     bool toSavings = false,
+    int? cycleId,
   }) async {}
 
   @override
@@ -199,6 +210,32 @@ class FakeLendingRepository implements LendingRepository {
 }
 
 class FakeSavingsRepository implements SavingsRepository {
+
+  @override
+  Future<void> createIncomeDeposit({
+    required int amount,
+    required String description,
+    required int cycleId,
+    required int incomeId,
+  }) async {}
+
+  @override
+  Future<void> updateDepositAmountByIncomeId(int incomeId, int amount) async {}
+
+  @override
+  Future<void> deleteDepositByIncomeId(int incomeId) async {}
+
+  @override
+  Future<SavingsHistoryEntity> createTransfer({
+    required bool toSavings,
+    required int amount,
+    required String description,
+    required int cycleId,
+  }) async =>
+      throw UnimplementedError();
+
+  @override
+  Future<int> getNetTransfersToBalanceForCycle(int cycleId) async => 0;
   int _balance = 0;
 
   void setBalance(int balance) => _balance = balance;

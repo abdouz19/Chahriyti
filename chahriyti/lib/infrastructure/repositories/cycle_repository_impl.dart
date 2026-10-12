@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 
 import '../../domain/entities/financial_cycle_entity.dart';
 import '../../domain/repositories/cycle_repository.dart';
+import '../../domain/value_objects/cycle_dates.dart';
 import '../database/app_database.dart';
 import '../database/daos/cycles_dao.dart';
 
@@ -91,8 +92,13 @@ class CycleRepositoryImpl implements CycleRepository {
 
   @override
   Future<void> updateCycleSalaryDay(int cycleId, int salaryDay) async {
-    // No-op: active cycle dates are never retroactively modified.
-    // The new salary day is stored on the user record and takes effect
-    // when the next cycle is auto-created by CheckAndStartCycleUseCase.
+    // Keep the start (and salary) as is; end the cycle the day before the
+    // next salary under the new day, so days remaining stay right and the
+    // next cycle starts on time.
+    final row = await _dao.getCycleById(cycleId);
+    if (row == null) return;
+    final newEnd = CycleDates.dayBefore(
+        CycleDates.nextSalaryDateAfter(salaryDay, DateTime.now()));
+    await _dao.updateCycleDates(cycleId, row.startDate, newEnd);
   }
 }

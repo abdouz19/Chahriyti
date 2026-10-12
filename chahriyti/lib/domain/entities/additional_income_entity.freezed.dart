@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AdditionalIncomeEntity {
 
- int get id; int get cycleId; String get description; int get amount; DateTime get createdAt;
+ int get id; int get cycleId; String get description; int get amount; DateTime get createdAt; bool get toSavings;
 /// Create a copy of AdditionalIncomeEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AdditionalIncomeEntityCopyWith<AdditionalIncomeEntity> get copyWith => _$Additi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdditionalIncomeEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdditionalIncomeEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.toSavings, toSavings) || other.toSavings == toSavings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,cycleId,description,amount,createdAt);
+int get hashCode => Object.hash(runtimeType,id,cycleId,description,amount,createdAt,toSavings);
 
 @override
 String toString() {
-  return 'AdditionalIncomeEntity(id: $id, cycleId: $cycleId, description: $description, amount: $amount, createdAt: $createdAt)';
+  return 'AdditionalIncomeEntity(id: $id, cycleId: $cycleId, description: $description, amount: $amount, createdAt: $createdAt, toSavings: $toSavings)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AdditionalIncomeEntityCopyWith<$Res>  {
   factory $AdditionalIncomeEntityCopyWith(AdditionalIncomeEntity value, $Res Function(AdditionalIncomeEntity) _then) = _$AdditionalIncomeEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, int cycleId, String description, int amount, DateTime createdAt
+ int id, int cycleId, String description, int amount, DateTime createdAt, bool toSavings
 });
 
 
@@ -65,14 +65,15 @@ class _$AdditionalIncomeEntityCopyWithImpl<$Res>
 
 /// Create a copy of AdditionalIncomeEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? cycleId = null,Object? description = null,Object? amount = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? cycleId = null,Object? description = null,Object? amount = null,Object? createdAt = null,Object? toSavings = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,cycleId: null == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
 as int,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,toSavings: null == toSavings ? _self.toSavings : toSavings // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int cycleId,  String description,  int amount,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int cycleId,  String description,  int amount,  DateTime createdAt,  bool toSavings)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AdditionalIncomeEntity() when $default != null:
-return $default(_that.id,_that.cycleId,_that.description,_that.amount,_that.createdAt);case _:
+return $default(_that.id,_that.cycleId,_that.description,_that.amount,_that.createdAt,_that.toSavings);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.id,_that.cycleId,_that.description,_that.amount,_that.crea
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int cycleId,  String description,  int amount,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int cycleId,  String description,  int amount,  DateTime createdAt,  bool toSavings)  $default,) {final _that = this;
 switch (_that) {
 case _AdditionalIncomeEntity():
-return $default(_that.id,_that.cycleId,_that.description,_that.amount,_that.createdAt);case _:
+return $default(_that.id,_that.cycleId,_that.description,_that.amount,_that.createdAt,_that.toSavings);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.id,_that.cycleId,_that.description,_that.amount,_that.crea
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int cycleId,  String description,  int amount,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int cycleId,  String description,  int amount,  DateTime createdAt,  bool toSavings)?  $default,) {final _that = this;
 switch (_that) {
 case _AdditionalIncomeEntity() when $default != null:
-return $default(_that.id,_that.cycleId,_that.description,_that.amount,_that.createdAt);case _:
+return $default(_that.id,_that.cycleId,_that.description,_that.amount,_that.createdAt,_that.toSavings);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.id,_that.cycleId,_that.description,_that.amount,_that.crea
 @JsonSerializable()
 
 class _AdditionalIncomeEntity extends AdditionalIncomeEntity {
-  const _AdditionalIncomeEntity({required this.id, required this.cycleId, required this.description, required this.amount, required this.createdAt}): super._();
+  const _AdditionalIncomeEntity({required this.id, required this.cycleId, required this.description, required this.amount, required this.createdAt, this.toSavings = false}): super._();
   factory _AdditionalIncomeEntity.fromJson(Map<String, dynamic> json) => _$AdditionalIncomeEntityFromJson(json);
 
 @override final  int id;
@@ -221,6 +222,7 @@ class _AdditionalIncomeEntity extends AdditionalIncomeEntity {
 @override final  String description;
 @override final  int amount;
 @override final  DateTime createdAt;
+@override@JsonKey() final  bool toSavings;
 
 /// Create a copy of AdditionalIncomeEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdditionalIncomeEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdditionalIncomeEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.cycleId, cycleId) || other.cycleId == cycleId)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.toSavings, toSavings) || other.toSavings == toSavings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,cycleId,description,amount,createdAt);
+int get hashCode => Object.hash(runtimeType,id,cycleId,description,amount,createdAt,toSavings);
 
 @override
 String toString() {
-  return 'AdditionalIncomeEntity(id: $id, cycleId: $cycleId, description: $description, amount: $amount, createdAt: $createdAt)';
+  return 'AdditionalIncomeEntity(id: $id, cycleId: $cycleId, description: $description, amount: $amount, createdAt: $createdAt, toSavings: $toSavings)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$AdditionalIncomeEntityCopyWith<$Res> implements $Addition
   factory _$AdditionalIncomeEntityCopyWith(_AdditionalIncomeEntity value, $Res Function(_AdditionalIncomeEntity) _then) = __$AdditionalIncomeEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int cycleId, String description, int amount, DateTime createdAt
+ int id, int cycleId, String description, int amount, DateTime createdAt, bool toSavings
 });
 
 
@@ -272,14 +274,15 @@ class __$AdditionalIncomeEntityCopyWithImpl<$Res>
 
 /// Create a copy of AdditionalIncomeEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? cycleId = null,Object? description = null,Object? amount = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? cycleId = null,Object? description = null,Object? amount = null,Object? createdAt = null,Object? toSavings = null,}) {
   return _then(_AdditionalIncomeEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,cycleId: null == cycleId ? _self.cycleId : cycleId // ignore: cast_nullable_to_non_nullable
 as int,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,toSavings: null == toSavings ? _self.toSavings : toSavings // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

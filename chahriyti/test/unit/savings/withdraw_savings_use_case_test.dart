@@ -5,6 +5,32 @@ import 'package:chahriyti/domain/entities/savings_history_entity.dart';
 import 'package:chahriyti/domain/repositories/savings_repository.dart';
 
 class FakeSavingsRepository implements SavingsRepository {
+
+  @override
+  Future<void> createIncomeDeposit({
+    required int amount,
+    required String description,
+    required int cycleId,
+    required int incomeId,
+  }) async {}
+
+  @override
+  Future<void> updateDepositAmountByIncomeId(int incomeId, int amount) async {}
+
+  @override
+  Future<void> deleteDepositByIncomeId(int incomeId) async {}
+
+  @override
+  Future<SavingsHistoryEntity> createTransfer({
+    required bool toSavings,
+    required int amount,
+    required String description,
+    required int cycleId,
+  }) async =>
+      throw UnimplementedError();
+
+  @override
+  Future<int> getNetTransfersToBalanceForCycle(int cycleId) async => 0;
   int _balance = 0;
   final List<SavingsHistoryEntity> _created = [];
 

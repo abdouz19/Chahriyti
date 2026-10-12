@@ -1,11 +1,17 @@
+import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/lending_repository.dart';
 import '../../../domain/repositories/savings_repository.dart';
 
 class AddLendingCollectionUseCase {
   final LendingRepository _repository;
   final SavingsRepository? _savingsRepository;
+  final CycleRepository? _cycleRepository;
 
-  const AddLendingCollectionUseCase(this._repository, [this._savingsRepository]);
+  const AddLendingCollectionUseCase(
+    this._repository, [
+    this._savingsRepository,
+    this._cycleRepository,
+  ]);
 
   Future<void> call({
     required int lendingId,
@@ -27,10 +33,14 @@ class AddLendingCollectionUseCase {
       );
     }
 
+    // Money comes back in the current cycle, whatever cycle it was lent in
+    final cycle = await _cycleRepository?.getActiveCycle();
+
     await _repository.addCollection(
       lendingId: lendingId,
       amount: amount,
       toSavings: toSavings,
+      cycleId: cycle?.id,
     );
 
     // If collection goes to savings, create a savings deposit

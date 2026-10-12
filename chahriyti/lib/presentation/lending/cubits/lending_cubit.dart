@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/lending_entity.dart';
+import '../../../domain/value_objects/lending_money_place.dart';
 import '../../../application/use_cases/lending/add_lending_collection_use_case.dart';
 import '../../../application/use_cases/lending/create_lending_use_case.dart';
 import '../../../application/use_cases/lending/delete_lending_use_case.dart';
@@ -150,9 +151,12 @@ class LendingCubit extends Cubit<LendingState> {
     }
   }
 
-  Future<void> deleteLending(int id) async {
+  Future<void> deleteLending(
+    int id, {
+    LendingMoneyPlace remainingTo = LendingMoneyPlace.untracked,
+  }) async {
     try {
-      await _deleteLendingUseCase(id);
+      await _deleteLendingUseCase(id, remainingTo: remainingTo);
       emit(const LendingState.lendingDeleted());
     } catch (e) {
       emit(LendingState.error(e.toString()));

@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -40,8 +40,21 @@ import '../../lending/pages/lendings_list_page.dart';
 import '../../savings/pages/savings_page.dart';
 import '../../settings/pages/settings_page.dart';
 import '../../statistics/pages/statistics_page.dart';
+import '../../../application/use_cases/notification/generate_notification_use_case.dart';
 
 abstract final class AppRouter {
+  /// Redirect runs on every keyboard animation frame (route parsing follows
+  /// MediaQuery); reading encrypted storage each time froze Android. Read
+  /// once per session: a request sent later in the session navigates to the
+  /// welcome screen by itself.
+  static Future<bool>? _leadSent;
+  static String? _cycleCheckedOn;
+  static Future<bool> _leadAlreadySent() => _leadSent ??= () async {
+        final sent = await const LeadStorage().load() != null;
+        debugPrint('🧭 ROUTER: no account yet, request already sent = $sent');
+        return sent;
+      }();
+
   static final router = GoRouter(
     initialLocation: '/',
     redirect: (context, state) async {
@@ -52,8 +65,7 @@ abstract final class AppRouter {
 
       // No user: check if profile was saved → skip to celebration, else normal onboarding
       if (user == null) {
-        final savedProfile = await const LeadStorage().load();
-        if (savedProfile != null) {
+        if (await _leadAlreadySent()) {
           return path == '/onboarding/welcome' ? null : '/onboarding/welcome';
         }
 
@@ -84,12 +96,26 @@ abstract final class AppRouter {
         return '/home';
       }
 
-      // Auto-cycle gate: check if a new cycle should start on this app launch
-      if (path != '/salary-split') {
-        final newCycle = await Injection.checkAndStartCycleUseCase();
-        if (newCycle != null) {
-          Injection.pendingCycleForSplit = newCycle;
-          return '/salary-split';
+      // Auto-cycle gate: a new cycle can only start on a new day, so check
+      // once per day rather than on every redirect (which runs per frame)
+      final now = DateTime.now();
+      final today = '${now.year}-${now.month}-${now.day}';
+      if (path != '/salary-split' && _cycleCheckedOn != today) {
+        _cycleCheckedOn = today;
+        final started = await Injection.checkAndStartCycleUseCase();
+        if (started != null) {
+          Injection.pendingCycleForSplit = started.cycle;
+          // How the closed cycle went, and the next salary-day reminder
+          final service = Injection.notificationService;
+          service.show(NotificationContent(
+            type: NotificationType.cycleComplete,
+            dedupeKey: 'c${started.cycle.id}',
+            amount: started.savedFromClosedCycles,
+          ));
+          service.rescheduleReminders();
+          // Nothing to split without a salary
+          if (started.cycle.salaryAmount > 0) return '/salary-split';
+          Injection.pendingCycleForSplit = null;
         }
       }
 

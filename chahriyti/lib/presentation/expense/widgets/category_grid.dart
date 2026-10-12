@@ -70,7 +70,7 @@ class _CategoryGridState extends State<CategoryGrid> {
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: AppColors.negative),
-            child: Text(ctx.l10n.delete),
+            child: Text(ctx.l10n.confirm),
           ),
         ],
       ),

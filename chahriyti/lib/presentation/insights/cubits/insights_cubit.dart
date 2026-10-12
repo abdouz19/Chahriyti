@@ -92,7 +92,7 @@ class InsightsCubit extends Cubit<InsightsState> {
       // Get active cycle
       final cycle = await _cycleRepository?.getActiveCycle();
       if (cycle == null) {
-        emit(const InsightsError('لا توجد دورة مالية نشطة'));
+        emit(const InsightsError('لا توجد شهرية نشطة'));
         return;
       }
 

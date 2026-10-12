@@ -5,10 +5,14 @@ class CustomCategoryEntity {
   final String name;
   final int iconCodePoint;
 
+  /// Hidden from the picker; still names the expenses that use it.
+  final bool isArchived;
+
   const CustomCategoryEntity({
     required this.id,
     required this.name,
     required this.iconCodePoint,
+    this.isArchived = false,
   });
 
   String get categoryKey => 'custom_$id';

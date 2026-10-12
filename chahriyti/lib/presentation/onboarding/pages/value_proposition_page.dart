@@ -25,6 +25,13 @@ class _ValuePropositionPageState extends State<ValuePropositionPage>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..forward();
+  }
+
+  // Translated texts: read here, not in initState (needs the localizations,
+  // and refreshes when the language changes)
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final l = context.l10n;
     _benefits = [
       l.vp1, l.vp2, l.vp3, l.vp4, l.vp5,

@@ -57,6 +57,9 @@ class LendingRepositoryImpl implements LendingRepository {
   }
 
   @override
+  Future<void> archiveLending(int id) => _dao.archiveLendingById(id);
+
+  @override
   Future<void> updateLending({
     required int id,
     String? borrowerName,
@@ -76,13 +79,27 @@ class LendingRepositoryImpl implements LendingRepository {
     required int lendingId,
     required int amount,
     bool toSavings = false,
+    int? cycleId,
   }) async {
     await _dao.insertCollection(
       lendingId: lendingId,
       amount: amount,
       toSavings: toSavings,
+      cycleId: cycleId,
     );
   }
+
+  @override
+  Future<void> addBalanceAdjustment({
+    required int lendingId,
+    required int amount,
+    required int cycleId,
+  }) =>
+      _dao.insertBalanceAdjustment(
+        lendingId: lendingId,
+        amount: amount,
+        cycleId: cycleId,
+      );
 
   @override
   Future<List<LendingCollectionEntity>> getCollectionsForLending(

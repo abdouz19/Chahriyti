@@ -1,154 +1,116 @@
 import '../../../domain/repositories/cycle_repository.dart';
-import '../../../domain/repositories/debt_repository.dart';
-import '../../../domain/repositories/expense_repository.dart';
-import '../../../domain/repositories/income_repository.dart';
-import '../../../domain/repositories/lending_repository.dart';
+import '../../../domain/repositories/goal_repository.dart';
+import '../../../domain/repositories/savings_repository.dart';
+import '../dashboard/get_dashboard_data_use_case.dart';
 
+/// In-app alerts, most important first. The service shows at most one a day.
 enum NotificationType {
-  spendingMilestone70,
-  spendingMilestone90,
-  oneWeekRemaining,
+  paceWarning,
+  goalReachable,
   excellentPerformance,
   cycleComplete,
-  weeklyProgress,
 }
 
+/// What to notify about, with the values to show. Texts are built in the
+/// user's language by the notification service.
 class NotificationContent {
   final NotificationType type;
-  final String title;
-  final String body;
+
+  /// Same key = same notification; shown only once.
+  final String dedupeKey;
+  final int percent;
+  final int balance;
+  final int days;
+  final int amount;
+  final String name;
+  final DateTime? date;
 
   const NotificationContent({
     required this.type,
-    required this.title,
-    required this.body,
+    required this.dedupeKey,
+    this.percent = 0,
+    this.balance = 0,
+    this.days = 0,
+    this.amount = 0,
+    this.name = '',
+    this.date,
   });
 }
 
 class GenerateNotificationUseCase {
   final CycleRepository _cycleRepository;
-  final ExpenseRepository _expenseRepository;
-  final IncomeRepository _incomeRepository;
-  final DebtRepository _debtRepository;
-  final LendingRepository? _lendingRepository;
+  final GetDashboardDataUseCase _getDashboardData;
+  final GoalRepository _goalRepository;
+  final SavingsRepository _savingsRepository;
 
   const GenerateNotificationUseCase({
     required CycleRepository cycleRepository,
-    required ExpenseRepository expenseRepository,
-    required IncomeRepository incomeRepository,
-    required DebtRepository debtRepository,
-    LendingRepository? lendingRepository,
+    required GetDashboardDataUseCase getDashboardData,
+    required GoalRepository goalRepository,
+    required SavingsRepository savingsRepository,
   })  : _cycleRepository = cycleRepository,
-        _expenseRepository = expenseRepository,
-        _incomeRepository = incomeRepository,
-        _debtRepository = debtRepository,
-        _lendingRepository = lendingRepository;
+        _getDashboardData = getDashboardData,
+        _goalRepository = goalRepository,
+        _savingsRepository = savingsRepository;
 
-  Future<List<NotificationContent>> call() async {
+  Future<List<NotificationContent>> call({DateTime? now}) async {
     final cycle = await _cycleRepository.getActiveCycle();
     if (cycle == null) return [];
 
-    final now = DateTime.now();
-
-    final results = await Future.wait([
-      _expenseRepository.getTotalExpenses(cycle.id),
-      _incomeRepository.getTotalIncomeForCycle(cycle.id),
-      _debtRepository.getTotalDebtPaymentsForCycle(cycle.id),
-      _debtRepository.getTotalDebtsCreatedForCycle(cycle.id),
-    ]);
-
-    final totalExpenses = results[0];
-    final totalIncome = results[1];
-    final totalDebtPayments = results[2];
-    final totalDebtsCreated = results[3];
-
-    int totalLendingsFromBalance = 0;
-    int totalCollectionsToBalance = 0;
-    if (_lendingRepository != null) {
-      final lendingResults = await Future.wait([
-        _lendingRepository.getTotalLendingsFromBalanceForCycle(cycle.id),
-        _lendingRepository.getTotalCollectionsToBalanceForCycle(cycle.id),
-      ]);
-      totalLendingsFromBalance = lendingResults[0];
-      totalCollectionsToBalance = lendingResults[1];
-    }
-
-    final totalIn = cycle.salaryAmount - cycle.salarySplitAmount + totalIncome + totalDebtsCreated;
-    final currentBalance = totalIn -
-        totalExpenses -
-        totalDebtPayments -
-        totalLendingsFromBalance +
-        totalCollectionsToBalance;
-    final consumptionPercent =
-        totalIn > 0 ? (totalExpenses / totalIn * 100) : 0.0;
+    now ??= DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final data = await _getDashboardData();
+    final spent = data.totalExpenses;
+    final balance = data.currentBalance;
     final daysRemaining = cycle.daysRemaining(now);
     final daysElapsed = cycle.daysElapsed(now);
     final totalDays = daysElapsed + daysRemaining;
 
     final notifications = <NotificationContent>[];
 
-    // 70% spending milestone
-    if (consumptionPercent >= 70 && consumptionPercent < 90) {
-      final pct = consumptionPercent.toStringAsFixed(0);
-      notifications.add(NotificationContent(
-        type: NotificationType.spendingMilestone70,
-        title: '🟡 $pct% من ميزانيتك راحت',
-        body: 'باقيلك $currentBalance دج على $daysRemaining يوم — افتح شهريتي وراجع وين تقدر توفر!',
-      ));
+    // Pace: when the money runs out at the current daily rate. Waits a few
+    // days so one big early expense doesn't trigger it.
+    if (daysElapsed >= 3 && spent > 0 && daysRemaining > 0) {
+      final dailyRate = spent / daysElapsed;
+      final daysOfMoney = (balance / dailyRate).floor();
+      final shortBy = daysRemaining - daysOfMoney;
+      if (shortBy >= 3) {
+        notifications.add(NotificationContent(
+          type: NotificationType.paceWarning,
+          dedupeKey: 'c${cycle.id}',
+          date: DateTime(today.year, today.month, today.day + daysOfMoney),
+          days: shortBy,
+        ));
+      }
     }
 
-    // 90% spending milestone
-    if (consumptionPercent >= 90) {
-      final pct = consumptionPercent.toStringAsFixed(0);
-      notifications.add(NotificationContent(
-        type: NotificationType.spendingMilestone90,
-        title: '🔴 $pct% من ميزانيتك انصرفت',
-        body: currentBalance > 0
-            ? 'باقيلك غير $currentBalance دج — اصرف على الضروري بصح. $daysRemaining يوم للراتب!'
-            : 'رصيدك وصل للنهاية — $daysRemaining يوم للراتب. تحمّل شوية!',
-      ));
+    // A goal the savings now cover
+    final savings = await _savingsRepository.getSavingsBalance();
+    final goals = await _goalRepository.getActiveGoalsPaginated(limit: 50);
+    for (final goal in goals) {
+      if (!goal.isCompleted && goal.targetAmount <= savings) {
+        notifications.add(NotificationContent(
+          type: NotificationType.goalReachable,
+          dedupeKey: 'g${goal.id}',
+          name: goal.name,
+        ));
+      }
     }
 
-    // One week remaining
-    if (daysRemaining <= 7 && daysRemaining > 0) {
-      final dailySafe = daysRemaining > 0 ? (currentBalance ~/ daysRemaining) : 0;
-      notifications.add(NotificationContent(
-        type: NotificationType.oneWeekRemaining,
-        title: '📅 $daysRemaining يوم للراتب',
-        body: dailySafe > 0
-            ? 'اصرف مش أكثر من $dailySafe دج في اليوم وتوصل بسلام 💪'
-            : 'الأيام الأخيرة — اصرف على الضروري بصح وتعدّاها!',
-      ));
-    }
-
-    // Excellent performance
+    // More than half the cycle gone with less than half the money spent
+    final available = spent + balance;
     if (totalDays > 0 &&
         daysElapsed > totalDays / 2 &&
-        consumptionPercent < 50) {
-      final pct = consumptionPercent.toStringAsFixed(0);
+        available > 0 &&
+        spent / available < 0.5) {
       notifications.add(NotificationContent(
         type: NotificationType.excellentPerformance,
-        title: '🏆 أداء ممتاز هذا الشهر!',
-        body: 'نصف الشهر عدى وما صرفتش غير $pct% — باقيلك $currentBalance دج. واصل على هذا النهج!',
+        dedupeKey: 'c${cycle.id}',
+        percent: (spent / available * 100).round(),
+        balance: balance,
       ));
     }
 
     return notifications;
   }
-
-  static NotificationContent cycleCompleteNotification(int savedAmount) =>
-      NotificationContent(
-        type: NotificationType.cycleComplete,
-        title: savedAmount > 0 ? '✅ دورة ناجحة!' : '🔄 دورة جديدة بدات',
-        body: savedAmount > 0
-            ? 'أحسنت! وفّرت $savedAmount دج هذا الشهر وانضافوا لمدخراتك. الشهر الجاي أحسن!'
-            : 'الدورة انتهت. الشهر الجاي عندك فرصة توفّر — ابدأ بالتخطيط من البداية!',
-      );
-
-  static const NotificationContent weeklyProgressNotification =
-      NotificationContent(
-    type: NotificationType.weeklyProgress,
-    title: '📊 ملخص أسبوعك',
-    body: 'شوف وين راحت فلوسك هذا الأسبوع — دقيقة وتعرف كيفاش توفّر أكثر!',
-  );
 }

@@ -1,8 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/financial_cycle_entity.dart';
-import '../../../domain/repositories/cycle_repository.dart';
-import '../../../domain/repositories/expense_repository.dart';
+import '../../../application/use_cases/statistics/get_past_cycles_use_case.dart';
 
 // ─── States ────────────────────────────────────────────────────────────────
 
@@ -11,7 +9,7 @@ abstract class CycleHistoryState {}
 class CycleHistoryLoading extends CycleHistoryState {}
 
 class CycleHistoryLoaded extends CycleHistoryState {
-  final List<CycleWithStats> cycles;
+  final List<PastCycleSummary> cycles;
   final bool hasMore;
   final int offset;
   CycleHistoryLoaded(this.cycles, {this.hasMore = false, this.offset = 0});
@@ -22,50 +20,24 @@ class CycleHistoryError extends CycleHistoryState {
   CycleHistoryError(this.message);
 }
 
-// ─── Cycle with Stats ──────────────────────────────────────────────────────
-
-class CycleWithStats {
-  final FinancialCycleEntity cycle;
-  final int totalExpenses;
-  final int totalIncome;
-
-  CycleWithStats({
-    required this.cycle,
-    required this.totalExpenses,
-    required this.totalIncome,
-  });
-
-  int get balance => cycle.salaryAmount + totalIncome - totalExpenses;
-}
-
 // ─── Cubit ────────────────────────────────────────────────────────────────
 
 class CycleHistoryCubit extends Cubit<CycleHistoryState> {
-  final CycleRepository _cycleRepository;
-  final ExpenseRepository _expenseRepository;
+  final GetPastCyclesUseCase _getPastCycles;
 
   static const _pageSize = 10;
   bool _isLoadingMore = false;
 
-  CycleHistoryCubit({
-    required CycleRepository cycleRepository,
-    required ExpenseRepository expenseRepository,
-  })  : _cycleRepository = cycleRepository,
-        _expenseRepository = expenseRepository,
+  CycleHistoryCubit({required GetPastCyclesUseCase getPastCycles})
+      : _getPastCycles = getPastCycles,
         super(CycleHistoryLoading());
 
   Future<void> loadHistory() async {
     emit(CycleHistoryLoading());
     try {
-      final cycles = await _cycleRepository.getCycleHistory(
-        limit: _pageSize,
-        offset: 0,
-      );
-
-      final cyclesWithStats = await _buildStats(cycles);
-
+      final cycles = await _getPastCycles(limit: _pageSize);
       emit(CycleHistoryLoaded(
-        cyclesWithStats,
+        cycles,
         hasMore: cycles.length == _pageSize,
         offset: _pageSize,
       ));
@@ -75,36 +47,19 @@ class CycleHistoryCubit extends Cubit<CycleHistoryState> {
   }
 
   Future<void> loadMore() async {
-    final currentState = state;
-    if (currentState is! CycleHistoryLoaded || !currentState.hasMore || _isLoadingMore) return;
+    final current = state;
+    if (current is! CycleHistoryLoaded || !current.hasMore || _isLoadingMore) {
+      return;
+    }
     _isLoadingMore = true;
     try {
-      final newCycles = await _cycleRepository.getCycleHistory(
-        limit: _pageSize,
-        offset: currentState.offset,
-      );
-
-      final newStats = await _buildStats(newCycles);
-
+      final more = await _getPastCycles(limit: _pageSize, offset: current.offset);
       emit(CycleHistoryLoaded(
-        [...currentState.cycles, ...newStats],
-        hasMore: newCycles.length == _pageSize,
-        offset: currentState.offset + _pageSize,
+        [...current.cycles, ...more],
+        hasMore: more.length == _pageSize,
+        offset: current.offset + _pageSize,
       ));
     } catch (_) {}
     _isLoadingMore = false;
-  }
-
-  Future<List<CycleWithStats>> _buildStats(List<FinancialCycleEntity> cycles) async {
-    final result = <CycleWithStats>[];
-    for (final cycle in cycles) {
-      final totalExpenses = await _expenseRepository.getTotalExpenses(cycle.id);
-      result.add(CycleWithStats(
-        cycle: cycle,
-        totalExpenses: totalExpenses,
-        totalIncome: 0,
-      ));
-    }
-    return result;
   }
 }

@@ -25,10 +25,11 @@ class AddIncomeUseCase {
       toSavings: toSavings,
     );
     if (toSavings && _savingsRepository != null) {
-      await _savingsRepository.createDeposit(
+      await _savingsRepository.createIncomeDeposit(
         amount: amount,
         description: 'مدخول - ${description.trim()}',
         cycleId: cycleId,
+        incomeId: income.id,
       );
     }
     return income;

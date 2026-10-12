@@ -1,6 +1,7 @@
 import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/user_repository.dart';
 import '../../../infrastructure/database/app_database.dart';
+import '../../../domain/value_objects/cycle_dates.dart';
 
 class ResetAppDataUseCase {
   final AppDatabase _db;
@@ -17,38 +18,30 @@ class ResetAppDataUseCase {
     final user = await _userRepo.getUser();
     if (user == null) throw StateError('لم يتم العثور على بيانات المستخدم');
 
-    await _db.resetFinancialData();
+    // All or nothing: a reset cut half-way (app killed) would leave the user
+    // on an empty home with setup already marked done.
+    await _db.transaction(() async {
+      await _db.resetFinancialData();
 
-    // Create a fresh cycle so the financial setup has a cycle to operate on
-    // and the auto-cycle gate in the router does not fire after setup.
-    final now = DateTime.now();
-    final salaryDay = user.salaryDay;
-    final thisMonthLastDay = DateTime(now.year, now.month + 1, 0).day;
-    final effectiveDay = salaryDay > thisMonthLastDay ? thisMonthLastDay : salaryDay;
-    final startDate = DateTime(now.year, now.month, effectiveDay);
-    final cycleStart = startDate.isAfter(now)
-        ? DateTime(now.year, now.month - 1, effectiveDay)
-        : startDate;
-    final nextMonth = cycleStart.month == 12 ? 1 : cycleStart.month + 1;
-    final nextYear = cycleStart.month == 12 ? cycleStart.year + 1 : cycleStart.year;
-    final nextMonthLastDay = DateTime(nextYear, nextMonth + 1, 0).day;
-    final nextEffectiveDay = salaryDay > nextMonthLastDay ? nextMonthLastDay : salaryDay;
-    final cycleEnd = DateTime(nextYear, nextMonth, nextEffectiveDay)
-        .subtract(const Duration(days: 1));
+      // Fresh cycle so the financial setup has a cycle to operate on and the
+      // auto-cycle gate in the router does not fire after setup.
+      final salaryDay = user.salaryDay;
+      final cycleStart = CycleDates.currentCycleStart(salaryDay, DateTime.now());
+      await _cycleRepo.createCycle(
+        startDate: cycleStart,
+        endDate: CycleDates.cycleEnd(salaryDay, cycleStart),
+        salaryAmount: user.monthlySalary,
+      );
 
-    await _cycleRepo.createCycle(
-      startDate: cycleStart,
-      endDate: cycleEnd,
-      salaryAmount: user.monthlySalary,
-    );
-
-    // Reset financial-setup flags — router will redirect to /financial-setup.
-    await _userRepo.updateUser(
-      user.copyWith(
-        hasCompletedFinancialSetup: false,
-        initialBalance: null,
-        financialSetupStep: null,
-      ),
-    );
+      // Keeps salary, salary day, name and activation (the licence was
+      // already bought); only re-runs the financial setup.
+      await _userRepo.updateUser(
+        user.copyWith(
+          hasCompletedFinancialSetup: false,
+          initialBalance: null,
+          financialSetupStep: null,
+        ),
+      );
+    });
   }
 }

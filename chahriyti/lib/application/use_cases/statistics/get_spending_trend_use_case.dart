@@ -1,5 +1,6 @@
 import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/expense_repository.dart';
+import '../dashboard/get_dashboard_data_use_case.dart';
 
 class SpendingTrendPoint {
   final int dayIndex; // 1-based from cycle start
@@ -28,12 +29,15 @@ class SpendingTrend {
 class GetSpendingTrendUseCase {
   final CycleRepository _cycleRepository;
   final ExpenseRepository _expenseRepository;
+  final GetDashboardDataUseCase _getDashboardData;
 
   const GetSpendingTrendUseCase({
     required CycleRepository cycleRepository,
     required ExpenseRepository expenseRepository,
+    required GetDashboardDataUseCase getDashboardData,
   })  : _cycleRepository = cycleRepository,
-        _expenseRepository = expenseRepository;
+        _expenseRepository = expenseRepository,
+        _getDashboardData = getDashboardData;
 
   Future<SpendingTrend?> call() async {
     final cycle = await _cycleRepository.getActiveCycle();
@@ -54,12 +58,14 @@ class GetSpendingTrendUseCase {
 
     // Group expenses by day index
     final dailyMap = <int, double>{};
-    for (final expense in expenses) {
+    for (final expense in expenses.where((e) => !e.isSetupAdjustment)) {
       final expDay = DateTime(
           expense.createdAt.year, expense.createdAt.month, expense.createdAt.day);
       final dayIndex = expDay.difference(start).inDays + 1;
       if (dayIndex >= 1 && dayIndex <= totalDays) {
-        dailyMap[dayIndex] = (dailyMap[dayIndex] ?? 0) + expense.amount;
+        // Balance part only, to compare with the balance-based budget line
+        dailyMap[dayIndex] = (dailyMap[dayIndex] ?? 0) +
+            (expense.amount - expense.savingsAmount);
       }
     }
 
@@ -76,8 +82,9 @@ class GetSpendingTrendUseCase {
       ));
     }
 
-    final budget =
-        (cycle.salaryAmount - cycle.salarySplitAmount).toDouble();
+    // Money available this cycle, same base as the home screen
+    final data = await _getDashboardData();
+    final budget = (data.totalExpenses + data.currentBalance).toDouble();
 
     return SpendingTrend(
       points: points,

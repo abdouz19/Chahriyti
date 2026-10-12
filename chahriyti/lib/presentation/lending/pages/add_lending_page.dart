@@ -4,12 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/lending_entity.dart';
 import '../../shared/widgets/payment_source_toggle.dart';
 import '../../shared/widgets/funding_source_sheet.dart';
 import '../../../application/use_cases/lending/update_lending_use_case.dart';
+import '../../../domain/value_objects/lending_money_place.dart';
 import '../cubits/lending_cubit.dart';
 import '../cubits/lending_state.dart';
 import '../widgets/delta_adjustment_sheet.dart';
@@ -165,7 +167,7 @@ class _AddLendingPageState extends State<AddLendingPage> {
 
     if (!context.mounted) return;
     final l10n = context.l10n;
-    final source = await showModalBottomSheet<LendingDeltaSource>(
+    final source = await showModalBottomSheet<LendingMoneyPlace>(
       context: context,
       isScrollControlled: true,
       builder: (_) => LendingDeltaAdjustmentSheet(
@@ -183,63 +185,34 @@ class _AddLendingPageState extends State<AddLendingPage> {
     );
     if (source == null || !context.mounted) return;
 
-    // Update lending record
-    await Injection.updateLendingUseCase(UpdateLendingRequest(
-      id: lending.id,
-      borrowerName: _borrowerController.text,
-      notes: _notesController.text.isEmpty ? null : _notesController.text,
-      totalAmount: newAmount,
-    ));
-
-    // Financial side-effects
-    if (source == LendingDeltaSource.savings) {
-      if (delta > 0) {
-        // Extra lent money came from savings → withdraw delta from savings
-        await Injection.withdrawSavingsUseCase(
-          amount: delta,
-          description: _borrowerController.text,
+    try {
+      await Injection.updateLendingUseCase(UpdateLendingRequest(
+        id: lending.id,
+        borrowerName: _borrowerController.text,
+        notes: _notesController.text.isEmpty ? null : _notesController.text,
+        totalAmount: newAmount,
+        deltaPlace: source,
+      ));
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: AppColors.negative,
+          ),
         );
-      } else {
-        // Reduced lending amount goes to savings → deposit |delta|
-        await Injection.depositFromBalanceUseCase(amount: -delta);
       }
+      return;
     }
-    // balance source: balance formula auto-adjusts; no extra ops
-    // forgotten source: no financial tracking; no extra ops
 
     if (!context.mounted) return;
     cubit.loadLendingById(lending.id);
   }
 
-  Future<int> _getCurrentBalance() async {
-    final totalExpenses =
-        await Injection.expenseRepository.getTotalExpenses(widget.cycleId);
-    final totalIncome =
-        await Injection.incomeRepository.getTotalIncomeForCycle(widget.cycleId);
-    final totalDebtPayments =
-        await Injection.debtRepository.getTotalDebtPaymentsForCycle(
-            widget.cycleId);
-    final totalDebtsCreated =
-        await Injection.debtRepository.getTotalDebtsCreatedForCycle(
-            widget.cycleId);
-    final totalLendings =
-        await Injection.lendingRepository.getTotalLendingsFromBalanceForCycle(
-            widget.cycleId);
-    final totalCollections =
-        await Injection.lendingRepository.getTotalCollectionsToBalanceForCycle(
-            widget.cycleId);
-    final cycle =
-        await Injection.cycleRepository.getCycleById(widget.cycleId);
-    if (cycle == null) return 0;
-    return cycle.salaryAmount -
-        cycle.salarySplitAmount +
-        totalIncome +
-        totalDebtsCreated -
-        totalExpenses -
-        totalDebtPayments -
-        totalLendings +
-        totalCollections;
-  }
+  // Active cycle balance: the difference always moves money today, even when
+  // editing a lending made in an older cycle.
+  Future<int> _getCurrentBalance() async =>
+      (await Injection.getDashboardDataUseCase()).currentBalance;
 
   @override
   Widget build(BuildContext context) {
@@ -346,8 +319,17 @@ class _AddLendingPageState extends State<AddLendingPage> {
                           if (value == null || value.isEmpty) {
                             return context.l10n.amountRequired;
                           }
-                          if (int.tryParse(value) == null) {
+                          final parsed = int.tryParse(value);
+                          if (parsed == null) {
                             return context.l10n.enterNumber;
+                          }
+                          final collected =
+                              widget.initialLending?.collectedAmount ?? 0;
+                          if (parsed < collected) {
+                            return context.l10n.lendingAmountBelowCollected(
+                              collected.toDZDString(
+                                  symbol: context.l10n.currencySymbol),
+                            );
                           }
                           return null;
                         },

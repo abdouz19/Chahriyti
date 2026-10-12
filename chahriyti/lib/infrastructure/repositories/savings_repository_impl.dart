@@ -23,6 +23,11 @@ class SavingsRepositoryImpl implements SavingsRepository {
         relatedDebtPaymentId: row.relatedDebtPaymentId,
         relatedLendingId: row.relatedLendingId,
         createdAt: row.createdAt,
+        kind: switch (row.kind) {
+          'initial' => SavingsRecordKind.initial,
+          'transfer' => SavingsRecordKind.transfer,
+          _ => SavingsRecordKind.other,
+        },
       );
 
   @override
@@ -115,7 +120,57 @@ class SavingsRepositoryImpl implements SavingsRepository {
         type: const Value('deposit'),
         amount: Value(amount),
         description: const Value('رصيد الادخار الأولي'),
+        kind: const Value('initial'),
       ),
     );
   }
+
+  @override
+  Future<SavingsHistoryEntity> createTransfer({
+    required bool toSavings,
+    required int amount,
+    required String description,
+    required int cycleId,
+  }) async {
+    final id = await _dao.insertRecord(
+      SavingsHistoryCompanion(
+        type: Value(toSavings ? 'deposit' : 'withdrawal'),
+        amount: Value(amount),
+        description: Value(description),
+        relatedCycleId: Value(cycleId),
+        kind: const Value('transfer'),
+      ),
+    );
+    final rows = await _dao.getAllRecords();
+    return _toEntity(rows.firstWhere((r) => r.id == id));
+  }
+
+  @override
+  Future<void> createIncomeDeposit({
+    required int amount,
+    required String description,
+    required int cycleId,
+    required int incomeId,
+  }) =>
+      _dao.insertRecord(
+        SavingsHistoryCompanion(
+          type: const Value('deposit'),
+          amount: Value(amount),
+          description: Value(description),
+          relatedCycleId: Value(cycleId),
+          relatedIncomeId: Value(incomeId),
+        ),
+      );
+
+  @override
+  Future<void> updateDepositAmountByIncomeId(int incomeId, int amount) =>
+      _dao.updateAmountByRelatedIncomeId(incomeId, amount);
+
+  @override
+  Future<void> deleteDepositByIncomeId(int incomeId) =>
+      _dao.deleteByRelatedIncomeId(incomeId);
+
+  @override
+  Future<int> getNetTransfersToBalanceForCycle(int cycleId) =>
+      _dao.getNetTransfersToBalanceForCycle(cycleId);
 }

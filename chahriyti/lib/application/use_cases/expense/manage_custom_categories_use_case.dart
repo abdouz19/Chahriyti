@@ -5,7 +5,9 @@ class GetCustomCategoriesUseCase {
   final CustomCategoryRepository _repo;
   const GetCustomCategoriesUseCase(this._repo);
 
-  Future<List<CustomCategoryEntity>> call() => _repo.getAll();
+  /// Categories offered in the picker (archived ones are hidden).
+  Future<List<CustomCategoryEntity>> call() async =>
+      (await _repo.getAll()).where((c) => !c.isArchived).toList();
 }
 
 class CreateCustomCategoryUseCase {
@@ -21,7 +23,8 @@ class CreateCustomCategoryUseCase {
     final trimmed = name.trim();
     if (trimmed.isEmpty) throw ArgumentError('اسم الفئة مطلوب');
 
-    final existing = await _repo.getAll();
+    final existing =
+        (await _repo.getAll()).where((c) => !c.isArchived).toList();
     if (existing.length >= _maxCustomCategories) {
       throw StateError('وصلت إلى الحد الأقصى للفئات المخصصة ($_maxCustomCategories)');
     }

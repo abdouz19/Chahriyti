@@ -3,6 +3,8 @@ import '../../../domain/repositories/expense_repository.dart';
 import '../../../domain/repositories/income_repository.dart';
 import '../../../domain/repositories/debt_repository.dart';
 import '../../../domain/repositories/lending_repository.dart';
+import '../../../domain/repositories/savings_repository.dart';
+import 'cycle_balance.dart';
 
 class DashboardData {
   final int currentBalance;
@@ -50,6 +52,7 @@ class GetDashboardDataUseCase {
   final IncomeRepository _incomeRepository;
   final DebtRepository _debtRepository;
   final LendingRepository? _lendingRepository;
+  final SavingsRepository? _savingsRepository;
 
   const GetDashboardDataUseCase({
     required CycleRepository cycleRepository,
@@ -57,7 +60,9 @@ class GetDashboardDataUseCase {
     required IncomeRepository incomeRepository,
     required DebtRepository debtRepository,
     LendingRepository? lendingRepository,
-  })  : _cycleRepository = cycleRepository,
+    SavingsRepository? savingsRepository,
+  })  : _savingsRepository = savingsRepository,
+        _cycleRepository = cycleRepository,
         _expenseRepository = expenseRepository,
         _incomeRepository = incomeRepository,
         _debtRepository = debtRepository,
@@ -90,9 +95,13 @@ class GetDashboardDataUseCase {
       _debtRepository.getTotalDebtPaymentsForCycle(cycle.id),
       _debtRepository.getTotalDebtPaymentsFromSavingsForCycle(cycle.id),
       _debtRepository.getTotalDebtsCreatedForCycle(cycle.id),
+      _expenseRepository.getSetupAdjustmentForCycle(cycle.id),
     ]);
 
-    final totalExpenses = results[0];
+    // Money spent before the app counts in the balance, not as spending
+    final setupAdjustment = results[6];
+    final expensesForBalance = results[0];
+    final totalExpenses = expensesForBalance - setupAdjustment;
     final totalExpensesFromSavings = results[1];
     final totalIncome = results[2];
     final totalDebtPayments = results[3];
@@ -118,11 +127,19 @@ class GetDashboardDataUseCase {
 
     final salaryAmount = cycle.salaryAmount;
     final totalIn = salaryAmount - cycle.salarySplitAmount + totalIncome + totalDebtsCreated;
-    final currentBalance = totalIn -
-        totalExpenses -
-        totalDebtPayments -
-        totalLendingsFromBalance +
-        totalCollectionsToBalance;
+    final netTransfersToBalance =
+        await _savingsRepository?.getNetTransfersToBalanceForCycle(cycle.id) ??
+            0;
+    final currentBalance = cycleBalance(
+      cycle: cycle,
+      income: totalIncome,
+      debtsCreated: totalDebtsCreated,
+      expenses: expensesForBalance,
+      debtPayments: totalDebtPayments,
+      lendingsFromBalance: totalLendingsFromBalance,
+      collectionsToBalance: totalCollectionsToBalance,
+      netTransfersToBalance: netTransfersToBalance,
+    );
 
     final daysRemaining = cycle.daysRemaining(now);
     final daysElapsed = cycle.daysElapsed(now);
@@ -132,8 +149,13 @@ class GetDashboardDataUseCase {
     final safeDaily =
         daysRemaining > 0 ? (currentBalance ~/ daysRemaining) : 0;
 
-    final consumptionPercent =
-        totalIn > 0 ? (totalExpenses / totalIn * 100).clamp(0.0, 100.0) : 0.0;
+    // Share of the money available this cycle already spent:
+    // spent ÷ (spent + what's left). Lendings, debt payments and setup money
+    // are already reflected in the balance, so they don't skew it.
+    final available = totalExpenses + currentBalance;
+    final consumptionPercent = available > 0
+        ? (totalExpenses / available * 100).clamp(0.0, 100.0)
+        : (totalExpenses > 0 ? 100.0 : 0.0);
 
     return DashboardData(
       currentBalance: currentBalance,

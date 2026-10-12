@@ -44,15 +44,8 @@ class IncomesDao extends DatabaseAccessor<AppDatabase> with _$IncomesDaoMixin {
     );
   }
 
-  Future<void> deleteIncome(int id) async {
-    final rows = await (select(additionalIncomes)..where((t) => t.id.equals(id))).get();
-    if (rows.isEmpty) return;
-    final row = rows.first;
-    if (row.toSavings) {
-      throw ArgumentError('لا يمكن حذف دخل محوّل للمدخرات');
-    }
-    await (delete(additionalIncomes)..where((t) => t.id.equals(id))).go();
-  }
+  Future<void> deleteIncome(int id) =>
+      (delete(additionalIncomes)..where((t) => t.id.equals(id))).go();
 
   static const _excludedDescriptions = {'رصيد أولي', 'رصيد اولي'};
 

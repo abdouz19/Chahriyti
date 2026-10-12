@@ -6,101 +6,80 @@ import 'fakes.dart';
 
 void main() {
   late FakeCycleRepository cycleRepo;
-  late FakeExpenseRepository expenseRepo;
+  late FakeDashboard dashboard;
   late GetFinancialClassificationUseCase useCase;
 
-  // A 30-day cycle, 10 days elapsed (day 10 of 30)
-  final start = DateTime(2024, 1, 1);
-  final end = DateTime(2024, 1, 30);
+  final today = DateTime.now();
+  final midnight = DateTime(today.year, today.month, today.day);
+
+  /// 30-day cycle on its [day]-th day.
+  void cycleOnDay(int day) {
+    final start = midnight.subtract(Duration(days: day - 1));
+    cycleRepo.activeCycle = makeCycle(
+      id: 1,
+      salaryAmount: 80000,
+      salarySplitAmount: 60000,
+      startDate: start,
+      endDate: start.add(const Duration(days: 29)),
+    );
+  }
 
   setUp(() {
     cycleRepo = FakeCycleRepository();
-    expenseRepo = FakeExpenseRepository();
+    dashboard = FakeDashboard();
     useCase = GetFinancialClassificationUseCase(
       cycleRepository: cycleRepo,
-      expenseRepository: expenseRepo,
+      getDashboardData: dashboard,
     );
   });
 
   test('returns null when no active cycle', () async {
     cycleRepo.activeCycle = null;
-    final result = await useCase();
-    expect(result, isNull);
+    expect(await useCase(), isNull);
   });
 
-  test('returns null when salary is zero', () async {
-    cycleRepo.activeCycle =
-        makeCycle(id: 1, salaryAmount: 0, startDate: start, endDate: end);
-    expenseRepo.setTotal(1, 0);
-    final result = await useCase();
-    expect(result, isNull);
+  // Day 15 of 30, spent 5000 of 30000 → pace 10000 → 67% left → legendary
+  test('legendary when on pace to keep most of the money', () async {
+    cycleOnDay(15);
+    dashboard
+      ..expenses = 5000
+      ..balance = 25000;
+    expect(await useCase(), FinancialTier.legendary);
   });
 
-  // savingsRatio = (50000 - 10000) / 50000 = 0.80 → legendary (> 0.30)
-  test('legendary when spent < 70% of salary', () async {
-    cycleRepo.activeCycle =
-        makeCycle(id: 1, salaryAmount: 50000, startDate: start, endDate: end);
-    expenseRepo.setTotal(1, 10000);
-    final result = await useCase();
-    expect(result, FinancialTier.legendary);
+  // Day 15, spent 12750 of 30000 → pace 25500 → 15% left → balanced
+  test('balanced when on pace to keep a little', () async {
+    cycleOnDay(15);
+    dashboard
+      ..expenses = 12750
+      ..balance = 17250;
+    expect(await useCase(), FinancialTier.balanced);
   });
 
-  // savingsRatio = (50000 - 32000) / 50000 = 0.36 → legendary
-  // savingsRatio = (50000 - 40000) / 50000 = 0.20 → smart (> 0.15)
-  test('smart when savingsRatio between 0.15 and 0.30', () async {
-    cycleRepo.activeCycle =
-        makeCycle(id: 1, salaryAmount: 50000, startDate: start, endDate: end);
-    expenseRepo.setTotal(1, 40000); // ratio = 0.20
-    final result = await useCase();
-    expect(result, FinancialTier.smart);
+  // Day 15, spent 20000 of 30000 → pace 40000 → over budget → danger
+  test('danger when on pace to overspend', () async {
+    cycleOnDay(15);
+    dashboard
+      ..expenses = 20000
+      ..balance = 10000;
+    expect(await useCase(), FinancialTier.danger);
   });
 
-  // savingsRatio = (50000 - 46000) / 50000 = 0.08 → balanced (> 0.05)
-  test('balanced when savingsRatio between 0.05 and 0.15', () async {
-    cycleRepo.activeCycle =
-        makeCycle(id: 1, salaryAmount: 50000, startDate: start, endDate: end);
-    expenseRepo.setTotal(1, 46000);
-    final result = await useCase();
-    expect(result, FinancialTier.balanced);
+  // Salary 80000 with 60000 set aside, 30000 spent: old formula said
+  // legendary (62% of salary left); the real balance is gone.
+  test('balance gone early is earlyBankrupt, whatever the salary', () async {
+    cycleOnDay(5);
+    dashboard
+      ..expenses = 30000
+      ..balance = 0;
+    expect(await useCase(), FinancialTier.earlyBankrupt);
   });
 
-  // savingsRatio = (50000 - 49000) / 50000 = 0.02 → spender (>= 0)
-  test('spender when savingsRatio between 0 and 0.05', () async {
-    cycleRepo.activeCycle =
-        makeCycle(id: 1, salaryAmount: 50000, startDate: start, endDate: end);
-    expenseRepo.setTotal(1, 49000);
-    final result = await useCase();
-    expect(result, FinancialTier.spender);
-  });
-
-  // savingsRatio < 0 but cycle > 50% elapsed → danger
-  test('danger when negative balance and cycle past halfway', () async {
-    // Cycle was 30 days; we simulate it's near end by using a past start
-    final pastStart = DateTime.now().subtract(const Duration(days: 25));
-    final pastEnd = DateTime.now().add(const Duration(days: 5));
-    cycleRepo.activeCycle = makeCycle(
-      id: 1,
-      salaryAmount: 50000,
-      startDate: pastStart,
-      endDate: pastEnd,
-    );
-    expenseRepo.setTotal(1, 60000); // overspent → negative ratio
-    final result = await useCase();
-    expect(result, FinancialTier.danger);
-  });
-
-  // savingsRatio < 0 AND elapsed < 50% of cycle → earlyBankrupt
-  test('earlyBankrupt when negative balance early in cycle', () async {
-    final recentStart = DateTime.now().subtract(const Duration(days: 3));
-    final farEnd = DateTime.now().add(const Duration(days: 27));
-    cycleRepo.activeCycle = makeCycle(
-      id: 1,
-      salaryAmount: 50000,
-      startDate: recentStart,
-      endDate: farEnd,
-    );
-    expenseRepo.setTotal(1, 60000); // overspent early
-    final result = await useCase();
-    expect(result, FinancialTier.earlyBankrupt);
+  test('balance gone late is danger', () async {
+    cycleOnDay(25);
+    dashboard
+      ..expenses = 30000
+      ..balance = 0;
+    expect(await useCase(), FinancialTier.danger);
   });
 }

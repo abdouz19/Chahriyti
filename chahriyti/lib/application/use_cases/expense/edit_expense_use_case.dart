@@ -23,10 +23,24 @@ class EditExpenseUseCase {
 
     final cycle = await _cycleRepo.getActiveCycle();
     if (cycle == null || cycle.id != expense.cycleId || !cycle.isActive) {
-      throw StateError('Cannot edit expense: cycle is not active');
+      throw StateError('pastCycleExpense');
     }
 
-    final newSavings = expense.savingsAmount;
+    // Keep the savings part consistent with the new amount: an expense paid
+    // from savings stays fully from savings; otherwise the savings part never
+    // exceeds the amount (the rest is the balance part).
+    final newSavings = expense.fromSavings
+        ? expense.amount
+        : expense.savingsAmount.clamp(0, expense.amount);
+    expense = expense.copyWith(savingsAmount: newSavings);
+
+    final savingsIncrease = newSavings - originalSavingsAmount;
+    if (savingsIncrease > 0 && _savingsRepo != null) {
+      final available = await _savingsRepo.getSavingsBalance();
+      if (savingsIncrease > available) {
+        throw StateError('insufficientSavings');
+      }
+    }
 
     if (newSavings > 0 && originalSavingsAmount == 0) {
       // No prior savings record — create one

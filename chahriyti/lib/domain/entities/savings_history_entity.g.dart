@@ -18,6 +18,9 @@ _SavingsHistoryEntity _$SavingsHistoryEntityFromJson(
   relatedDebtPaymentId: (json['relatedDebtPaymentId'] as num?)?.toInt(),
   relatedLendingId: (json['relatedLendingId'] as num?)?.toInt(),
   createdAt: DateTime.parse(json['createdAt'] as String),
+  kind:
+      $enumDecodeNullable(_$SavingsRecordKindEnumMap, json['kind']) ??
+      SavingsRecordKind.other,
 );
 
 Map<String, dynamic> _$SavingsHistoryEntityToJson(
@@ -32,9 +35,16 @@ Map<String, dynamic> _$SavingsHistoryEntityToJson(
   'relatedDebtPaymentId': instance.relatedDebtPaymentId,
   'relatedLendingId': instance.relatedLendingId,
   'createdAt': instance.createdAt.toIso8601String(),
+  'kind': _$SavingsRecordKindEnumMap[instance.kind]!,
 };
 
 const _$SavingsTransactionTypeEnumMap = {
   SavingsTransactionType.deposit: 'deposit',
   SavingsTransactionType.withdrawal: 'withdrawal',
+};
+
+const _$SavingsRecordKindEnumMap = {
+  SavingsRecordKind.initial: 'initial',
+  SavingsRecordKind.transfer: 'transfer',
+  SavingsRecordKind.other: 'other',
 };

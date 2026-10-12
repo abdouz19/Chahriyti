@@ -165,6 +165,13 @@ class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
                       expense: expense,
                       canDelete: canDelete,
                       onTap: () async {
+                        if (!canDelete) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text(context.l10n.pastCycleExpenseLocked),
+                          ));
+                          return;
+                        }
                         await context.push('/expense/edit', extra: expense);
                         if (context.mounted) {
                           context.read<HistoryCubit>().loadExpenses();

@@ -1,11 +1,9 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../core/storage/app_secure_storage.dart';
 
 class OemBatteryService {
   static const _channel = MethodChannel('com.chahriyti.dz/oem');
-  static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+  static const _storage = appSecureStorage;
   static const _promptShownKey = 'oem_battery_prompt_shown';
 
   static const _restrictedOems = {

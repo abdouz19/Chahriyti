@@ -81,7 +81,7 @@ class IncomeCubit extends Cubit<IncomeState> {
     try {
       final cycle = await _cycleRepository.getActiveCycle();
       if (cycle == null) {
-        emit(IncomeError('لا يوجد دورة مالية نشطة'));
+        emit(IncomeError('لا توجد شهرية نشطة'));
         return;
       }
       await _addIncome.call(
@@ -98,24 +98,27 @@ class IncomeCubit extends Cubit<IncomeState> {
     }
   }
 
-  Future<void> updateIncome(int id, String description, int amount) async {
+  Future<void> updateIncome(
+      AdditionalIncomeEntity income, String description, int amount) async {
     try {
-      await _updateIncome.call(id: id, description: description, amount: amount);
+      await _updateIncome.call(
+          income: income, description: description, amount: amount);
       emit(IncomeUpdated());
     } on ArgumentError catch (e) {
       emit(IncomeError(e.message.toString()));
+    } on StateError catch (e) {
+      emit(IncomeError(e.message));
     } catch (_) {
       emit(IncomeError('حدث خطأ. لم يتم حفظ التغييرات.'));
     }
   }
 
-  Future<void> deleteIncome(int id) async {
+  Future<void> deleteIncome(AdditionalIncomeEntity income) async {
     try {
-      await _deleteIncome.call(id);
+      await _deleteIncome.call(income);
       emit(IncomeDeleted());
-    } on ArgumentError catch (_) {
-      emit(IncomeError(
-          'لا يمكن حذف دخل محوّل للمدخرات. قم بسحب المبلغ من المدخرات يدوياً.'));
+    } on StateError catch (e) {
+      emit(IncomeError(e.message));
     } catch (_) {
       emit(IncomeError('حدث خطأ. لم يتم حذف الدخل.'));
     }

@@ -17,7 +17,7 @@ class LeadService {
   Future<bool> _phoneExists(String phone) async {
     try {
       final uri = Uri.parse(_checkUrl).replace(queryParameters: {'phone': phone});
-      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      final response = await http.get(uri).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
         return body['exists'] == true;
@@ -43,8 +43,13 @@ class LeadService {
     }
   }
 
-  /// Submits lead to Firestore only if the phone is not already registered.
-  /// Returns true if data was sent to server, false if it was a duplicate.
+  /// Submits the lead and waits for the server's confirmation. Returns false
+  /// if the phone was already registered. Throws when the server can't be
+  /// reached in time, so the caller can show an error and let the user retry.
+  ///
+  /// The phone number is the document id: a retry after a timeout (while
+  /// Firestore may still hold the first attempt in its offline queue)
+  /// overwrites the same document instead of creating a duplicate.
   Future<bool> submitLead({
     required String name,
     required String phone,
@@ -61,7 +66,7 @@ class LeadService {
     final exists = await _phoneExists(phone);
     if (exists) return false;
 
-    await _db.collection('leads').add({
+    await _db.collection('leads').doc(phone).set({
       'name': name,
       'phone': phone,
       'wilayaCode': wilayaCode,
@@ -75,7 +80,7 @@ class LeadService {
       'fcmToken': fcmToken,
       'submittedAt': FieldValue.serverTimestamp(),
       'status': 'pending',
-    });
+    }).timeout(const Duration(seconds: 15));
     return true;
   }
 }

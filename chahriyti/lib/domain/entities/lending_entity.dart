@@ -20,6 +20,10 @@ abstract class LendingEntity with _$LendingEntity {
     required DateTime createdAt,
   }) = _LendingEntity;
 
+  /// Created as "forgotten": recorded without taking money from balance or
+  /// savings (stored as fromSavings with no savings amount).
+  bool get isUntracked => fromSavings && savingsAmount == 0;
+
   factory LendingEntity.fromJson(Map<String, dynamic> json) =>
       _$LendingEntityFromJson(json);
 

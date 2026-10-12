@@ -25,14 +25,17 @@ ExpenseEntity makeExpense({
 void main() {
   late FakeCycleRepository cycleRepo;
   late FakeExpenseRepository expenseRepo;
+  late FakeDashboard dashboard;
   late GetSpendingTrendUseCase useCase;
 
   setUp(() {
     cycleRepo = FakeCycleRepository();
     expenseRepo = FakeExpenseRepository();
+    dashboard = FakeDashboard();
     useCase = GetSpendingTrendUseCase(
       cycleRepository: cycleRepo,
       expenseRepository: expenseRepo,
+      getDashboardData: dashboard,
     );
   });
 
@@ -42,7 +45,7 @@ void main() {
     expect(result, isNull);
   });
 
-  test('budget equals salary minus split', () async {
+  test('budget equals spent plus current balance', () async {
     final today = DateTime.now();
     final start = DateTime(today.year, today.month, today.day);
     final end = start.add(const Duration(days: 29));
@@ -54,6 +57,9 @@ void main() {
       endDate: end,
     );
     expenseRepo.setExpenses(1, []);
+    dashboard
+      ..expenses = 12000
+      ..balance = 38000;
 
     final result = await useCase();
     expect(result, isNotNull);

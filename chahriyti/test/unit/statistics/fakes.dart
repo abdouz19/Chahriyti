@@ -1,3 +1,6 @@
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:chahriyti/application/use_cases/dashboard/get_dashboard_data_use_case.dart';
 import 'package:chahriyti/domain/entities/additional_income_entity.dart';
 import 'package:chahriyti/domain/entities/custom_category_entity.dart';
 import 'package:chahriyti/domain/entities/expense_entity.dart';
@@ -36,6 +39,7 @@ AdditionalIncomeEntity makeIncome({
   int cycleId = 1,
   required String description,
   required int amount,
+  bool toSavings = false,
 }) =>
     AdditionalIncomeEntity(
       id: id,
@@ -43,7 +47,29 @@ AdditionalIncomeEntity makeIncome({
       description: description,
       amount: amount,
       createdAt: DateTime(2024, 1, 10),
+      toSavings: toSavings,
     );
+
+/// Home-screen numbers for the active cycle.
+class FakeDashboard extends Fake implements GetDashboardDataUseCase {
+  int expenses = 0;
+  int balance = 0;
+
+  @override
+  Future<DashboardData> call() async => DashboardData(
+        currentBalance: balance,
+        totalExpenses: expenses,
+        totalDebtPayments: 0,
+        totalIn: 0,
+        totalIncome: 0,
+        salaryAmount: 0,
+        daysRemaining: 0,
+        daysElapsed: 0,
+        dailyAverage: 0,
+        safeDaily: 0,
+        consumptionPercent: 0,
+      );
+}
 
 // ─── Fake repositories ────────────────────────────────────────────────────────
 
@@ -88,6 +114,14 @@ class FakeCycleRepository implements CycleRepository {
 }
 
 class FakeExpenseRepository implements ExpenseRepository {
+
+  /// cycleId → spent before the app (setup adjustment)
+  final Map<int, int> _setup = {};
+  void setSetupAdjustment(int cycleId, int amount) => _setup[cycleId] = amount;
+
+  @override
+  Future<int> getSetupAdjustmentForCycle(int cycleId) async =>
+      _setup[cycleId] ?? 0;
   /// cycleId → total expenses
   final Map<int, int> _totals = {};
   /// cycleId → category → amount
@@ -135,7 +169,12 @@ class FakeExpenseRepository implements ExpenseRepository {
           DateTime startDate, DateTime endDate) async =>
       [];
   @override
-  Future<int> getTotalExpensesFromSavingsForCycle(int cycleId) async => 0;
+  Future<int> getTotalExpensesFromSavingsForCycle(int cycleId) async =>
+      _fromSavings[cycleId] ?? 0;
+
+  /// cycleId → part of expenses paid from savings
+  final Map<int, int> _fromSavings = {};
+  void setFromSavings(int cycleId, int amount) => _fromSavings[cycleId] = amount;
 }
 
 class FakeIncomeRepository implements IncomeRepository {
@@ -151,9 +190,18 @@ class FakeIncomeRepository implements IncomeRepository {
   @override
   Future<int> getTotalIncomeForCycle(int cycleId) async => _totals[cycleId] ?? 0;
 
+  /// Explicit incomes, or one income matching the total set by [setTotal].
   @override
   Future<List<AdditionalIncomeEntity>> getIncomesForCycle(int cycleId) async =>
-      _incomes[cycleId] ?? [];
+      _incomes[cycleId] ??
+      (_totals[cycleId] != null
+          ? [
+              makeIncome(
+                  cycleId: cycleId,
+                  description: 'income',
+                  amount: _totals[cycleId]!)
+            ]
+          : []);
 
   @override
   Future<AdditionalIncomeEntity> addIncome({
@@ -174,6 +222,36 @@ class FakeIncomeRepository implements IncomeRepository {
 }
 
 class FakeSavingsRepository implements SavingsRepository {
+
+  @override
+  Future<void> createIncomeDeposit({
+    required int amount,
+    required String description,
+    required int cycleId,
+    required int incomeId,
+  }) async {}
+
+  @override
+  Future<void> updateDepositAmountByIncomeId(int incomeId, int amount) async {}
+
+  @override
+  Future<void> deleteDepositByIncomeId(int incomeId) async {}
+
+  @override
+  Future<SavingsHistoryEntity> createTransfer({
+    required bool toSavings,
+    required int amount,
+    required String description,
+    required int cycleId,
+  }) async =>
+      throw UnimplementedError();
+
+  @override
+  Future<int> getNetTransfersToBalanceForCycle(int cycleId) async =>
+      netTransfers[cycleId] ?? 0;
+
+  /// cycleId → net money moved from savings to the balance
+  final Map<int, int> netTransfers = {};
   List<SavingsHistoryEntity> history = [];
 
   void addTransaction({

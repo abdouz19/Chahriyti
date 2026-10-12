@@ -3,6 +3,7 @@ import '../../../domain/repositories/expense_repository.dart';
 import '../../../domain/repositories/income_repository.dart';
 import '../../../domain/repositories/lending_repository.dart';
 import '../../../domain/repositories/user_repository.dart';
+import '../../../domain/value_objects/setup_adjustment.dart';
 
 class CompleteFinancialSetupUseCase {
   final UserRepository _userRepository;
@@ -74,9 +75,9 @@ class CompleteFinancialSetupUseCase {
           // User already spent some salary before installing → add expense
           await _expenseRepository.addExpense(
             cycleId: cycle.id,
-            category: 'أخرى',
-            subcategory: 'أخرى',
-            itemName: 'رصيد قبل التطبيق',
+            category: SetupAdjustment.expenseCategory,
+            subcategory: SetupAdjustment.expenseCategory,
+            itemName: SetupAdjustment.expenseItem,
             amount: -delta,
           );
         }

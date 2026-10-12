@@ -9,6 +9,29 @@ abstract class SavingsRepository {
     required int cycleId,
   });
   Future<void> createInitialDeposit({required int amount});
+
+  /// Moves money between the balance of [cycleId] and savings.
+  Future<SavingsHistoryEntity> createTransfer({
+    required bool toSavings,
+    required int amount,
+    required String description,
+    required int cycleId,
+  });
+
+  /// Deposit of an income sent to savings, linked so it follows the income.
+  Future<void> createIncomeDeposit({
+    required int amount,
+    required String description,
+    required int cycleId,
+    required int incomeId,
+  });
+
+  Future<void> updateDepositAmountByIncomeId(int incomeId, int amount);
+
+  Future<void> deleteDepositByIncomeId(int incomeId);
+
+  /// Net money moved from savings into the balance of [cycleId].
+  Future<int> getNetTransfersToBalanceForCycle(int cycleId);
   Future<SavingsHistoryEntity> createWithdrawal({
     required int amount,
     required String description,

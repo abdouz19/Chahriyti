@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../application/use_cases/cycle/reset_app_data_use_case.dart';
+import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dart';
 import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/user_repository.dart';
 
@@ -66,12 +67,19 @@ class SettingsCubit extends Cubit<SettingsState> {
   final UserRepository _userRepository;
   final CycleRepository _cycleRepository;
   final ResetAppDataUseCase _resetAppData;
+  final GetDashboardDataUseCase _getDashboardData;
+
+  /// E.g. to move the salary-day reminder.
+  final VoidCallback? onSalaryDayChanged;
 
   SettingsCubit({
     required UserRepository userRepository,
     required CycleRepository cycleRepository,
     required ResetAppDataUseCase resetAppData,
-  })  : _userRepository = userRepository,
+    required GetDashboardDataUseCase getDashboardData,
+    this.onSalaryDayChanged,
+  })  : _getDashboardData = getDashboardData,
+        _userRepository = userRepository,
         _cycleRepository = cycleRepository,
         _resetAppData = resetAppData,
         super(const SettingsLoading());
@@ -102,7 +110,14 @@ class SettingsCubit extends Cubit<SettingsState> {
     }
   }
 
-  Future<void> updateSalary(int newSalary) async {
+  /// Current balance, for previewing a salary change on this cycle.
+  Future<int> currentBalance() async =>
+      (await _getDashboardData()).currentBalance;
+
+  /// With [applyToCurrentCycle] the active cycle's salary changes too (e.g. a
+  /// typo at setup); blocked when that would make the balance negative.
+  Future<void> updateSalary(int newSalary,
+      {bool applyToCurrentCycle = false}) async {
     emit(const SettingsUpdating());
     try {
       debugPrint('💾 SETTINGS: Updating salary to $newSalary');
@@ -112,10 +127,22 @@ class SettingsCubit extends Cubit<SettingsState> {
         return;
       }
 
+      if (applyToCurrentCycle) {
+        final cycle = await _cycleRepository.getActiveCycle();
+        if (cycle != null) {
+          final balance = (await _getDashboardData()).currentBalance;
+          if (balance + newSalary - cycle.salaryAmount < 0) {
+            emit(const SettingsError('الرصيد الحالي لا يكفي لهذا التعديل'));
+            await loadSettings();
+            return;
+          }
+          await _cycleRepository.updateCycleSalary(cycle.id, newSalary);
+        }
+      }
+
       final updatedUser = user.copyWith(monthlySalary: newSalary);
       await _userRepository.updateUser(updatedUser);
-      // Do NOT update the current cycle — change takes effect next cycle only.
-      debugPrint('✅ SETTINGS: Salary updated successfully (applies next cycle)');
+      debugPrint('✅ SETTINGS: Salary updated (current cycle: $applyToCurrentCycle)');
       await loadSettings();
     } catch (e) {
       debugPrint('❌ SETTINGS ERROR: $e');
@@ -138,6 +165,14 @@ class SettingsCubit extends Cubit<SettingsState> {
       final updatedUser = user.copyWith(salaryDay: newDay);
       await _userRepository.updateUser(updatedUser);
 
+      // The current cycle keeps its start and salary but now ends the day
+      // before the next salary on the new day
+      final cycle = await _cycleRepository.getActiveCycle();
+      if (cycle != null) {
+        await _cycleRepository.updateCycleSalaryDay(cycle.id, newDay);
+      }
+
+      onSalaryDayChanged?.call();
       debugPrint('✅ SETTINGS: Salary day updated successfully');
       await loadSettings();
     } catch (e) {

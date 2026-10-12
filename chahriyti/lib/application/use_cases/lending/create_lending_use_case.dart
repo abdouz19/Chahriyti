@@ -29,7 +29,7 @@ class CreateLendingUseCase {
     if (amount <= 0) throw ArgumentError('المبلغ يجب أن يكون أكبر من صفر');
 
     final cycle = await _cycleRepository.getActiveCycle();
-    if (cycle == null) throw StateError('لا توجد دورة مالية نشطة');
+    if (cycle == null) throw StateError('لا توجد شهرية نشطة');
 
     // Forgotten: record only, no deduction from balance or savings
     if (forgotten) {

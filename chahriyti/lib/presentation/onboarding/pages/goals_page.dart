@@ -24,6 +24,13 @@ class _GoalsPageState extends State<GoalsPage> {
   void initState() {
     super.initState();
     _selected.addAll(context.read<OnboardingCubit>().goals);
+  }
+
+  // Translated texts: read here, not in initState (needs the localizations,
+  // and refreshes when the language changes)
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final l = context.l10n;
     _goals = [
       l.goal1,
@@ -48,8 +55,11 @@ class _GoalsPageState extends State<GoalsPage> {
         } else if (state is OnboardingError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content: Text(state.message == OnboardingCubit.leadSendFailed
+                  ? context.l10n.leadSendFailed
+                  : state.message),
               backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5),
             ),
           );
         }
@@ -125,10 +135,23 @@ class _GoalsPageState extends State<GoalsPage> {
               // Bottom CTA
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: SizedBox(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (!_selected.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          context.l10n.completeAllFieldsHint,
+                          style: AppTypography.bodySmall
+                              .copyWith(color: AppColors.textSecondary),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: isLoading
+                    onPressed: isLoading || _selected.isEmpty
                         ? null
                         : () => context
                             .read<OnboardingCubit>()
@@ -144,6 +167,8 @@ class _GoalsPageState extends State<GoalsPage> {
                           )
                         : Text(context.l10n.next),
                   ),
+                ),
+                  ],
                 ),
               ),
             ],

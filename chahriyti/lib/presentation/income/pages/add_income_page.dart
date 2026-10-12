@@ -9,7 +9,7 @@ import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/additional_income_entity.dart';
-import '../../shared/widgets/confirmation_dialog.dart';
+import '../../debt/widgets/balance_impact_view.dart';
 import '../cubits/income_cubit.dart';
 
 // Shared options view for income source autocomplete (same style as expense form)
@@ -128,25 +128,64 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
     final cubit = context.read<IncomeCubit>();
     final result = await showDialog<(String, int)>(
       context: context,
-      builder: (ctx) => _EditIncomeDialog(income: income),
+      builder: (ctx) => _EditIncomeDialog(
+        income: income,
+        available: _availableFor(income),
+      ),
     );
     if (result != null) {
-      cubit.updateIncome(income.id, result.$1, result.$2);
+      cubit.updateIncome(income, result.$1, result.$2);
     }
   }
 
   Future<void> _showDeleteConfirmation(AdditionalIncomeEntity income) async {
     final cubit = context.read<IncomeCubit>();
-    final confirmed = await ConfirmationDialog.show(
-      context,
-      title: context.l10n.deleteIncome,
-      message: context.l10n.deleteIncomeConfirm(income.description),
-      confirmColor: AppColors.negative,
+    final available = await _availableFor(income);
+    if (!mounted) return;
+    final blocked = available - income.amount < 0;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(ctx.l10n.deleteIncome),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(ctx.l10n.deleteIncomeConfirm(_incomeName(ctx, income))),
+            const SizedBox(height: 12),
+            BalanceImpactView(
+              delta: -income.amount,
+              currentBalance: available,
+              isSavings: income.toSavings,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(ctx.l10n.cancel),
+          ),
+          ElevatedButton(
+            onPressed: blocked ? null : () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.negative,
+              foregroundColor: Colors.white,
+            ),
+            child: Text(ctx.l10n.delete),
+          ),
+        ],
+      ),
     );
-    if (confirmed) {
-      cubit.deleteIncome(income.id);
+    if (confirmed == true) {
+      cubit.deleteIncome(income);
     }
   }
+
+  /// Money in the place this income went to: savings or the current balance.
+  Future<int> _availableFor(AdditionalIncomeEntity income) async =>
+      income.toSavings
+          ? await Injection.getSavingsBalanceUseCase()
+          : (await Injection.getDashboardDataUseCase()).currentBalance;
 
   @override
   Widget build(BuildContext context) {
@@ -506,7 +545,8 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
 
 class _EditIncomeDialog extends StatefulWidget {
   final AdditionalIncomeEntity income;
-  const _EditIncomeDialog({required this.income});
+  final Future<int> available;
+  const _EditIncomeDialog({required this.income, required this.available});
 
   @override
   State<_EditIncomeDialog> createState() => _EditIncomeDialogState();
@@ -515,13 +555,27 @@ class _EditIncomeDialog extends StatefulWidget {
 class _EditIncomeDialogState extends State<_EditIncomeDialog> {
   late final TextEditingController _descController;
   late final TextEditingController _amountController;
+  int? _available;
 
   @override
   void initState() {
     super.initState();
     _descController = TextEditingController(text: widget.income.description);
     _amountController = TextEditingController(text: widget.income.amount.toString());
+    _amountController.addListener(() => setState(() {}));
+    widget.available.then((v) {
+      if (mounted) setState(() => _available = v);
+    });
   }
+
+  int get _delta {
+    final amount =
+        int.tryParse(_amountController.text.replaceAll(',', '').trim());
+    return amount == null ? 0 : amount - widget.income.amount;
+  }
+
+  bool get _blocked =>
+      _delta < 0 && (_available == null || _available! + _delta < 0);
 
   @override
   void dispose() {
@@ -555,7 +609,9 @@ class _EditIncomeDialogState extends State<_EditIncomeDialog> {
         children: [
           TextField(
             controller: _descController,
-            autofocus: true,
+            // The setup opening balance keeps its name
+            readOnly: widget.income.isInitialBalance,
+            autofocus: !widget.income.isInitialBalance,
             style: AppTypography.bodyLarge,
             decoration: InputDecoration(
               hintText: context.l10n.incomeSource,
@@ -582,6 +638,14 @@ class _EditIncomeDialogState extends State<_EditIncomeDialog> {
               fillColor: AppColors.background,
             ),
           ),
+          if (_delta != 0) ...[
+            const SizedBox(height: 12),
+            BalanceImpactView(
+              delta: _delta,
+              currentBalance: _available,
+              isSavings: widget.income.toSavings,
+            ),
+          ],
         ],
       ),
       actions: [
@@ -593,7 +657,7 @@ class _EditIncomeDialogState extends State<_EditIncomeDialog> {
           ),
         ),
         TextButton(
-          onPressed: _save,
+          onPressed: _blocked ? null : _save,
           child: Text(
             context.l10n.save,
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
@@ -663,17 +727,47 @@ class _IncomeItem extends StatelessWidget {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         title: Text(
-          income.description,
+          _incomeName(context, income),
           style: AppTypography.bodyMedium,
-          textDirection: TextDirection.rtl,
         ),
-        subtitle: Text(
-          income.amount.toDZDString(symbol: context.l10n.currencySymbol),
-          style: AppTypography.labelMedium.copyWith(
-            color: AppColors.positive,
-            fontWeight: FontWeight.w600,
-          ),
-          textDirection: TextDirection.rtl,
+        subtitle: Row(
+          children: [
+            Text(
+              income.amount.toDZDString(symbol: context.l10n.currencySymbol),
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.positive,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    income.toSavings
+                        ? Icons.savings_rounded
+                        : Icons.account_balance_wallet_rounded,
+                    size: 12,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    income.toSavings
+                        ? context.l10n.incomeToSavingsTag
+                        : context.l10n.incomeToBalanceTag,
+                    style: AppTypography.labelSmall
+                        .copyWith(color: AppColors.primary, fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -696,3 +790,7 @@ class _IncomeItem extends StatelessWidget {
     );
   }
 }
+
+/// Display name; the setup opening balance is stored in Arabic.
+String _incomeName(BuildContext context, AdditionalIncomeEntity income) =>
+    income.isInitialBalance ? context.l10n.openingBalance : income.description;

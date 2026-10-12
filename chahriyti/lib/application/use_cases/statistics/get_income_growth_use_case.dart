@@ -1,5 +1,6 @@
 import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/income_repository.dart';
+import 'stats_amounts.dart';
 
 class IncomeGrowthResult {
   final int currentIncome;
@@ -38,10 +39,9 @@ class GetIncomeGrowthUseCase {
     final activeCycle = await _cycleRepository.getActiveCycle();
     if (activeCycle == null) return IncomeGrowthResult.empty;
 
-    final additionalCurrent = await _incomeRepository.getTotalIncomeForCycle(activeCycle.id);
-    final currentIncome = activeCycle.salaryAmount + additionalCurrent;
+    final currentIncome = activeCycle.salaryAmount +
+        await earnedIncome(_incomeRepository, activeCycle.id);
 
-    // Last closed cycle
     final history = await _cycleRepository.getCycleHistory(limit: 6);
     final lastClosed = history.where((c) => !c.isActive).toList();
     if (lastClosed.isEmpty) {
@@ -53,11 +53,10 @@ class GetIncomeGrowthUseCase {
       );
     }
 
-    // Most recent closed cycle
     lastClosed.sort((a, b) => b.startDate.compareTo(a.startDate));
     final prevCycle = lastClosed.first;
-    final additionalPrev = await _incomeRepository.getTotalIncomeForCycle(prevCycle.id);
-    final previousIncome = prevCycle.salaryAmount + additionalPrev;
+    final previousIncome = prevCycle.salaryAmount +
+        await earnedIncome(_incomeRepository, prevCycle.id);
 
     final growthPercent = previousIncome > 0
         ? ((currentIncome - previousIncome) / previousIncome) * 100

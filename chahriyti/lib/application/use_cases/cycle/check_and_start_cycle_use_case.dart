@@ -1,7 +1,16 @@
 import '../../../domain/entities/financial_cycle_entity.dart';
 import '../../../domain/repositories/cycle_repository.dart';
 import '../../../domain/repositories/user_repository.dart';
+import '../../../domain/value_objects/cycle_dates.dart';
 import '../savings/deposit_cycle_savings_use_case.dart';
+
+/// New current cycle, plus what the cycles closed on the way left in savings.
+class CycleStartResult {
+  final FinancialCycleEntity cycle;
+  final int savedFromClosedCycles;
+
+  const CycleStartResult(this.cycle, this.savedFromClosedCycles);
+}
 
 class CheckAndStartCycleUseCase {
   final UserRepository _userRepo;
@@ -14,9 +23,12 @@ class CheckAndStartCycleUseCase {
     this._depositSavings,
   );
 
-  /// Returns a new [FinancialCycleEntity] if a new cycle was created (salary split needed).
-  /// Returns null if no action was required.
-  Future<FinancialCycleEntity?> call() async {
+  /// Returns the new current [FinancialCycleEntity] if one was created
+  /// (salary split needed), or null if the active cycle is still running.
+  ///
+  /// Months the app wasn't opened get their own cycle, each with its salary,
+  /// closed right away so its leftover goes to savings.
+  Future<CycleStartResult?> call() async {
     final user = await _userRepo.getUser();
     if (user == null) return null;
 
@@ -24,41 +36,35 @@ class CheckAndStartCycleUseCase {
     final today = DateTime(now.year, now.month, now.day);
     final salaryDay = user.salaryDay;
 
-    // Clamp salary day to actual days in this month
-    final effectiveDay = _clampToMonth(salaryDay, today.year, today.month);
-    final thisSalaryDate = DateTime(today.year, today.month, effectiveDay);
-
-    // Not yet salary day this month
-    if (today.isBefore(thisSalaryDate)) return null;
-
-    // Already have a cycle for this month
-    final existing = await _cycleRepo.getCycleForMonth(today.year, today.month);
-    if (existing != null) return null;
-
-    // Close and archive the current active cycle
     final active = await _cycleRepo.getActiveCycle();
+    var saved = 0;
+    DateTime start;
     if (active != null) {
-      await _depositSavings(active.id);
-      await _cycleRepo.closeCycle(active.id);
+      // Still within the active cycle
+      if (!today.isAfter(active.endDate)) return null;
+      saved += await _closeCycle(active);
+      start = CycleDates.dayAfter(active.endDate);
+    } else {
+      start = CycleDates.currentCycleStart(salaryDay, today);
     }
 
-    // Compute next cycle's end date (day before next salary day)
-    final nextMonth = today.month == 12 ? 1 : today.month + 1;
-    final nextYear = today.month == 12 ? today.year + 1 : today.year;
-    final nextEffectiveDay = _clampToMonth(salaryDay, nextYear, nextMonth);
-    final cycleEnd = DateTime(nextYear, nextMonth, nextEffectiveDay)
-        .subtract(const Duration(days: 1));
-
-    return _cycleRepo.createCycle(
-      startDate: thisSalaryDate,
-      endDate: cycleEnd,
-      salaryAmount: user.monthlySalary,
-    );
+    while (true) {
+      final cycle = await _cycleRepo.createCycle(
+        startDate: start,
+        endDate: CycleDates.cycleEnd(salaryDay, start),
+        salaryAmount: user.monthlySalary,
+      );
+      if (!today.isAfter(cycle.endDate)) return CycleStartResult(cycle, saved);
+      // A month that passed without opening the app
+      saved += await _closeCycle(cycle);
+      start = CycleDates.dayAfter(cycle.endDate);
+    }
   }
 
-  /// Returns [salaryDay] clamped to the last valid day of [year]/[month].
-  static int _clampToMonth(int salaryDay, int year, int month) {
-    final lastDay = DateTime(year, month + 1, 0).day;
-    return salaryDay > lastDay ? lastDay : salaryDay;
+  /// Returns the leftover moved to savings.
+  Future<int> _closeCycle(FinancialCycleEntity cycle) async {
+    final deposit = await _depositSavings(cycle.id);
+    await _cycleRepo.closeCycle(cycle.id);
+    return deposit?.amount ?? 0;
   }
 }

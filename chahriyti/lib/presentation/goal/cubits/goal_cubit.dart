@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../application/use_cases/goal/create_goal_use_case.dart';
 import '../../../application/use_cases/goal/delete_goal_use_case.dart';
 import '../../../application/use_cases/goal/get_goals_use_case.dart';
+import '../../../application/use_cases/goal/purchase_goal_use_case.dart';
+import '../../../application/use_cases/goal/undo_goal_purchase_use_case.dart';
 import '../../../application/use_cases/goal/update_goal_use_case.dart';
-import '../../../application/use_cases/savings/withdraw_savings_use_case.dart';
-import '../../../domain/repositories/goal_repository.dart';
+import '../../../domain/entities/goal_entity.dart';
 import '../../../infrastructure/services/notification_service.dart';
 import 'goal_state.dart';
 
@@ -14,8 +15,8 @@ class GoalCubit extends Cubit<GoalState> {
   final GetGoalsUseCase _getGoalsUseCase;
   final UpdateGoalUseCase _updateGoalUseCase;
   final DeleteGoalUseCase _deleteGoalUseCase;
-  final WithdrawSavingsUseCase? _withdrawSavingsUseCase;
-  final GoalRepository? _goalRepository;
+  final PurchaseGoalUseCase? _purchaseGoalUseCase;
+  final UndoGoalPurchaseUseCase? _undoGoalPurchaseUseCase;
   final NotificationService? _notificationService;
 
   static const _pageSize = 10;
@@ -26,11 +27,11 @@ class GoalCubit extends Cubit<GoalState> {
     this._getGoalsUseCase,
     this._updateGoalUseCase,
     this._deleteGoalUseCase, {
-    WithdrawSavingsUseCase? withdrawSavingsUseCase,
-    GoalRepository? goalRepository,
+    PurchaseGoalUseCase? purchaseGoalUseCase,
+    UndoGoalPurchaseUseCase? undoGoalPurchaseUseCase,
     NotificationService? notificationService,
-  })  : _withdrawSavingsUseCase = withdrawSavingsUseCase,
-        _goalRepository = goalRepository,
+  })  : _purchaseGoalUseCase = purchaseGoalUseCase,
+        _undoGoalPurchaseUseCase = undoGoalPurchaseUseCase,
         _notificationService = notificationService,
         super(const GoalState.initial());
 
@@ -167,21 +168,34 @@ class GoalCubit extends Cubit<GoalState> {
     }
   }
 
+  /// [price] is what the user actually paid; it may differ from the target.
   Future<void> purchaseGoal({
     required int goalId,
-    required int amount,
+    required int price,
     required String goalName,
   }) async {
     emit(const GoalState.loading());
     try {
-      await _withdrawSavingsUseCase!(
-        amount: amount,
-        description: 'شراء هدف - $goalName',
+      await _purchaseGoalUseCase!(
+        goalId: goalId,
+        goalName: goalName,
+        price: price,
       );
-      await _goalRepository!.markGoalCompleted(goalId);
       emit(const GoalState.goalUpdated());
     } catch (e) {
       emit(GoalState.error('فشل عملية الشراء: ${e.toString()}'));
+    }
+  }
+
+  /// Returns an error message, or null on success.
+  Future<String?> undoPurchase(GoalEntity goal) async {
+    try {
+      await _undoGoalPurchaseUseCase!(goal);
+      await loadGoalById(goal.id);
+      return null;
+    } catch (e) {
+      await loadGoalById(goal.id);
+      return 'فشل إلغاء الشراء: ${e.toString()}';
     }
   }
 

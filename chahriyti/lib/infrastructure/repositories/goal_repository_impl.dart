@@ -28,6 +28,8 @@ class GoalRepositoryImpl implements GoalRepository {
         description: null,
         createdAt: row.createdAt,
         completedAt: row.isAchieved ? row.createdAt : null,
+        purchasedAmount: row.purchasedAmount,
+        purchaseTransactionId: row.purchaseTransactionId,
       );
 
   @override
@@ -104,6 +106,18 @@ class GoalRepositoryImpl implements GoalRepository {
   Future<void> markGoalCompleted(int id) async {
     await _dao.markGoalAchieved(id);
   }
+
+  @override
+  Future<void> markGoalPurchased({
+    required int id,
+    required int amount,
+    required int transactionId,
+  }) =>
+      _dao.markGoalPurchased(
+          id: id, amount: amount, transactionId: transactionId);
+
+  @override
+  Future<void> undoGoalPurchase(int id) => _dao.undoGoalPurchase(id);
 
   @override
   Future<void> contribute({

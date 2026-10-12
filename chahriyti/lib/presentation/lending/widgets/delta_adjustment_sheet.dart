@@ -4,8 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
-
-enum LendingDeltaSource { balance, savings, forgotten }
+import '../../../domain/value_objects/lending_money_place.dart';
 
 class LendingDeltaAdjustmentSheet extends StatelessWidget {
   final int delta;
@@ -61,7 +60,7 @@ class LendingDeltaAdjustmentSheet extends StatelessWidget {
                   : '${l10n.currentBalance}: ${_fmt(currentBalance)} ${l10n.currencySymbol}',
               color: AppColors.primary,
               enabled: canAffordBalance,
-              onTap: () => Navigator.pop(context, LendingDeltaSource.balance),
+              onTap: () => Navigator.pop(context, LendingMoneyPlace.balance),
             ),
             const SizedBox(height: 12),
             LendingSheetOption(
@@ -72,14 +71,14 @@ class LendingDeltaAdjustmentSheet extends StatelessWidget {
                   : '${l10n.savingsBalance}: ${_fmt(savingsBalance)} ${l10n.currencySymbol}',
               color: AppColors.positive,
               enabled: canAffordSavings,
-              onTap: () => Navigator.pop(context, LendingDeltaSource.savings),
+              onTap: () => Navigator.pop(context, LendingMoneyPlace.savings),
             ),
             const SizedBox(height: 12),
             LendingSheetOption(
               icon: Icons.history_outlined,
               label: l10n.forgottenAdjustment,
               color: AppColors.warning,
-              onTap: () => Navigator.pop(context, LendingDeltaSource.forgotten),
+              onTap: () => Navigator.pop(context, LendingMoneyPlace.untracked),
             ),
           ],
         ),

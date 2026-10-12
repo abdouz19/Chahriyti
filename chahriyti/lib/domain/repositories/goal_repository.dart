@@ -26,6 +26,16 @@ abstract class GoalRepository {
 
   Future<void> markGoalCompleted(int id);
 
+  /// Marks the goal bought for [amount] via savings transaction [transactionId].
+  Future<void> markGoalPurchased({
+    required int id,
+    required int amount,
+    required int transactionId,
+  });
+
+  /// Reopens a bought goal and clears its purchase details.
+  Future<void> undoGoalPurchase(int id);
+
   Future<void> contribute({
     required int goalId,
     required int amount,

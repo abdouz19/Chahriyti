@@ -1207,7 +1207,7 @@ abstract class AppLocalizations {
   /// No description provided for @newSalaryDayConfirmBody.
   ///
   /// In en, this message translates to:
-  /// **'The new salary day (Day {day}) will apply from your next cycle.\nThe current cycle will not be affected.'**
+  /// **'The new salary day (day {day}) applies. Your current cycle will end the day before the next salary.'**
   String newSalaryDayConfirmBody(int day);
 
   /// No description provided for @editMonthlySalary.
@@ -1231,7 +1231,7 @@ abstract class AppLocalizations {
   /// No description provided for @salaryMustBePositive.
   ///
   /// In en, this message translates to:
-  /// **'Salary must be greater than zero'**
+  /// **'Enter a valid number (0 or more)'**
   String get salaryMustBePositive;
 
   /// No description provided for @confirmEditSalary.
@@ -1273,7 +1273,7 @@ abstract class AppLocalizations {
   /// No description provided for @resetWarningBody.
   ///
   /// In en, this message translates to:
-  /// **'You will delete all your financial data including:\n\n• All expenses\n• All debts and payments\n• All lendings\n• All goals and savings\n• Financial cycle history\n\nOnly your salary and salary day will be kept.\n\nThis action cannot be undone.'**
+  /// **'You are about to erase all your financial data, including:\n\n• all expenses and incomes\n• all debts and payments\n• all lendings\n• all goals and savings\n• custom categories\n• cycle history\n\nYour account, activation, salary and salary day are kept.\n\nThis action can\'t be undone.'**
   String get resetWarningBody;
 
   /// No description provided for @cannotBeUndone.
@@ -1729,19 +1729,19 @@ abstract class AppLocalizations {
   /// No description provided for @debtIsSpentQuestion.
   ///
   /// In en, this message translates to:
-  /// **'Has this amount been spent?'**
+  /// **'Did you spend this amount before recording it?'**
   String get debtIsSpentQuestion;
 
   /// No description provided for @debtIsSpentDesc.
   ///
   /// In en, this message translates to:
-  /// **'Amount has been spent and is no longer in your balance'**
+  /// **'Already spent, not counted in your balance'**
   String get debtIsSpentDesc;
 
   /// No description provided for @debtNotSpentDesc.
   ///
   /// In en, this message translates to:
-  /// **'Amount is still in your balance'**
+  /// **'Counted in your balance, record its expenses later'**
   String get debtNotSpentDesc;
 
   /// No description provided for @currentBalance.
@@ -3019,13 +3019,13 @@ abstract class AppLocalizations {
   /// No description provided for @deleteCategory.
   ///
   /// In en, this message translates to:
-  /// **'Delete Category'**
+  /// **'Hide category'**
   String get deleteCategory;
 
   /// No description provided for @deleteCategoryConfirm.
   ///
   /// In en, this message translates to:
-  /// **'Do you want to delete the \"{name}\" category?'**
+  /// **'\"{name}\" will be removed from the list. Expenses already recorded with it stay unchanged.'**
   String deleteCategoryConfirm(String name);
 
   /// No description provided for @newCategory.
@@ -3457,7 +3457,7 @@ abstract class AppLocalizations {
   /// No description provided for @celebrationTagline.
   ///
   /// In en, this message translates to:
-  /// **'Chahriyti is happy to have you'**
+  /// **'One step away from taking control of your salary'**
   String get celebrationTagline;
 
   /// No description provided for @celebrationBody.
@@ -3843,6 +3843,900 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'M'**
   String get amountMillionShort;
+
+  /// No description provided for @debtImpactAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} will be added to your current balance'**
+  String debtImpactAdd(String amount);
+
+  /// No description provided for @debtImpactDeduct.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} will be deducted from your current balance'**
+  String debtImpactDeduct(String amount);
+
+  /// No description provided for @debtImpactNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No effect on your current balance'**
+  String get debtImpactNone;
+
+  /// No description provided for @debtImpactPastCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'This debt belongs to a previous cycle. Editing it does not affect your current balance'**
+  String get debtImpactPastCycle;
+
+  /// No description provided for @debtImpactInsufficientBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current balance ({balance}) isn\'t enough to deduct {amount}.'**
+  String debtImpactInsufficientBalance(String balance, String amount);
+
+  /// No description provided for @debtSpentDoubleCountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'If you already recorded expenses from this money, they are already deducted from your balance. Don\'t enable this option.'**
+  String get debtSpentDoubleCountHint;
+
+  /// No description provided for @debtConfirmEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm edit'**
+  String get debtConfirmEditTitle;
+
+  /// No description provided for @debtAmountBelowPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount can\'t be less than what you already paid ({paid})'**
+  String debtAmountBelowPaid(String paid);
+
+  /// No description provided for @lendingAmountBelowCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount can\'t be less than what was already collected ({collected})'**
+  String lendingAmountBelowCollected(String collected);
+
+  /// No description provided for @purchasePriceQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How much did you actually pay for \"{name}\"?'**
+  String purchasePriceQuestion(String name);
+
+  /// No description provided for @purchaseDeductNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This amount will be deducted from your savings.'**
+  String get purchaseDeductNote;
+
+  /// No description provided for @purchasedFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Bought for {amount}'**
+  String purchasedFor(String amount);
+
+  /// No description provided for @undoPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo purchase'**
+  String get undoPurchase;
+
+  /// No description provided for @undoPurchaseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} will go back to your savings and the goal will be active again.'**
+  String undoPurchaseBody(String amount);
+
+  /// No description provided for @purchaseUndone.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase undone'**
+  String get purchaseUndone;
+
+  /// No description provided for @goalsShareSavingsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your savings are shared by all your goals. Buying one lowers the progress of the others.'**
+  String get goalsShareSavingsNote;
+
+  /// No description provided for @applySalaryToCurrentCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Also apply to the current cycle'**
+  String get applySalaryToCurrentCycle;
+
+  /// No description provided for @applySalaryToCurrentCycleDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'To fix a mistake or a raise received this month'**
+  String get applySalaryToCurrentCycleDesc;
+
+  /// No description provided for @newSalaryConfirmBodyNow.
+  ///
+  /// In en, this message translates to:
+  /// **'The new salary ({amount}) will apply to the current cycle and the next ones.'**
+  String newSalaryConfirmBodyNow(String amount);
+
+  /// No description provided for @salaryDayChangeConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current cycle will end on {endDate} and the new one will start on {startDate}.'**
+  String salaryDayChangeConfirmBody(String endDate, String startDate);
+
+  /// No description provided for @pastCycleExpenseLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses from previous cycles are closed and can\'t be edited'**
+  String get pastCycleExpenseLocked;
+
+  /// No description provided for @savDescInitial.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial savings'**
+  String get savDescInitial;
+
+  /// No description provided for @savDescDepositFromBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Deposit from balance'**
+  String get savDescDepositFromBalance;
+
+  /// No description provided for @savDescWithdrawToBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal to balance'**
+  String get savDescWithdrawToBalance;
+
+  /// No description provided for @savDescCycleEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End-of-cycle savings'**
+  String get savDescCycleEnd;
+
+  /// No description provided for @savDescSalarySplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary split'**
+  String get savDescSalarySplit;
+
+  /// No description provided for @savDescGoalPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal purchase - {name}'**
+  String savDescGoalPurchase(String name);
+
+  /// No description provided for @savDescGoalPurchaseUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal purchase undone - {name}'**
+  String savDescGoalPurchaseUndo(String name);
+
+  /// No description provided for @savDescLending.
+  ///
+  /// In en, this message translates to:
+  /// **'Lending - {name}'**
+  String savDescLending(String name);
+
+  /// No description provided for @savDescLendingCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Lending collected - {name}'**
+  String savDescLendingCollection(String name);
+
+  /// No description provided for @savDescLendingEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Lending edit - {name}'**
+  String savDescLendingEdit(String name);
+
+  /// No description provided for @savDescDebtPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt payment - {name}'**
+  String savDescDebtPayment(String name);
+
+  /// No description provided for @savDescIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Income - {name}'**
+  String savDescIncome(String name);
+
+  /// No description provided for @savingsImpactAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} will be added to your savings'**
+  String savingsImpactAdd(String amount);
+
+  /// No description provided for @savingsImpactDeduct.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} will be deducted from your savings'**
+  String savingsImpactDeduct(String amount);
+
+  /// No description provided for @savingsImpactNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No effect on your savings'**
+  String get savingsImpactNone;
+
+  /// No description provided for @savingsImpactInsufficient.
+  ///
+  /// In en, this message translates to:
+  /// **'Your savings ({balance}) aren\'t enough to deduct {amount}.'**
+  String savingsImpactInsufficient(String balance, String amount);
+
+  /// No description provided for @incomeToBalanceTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get incomeToBalanceTag;
+
+  /// No description provided for @incomeToSavingsTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings'**
+  String get incomeToSavingsTag;
+
+  /// No description provided for @openingBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening balance'**
+  String get openingBalance;
+
+  /// No description provided for @statSectionThisCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'This cycle'**
+  String get statSectionThisCycle;
+
+  /// No description provided for @statSectionIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get statSectionIncome;
+
+  /// No description provided for @statSectionSavings.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings'**
+  String get statSectionSavings;
+
+  /// No description provided for @statRemainingThisCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Left this cycle'**
+  String get statRemainingThisCycle;
+
+  /// No description provided for @statSpentOfAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent {spent} of {available}'**
+  String statSpentOfAvailable(String spent, String available);
+
+  /// No description provided for @notifChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial alerts'**
+  String get notifChannelName;
+
+  /// No description provided for @notifChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts about your budget and spending'**
+  String get notifChannelDesc;
+
+  /// No description provided for @notifWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Chahriyti! 🎉'**
+  String get notifWelcomeTitle;
+
+  /// No description provided for @notifWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts are on — we\'ll help you track spending and make it to payday 💪'**
+  String get notifWelcomeBody;
+
+  /// No description provided for @notifWeekTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'📅 {days} days to payday'**
+  String notifWeekTitle(int days);
+
+  /// No description provided for @notifWeekBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend no more than {amount} a day and you\'ll make it 💪'**
+  String notifWeekBody(String amount);
+
+  /// No description provided for @notifWeekBodyTight.
+  ///
+  /// In en, this message translates to:
+  /// **'Last days — essentials only and you will make it!'**
+  String get notifWeekBodyTight;
+
+  /// No description provided for @notifExcellentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🏆 Great month so far!'**
+  String get notifExcellentTitle;
+
+  /// No description provided for @notifExcellentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Half the month gone and only {percent}% spent — {balance} left. Keep it up!'**
+  String notifExcellentBody(int percent, String balance);
+
+  /// No description provided for @notifCycleSavedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Successful cycle!'**
+  String get notifCycleSavedTitle;
+
+  /// No description provided for @notifCycleSavedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done! You saved {amount} last month, added to your savings.'**
+  String notifCycleSavedBody(String amount);
+
+  /// No description provided for @notifCycleNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🔄 New cycle started'**
+  String get notifCycleNewTitle;
+
+  /// No description provided for @notifCycleNewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A new month to save — plan from day one!'**
+  String get notifCycleNewBody;
+
+  /// No description provided for @notifDailyReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded today\'s spending? 📝'**
+  String get notifDailyReminderTitle;
+
+  /// No description provided for @notifDailyReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing recorded today — one minute to keep track of your money.'**
+  String get notifDailyReminderBody;
+
+  /// No description provided for @notifSalaryDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'💰 Payday!'**
+  String get notifSalaryDayTitle;
+
+  /// No description provided for @notifSalaryDayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Before spending: decide how much to save this month.'**
+  String get notifSalaryDayBody;
+
+  /// No description provided for @notificationsSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsSetting;
+
+  /// No description provided for @notificationsSettingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminder, payday and budget alerts'**
+  String get notificationsSettingDesc;
+
+  /// No description provided for @notifOnTimeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders may arrive late'**
+  String get notifOnTimeTitle;
+
+  /// No description provided for @notifOnTimeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow \"Alarms & reminders\" so they come on time'**
+  String get notifOnTimeDesc;
+
+  /// No description provided for @notifOnTimeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get notifOnTimeAction;
+
+  /// No description provided for @notifPaceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ At this pace, money runs out before payday'**
+  String get notifPaceTitle;
+
+  /// No description provided for @notifPaceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Around {date} — {days} days before payday. Slow down a little to make it.'**
+  String notifPaceBody(String date, int days);
+
+  /// No description provided for @notifGoalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 You can buy \"{name}\"'**
+  String notifGoalTitle(String name);
+
+  /// No description provided for @notifGoalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your savings reached the goal. Open Chahriyti to record the purchase.'**
+  String get notifGoalBody;
+
+  /// No description provided for @notifSalaryDayBodyWithDebt.
+  ///
+  /// In en, this message translates to:
+  /// **'Before spending: decide how much to save, and don\'t forget {amount} for {name}.'**
+  String notifSalaryDayBodyWithDebt(String amount, String name);
+
+  /// No description provided for @notifLendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🤝 Lending reminder'**
+  String get notifLendingTitle;
+
+  /// No description provided for @notifLendingBodyOne.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} still owes you {amount}. Payday just passed — a good time to remind them.'**
+  String notifLendingBodyOne(String name, String amount);
+
+  /// No description provided for @notifLendingBodyMany.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} and {count} others owe you {amount}. A good time to remind them.'**
+  String notifLendingBodyMany(String name, int count, String amount);
+
+  /// No description provided for @securitySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get securitySection;
+
+  /// No description provided for @appLockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock the app'**
+  String get appLockTitle;
+
+  /// No description provided for @appLockSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Face ID / fingerprint / phone passcode'**
+  String get appLockSubtitle;
+
+  /// No description provided for @appLockAfterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock after'**
+  String get appLockAfterLabel;
+
+  /// No description provided for @appLockImmediately.
+  ///
+  /// In en, this message translates to:
+  /// **'Immediately'**
+  String get appLockImmediately;
+
+  /// No description provided for @appLockAfterMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String appLockAfterMinutes(int minutes);
+
+  /// No description provided for @hideAmountsInNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide amounts in notifications'**
+  String get hideAmountsInNotifications;
+
+  /// No description provided for @appLockNoDeviceLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on a screen lock in your phone settings first'**
+  String get appLockNoDeviceLock;
+
+  /// No description provided for @appLockReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Chahriyti'**
+  String get appLockReason;
+
+  /// No description provided for @appLockedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Chahriyti is locked'**
+  String get appLockedTitle;
+
+  /// No description provided for @appLockedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial data is protected'**
+  String get appLockedSubtitle;
+
+  /// No description provided for @appUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get appUnlock;
+
+  /// No description provided for @tourNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get tourNext;
+
+  /// No description provided for @tourBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get tourBack;
+
+  /// No description provided for @tourSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get tourSkip;
+
+  /// No description provided for @tourDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s go'**
+  String get tourDone;
+
+  /// No description provided for @tourStepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{current}/{total}'**
+  String tourStepOf(int current, int total);
+
+  /// No description provided for @tourBalanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your balance'**
+  String get tourBalanceTitle;
+
+  /// No description provided for @tourBalanceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The money you have left this cycle. It updates with every expense, income, debt or lending.'**
+  String get tourBalanceBody;
+
+  /// No description provided for @tourSpendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your spending'**
+  String get tourSpendingTitle;
+
+  /// No description provided for @tourSpendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything spent this cycle. Below it: how much of your money is used and a safe daily amount.'**
+  String get tourSpendingBody;
+
+  /// No description provided for @tourIncomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add income'**
+  String get tourIncomeTitle;
+
+  /// No description provided for @tourIncomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Money on top of your salary? Add it here, to your balance or to savings.'**
+  String get tourIncomeBody;
+
+  /// No description provided for @tourAddExpenseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record an expense'**
+  String get tourAddExpenseTitle;
+
+  /// No description provided for @tourAddExpenseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The most important button: every time you buy something, record it here in seconds.'**
+  String get tourAddExpenseBody;
+
+  /// No description provided for @tourGoalsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your goals'**
+  String get tourGoalsTitle;
+
+  /// No description provided for @tourGoalsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick something to buy (phone, car…) and see how close your savings get you.'**
+  String get tourGoalsBody;
+
+  /// No description provided for @tourDebtsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Debts'**
+  String get tourDebtsTitle;
+
+  /// No description provided for @tourDebtsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Money you borrowed. Record it and pay it back step by step; we remind you on payday.'**
+  String get tourDebtsBody;
+
+  /// No description provided for @tourLendingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lendings'**
+  String get tourLendingsTitle;
+
+  /// No description provided for @tourLendingsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Money you lent to others. Record each repayment; we remind you after payday.'**
+  String get tourLendingsBody;
+
+  /// No description provided for @tourStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get tourStatsTitle;
+
+  /// No description provided for @tourStatsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'See where your money goes: by category, daily pace and an end-of-cycle forecast.'**
+  String get tourStatsBody;
+
+  /// No description provided for @tourSavingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings'**
+  String get tourSavingsTitle;
+
+  /// No description provided for @tourSavingsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'In Settings ⚙️: your savings, moves between balance and savings, and the full history.'**
+  String get tourSavingsBody;
+
+  /// No description provided for @tourCyclesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycles'**
+  String get tourCyclesTitle;
+
+  /// No description provided for @tourCyclesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Each cycle starts on payday. In Settings ⚙️: salary, payday and past cycles.'**
+  String get tourCyclesBody;
+
+  /// No description provided for @tourLockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock'**
+  String get tourLockTitle;
+
+  /// No description provided for @tourLockBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Protect your money with Face ID or fingerprint: Settings ⚙️ → Security.'**
+  String get tourLockBody;
+
+  /// No description provided for @offerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order'**
+  String get offerLabel;
+
+  /// No description provided for @offerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The Chahriyti book + lifetime app access'**
+  String get offerTitle;
+
+  /// No description provided for @offerPriceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'One payment — no subscription'**
+  String get offerPriceNote;
+
+  /// No description provided for @offerPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s less than {amount} a day over just one year'**
+  String offerPerDay(String amount);
+
+  /// No description provided for @offerInclude1.
+  ///
+  /// In en, this message translates to:
+  /// **'The printed Chahriyti book, delivered to you'**
+  String get offerInclude1;
+
+  /// No description provided for @offerInclude2.
+  ///
+  /// In en, this message translates to:
+  /// **'The app activated for life on your phone'**
+  String get offerInclude2;
+
+  /// No description provided for @offerInclude3.
+  ///
+  /// In en, this message translates to:
+  /// **'Every feature: budget, debts, lendings, goals and statistics'**
+  String get offerInclude3;
+
+  /// No description provided for @nextStepsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What happens now?'**
+  String get nextStepsTitle;
+
+  /// No description provided for @nextStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll call you soon to confirm your order'**
+  String get nextStep1;
+
+  /// No description provided for @nextStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'During that call, we agree on the delivery details together'**
+  String get nextStep2;
+
+  /// No description provided for @nextStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'You receive the book with your activation code, and you\'re set'**
+  String get nextStep3;
+
+  /// No description provided for @reassuranceKeepPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to do for now, just keep your phone close 📞'**
+  String get reassuranceKeepPhone;
+
+  /// No description provided for @completeAllFieldsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer every question to continue'**
+  String get completeAllFieldsHint;
+
+  /// No description provided for @notifSpentNothingAction.
+  ///
+  /// In en, this message translates to:
+  /// **'I spent nothing today'**
+  String get notifSpentNothingAction;
+
+  /// No description provided for @notifGoalTitleHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Your savings reached one of your goals'**
+  String get notifGoalTitleHidden;
+
+  /// No description provided for @notifSalaryDayBodyWithDebtHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Before spending: decide how much to save, and don\'t forget your debts.'**
+  String get notifSalaryDayBodyWithDebtHidden;
+
+  /// No description provided for @notifLendingBodyHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Some people still owe you money. A good time to remind them.'**
+  String get notifLendingBodyHidden;
+
+  /// No description provided for @notifInactiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your budget is waiting for you 👋'**
+  String get notifInactiveTitle;
+
+  /// No description provided for @notifInactiveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Record the last few days in a minute and take back control.'**
+  String get notifInactiveBody;
+
+  /// No description provided for @notifRemindersChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminders'**
+  String get notifRemindersChannelName;
+
+  /// No description provided for @notifRemindersChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening reminder, payday countdown and lendings'**
+  String get notifRemindersChannelDesc;
+
+  /// No description provided for @notifAskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let Chahriyti remind you'**
+  String get notifAskTitle;
+
+  /// No description provided for @notifAskPoint1.
+  ///
+  /// In en, this message translates to:
+  /// **'Payday: decide how much to save before spending'**
+  String get notifAskPoint1;
+
+  /// No description provided for @notifAskPoint2.
+  ///
+  /// In en, this message translates to:
+  /// **'A light evening reminder if you recorded nothing'**
+  String get notifAskPoint2;
+
+  /// No description provided for @notifAskPoint3.
+  ///
+  /// In en, this message translates to:
+  /// **'A heads-up before your money runs out before payday'**
+  String get notifAskPoint3;
+
+  /// No description provided for @notifAskEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on notifications'**
+  String get notifAskEnable;
+
+  /// No description provided for @notifAskLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notifAskLater;
+
+  /// No description provided for @leadSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request could not be sent. Check your internet connection, then tap \"Next\" again.'**
+  String get leadSendFailed;
+
+  /// No description provided for @pastCyclesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Past months'**
+  String get pastCyclesButton;
+
+  /// No description provided for @pastCyclesEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When your current cycle ends, its summary appears here.'**
+  String get pastCyclesEmptyHint;
+
+  /// No description provided for @pastCycleIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get pastCycleIncome;
+
+  /// No description provided for @pastCycleSpent.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get pastCycleSpent;
+
+  /// No description provided for @pastCycleSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get pastCycleSaved;
+
+  /// No description provided for @pastCycleSavedShare.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of your income'**
+  String pastCycleSavedShare(String percent);
+
+  /// No description provided for @statFirstCycleNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first cycle started with a balance of {balance} when you signed up. From {date}, it is based on your salary of {salary}.'**
+  String statFirstCycleNote(String balance, String date, String salary);
 }
 
 class _AppLocalizationsDelegate

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+import '../../../application/use_cases/statistics/get_past_cycles_use_case.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../domain/value_objects/money.dart';
-import '../../shared/widgets/money_text.dart';
+import '../../statistics/widgets/stat_widgets.dart';
 import '../cubits/cycle_history_cubit.dart';
+import 'past_cycle_detail_page.dart';
 
+/// Finished monthly cycles, newest first; each opens its own statistics.
 class CycleHistoryPage extends StatelessWidget {
   const CycleHistoryPage({super.key});
 
@@ -16,8 +20,12 @@ class CycleHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => CycleHistoryCubit(
-        cycleRepository: Injection.cycleRepository,
-        expenseRepository: Injection.expenseRepository,
+        getPastCycles: GetPastCyclesUseCase(
+          cycleRepository: Injection.cycleRepository,
+          expenseRepository: Injection.expenseRepository,
+          incomeRepository: Injection.incomeRepository,
+          savingsRepository: Injection.savingsRepository,
+        ),
       )..loadHistory(),
       child: const _CycleHistoryView(),
     );
@@ -29,225 +37,204 @@ class _CycleHistoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(
-          context.l10n.cycleHistory,
-          style: AppTypography.headlineSmall,
-        ),
+        title: Text(l10n.cycleHistory, style: AppTypography.headlineSmall),
       ),
       body: BlocBuilder<CycleHistoryCubit, CycleHistoryState>(
         builder: (context, state) {
           if (state is CycleHistoryLoading) {
             return const Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
-            );
+                child: CircularProgressIndicator(color: AppColors.primary));
           }
-
           if (state is CycleHistoryError) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(32),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
-                      Icons.error_outline_rounded,
-                      size: 48,
-                      color: AppColors.negative,
-                    ),
+                    Text(state.message,
+                        style: AppTypography.bodyMedium,
+                        textAlign: TextAlign.center),
                     const SizedBox(height: 16),
-                    Text(
-                      state.message,
-                      style: AppTypography.bodyLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () =>
                           context.read<CycleHistoryCubit>().loadHistory(),
-                      child: Text(context.l10n.retry),
+                      child: Text(l10n.retry),
                     ),
                   ],
                 ),
               ),
             );
           }
-
-          if (state is CycleHistoryLoaded) {
-            if (state.cycles.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.history_rounded,
-                        size: 64,
-                        color: AppColors.textSecondary.withValues(alpha: 0.5),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        context.l10n.noPreviousCycles,
-                        style: AppTypography.bodyLarge.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
+          if (state is! CycleHistoryLoaded) return const SizedBox.shrink();
+          if (state.cycles.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.history_rounded,
+                        size: 56, color: AppColors.textSecondary),
+                    const SizedBox(height: 12),
+                    Text(l10n.noPreviousCycles,
+                        style: AppTypography.labelLarge),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.pastCyclesEmptyHint,
+                      style: AppTypography.bodySmall
+                          .copyWith(color: AppColors.textSecondary),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-              );
-            }
-
-            return NotificationListener<ScrollNotification>(
-              onNotification: (notification) {
-                if (notification is ScrollEndNotification &&
-                    notification.metrics.extentAfter < 200 &&
-                    state.hasMore) {
-                  context.read<CycleHistoryCubit>().loadMore();
-                }
-                return false;
-              },
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: state.cycles.length + (state.hasMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index == state.cycles.length) {
-                    return const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                          strokeWidth: 2,
-                        ),
-                      ),
-                    );
-                  }
-                  return _CycleCard(cycle: state.cycles[index]);
-                },
               ),
             );
           }
-
-          return const SizedBox.shrink();
+          return NotificationListener<ScrollNotification>(
+            onNotification: (n) {
+              if (n.metrics.pixels >= n.metrics.maxScrollExtent - 200) {
+                context.read<CycleHistoryCubit>().loadMore();
+              }
+              return false;
+            },
+            child: ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: state.cycles.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, i) =>
+                  PastCycleCard(summary: state.cycles[i]),
+            ),
+          );
         },
       ),
     );
   }
 }
 
-class _CycleCard extends StatelessWidget {
-  final CycleWithStats cycle;
+/// "October 2026" style title for a cycle (by the month it started in).
+String pastCycleTitle(BuildContext context, DateTime start) {
+  final locale = Localizations.localeOf(context).languageCode;
+  return DateFormat('MMMM y', locale).format(start);
+}
 
-  const _CycleCard({required this.cycle});
+String pastCycleRange(BuildContext context, DateTime start, DateTime end) {
+  final locale = Localizations.localeOf(context).languageCode;
+  final f = DateFormat('d MMM', locale);
+  return '${f.format(start)} – ${f.format(end)}';
+}
 
-  String _formatDateRange(BuildContext context, DateTime start, DateTime end) {
-    final locale = Localizations.localeOf(context).languageCode;
-    final startMonth = DateFormat('MMM', locale).format(start);
-    final endMonth = DateFormat('MMM', locale).format(end);
+class PastCycleCard extends StatelessWidget {
+  final PastCycleSummary summary;
 
-    if (start.month == end.month) {
-      return '${start.day} - ${end.day} $startMonth ${start.year}';
-    }
-
-    return '${start.day} $startMonth - ${end.day} $endMonth ${end.year}';
-  }
+  const PastCycleCard({super.key, required this.summary});
 
   @override
   Widget build(BuildContext context) {
-    final isPositive = cycle.balance >= 0;
-
-    return Card(
-      color: AppColors.card,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(
-          color: isPositive
-              ? AppColors.positive.withValues(alpha: 0.3)
-              : AppColors.negative.withValues(alpha: 0.3),
-        ),
-      ),
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Date range
-            Text(
-              _formatDateRange(context, cycle.cycle.startDate, cycle.cycle.endDate),
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Salary
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  context.l10n.salary,
-                  style: AppTypography.bodyMedium,
-                ),
-                MoneyText(
-                  amount: Money(cycle.cycle.salaryAmount),
-                  style: AppTypography.labelMedium,
-                  color: AppColors.primary,
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-
-            // Total expenses
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  context.l10n.totalExpensesLabel,
-                  style: AppTypography.bodyMedium,
-                ),
-                MoneyText(
-                  amount: Money(cycle.totalExpenses),
-                  style: AppTypography.labelMedium,
-                  color: AppColors.negative,
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-
-            // Balance
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: isPositive
-                    ? AppColors.positive.withValues(alpha: 0.08)
-                    : AppColors.negative.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final l10n = context.l10n;
+    final symbol = l10n.currencySymbol;
+    final cycle = summary.cycle;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => PastCycleDetailPage(summary: summary),
+        )),
+        child: Ink(
+          padding: const EdgeInsets.all(16),
+          decoration: statCardDecoration,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Text(
-                    context.l10n.finalBalance,
-                    style: AppTypography.labelMedium,
-                  ),
-                  MoneyText(
-                    amount: Money(cycle.balance),
-                    style: AppTypography.amountSmall.copyWith(
-                      fontWeight: FontWeight.w700,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(pastCycleTitle(context, cycle.startDate),
+                            style: AppTypography.labelLarge.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w800)),
+                        Text(
+                          pastCycleRange(
+                              context, cycle.startDate, cycle.endDate),
+                          style: AppTypography.labelSmall,
+                        ),
+                      ],
                     ),
-                    color: isPositive ? AppColors.positive : AppColors.negative,
                   ),
+                  const Icon(Icons.chevron_right_rounded,
+                      color: AppColors.textSecondary),
                 ],
               ),
-            ),
-          ],
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Divider(height: 1, color: AppColors.divider),
+              ),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _Figure(
+                          label: l10n.pastCycleIncome,
+                          value: summary.income.toDZDString(symbol: symbol)),
+                    ),
+                    const VerticalDivider(width: 16, color: AppColors.divider),
+                    Expanded(
+                      child: _Figure(
+                        label: l10n.pastCycleSpent,
+                        value: summary.spending.toDZDString(symbol: symbol),
+                        color: AppColors.negative,
+                      ),
+                    ),
+                    const VerticalDivider(width: 16, color: AppColors.divider),
+                    Expanded(
+                      child: _Figure(
+                        label: l10n.pastCycleSaved,
+                        value: summary.saved.toDZDString(symbol: symbol),
+                        color: AppColors.positive,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _Figure extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color? color;
+
+  const _Figure({required this.label, required this.value, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: AppTypography.labelSmall),
+        const SizedBox(height: 4),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
+            value,
+            style: AppTypography.amountSmall.copyWith(
+                color: color ?? AppColors.textPrimary, fontSize: 14),
+          ),
+        ),
+      ],
     );
   }
 }

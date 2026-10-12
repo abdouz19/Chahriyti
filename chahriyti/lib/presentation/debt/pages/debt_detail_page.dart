@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../domain/entities/financial_cycle_entity.dart';
 import '../cubits/debt_cubit.dart';
 import '../cubits/debt_state.dart';
+import '../widgets/balance_impact_view.dart';
 import '../../shared/widgets/payment_source_toggle.dart';
 import '../../shared/widgets/funding_source_sheet.dart';
+import '../../shared/widgets/amount_progress_card.dart';
 import 'add_debt_page.dart';
 
 class DebtDetailPage extends StatelessWidget {
@@ -101,171 +106,20 @@ class _DebtDetailView extends StatelessWidget {
 
             if (state is DebtLoaded) {
               final debt = state.debt;
-              final percentagePaid = debt.totalAmount > 0
-                  ? (debt.paidAmount / debt.totalAmount * 100).clamp(0, 100)
-                  : 0.0;
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Creditor name
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            context.l10n.creditorName,
-                            style: AppTypography.labelLarge.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            debt.creditorName,
-                            style: AppTypography.headlineSmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Amount info
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColors.card,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: AppColors.border),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  context.l10n.totalAmount,
-                                  style: AppTypography.labelSmall.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${debt.totalAmount} ${context.l10n.currencySymbol}',
-                                  style: AppTypography.labelLarge,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColors.positive.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: AppColors.positive.withValues(alpha: 0.3),
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  context.l10n.paidAmount,
-                                  style: AppTypography.labelSmall.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${debt.paidAmount} ${context.l10n.currencySymbol}',
-                                  style: AppTypography.labelLarge.copyWith(
-                                    color: AppColors.positive,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Progress bar
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              context.l10n.progress,
-                              style: AppTypography.labelLarge,
-                            ),
-                            Text(
-                              '${percentagePaid.toStringAsFixed(0)}%',
-                              style: AppTypography.labelLarge.copyWith(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: percentagePaid / 100,
-                            minHeight: 8,
-                            backgroundColor: AppColors.border,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              percentagePaid == 100
-                                  ? AppColors.positive
-                                  : AppColors.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Remaining amount
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.warning.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppColors.warning.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            context.l10n.remainingAmount,
-                            style: AppTypography.labelLarge.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '${debt.remainingAmount} ${context.l10n.currencySymbol}',
-                            style: AppTypography.headlineSmall.copyWith(
-                              color: AppColors.warning,
-                            ),
-                          ),
-                        ],
-                      ),
+                    AmountProgressCard(
+                      personLabel: context.l10n.creditorName,
+                      personName: debt.creditorName,
+                      totalAmount: debt.totalAmount,
+                      progressLabel: context.l10n.paidAmount,
+                      progressAmount: debt.paidAmount,
+                      remainingAmount: debt.remainingAmount,
+                      isCompleted: debt.isCompleted,
                     ),
                     const SizedBox(height: 20),
 
@@ -277,10 +131,11 @@ class _DebtDetailView extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           color: AppColors.card,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: AppColors.border),
                         ),
                         child: Text(
@@ -339,26 +194,53 @@ class _DebtDetailView extends StatelessWidget {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context) {
+  Future<void> _showDeleteConfirmation(BuildContext context) async {
     final cubit = context.read<DebtCubit>();
+    final currentState = cubit.state;
+    if (currentState is! DebtLoaded) return;
+    final debt = currentState.debt;
+
+    // Deleting a non-spent debt of the active cycle takes its amount back out
+    // of the balance (delete is only allowed before any payment).
+    final results = await Future.wait([
+      Injection.cycleRepository.getActiveCycle(),
+      Injection.getDashboardDataUseCase(),
+    ]);
+    final activeCycleId = (results[0] as FinancialCycleEntity?)?.id;
+    final balance = (results[1] as DashboardData).currentBalance;
+    final delta = !debt.isSpent &&
+            activeCycleId != null &&
+            debt.cycleId == activeCycleId
+        ? -debt.totalAmount
+        : 0;
+    final blocked = balance + delta < 0;
+
+    if (!context.mounted) return;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(context.l10n.deleteDebtTitle),
-        content: Text(context.l10n.deleteDebtBody),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(context.l10n.deleteDebtBody),
+            const SizedBox(height: 12),
+            BalanceImpactView(delta: delta, currentBalance: balance),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(context.l10n.cancel),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              final currentState = cubit.state;
-              if (currentState is DebtLoaded) {
-                cubit.deleteDebt(currentState.debt.id);
-              }
-            },
+            onPressed: blocked
+                ? null
+                : () {
+                    Navigator.pop(dialogContext);
+                    cubit.deleteDebt(debt.id);
+                  },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.negative,
               foregroundColor: Colors.white,
@@ -445,30 +327,9 @@ class _DebtDetailView extends StatelessWidget {
     );
   }
 
-  Future<int> _getCurrentBalance() async {
-    final cycle = await Injection.cycleRepository.getActiveCycle();
-    if (cycle == null) return 0;
-    final totalExpenses =
-        await Injection.expenseRepository.getTotalExpenses(cycle.id);
-    final totalIncome =
-        await Injection.incomeRepository.getTotalIncomeForCycle(cycle.id);
-    final totalDebtPayments =
-        await Injection.debtRepository.getTotalDebtPaymentsForCycle(cycle.id);
-    final totalDebtsCreated =
-        await Injection.debtRepository.getTotalDebtsCreatedForCycle(cycle.id);
-    final totalLendings =
-        await Injection.lendingRepository.getTotalLendingsFromBalanceForCycle(cycle.id);
-    final totalCollections =
-        await Injection.lendingRepository.getTotalCollectionsToBalanceForCycle(cycle.id);
-    return cycle.salaryAmount -
-        cycle.salarySplitAmount +
-        totalIncome +
-        totalDebtsCreated -
-        totalExpenses -
-        totalDebtPayments -
-        totalLendings +
-        totalCollections;
-  }
+  Future<int> _getCurrentBalance() async =>
+      // Shared formula: the active cycle balance, same as the dashboard
+      (await Injection.getDashboardDataUseCase()).currentBalance;
 }
 
 class _PaymentDialog extends StatefulWidget {
@@ -557,7 +418,8 @@ class _PaymentDialogState extends State<_PaymentDialog> {
               return;
             }
             if (amount > widget.maxAmount) {
-              setState(() => _errorText = l10n.amountExceedsRemaining('${widget.maxAmount}'));
+              setState(() => _errorText = l10n.amountExceedsRemaining(
+                  widget.maxAmount.toFormattedNumber()));
               return;
             }
             widget.onSubmit(amount, _fromSavings);
@@ -568,28 +430,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
     );
   }
 
-  Future<int> _getCurrentBalance() async {
-    final cycle = await Injection.cycleRepository.getActiveCycle();
-    if (cycle == null) return 0;
-    final totalExpenses =
-        await Injection.expenseRepository.getTotalExpenses(cycle.id);
-    final totalIncome =
-        await Injection.incomeRepository.getTotalIncomeForCycle(cycle.id);
-    final totalDebtPayments =
-        await Injection.debtRepository.getTotalDebtPaymentsForCycle(cycle.id);
-    final totalDebtsCreated =
-        await Injection.debtRepository.getTotalDebtsCreatedForCycle(cycle.id);
-    final totalLendings =
-        await Injection.lendingRepository.getTotalLendingsFromBalanceForCycle(cycle.id);
-    final totalCollections =
-        await Injection.lendingRepository.getTotalCollectionsToBalanceForCycle(cycle.id);
-    return cycle.salaryAmount -
-        cycle.salarySplitAmount +
-        totalIncome +
-        totalDebtsCreated -
-        totalExpenses -
-        totalDebtPayments -
-        totalLendings +
-        totalCollections;
-  }
+  Future<int> _getCurrentBalance() async =>
+      // Shared formula: the active cycle balance, same as the dashboard
+      (await Injection.getDashboardDataUseCase()).currentBalance;
 }

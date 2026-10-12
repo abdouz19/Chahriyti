@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../domain/value_objects/device_id.dart';
+import '../../core/storage/app_secure_storage.dart';
 
 class DeviceInfoService {
   static const _deviceIdKey = 'chahriyti_device_id';
   final _deviceInfo = DeviceInfoPlugin();
-  final _storage = const FlutterSecureStorage();
+  final _storage = appSecureStorage;
 
   Future<DeviceId> getDeviceId() async {
     // Try to get cached device ID first

@@ -56,7 +56,7 @@ extension ClassificationDisplay on FinancialClassification {
       case FinancialClassification.spendthrift:
         return 'قلل المصاريف غير الضرورية لتحسين وضعك 🎯';
       case FinancialClassification.danger:
-        return 'احذر! قد لا تكمل الدورة بأمان. خطط أفضل 🚨';
+        return 'احذر! قد لا تكمل الشهرية بأمان. خطط أفضل 🚨';
       case FinancialClassification.earlyBankruptcy:
         return 'أنفقت أكثر من دخلك. تحرك بسرعة! 🆘';
     }

@@ -111,4 +111,20 @@ void main() {
     // should compare against cycle 2 (most recent closed), not cycle 1
     expect(result.previousIncome, 45000);
   });
+
+  test('opening balance from setup is not income', () async {
+    cycleRepo.activeCycle = makeCycle(id: 2, salaryAmount: 80000);
+    cycleRepo.history = [
+      makeCycle(id: 1, isActive: false, salaryAmount: 80000,
+          startDate: DateTime(2024, 1, 1)),
+    ];
+    incomeRepo.setIncomes(1, [
+      makeIncome(cycleId: 1, description: 'رصيد أولي', amount: 500000),
+    ]);
+    incomeRepo.setIncomes(2, []);
+
+    final result = await useCase();
+    expect(result.previousIncome, 80000);
+    expect(result.growthPercent, 0);
+  });
 }

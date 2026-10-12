@@ -15,6 +15,8 @@ abstract class GoalEntity with _$GoalEntity {
     String? description,
     required DateTime createdAt,
     DateTime? completedAt,
+    int? purchasedAmount,
+    int? purchaseTransactionId,
   }) = _GoalEntity;
 
   bool get isCompleted => completedAt != null;

@@ -11,6 +11,8 @@ class Lendings extends Table {
   BoolColumn get fromSavings => boolean().withDefault(const Constant(false))();
   IntColumn get savingsAmount => integer().withDefault(const Constant(0))();
   IntColumn get cycleId => integer().nullable()();
+  // Deleted from the user's view; kept so its money movements stay counted.
+  BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }

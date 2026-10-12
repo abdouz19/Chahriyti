@@ -49,6 +49,12 @@ class FakeDebtRepository implements DebtRepository {
 }
 
 class FakeSavingsRepository implements SavingsRepository {
+  int netTransfersToBalance = 0;
+
+  @override
+  Future<int> getNetTransfersToBalanceForCycle(int cycleId) async =>
+      netTransfersToBalance;
+
   SavingsHistoryEntity? lastDeposit;
 
   @override

@@ -42,4 +42,7 @@ abstract class ExpenseRepository {
   Future<int> getTotalExpensesFromSavingsForCycle(int cycleId);
 
   Future<Map<String, int>> getExpensesByCategory(int cycleId);
+
+  /// Spent before the app, recorded at setup: in the balance, not spending.
+  Future<int> getSetupAdjustmentForCycle(int cycleId);
 }

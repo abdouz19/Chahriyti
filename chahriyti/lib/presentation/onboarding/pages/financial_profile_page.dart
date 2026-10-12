@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../shared/widgets/salary_day_picker.dart';
 import '../cubits/onboarding_cubit.dart';
 import '../widgets/onboarding_progress_dots.dart';
 import '../widgets/selection_card.dart';
@@ -19,7 +20,8 @@ class FinancialProfilePage extends StatefulWidget {
 
 class _FinancialProfilePageState extends State<FinancialProfilePage> {
   final _salaryController = TextEditingController();
-  int _salaryDay = 1;
+  // Nothing pre-selected: the user must choose their salary day
+  int? _salaryDay;
   bool _useCustomDay = false;
   String? _maritalStatus;
   bool? _tracksExpenses;
@@ -29,16 +31,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
   @override
   void initState() {
     super.initState();
-    final l = context.l10n;
-    _maritalOptions = [
-      l.financialProfileSingle,
-      l.financialProfileMarried,
-      l.financialProfileMarried1Child,
-      l.financialProfileMarried2Children,
-      l.financialProfileMarried3Children,
-      l.financialProfileMarried4PlusChildren,
-    ];
-    _expenseOptions = [l.financialProfileTracksYes, l.financialProfileTracksNo];
+    _salaryController.addListener(() => setState(() {}));
     final cubit = context.read<OnboardingCubit>();
     if (cubit.salary > 0) {
       _salaryController.text = cubit.salary.toString();
@@ -49,6 +42,23 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
     }
   }
 
+  // Translated texts: read here, not in initState (needs the localizations,
+  // and refreshes when the language changes)
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final l = context.l10n;
+    _maritalOptions = [
+      l.financialProfileSingle,
+      l.financialProfileMarried,
+      l.financialProfileMarried1Child,
+      l.financialProfileMarried2Children,
+      l.financialProfileMarried3Children,
+      l.financialProfileMarried4PlusChildren,
+    ];
+    _expenseOptions = [l.financialProfileTracksYes, l.financialProfileTracksNo];
+  }
+
   @override
   void dispose() {
     _salaryController.dispose();
@@ -56,34 +66,31 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
   }
 
   Future<void> _pickDay() async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime(now.year, now.month, _salaryDay.clamp(1, 28)),
-      firstDate: DateTime(now.year, now.month, 1),
-      lastDate: DateTime(now.year, now.month, 28),
-      helpText: context.l10n.salarySetupPickDayHelp,
-      locale: const Locale('ar'),
-    );
+    final picked = await showSalaryDayPicker(context, selected: _salaryDay);
     if (picked != null) {
-      setState(() => _salaryDay = picked.day);
+      setState(() => _salaryDay = picked);
+    } else if (_salaryDay == null) {
+      // Picker closed without a day: nothing is chosen yet
+      setState(() => _useCustomDay = false);
     }
   }
 
+  int get _salary =>
+      int.tryParse(_salaryController.text.replaceAll(',', '').trim()) ?? 0;
+
+  /// Every question answered: salary entered (0 is valid), salary day
+  /// chosen, marital status and expense tracking picked.
+  bool get _isComplete =>
+      _salaryController.text.trim().isNotEmpty &&
+      _salaryDay != null &&
+      _maritalStatus != null &&
+      _tracksExpenses != null;
+
   void _submit() {
-    final salary = int.tryParse(
-          _salaryController.text.replaceAll(',', '').trim(),
-        ) ??
-        0;
-    if (salary < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.financialProfileSalaryNegative)),
-      );
-      return;
-    }
+    if (!_isComplete) return;
     context.read<OnboardingCubit>().submitFinancial(
-          salary: salary,
-          salaryDay: _salaryDay,
+          salary: _salary,
+          salaryDay: _salaryDay!,
           maritalStatus: _maritalStatus,
           tracksExpenses: _tracksExpenses,
         );
@@ -155,7 +162,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                         children: [
                           _DayChip(
                             label: context.l10n.financialProfileStartOfMonth,
-                            selected: !_useCustomDay,
+                            selected: !_useCustomDay && _salaryDay == 1,
                             onTap: () => setState(() {
                               _useCustomDay = false;
                               _salaryDay = 1;
@@ -172,7 +179,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                           ),
                         ],
                       ),
-                      if (_useCustomDay) ...[
+                      if (_useCustomDay && _salaryDay != null) ...[
                         const SizedBox(height: 12),
                         GestureDetector(
                           onTap: _pickDay,
@@ -195,7 +202,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  context.l10n.financialProfileDayOfMonth(_salaryDay),
+                                  context.l10n.financialProfileDayOfMonth(_salaryDay!),
                                   style: AppTypography.bodyMedium.copyWith(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.w600,
@@ -263,12 +270,27 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
               // Bottom CTA
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _submit,
-                    child: Text(context.l10n.next),
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (!_isComplete)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          context.l10n.completeAllFieldsHint,
+                          style: AppTypography.bodySmall
+                              .copyWith(color: AppColors.textSecondary),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _isComplete ? _submit : null,
+                        child: Text(context.l10n.next),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

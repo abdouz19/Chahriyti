@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SavingsHistoryEntity {
 
- int get id; SavingsTransactionType get type; int get amount; String get description; int? get relatedCycleId; int? get relatedExpenseId; int? get relatedDebtPaymentId; int? get relatedLendingId; DateTime get createdAt;
+ int get id; SavingsTransactionType get type; int get amount; String get description; int? get relatedCycleId; int? get relatedExpenseId; int? get relatedDebtPaymentId; int? get relatedLendingId; DateTime get createdAt; SavingsRecordKind get kind;
 /// Create a copy of SavingsHistoryEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SavingsHistoryEntityCopyWith<SavingsHistoryEntity> get copyWith => _$SavingsHis
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavingsHistoryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.description, description) || other.description == description)&&(identical(other.relatedCycleId, relatedCycleId) || other.relatedCycleId == relatedCycleId)&&(identical(other.relatedExpenseId, relatedExpenseId) || other.relatedExpenseId == relatedExpenseId)&&(identical(other.relatedDebtPaymentId, relatedDebtPaymentId) || other.relatedDebtPaymentId == relatedDebtPaymentId)&&(identical(other.relatedLendingId, relatedLendingId) || other.relatedLendingId == relatedLendingId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavingsHistoryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.description, description) || other.description == description)&&(identical(other.relatedCycleId, relatedCycleId) || other.relatedCycleId == relatedCycleId)&&(identical(other.relatedExpenseId, relatedExpenseId) || other.relatedExpenseId == relatedExpenseId)&&(identical(other.relatedDebtPaymentId, relatedDebtPaymentId) || other.relatedDebtPaymentId == relatedDebtPaymentId)&&(identical(other.relatedLendingId, relatedLendingId) || other.relatedLendingId == relatedLendingId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.kind, kind) || other.kind == kind));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,amount,description,relatedCycleId,relatedExpenseId,relatedDebtPaymentId,relatedLendingId,createdAt);
+int get hashCode => Object.hash(runtimeType,id,type,amount,description,relatedCycleId,relatedExpenseId,relatedDebtPaymentId,relatedLendingId,createdAt,kind);
 
 @override
 String toString() {
-  return 'SavingsHistoryEntity(id: $id, type: $type, amount: $amount, description: $description, relatedCycleId: $relatedCycleId, relatedExpenseId: $relatedExpenseId, relatedDebtPaymentId: $relatedDebtPaymentId, relatedLendingId: $relatedLendingId, createdAt: $createdAt)';
+  return 'SavingsHistoryEntity(id: $id, type: $type, amount: $amount, description: $description, relatedCycleId: $relatedCycleId, relatedExpenseId: $relatedExpenseId, relatedDebtPaymentId: $relatedDebtPaymentId, relatedLendingId: $relatedLendingId, createdAt: $createdAt, kind: $kind)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SavingsHistoryEntityCopyWith<$Res>  {
   factory $SavingsHistoryEntityCopyWith(SavingsHistoryEntity value, $Res Function(SavingsHistoryEntity) _then) = _$SavingsHistoryEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, SavingsTransactionType type, int amount, String description, int? relatedCycleId, int? relatedExpenseId, int? relatedDebtPaymentId, int? relatedLendingId, DateTime createdAt
+ int id, SavingsTransactionType type, int amount, String description, int? relatedCycleId, int? relatedExpenseId, int? relatedDebtPaymentId, int? relatedLendingId, DateTime createdAt, SavingsRecordKind kind
 });
 
 
@@ -65,7 +65,7 @@ class _$SavingsHistoryEntityCopyWithImpl<$Res>
 
 /// Create a copy of SavingsHistoryEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? amount = null,Object? description = null,Object? relatedCycleId = freezed,Object? relatedExpenseId = freezed,Object? relatedDebtPaymentId = freezed,Object? relatedLendingId = freezed,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? amount = null,Object? description = null,Object? relatedCycleId = freezed,Object? relatedExpenseId = freezed,Object? relatedDebtPaymentId = freezed,Object? relatedLendingId = freezed,Object? createdAt = null,Object? kind = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,8 @@ as int?,relatedExpenseId: freezed == relatedExpenseId ? _self.relatedExpenseId :
 as int?,relatedDebtPaymentId: freezed == relatedDebtPaymentId ? _self.relatedDebtPaymentId : relatedDebtPaymentId // ignore: cast_nullable_to_non_nullable
 as int?,relatedLendingId: freezed == relatedLendingId ? _self.relatedLendingId : relatedLendingId // ignore: cast_nullable_to_non_nullable
 as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
+as SavingsRecordKind,
   ));
 }
 
@@ -161,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  SavingsTransactionType type,  int amount,  String description,  int? relatedCycleId,  int? relatedExpenseId,  int? relatedDebtPaymentId,  int? relatedLendingId,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  SavingsTransactionType type,  int amount,  String description,  int? relatedCycleId,  int? relatedExpenseId,  int? relatedDebtPaymentId,  int? relatedLendingId,  DateTime createdAt,  SavingsRecordKind kind)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SavingsHistoryEntity() when $default != null:
-return $default(_that.id,_that.type,_that.amount,_that.description,_that.relatedCycleId,_that.relatedExpenseId,_that.relatedDebtPaymentId,_that.relatedLendingId,_that.createdAt);case _:
+return $default(_that.id,_that.type,_that.amount,_that.description,_that.relatedCycleId,_that.relatedExpenseId,_that.relatedDebtPaymentId,_that.relatedLendingId,_that.createdAt,_that.kind);case _:
   return orElse();
 
 }
@@ -182,10 +183,10 @@ return $default(_that.id,_that.type,_that.amount,_that.description,_that.related
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  SavingsTransactionType type,  int amount,  String description,  int? relatedCycleId,  int? relatedExpenseId,  int? relatedDebtPaymentId,  int? relatedLendingId,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  SavingsTransactionType type,  int amount,  String description,  int? relatedCycleId,  int? relatedExpenseId,  int? relatedDebtPaymentId,  int? relatedLendingId,  DateTime createdAt,  SavingsRecordKind kind)  $default,) {final _that = this;
 switch (_that) {
 case _SavingsHistoryEntity():
-return $default(_that.id,_that.type,_that.amount,_that.description,_that.relatedCycleId,_that.relatedExpenseId,_that.relatedDebtPaymentId,_that.relatedLendingId,_that.createdAt);case _:
+return $default(_that.id,_that.type,_that.amount,_that.description,_that.relatedCycleId,_that.relatedExpenseId,_that.relatedDebtPaymentId,_that.relatedLendingId,_that.createdAt,_that.kind);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +203,10 @@ return $default(_that.id,_that.type,_that.amount,_that.description,_that.related
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  SavingsTransactionType type,  int amount,  String description,  int? relatedCycleId,  int? relatedExpenseId,  int? relatedDebtPaymentId,  int? relatedLendingId,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  SavingsTransactionType type,  int amount,  String description,  int? relatedCycleId,  int? relatedExpenseId,  int? relatedDebtPaymentId,  int? relatedLendingId,  DateTime createdAt,  SavingsRecordKind kind)?  $default,) {final _that = this;
 switch (_that) {
 case _SavingsHistoryEntity() when $default != null:
-return $default(_that.id,_that.type,_that.amount,_that.description,_that.relatedCycleId,_that.relatedExpenseId,_that.relatedDebtPaymentId,_that.relatedLendingId,_that.createdAt);case _:
+return $default(_that.id,_that.type,_that.amount,_that.description,_that.relatedCycleId,_that.relatedExpenseId,_that.relatedDebtPaymentId,_that.relatedLendingId,_that.createdAt,_that.kind);case _:
   return null;
 
 }
@@ -217,7 +218,7 @@ return $default(_that.id,_that.type,_that.amount,_that.description,_that.related
 @JsonSerializable()
 
 class _SavingsHistoryEntity implements SavingsHistoryEntity {
-  const _SavingsHistoryEntity({required this.id, required this.type, required this.amount, required this.description, this.relatedCycleId, this.relatedExpenseId, this.relatedDebtPaymentId, this.relatedLendingId, required this.createdAt});
+  const _SavingsHistoryEntity({required this.id, required this.type, required this.amount, required this.description, this.relatedCycleId, this.relatedExpenseId, this.relatedDebtPaymentId, this.relatedLendingId, required this.createdAt, this.kind = SavingsRecordKind.other});
   factory _SavingsHistoryEntity.fromJson(Map<String, dynamic> json) => _$SavingsHistoryEntityFromJson(json);
 
 @override final  int id;
@@ -229,6 +230,7 @@ class _SavingsHistoryEntity implements SavingsHistoryEntity {
 @override final  int? relatedDebtPaymentId;
 @override final  int? relatedLendingId;
 @override final  DateTime createdAt;
+@override@JsonKey() final  SavingsRecordKind kind;
 
 /// Create a copy of SavingsHistoryEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavingsHistoryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.description, description) || other.description == description)&&(identical(other.relatedCycleId, relatedCycleId) || other.relatedCycleId == relatedCycleId)&&(identical(other.relatedExpenseId, relatedExpenseId) || other.relatedExpenseId == relatedExpenseId)&&(identical(other.relatedDebtPaymentId, relatedDebtPaymentId) || other.relatedDebtPaymentId == relatedDebtPaymentId)&&(identical(other.relatedLendingId, relatedLendingId) || other.relatedLendingId == relatedLendingId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavingsHistoryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.description, description) || other.description == description)&&(identical(other.relatedCycleId, relatedCycleId) || other.relatedCycleId == relatedCycleId)&&(identical(other.relatedExpenseId, relatedExpenseId) || other.relatedExpenseId == relatedExpenseId)&&(identical(other.relatedDebtPaymentId, relatedDebtPaymentId) || other.relatedDebtPaymentId == relatedDebtPaymentId)&&(identical(other.relatedLendingId, relatedLendingId) || other.relatedLendingId == relatedLendingId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.kind, kind) || other.kind == kind));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,amount,description,relatedCycleId,relatedExpenseId,relatedDebtPaymentId,relatedLendingId,createdAt);
+int get hashCode => Object.hash(runtimeType,id,type,amount,description,relatedCycleId,relatedExpenseId,relatedDebtPaymentId,relatedLendingId,createdAt,kind);
 
 @override
 String toString() {
-  return 'SavingsHistoryEntity(id: $id, type: $type, amount: $amount, description: $description, relatedCycleId: $relatedCycleId, relatedExpenseId: $relatedExpenseId, relatedDebtPaymentId: $relatedDebtPaymentId, relatedLendingId: $relatedLendingId, createdAt: $createdAt)';
+  return 'SavingsHistoryEntity(id: $id, type: $type, amount: $amount, description: $description, relatedCycleId: $relatedCycleId, relatedExpenseId: $relatedExpenseId, relatedDebtPaymentId: $relatedDebtPaymentId, relatedLendingId: $relatedLendingId, createdAt: $createdAt, kind: $kind)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$SavingsHistoryEntityCopyWith<$Res> implements $SavingsHis
   factory _$SavingsHistoryEntityCopyWith(_SavingsHistoryEntity value, $Res Function(_SavingsHistoryEntity) _then) = __$SavingsHistoryEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, SavingsTransactionType type, int amount, String description, int? relatedCycleId, int? relatedExpenseId, int? relatedDebtPaymentId, int? relatedLendingId, DateTime createdAt
+ int id, SavingsTransactionType type, int amount, String description, int? relatedCycleId, int? relatedExpenseId, int? relatedDebtPaymentId, int? relatedLendingId, DateTime createdAt, SavingsRecordKind kind
 });
 
 
@@ -280,7 +282,7 @@ class __$SavingsHistoryEntityCopyWithImpl<$Res>
 
 /// Create a copy of SavingsHistoryEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? amount = null,Object? description = null,Object? relatedCycleId = freezed,Object? relatedExpenseId = freezed,Object? relatedDebtPaymentId = freezed,Object? relatedLendingId = freezed,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? amount = null,Object? description = null,Object? relatedCycleId = freezed,Object? relatedExpenseId = freezed,Object? relatedDebtPaymentId = freezed,Object? relatedLendingId = freezed,Object? createdAt = null,Object? kind = null,}) {
   return _then(_SavingsHistoryEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -291,7 +293,8 @@ as int?,relatedExpenseId: freezed == relatedExpenseId ? _self.relatedExpenseId :
 as int?,relatedDebtPaymentId: freezed == relatedDebtPaymentId ? _self.relatedDebtPaymentId : relatedDebtPaymentId // ignore: cast_nullable_to_non_nullable
 as int?,relatedLendingId: freezed == relatedLendingId ? _self.relatedLendingId : relatedLendingId // ignore: cast_nullable_to_non_nullable
 as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
+as SavingsRecordKind,
   ));
 }
 

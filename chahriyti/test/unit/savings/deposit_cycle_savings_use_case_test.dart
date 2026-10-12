@@ -58,6 +58,12 @@ class FakeDebtRepository implements DebtRepository {
 }
 
 class FakeSavingsRepository implements SavingsRepository {
+  int netTransfersToBalance = 0;
+
+  @override
+  Future<int> getNetTransfersToBalanceForCycle(int cycleId) async =>
+      netTransfersToBalance;
+
   SavingsHistoryEntity? lastDeposit;
 
   @override
@@ -154,5 +160,17 @@ void main() {
 
     expect(result, isNull);
     expect(savingsRepo.lastDeposit, isNull);
+  });
+
+  test('saved leftover matches the dashboard balance', () async {
+    cycleRepo.activeCycle = makeCycle(salary: 50000);
+    expenseRepo.totalExpenses = 30000;
+    debtRepo.totalDebtsCreated = 8000; // borrowed, not spent
+    savingsRepo.netTransfersToBalance = -5000; // moved 5000 into savings
+    // remaining = 50000 + 8000 - 5000 - 30000 = 23000
+
+    final result = await useCase(1);
+
+    expect(result!.amount, 23000);
   });
 }

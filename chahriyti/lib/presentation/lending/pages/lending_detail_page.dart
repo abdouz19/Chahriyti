@@ -11,6 +11,8 @@ import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
+import '../../../domain/value_objects/lending_money_place.dart';
+import '../../shared/widgets/amount_progress_card.dart';
 import '../../shared/widgets/money_text.dart';
 import '../cubits/lending_cubit.dart';
 import '../cubits/lending_state.dart';
@@ -127,11 +129,6 @@ class _LendingDetailView extends StatelessWidget {
 
             return state.maybeWhen(
               lendingLoaded: (lending, collections) {
-                final percentageCollected = lending.totalAmount > 0
-                    ? (lending.collectedAmount /
-                            lending.totalAmount.toDouble()) *
-                        100
-                    : 0.0;
                 final locale = Localizations.localeOf(context).languageCode;
                 final dateFormat = DateFormat('yyyy/MM/dd', locale);
 
@@ -140,198 +137,50 @@ class _LendingDetailView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Borrower name card
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: AppColors.primary.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      AmountProgressCard(
+                        personLabel: context.l10n.borrowerName,
+                        personName: lending.borrowerName,
+                        totalAmount: lending.totalAmount,
+                        progressLabel: context.l10n.collectedAmount,
+                        progressAmount: lending.collectedAmount,
+                        remainingAmount: lending.remainingAmount,
+                        isCompleted: lending.isFullyCollected,
+                        footer: Row(
                           children: [
+                            Icon(Icons.calendar_today_rounded,
+                                size: 16, color: AppColors.textSecondary),
+                            const SizedBox(width: 8),
                             Text(
-                              context.l10n.borrowerName,
-                              style: AppTypography.labelLarge.copyWith(
+                              dateFormat
+                                  .format(lending.createdAt)
+                                  .toLatinDigits(),
+                              style: AppTypography.bodySmall.copyWith(
                                 color: AppColors.textSecondary,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const Spacer(),
+                            Icon(
+                              lending.isUntracked
+                                  ? Icons.history_rounded
+                                  : lending.fromSavings
+                                      ? Icons.savings_rounded
+                                      : Icons.account_balance_wallet_rounded,
+                              size: 16,
+                              color: AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 8),
                             Text(
-                              lending.borrowerName,
-                              style: AppTypography.headlineSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Amount info row
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: AppColors.card,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppColors.border),
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    context.l10n.totalAmount,
-                                    style: AppTypography.labelSmall.copyWith(
-                                      color: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  MoneyText(
-                                    amount: Money(lending.totalAmount),
-                                    style: AppTypography.labelLarge,
-                                    color: AppColors.primary,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color:
-                                    AppColors.positive.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: AppColors.positive
-                                      .withValues(alpha: 0.3),
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    context.l10n.collectedAmount,
-                                    style: AppTypography.labelSmall.copyWith(
-                                      color: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  MoneyText(
-                                    amount: Money(lending.collectedAmount),
-                                    style: AppTypography.labelLarge,
-                                    color: AppColors.positive,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Progress bar
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                context.l10n.progress,
-                                style: AppTypography.labelLarge,
-                              ),
-                              Text(
-                                '${percentageCollected.toStringAsFixed(0)}%',
-                                style: AppTypography.labelLarge.copyWith(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: LinearProgressIndicator(
-                              value: percentageCollected / 100,
-                              minHeight: 8,
-                              backgroundColor: AppColors.border,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                percentageCollected >= 100
-                                    ? AppColors.positive
-                                    : AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Remaining amount
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.warning.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: AppColors.warning.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              context.l10n.remainingAmount,
-                              style: AppTypography.labelLarge.copyWith(
+                              lending.isUntracked
+                                  ? context.l10n.forgottenAdjustment
+                                  : lending.fromSavings
+                                      ? context.l10n.fromSavings
+                                      : context.l10n.fromBalance,
+                              style: AppTypography.bodySmall.copyWith(
                                 color: AppColors.textSecondary,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            MoneyText(
-                              amount: Money(lending.remainingAmount),
-                              style: AppTypography.headlineSmall,
-                              color: lending.remainingAmount > 0
-                                  ? AppColors.warning
-                                  : AppColors.positive,
-                            ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Date + source info
-                      Row(
-                        children: [
-                          Icon(Icons.calendar_today_rounded,
-                              size: 16, color: AppColors.textSecondary),
-                          const SizedBox(width: 8),
-                          Text(
-                            dateFormat.format(lending.createdAt).toLatinDigits(),
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Icon(
-                            lending.fromSavings
-                                ? Icons.savings_rounded
-                                : Icons.account_balance_wallet_rounded,
-                            size: 16,
-                            color: AppColors.textSecondary,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            lending.fromSavings
-                                ? context.l10n.fromSavings
-                                : context.l10n.fromBalance,
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
                       ),
                       const SizedBox(height: 20),
 
@@ -345,10 +194,10 @@ class _LendingDetailView extends StatelessWidget {
                         const SizedBox(height: 8),
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
                             color: AppColors.card,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(16),
                             border: Border.all(color: AppColors.border),
                           ),
                           child: Text(
@@ -500,13 +349,12 @@ class _LendingDetailView extends StatelessWidget {
     }
 
     // Fetch balances for display
-    final cycleId = lending.cycleId ?? 0;
-    final currentBalance = await _computeBalance(cycleId);
+    final currentBalance = await _currentBalance();
     final savingsBalance = await Injection.getSavingsBalanceUseCase();
 
     if (!context.mounted) return;
     final l10n = context.l10n;
-    final source = await showModalBottomSheet<LendingDeltaSource>(
+    final source = await showModalBottomSheet<LendingMoneyPlace>(
       context: context,
       isScrollControlled: true,
       builder: (_) => LendingDeltaAdjustmentSheet(
@@ -520,16 +368,7 @@ class _LendingDetailView extends StatelessWidget {
     );
     if (source == null || !context.mounted) return;
 
-    // Move remaining to savings before deleting
-    // (lending deletion auto-returns remainingAmount to balance;
-    //  deposit moves it from balance → savings)
-    if (source == LendingDeltaSource.savings) {
-      await Injection.depositFromBalanceUseCase(amount: lending.remainingAmount);
-    }
-    // balance/forgotten: balance formula auto-adjusts on delete, no extra ops
-
-    if (!context.mounted) return;
-    cubit.deleteLending(lendingId);
+    cubit.deleteLending(lendingId, remainingTo: source);
   }
 
   void _showSimpleDeleteConfirmation(BuildContext context, LendingCubit cubit) {
@@ -559,39 +398,15 @@ class _LendingDetailView extends StatelessWidget {
     );
   }
 
-  Future<int> _computeBalance(int cycleId) async {
-    final totalExpenses =
-        await Injection.expenseRepository.getTotalExpenses(cycleId);
-    final totalIncome =
-        await Injection.incomeRepository.getTotalIncomeForCycle(cycleId);
-    final totalDebtPayments =
-        await Injection.debtRepository.getTotalDebtPaymentsForCycle(cycleId);
-    final totalDebtsCreated =
-        await Injection.debtRepository.getTotalDebtsCreatedForCycle(cycleId);
-    final totalLendings =
-        await Injection.lendingRepository.getTotalLendingsFromBalanceForCycle(cycleId);
-    final totalCollections =
-        await Injection.lendingRepository.getTotalCollectionsToBalanceForCycle(cycleId);
-    final cycle = await Injection.cycleRepository.getCycleById(cycleId);
-    if (cycle == null) return 0;
-    return cycle.salaryAmount -
-        cycle.salarySplitAmount +
-        totalIncome +
-        totalDebtsCreated -
-        totalExpenses -
-        totalDebtPayments -
-        totalLendings +
-        totalCollections;
-  }
+  // Balance of the active cycle — collected money always lands there,
+  // even for a lending made in an older cycle.
+  Future<int> _currentBalance() async =>
+      (await Injection.getDashboardDataUseCase()).currentBalance;
 
   Future<void> _showAddCollectionDialog(BuildContext context, int maxAmount) async {
     final cubit = context.read<LendingCubit>();
 
-    final currentState = cubit.state;
-    final cycleId = currentState is LendingLoaded
-        ? (currentState.lending.cycleId ?? 0)
-        : 0;
-    final currentBalance = await _computeBalance(cycleId);
+    final currentBalance = await _currentBalance();
     final savingsBalance = await Injection.getSavingsBalanceUseCase();
 
     if (!context.mounted) return;

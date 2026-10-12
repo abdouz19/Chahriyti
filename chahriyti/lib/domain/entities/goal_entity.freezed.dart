@@ -17,7 +17,7 @@ mixin _$GoalEntity {
 
  int get id; String get name; int get targetAmount;// in centimes
  int get savedAmount;// in centimes
- String? get description; DateTime get createdAt; DateTime? get completedAt;
+ String? get description; DateTime get createdAt; DateTime? get completedAt; int? get purchasedAmount; int? get purchaseTransactionId;
 /// Create a copy of GoalEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +30,16 @@ $GoalEntityCopyWith<GoalEntity> get copyWith => _$GoalEntityCopyWithImpl<GoalEnt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.targetAmount, targetAmount) || other.targetAmount == targetAmount)&&(identical(other.savedAmount, savedAmount) || other.savedAmount == savedAmount)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.targetAmount, targetAmount) || other.targetAmount == targetAmount)&&(identical(other.savedAmount, savedAmount) || other.savedAmount == savedAmount)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.purchasedAmount, purchasedAmount) || other.purchasedAmount == purchasedAmount)&&(identical(other.purchaseTransactionId, purchaseTransactionId) || other.purchaseTransactionId == purchaseTransactionId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,targetAmount,savedAmount,description,createdAt,completedAt);
+int get hashCode => Object.hash(runtimeType,id,name,targetAmount,savedAmount,description,createdAt,completedAt,purchasedAmount,purchaseTransactionId);
 
 @override
 String toString() {
-  return 'GoalEntity(id: $id, name: $name, targetAmount: $targetAmount, savedAmount: $savedAmount, description: $description, createdAt: $createdAt, completedAt: $completedAt)';
+  return 'GoalEntity(id: $id, name: $name, targetAmount: $targetAmount, savedAmount: $savedAmount, description: $description, createdAt: $createdAt, completedAt: $completedAt, purchasedAmount: $purchasedAmount, purchaseTransactionId: $purchaseTransactionId)';
 }
 
 
@@ -50,7 +50,7 @@ abstract mixin class $GoalEntityCopyWith<$Res>  {
   factory $GoalEntityCopyWith(GoalEntity value, $Res Function(GoalEntity) _then) = _$GoalEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, int targetAmount, int savedAmount, String? description, DateTime createdAt, DateTime? completedAt
+ int id, String name, int targetAmount, int savedAmount, String? description, DateTime createdAt, DateTime? completedAt, int? purchasedAmount, int? purchaseTransactionId
 });
 
 
@@ -67,7 +67,7 @@ class _$GoalEntityCopyWithImpl<$Res>
 
 /// Create a copy of GoalEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? targetAmount = null,Object? savedAmount = null,Object? description = freezed,Object? createdAt = null,Object? completedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? targetAmount = null,Object? savedAmount = null,Object? description = freezed,Object? createdAt = null,Object? completedAt = freezed,Object? purchasedAmount = freezed,Object? purchaseTransactionId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,9 @@ as int,savedAmount: null == savedAmount ? _self.savedAmount : savedAmount // ign
 as int,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,completedAt: freezed == completedAt ? _self.completedAt : completedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,purchasedAmount: freezed == purchasedAmount ? _self.purchasedAmount : purchasedAmount // ignore: cast_nullable_to_non_nullable
+as int?,purchaseTransactionId: freezed == purchaseTransactionId ? _self.purchaseTransactionId : purchaseTransactionId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -161,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int targetAmount,  int savedAmount,  String? description,  DateTime createdAt,  DateTime? completedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int targetAmount,  int savedAmount,  String? description,  DateTime createdAt,  DateTime? completedAt,  int? purchasedAmount,  int? purchaseTransactionId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GoalEntity() when $default != null:
-return $default(_that.id,_that.name,_that.targetAmount,_that.savedAmount,_that.description,_that.createdAt,_that.completedAt);case _:
+return $default(_that.id,_that.name,_that.targetAmount,_that.savedAmount,_that.description,_that.createdAt,_that.completedAt,_that.purchasedAmount,_that.purchaseTransactionId);case _:
   return orElse();
 
 }
@@ -182,10 +184,10 @@ return $default(_that.id,_that.name,_that.targetAmount,_that.savedAmount,_that.d
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int targetAmount,  int savedAmount,  String? description,  DateTime createdAt,  DateTime? completedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int targetAmount,  int savedAmount,  String? description,  DateTime createdAt,  DateTime? completedAt,  int? purchasedAmount,  int? purchaseTransactionId)  $default,) {final _that = this;
 switch (_that) {
 case _GoalEntity():
-return $default(_that.id,_that.name,_that.targetAmount,_that.savedAmount,_that.description,_that.createdAt,_that.completedAt);case _:
+return $default(_that.id,_that.name,_that.targetAmount,_that.savedAmount,_that.description,_that.createdAt,_that.completedAt,_that.purchasedAmount,_that.purchaseTransactionId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +204,10 @@ return $default(_that.id,_that.name,_that.targetAmount,_that.savedAmount,_that.d
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int targetAmount,  int savedAmount,  String? description,  DateTime createdAt,  DateTime? completedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int targetAmount,  int savedAmount,  String? description,  DateTime createdAt,  DateTime? completedAt,  int? purchasedAmount,  int? purchaseTransactionId)?  $default,) {final _that = this;
 switch (_that) {
 case _GoalEntity() when $default != null:
-return $default(_that.id,_that.name,_that.targetAmount,_that.savedAmount,_that.description,_that.createdAt,_that.completedAt);case _:
+return $default(_that.id,_that.name,_that.targetAmount,_that.savedAmount,_that.description,_that.createdAt,_that.completedAt,_that.purchasedAmount,_that.purchaseTransactionId);case _:
   return null;
 
 }
@@ -217,7 +219,7 @@ return $default(_that.id,_that.name,_that.targetAmount,_that.savedAmount,_that.d
 @JsonSerializable()
 
 class _GoalEntity extends GoalEntity {
-  const _GoalEntity({required this.id, required this.name, required this.targetAmount, this.savedAmount = 0, this.description, required this.createdAt, this.completedAt}): super._();
+  const _GoalEntity({required this.id, required this.name, required this.targetAmount, this.savedAmount = 0, this.description, required this.createdAt, this.completedAt, this.purchasedAmount, this.purchaseTransactionId}): super._();
   factory _GoalEntity.fromJson(Map<String, dynamic> json) => _$GoalEntityFromJson(json);
 
 @override final  int id;
@@ -229,6 +231,8 @@ class _GoalEntity extends GoalEntity {
 @override final  String? description;
 @override final  DateTime createdAt;
 @override final  DateTime? completedAt;
+@override final  int? purchasedAmount;
+@override final  int? purchaseTransactionId;
 
 /// Create a copy of GoalEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoalEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.targetAmount, targetAmount) || other.targetAmount == targetAmount)&&(identical(other.savedAmount, savedAmount) || other.savedAmount == savedAmount)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoalEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.targetAmount, targetAmount) || other.targetAmount == targetAmount)&&(identical(other.savedAmount, savedAmount) || other.savedAmount == savedAmount)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.purchasedAmount, purchasedAmount) || other.purchasedAmount == purchasedAmount)&&(identical(other.purchaseTransactionId, purchaseTransactionId) || other.purchaseTransactionId == purchaseTransactionId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,targetAmount,savedAmount,description,createdAt,completedAt);
+int get hashCode => Object.hash(runtimeType,id,name,targetAmount,savedAmount,description,createdAt,completedAt,purchasedAmount,purchaseTransactionId);
 
 @override
 String toString() {
-  return 'GoalEntity(id: $id, name: $name, targetAmount: $targetAmount, savedAmount: $savedAmount, description: $description, createdAt: $createdAt, completedAt: $completedAt)';
+  return 'GoalEntity(id: $id, name: $name, targetAmount: $targetAmount, savedAmount: $savedAmount, description: $description, createdAt: $createdAt, completedAt: $completedAt, purchasedAmount: $purchasedAmount, purchaseTransactionId: $purchaseTransactionId)';
 }
 
 
@@ -263,7 +267,7 @@ abstract mixin class _$GoalEntityCopyWith<$Res> implements $GoalEntityCopyWith<$
   factory _$GoalEntityCopyWith(_GoalEntity value, $Res Function(_GoalEntity) _then) = __$GoalEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, int targetAmount, int savedAmount, String? description, DateTime createdAt, DateTime? completedAt
+ int id, String name, int targetAmount, int savedAmount, String? description, DateTime createdAt, DateTime? completedAt, int? purchasedAmount, int? purchaseTransactionId
 });
 
 
@@ -280,7 +284,7 @@ class __$GoalEntityCopyWithImpl<$Res>
 
 /// Create a copy of GoalEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? targetAmount = null,Object? savedAmount = null,Object? description = freezed,Object? createdAt = null,Object? completedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? targetAmount = null,Object? savedAmount = null,Object? description = freezed,Object? createdAt = null,Object? completedAt = freezed,Object? purchasedAmount = freezed,Object? purchaseTransactionId = freezed,}) {
   return _then(_GoalEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -289,7 +293,9 @@ as int,savedAmount: null == savedAmount ? _self.savedAmount : savedAmount // ign
 as int,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,completedAt: freezed == completedAt ? _self.completedAt : completedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,purchasedAmount: freezed == purchasedAmount ? _self.purchasedAmount : purchasedAmount // ignore: cast_nullable_to_non_nullable
+as int?,purchaseTransactionId: freezed == purchaseTransactionId ? _self.purchaseTransactionId : purchaseTransactionId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

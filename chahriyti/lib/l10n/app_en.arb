@@ -396,7 +396,7 @@
   "@appliesFromNextCycle": {},
   "confirmEditSalaryDay": "Confirm salary day change",
   "@confirmEditSalaryDay": {},
-  "newSalaryDayConfirmBody": "The new salary day (Day {day}) will apply from your next cycle.\nThe current cycle will not be affected.",
+  "newSalaryDayConfirmBody": "The new salary day (day {day}) applies. Your current cycle will end the day before the next salary.",
   "@newSalaryDayConfirmBody": {
     "placeholders": {
       "day": { "type": "int" }
@@ -408,7 +408,7 @@
   "@enterNewSalary": {},
   "salaryRequired": "Salary is required",
   "@salaryRequired": {},
-  "salaryMustBePositive": "Salary must be greater than zero",
+  "salaryMustBePositive": "Enter a valid number (0 or more)",
   "@salaryMustBePositive": {},
   "confirmEditSalary": "Confirm salary change",
   "@confirmEditSalary": {},
@@ -427,7 +427,7 @@
   "languageEn": "English",
   "@languageEn": {},
 
-  "resetWarningBody": "You will delete all your financial data including:\n\n• All expenses\n• All debts and payments\n• All lendings\n• All goals and savings\n• Financial cycle history\n\nOnly your salary and salary day will be kept.\n\nThis action cannot be undone.",
+  "resetWarningBody": "You are about to erase all your financial data, including:\n\n• all expenses and incomes\n• all debts and payments\n• all lendings\n• all goals and savings\n• custom categories\n• cycle history\n\nYour account, activation, salary and salary day are kept.\n\nThis action can't be undone.",
   "@resetWarningBody": {},
   "cannotBeUndone": "You won't be able to recover any data after this step.\n\nDo you want to continue?",
   "@cannotBeUndone": {},
@@ -593,11 +593,11 @@
   "@nameRequired": {},
   "amountMustBePositive": "Amount must be greater than zero",
   "@amountMustBePositive": {},
-  "debtIsSpentQuestion": "Has this amount been spent?",
+  "debtIsSpentQuestion": "Did you spend this amount before recording it?",
   "@debtIsSpentQuestion": {},
-  "debtIsSpentDesc": "Amount has been spent and is no longer in your balance",
+  "debtIsSpentDesc": "Already spent, not counted in your balance",
   "@debtIsSpentDesc": {},
-  "debtNotSpentDesc": "Amount is still in your balance",
+  "debtNotSpentDesc": "Counted in your balance, record its expenses later",
   "@debtNotSpentDesc": {},
 
   "currentBalance": "Current Balance",
@@ -1074,9 +1074,9 @@
   "@savingsRateShort": {
     "placeholders": { "rate": { "type": "String" } }
   },
-  "deleteCategory": "Delete Category",
+  "deleteCategory": "Hide category",
   "@deleteCategory": {},
-  "deleteCategoryConfirm": "Do you want to delete the \"{name}\" category?",
+  "deleteCategoryConfirm": "\"{name}\" will be removed from the list. Expenses already recorded with it stay unchanged.",
   "@deleteCategoryConfirm": {
     "placeholders": { "name": { "type": "String" } }
   },
@@ -1229,7 +1229,7 @@
   },
   "celebrationWelcome": "Welcome to Chahriyti!",
   "@celebrationWelcome": {},
-  "celebrationTagline": "Chahriyti is happy to have you",
+  "celebrationTagline": "One step away from taking control of your salary",
   "@celebrationTagline": {},
   "celebrationBody": "We are now in contact with you. We will reach out soon to help you and complete the steps to get Chahriyti.",
   "@celebrationBody": {},
@@ -1371,5 +1371,373 @@
     "placeholders": { "name": { "type": "String" } }
   },
   "amountMillionShort": "M",
-  "@amountMillionShort": { "description": "Abbreviation for million in chart axis labels" }
+  "@amountMillionShort": { "description": "Abbreviation for million in chart axis labels" },
+  "debtImpactAdd": "{amount} will be added to your current balance",
+  "@debtImpactAdd": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "debtImpactDeduct": "{amount} will be deducted from your current balance",
+  "@debtImpactDeduct": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "debtImpactNone": "No effect on your current balance",
+  "@debtImpactNone": {},
+  "debtImpactPastCycle": "This debt belongs to a previous cycle. Editing it does not affect your current balance",
+  "@debtImpactPastCycle": {},
+  "debtImpactInsufficientBalance": "Your current balance ({balance}) isn't enough to deduct {amount}.",
+  "@debtImpactInsufficientBalance": {
+    "placeholders": { "balance": { "type": "String" }, "amount": { "type": "String" } }
+  },
+  "debtSpentDoubleCountHint": "If you already recorded expenses from this money, they are already deducted from your balance. Don't enable this option.",
+  "@debtSpentDoubleCountHint": {},
+  "debtConfirmEditTitle": "Confirm edit",
+  "@debtConfirmEditTitle": {},
+  "debtAmountBelowPaid": "Amount can't be less than what you already paid ({paid})",
+  "@debtAmountBelowPaid": {
+    "placeholders": { "paid": { "type": "String" } }
+  },
+  "lendingAmountBelowCollected": "Amount can't be less than what was already collected ({collected})",
+  "@lendingAmountBelowCollected": {
+    "placeholders": { "collected": { "type": "String" } }
+  },
+  "purchasePriceQuestion": "How much did you actually pay for \"{name}\"?",
+  "@purchasePriceQuestion": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "purchaseDeductNote": "This amount will be deducted from your savings.",
+  "@purchaseDeductNote": {},
+  "purchasedFor": "Bought for {amount}",
+  "@purchasedFor": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "undoPurchase": "Undo purchase",
+  "@undoPurchase": {},
+  "undoPurchaseBody": "{amount} will go back to your savings and the goal will be active again.",
+  "@undoPurchaseBody": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "purchaseUndone": "Purchase undone",
+  "@purchaseUndone": {},
+  "goalsShareSavingsNote": "Your savings are shared by all your goals. Buying one lowers the progress of the others.",
+  "@goalsShareSavingsNote": {},
+  "applySalaryToCurrentCycle": "Also apply to the current cycle",
+  "@applySalaryToCurrentCycle": {},
+  "applySalaryToCurrentCycleDesc": "To fix a mistake or a raise received this month",
+  "@applySalaryToCurrentCycleDesc": {},
+  "newSalaryConfirmBodyNow": "The new salary ({amount}) will apply to the current cycle and the next ones.",
+  "@newSalaryConfirmBodyNow": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "salaryDayChangeConfirmBody": "Your current cycle will end on {endDate} and the new one will start on {startDate}.",
+  "@salaryDayChangeConfirmBody": {
+    "placeholders": { "endDate": { "type": "String" }, "startDate": { "type": "String" } }
+  },
+  "pastCycleExpenseLocked": "Expenses from previous cycles are closed and can't be edited",
+  "@pastCycleExpenseLocked": {},
+  "savDescInitial": "Initial savings",
+  "@savDescInitial": {},
+  "savDescDepositFromBalance": "Deposit from balance",
+  "@savDescDepositFromBalance": {},
+  "savDescWithdrawToBalance": "Withdrawal to balance",
+  "@savDescWithdrawToBalance": {},
+  "savDescCycleEnd": "End-of-cycle savings",
+  "@savDescCycleEnd": {},
+  "savDescSalarySplit": "Salary split",
+  "@savDescSalarySplit": {},
+  "savDescGoalPurchase": "Goal purchase - {name}",
+  "@savDescGoalPurchase": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "savDescGoalPurchaseUndo": "Goal purchase undone - {name}",
+  "@savDescGoalPurchaseUndo": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "savDescLending": "Lending - {name}",
+  "@savDescLending": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "savDescLendingCollection": "Lending collected - {name}",
+  "@savDescLendingCollection": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "savDescLendingEdit": "Lending edit - {name}",
+  "@savDescLendingEdit": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "savDescDebtPayment": "Debt payment - {name}",
+  "@savDescDebtPayment": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "savDescIncome": "Income - {name}",
+  "@savDescIncome": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "savingsImpactAdd": "{amount} will be added to your savings",
+  "@savingsImpactAdd": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "savingsImpactDeduct": "{amount} will be deducted from your savings",
+  "@savingsImpactDeduct": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "savingsImpactNone": "No effect on your savings",
+  "@savingsImpactNone": {},
+  "savingsImpactInsufficient": "Your savings ({balance}) aren't enough to deduct {amount}.",
+  "@savingsImpactInsufficient": {
+    "placeholders": { "balance": { "type": "String" }, "amount": { "type": "String" } }
+  },
+  "incomeToBalanceTag": "Balance",
+  "@incomeToBalanceTag": {},
+  "incomeToSavingsTag": "Savings",
+  "@incomeToSavingsTag": {},
+  "openingBalance": "Opening balance",
+  "@openingBalance": {},
+  "statSectionThisCycle": "This cycle",
+  "@statSectionThisCycle": {},
+  "statSectionIncome": "Income",
+  "@statSectionIncome": {},
+  "statSectionSavings": "Savings",
+  "@statSectionSavings": {},
+  "statRemainingThisCycle": "Left this cycle",
+  "@statRemainingThisCycle": {},
+  "statSpentOfAvailable": "Spent {spent} of {available}",
+  "@statSpentOfAvailable": {
+    "placeholders": { "spent": { "type": "String" }, "available": { "type": "String" } }
+  },
+  "notifChannelName": "Financial alerts",
+  "@notifChannelName": {},
+  "notifChannelDesc": "Alerts about your budget and spending",
+  "@notifChannelDesc": {},
+  "notifWelcomeTitle": "Welcome to Chahriyti! 🎉",
+  "@notifWelcomeTitle": {},
+  "notifWelcomeBody": "Alerts are on — we'll help you track spending and make it to payday 💪",
+  "@notifWelcomeBody": {},
+  "notifWeekTitle": "📅 {days} days to payday",
+  "@notifWeekTitle": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "notifWeekBody": "Spend no more than {amount} a day and you'll make it 💪",
+  "@notifWeekBody": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "notifWeekBodyTight": "Last days — essentials only and you will make it!",
+  "@notifWeekBodyTight": {},
+  "notifExcellentTitle": "🏆 Great month so far!",
+  "@notifExcellentTitle": {},
+  "notifExcellentBody": "Half the month gone and only {percent}% spent — {balance} left. Keep it up!",
+  "@notifExcellentBody": {
+    "placeholders": { "percent": { "type": "int" }, "balance": { "type": "String" } }
+  },
+  "notifCycleSavedTitle": "✅ Successful cycle!",
+  "@notifCycleSavedTitle": {},
+  "notifCycleSavedBody": "Well done! You saved {amount} last month, added to your savings.",
+  "@notifCycleSavedBody": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "notifCycleNewTitle": "🔄 New cycle started",
+  "@notifCycleNewTitle": {},
+  "notifCycleNewBody": "A new month to save — plan from day one!",
+  "@notifCycleNewBody": {},
+  "notifDailyReminderTitle": "Recorded today's spending? 📝",
+  "@notifDailyReminderTitle": {},
+  "notifDailyReminderBody": "Nothing recorded today — one minute to keep track of your money.",
+  "@notifDailyReminderBody": {},
+  "notifSalaryDayTitle": "💰 Payday!",
+  "@notifSalaryDayTitle": {},
+  "notifSalaryDayBody": "Before spending: decide how much to save this month.",
+  "@notifSalaryDayBody": {},
+  "notificationsSetting": "Notifications",
+  "@notificationsSetting": {},
+  "notificationsSettingDesc": "Daily reminder, payday and budget alerts",
+  "@notificationsSettingDesc": {},
+  "notifOnTimeTitle": "Reminders may arrive late",
+  "@notifOnTimeTitle": {},
+  "notifOnTimeDesc": "Allow \"Alarms & reminders\" so they come on time",
+  "@notifOnTimeDesc": {},
+  "notifOnTimeAction": "Allow",
+  "@notifOnTimeAction": {},
+  "notifPaceTitle": "⚠️ At this pace, money runs out before payday",
+  "@notifPaceTitle": {},
+  "notifPaceBody": "Around {date} — {days} days before payday. Slow down a little to make it.",
+  "@notifPaceBody": {
+    "placeholders": { "date": { "type": "String" }, "days": { "type": "int" } }
+  },
+  "notifGoalTitle": "🎉 You can buy \"{name}\"",
+  "@notifGoalTitle": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "notifGoalBody": "Your savings reached the goal. Open Chahriyti to record the purchase.",
+  "@notifGoalBody": {},
+  "notifSalaryDayBodyWithDebt": "Before spending: decide how much to save, and don't forget {amount} for {name}.",
+  "@notifSalaryDayBodyWithDebt": {
+    "placeholders": { "amount": { "type": "String" }, "name": { "type": "String" } }
+  },
+  "notifLendingTitle": "🤝 Lending reminder",
+  "@notifLendingTitle": {},
+  "notifLendingBodyOne": "{name} still owes you {amount}. Payday just passed — a good time to remind them.",
+  "@notifLendingBodyOne": {
+    "placeholders": { "name": { "type": "String" }, "amount": { "type": "String" } }
+  },
+  "notifLendingBodyMany": "{name} and {count} others owe you {amount}. A good time to remind them.",
+  "@notifLendingBodyMany": {
+    "placeholders": { "name": { "type": "String" }, "count": { "type": "int" }, "amount": { "type": "String" } }
+  },
+  "securitySection": "Security",
+  "@securitySection": {},
+  "appLockTitle": "Lock the app",
+  "@appLockTitle": {},
+  "appLockSubtitle": "Face ID / fingerprint / phone passcode",
+  "@appLockSubtitle": {},
+  "appLockAfterLabel": "Lock after",
+  "@appLockAfterLabel": {},
+  "appLockImmediately": "Immediately",
+  "@appLockImmediately": {},
+  "appLockAfterMinutes": "{minutes} min",
+  "@appLockAfterMinutes": {
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+  "hideAmountsInNotifications": "Hide amounts in notifications",
+  "@hideAmountsInNotifications": {},
+  "appLockNoDeviceLock": "Turn on a screen lock in your phone settings first",
+  "@appLockNoDeviceLock": {},
+  "appLockReason": "Unlock Chahriyti",
+  "@appLockReason": {},
+  "appLockedTitle": "Chahriyti is locked",
+  "@appLockedTitle": {},
+  "appLockedSubtitle": "Your financial data is protected",
+  "@appLockedSubtitle": {},
+  "appUnlock": "Unlock",
+  "@appUnlock": {},
+  "tourNext": "Next",
+  "@tourNext": {},
+  "tourBack": "Back",
+  "@tourBack": {},
+  "tourSkip": "Skip",
+  "@tourSkip": {},
+  "tourDone": "Let's go",
+  "@tourDone": {},
+  "tourStepOf": "{current}/{total}",
+  "@tourStepOf": {
+    "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "tourBalanceTitle": "Your balance",
+  "@tourBalanceTitle": {},
+  "tourBalanceBody": "The money you have left this cycle. It updates with every expense, income, debt or lending.",
+  "@tourBalanceBody": {},
+  "tourSpendingTitle": "Your spending",
+  "@tourSpendingTitle": {},
+  "tourSpendingBody": "Everything spent this cycle. Below it: how much of your money is used and a safe daily amount.",
+  "@tourSpendingBody": {},
+  "tourIncomeTitle": "Add income",
+  "@tourIncomeTitle": {},
+  "tourIncomeBody": "Money on top of your salary? Add it here, to your balance or to savings.",
+  "@tourIncomeBody": {},
+  "tourAddExpenseTitle": "Record an expense",
+  "@tourAddExpenseTitle": {},
+  "tourAddExpenseBody": "The most important button: every time you buy something, record it here in seconds.",
+  "@tourAddExpenseBody": {},
+  "tourGoalsTitle": "Your goals",
+  "@tourGoalsTitle": {},
+  "tourGoalsBody": "Pick something to buy (phone, car…) and see how close your savings get you.",
+  "@tourGoalsBody": {},
+  "tourDebtsTitle": "Debts",
+  "@tourDebtsTitle": {},
+  "tourDebtsBody": "Money you borrowed. Record it and pay it back step by step; we remind you on payday.",
+  "@tourDebtsBody": {},
+  "tourLendingsTitle": "Lendings",
+  "@tourLendingsTitle": {},
+  "tourLendingsBody": "Money you lent to others. Record each repayment; we remind you after payday.",
+  "@tourLendingsBody": {},
+  "tourStatsTitle": "Statistics",
+  "@tourStatsTitle": {},
+  "tourStatsBody": "See where your money goes: by category, daily pace and an end-of-cycle forecast.",
+  "@tourStatsBody": {},
+  "tourSavingsTitle": "Savings",
+  "@tourSavingsTitle": {},
+  "tourSavingsBody": "In Settings ⚙️: your savings, moves between balance and savings, and the full history.",
+  "@tourSavingsBody": {},
+  "tourCyclesTitle": "Cycles",
+  "@tourCyclesTitle": {},
+  "tourCyclesBody": "Each cycle starts on payday. In Settings ⚙️: salary, payday and past cycles.",
+  "@tourCyclesBody": {},
+  "tourLockTitle": "App lock",
+  "@tourLockTitle": {},
+  "tourLockBody": "Protect your money with Face ID or fingerprint: Settings ⚙️ → Security.",
+  "@tourLockBody": {},
+  "offerLabel": "Your order",
+  "@offerLabel": {},
+  "offerTitle": "The Chahriyti book + lifetime app access",
+  "@offerTitle": {},
+  "offerPriceNote": "One payment — no subscription",
+  "@offerPriceNote": {},
+  "offerPerDay": "That's less than {amount} a day over just one year",
+  "@offerPerDay": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "offerInclude1": "The printed Chahriyti book, delivered to you",
+  "@offerInclude1": {},
+  "offerInclude2": "The app activated for life on your phone",
+  "@offerInclude2": {},
+  "offerInclude3": "Every feature: budget, debts, lendings, goals and statistics",
+  "@offerInclude3": {},
+  "nextStepsTitle": "What happens now?",
+  "@nextStepsTitle": {},
+  "nextStep1": "We'll call you soon to confirm your order",
+  "@nextStep1": {},
+  "nextStep2": "During that call, we agree on the delivery details together",
+  "@nextStep2": {},
+  "nextStep3": "You receive the book with your activation code, and you're set",
+  "@nextStep3": {},
+  "reassuranceKeepPhone": "Nothing to do for now, just keep your phone close 📞",
+  "@reassuranceKeepPhone": {},
+  "completeAllFieldsHint": "Answer every question to continue",
+  "@completeAllFieldsHint": {},
+  "notifSpentNothingAction": "I spent nothing today",
+  "@notifSpentNothingAction": {},
+  "notifGoalTitleHidden": "🎉 Your savings reached one of your goals",
+  "@notifGoalTitleHidden": {},
+  "notifSalaryDayBodyWithDebtHidden": "Before spending: decide how much to save, and don't forget your debts.",
+  "@notifSalaryDayBodyWithDebtHidden": {},
+  "notifLendingBodyHidden": "Some people still owe you money. A good time to remind them.",
+  "@notifLendingBodyHidden": {},
+  "notifInactiveTitle": "Your budget is waiting for you 👋",
+  "@notifInactiveTitle": {},
+  "notifInactiveBody": "Record the last few days in a minute and take back control.",
+  "@notifInactiveBody": {},
+  "notifRemindersChannelName": "Daily reminders",
+  "@notifRemindersChannelName": {},
+  "notifRemindersChannelDesc": "Evening reminder, payday countdown and lendings",
+  "@notifRemindersChannelDesc": {},
+  "notifAskTitle": "Let Chahriyti remind you",
+  "@notifAskTitle": {},
+  "notifAskPoint1": "Payday: decide how much to save before spending",
+  "@notifAskPoint1": {},
+  "notifAskPoint2": "A light evening reminder if you recorded nothing",
+  "@notifAskPoint2": {},
+  "notifAskPoint3": "A heads-up before your money runs out before payday",
+  "@notifAskPoint3": {},
+  "notifAskEnable": "Turn on notifications",
+  "@notifAskEnable": {},
+  "notifAskLater": "Not now",
+  "@notifAskLater": {},
+  "leadSendFailed": "Your request could not be sent. Check your internet connection, then tap \"Next\" again.",
+  "@leadSendFailed": {},
+  "pastCyclesButton": "Past months",
+  "@pastCyclesButton": {},
+  "pastCyclesEmptyHint": "When your current cycle ends, its summary appears here.",
+  "@pastCyclesEmptyHint": {},
+  "pastCycleIncome": "Income",
+  "@pastCycleIncome": {},
+  "pastCycleSpent": "Spent",
+  "@pastCycleSpent": {},
+  "pastCycleSaved": "Saved",
+  "@pastCycleSaved": {},
+  "pastCycleSavedShare": "{percent}% of your income",
+  "@pastCycleSavedShare": {
+    "placeholders": { "percent": { "type": "String" } }
+  },
+  "statFirstCycleNote": "Your first cycle started with a balance of {balance} when you signed up. From {date}, it is based on your salary of {salary}.",
+  "@statFirstCycleNote": {
+    "placeholders": { "balance": { "type": "String" }, "date": { "type": "String" }, "salary": { "type": "String" } }
+  }
 }

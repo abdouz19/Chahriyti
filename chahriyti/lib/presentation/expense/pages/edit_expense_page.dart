@@ -102,15 +102,34 @@ class EditExpenseCubit extends Cubit<EditExpenseState> {
     final current = state;
     if (current is! EditExpenseReady) return;
 
-    final delta = amount - current.expense.amount;
+    final original = current.expense;
 
-    if (delta > 0) {
+    // Paid fully from savings: the whole change comes from / goes to savings
+    if (original.fromSavings) {
+      await _doSave(
+        original.copyWith(
+            itemName: itemName, amount: amount, notes: notes,
+            savingsAmount: amount),
+        originalSavingsAmount: original.savingsAmount,
+      );
+      return;
+    }
+
+    // Balance or split: keep the savings part (capped at the new amount);
+    // any increase comes from the balance
+    final newSavings = original.savingsAmount.clamp(0, amount);
+    final oldBalancePart = original.amount - original.savingsAmount;
+    final balancePartIncrease = (amount - newSavings) - oldBalancePart;
+
+    if (balancePartIncrease > 0) {
       final balance = await _getAvailableBalance();
-      if (delta > balance) {
+      if (balancePartIncrease > balance) {
         final savingsBalance = await Injection.getSavingsBalanceUseCase();
-        final effectiveBalance = balance + current.expense.amount;
+        // What this expense could use if re-funded from scratch
+        final effectiveBalance = balance + oldBalancePart;
+        final effectiveSavings = savingsBalance + original.savingsAmount;
 
-        if (amount > effectiveBalance + savingsBalance) {
+        if (amount > effectiveBalance + effectiveSavings) {
           emit(EditExpenseError(
             'insufficientBalance:$balance:$savingsBalance',
           ));
@@ -118,20 +137,22 @@ class EditExpenseCubit extends Cubit<EditExpenseState> {
         }
 
         emit(EditExpenseBalanceExceeded(
-          originalExpense: current.expense,
+          originalExpense: original,
           pendingItemName: itemName,
           pendingAmount: amount,
           pendingNotes: notes,
           effectiveBalance: effectiveBalance,
-          savingsBalance: savingsBalance,
+          savingsBalance: effectiveSavings,
         ));
         return;
       }
     }
 
     await _doSave(
-      current.expense.copyWith(itemName: itemName, amount: amount, notes: notes),
-      originalSavingsAmount: current.expense.savingsAmount,
+      original.copyWith(
+          itemName: itemName, amount: amount, notes: notes,
+          savingsAmount: newSavings),
+      originalSavingsAmount: original.savingsAmount,
     );
   }
 
@@ -178,30 +199,9 @@ class EditExpenseCubit extends Cubit<EditExpenseState> {
     }
   }
 
-  Future<int> _getAvailableBalance() async {
-    final totalExpenses =
-        await Injection.expenseRepository.getTotalExpenses(cycleId);
-    final totalIncome =
-        await Injection.incomeRepository.getTotalIncomeForCycle(cycleId);
-    final totalDebtPayments =
-        await Injection.debtRepository.getTotalDebtPaymentsForCycle(cycleId);
-    final totalDebtsCreated =
-        await Injection.debtRepository.getTotalDebtsCreatedForCycle(cycleId);
-    final totalLendings =
-        await Injection.lendingRepository.getTotalLendingsFromBalanceForCycle(cycleId);
-    final totalCollections =
-        await Injection.lendingRepository.getTotalCollectionsToBalanceForCycle(cycleId);
-    final cycle = await Injection.cycleRepository.getCycleById(cycleId);
-    if (cycle == null) return 0;
-    return cycle.salaryAmount -
-        cycle.salarySplitAmount +
-        totalIncome +
-        totalDebtsCreated -
-        totalExpenses -
-        totalDebtPayments -
-        totalLendings +
-        totalCollections;
-  }
+  Future<int> _getAvailableBalance() async =>
+      // Shared formula: the active cycle balance, same as the dashboard
+      (await Injection.getDashboardDataUseCase()).currentBalance;
 }
 
 // ---------------------------------------------------------------------------
@@ -224,10 +224,7 @@ class EditExpensePage extends StatelessWidget {
       create: (_) => EditExpenseCubit(
         expenseId: expenseId,
         cycleId: cycleId,
-        editExpense: EditExpenseUseCase(
-          Injection.expenseRepository,
-          Injection.cycleRepository,
-        ),
+        editExpense: Injection.editExpenseUseCase,
       ),
       child: const _EditExpenseView(),
     );
@@ -287,6 +284,8 @@ class _EditExpenseView extends StatelessWidget {
     final l = context.l10n;
     if (message == 'expenseNotFound') return l.expenseNotFound;
     if (message == 'unexpectedError') return l.unexpectedError;
+    if (message == 'insufficientSavings') return l.insufficientSavings;
+    if (message == 'pastCycleExpense') return l.pastCycleExpenseLocked;
     if (message.startsWith('insufficientBalance:')) {
       final parts = message.split(':');
       final balance = int.tryParse(parts.elementAtOrNull(1) ?? '') ?? 0;

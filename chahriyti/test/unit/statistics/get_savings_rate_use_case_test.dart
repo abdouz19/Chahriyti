@@ -6,17 +6,25 @@ import 'fakes.dart';
 
 void main() {
   late FakeCycleRepository cycleRepo;
+  late FakeIncomeRepository incomeRepo;
+  late FakeSavingsRepository savingsRepo;
   late GetSavingsRateUseCase useCase;
 
   setUp(() {
     cycleRepo = FakeCycleRepository();
-    useCase = GetSavingsRateUseCase(cycleRepository: cycleRepo);
+    incomeRepo = FakeIncomeRepository();
+    savingsRepo = FakeSavingsRepository();
+    useCase = GetSavingsRateUseCase(
+      cycleRepository: cycleRepo,
+      incomeRepository: incomeRepo,
+      savingsRepository: savingsRepo,
+    );
   });
 
   test('returns empty when no active cycle', () async {
     cycleRepo.activeCycle = null;
     final result = await useCase();
-    expect(result.salaryAmount, 0);
+    expect(result.incomeBase, 0);
     expect(result.rate, 0);
   });
 
@@ -31,8 +39,8 @@ void main() {
     cycleRepo.history = [];
     final result = await useCase();
     expect(result.rate, closeTo(20.0, 0.01)); // 10000/50000 * 100
-    expect(result.salarySplitAmount, 10000);
-    expect(result.salaryAmount, 50000);
+    expect(result.savedAmount, 10000);
+    expect(result.incomeBase, 50000);
   });
 
   test('zero split gives 0% rate', () async {
@@ -130,5 +138,23 @@ void main() {
     ];
     final result = await useCase();
     expect(result.hasComparison, isFalse);
+  });
+
+  test('counts income to savings and manual deposits, not opening balance',
+      () async {
+    cycleRepo.activeCycle =
+        makeCycle(id: 1, salaryAmount: 50000, salarySplitAmount: 5000);
+    cycleRepo.history = [];
+    incomeRepo.setIncomes(1, [
+      makeIncome(description: 'رصيد أولي', amount: 500000),
+      makeIncome(id: 2, description: 'Bonus', amount: 10000, toSavings: true),
+    ]);
+    savingsRepo.netTransfers[1] = -5000; // deposited 5000 from balance
+
+    final result = await useCase();
+    // saved = 5000 + 10000 + 5000; base = 50000 + 10000
+    expect(result.savedAmount, 20000);
+    expect(result.incomeBase, 60000);
+    expect(result.rate, closeTo(33.33, 0.01));
   });
 }

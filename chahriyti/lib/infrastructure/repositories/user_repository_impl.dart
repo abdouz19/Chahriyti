@@ -8,7 +8,13 @@ import '../database/daos/users_dao.dart';
 class UserRepositoryImpl implements UserRepository {
   final UsersDao _dao;
 
+  /// The single user, kept in memory: the router reads it on every keyboard
+  /// animation frame. Every write below goes through this class and drops it.
+  Future<UserEntity?>? _cached;
+
   UserRepositoryImpl(this._dao);
+
+  void _invalidate() => _cached = null;
 
   UserEntity _toEntity(UserRow row) => UserEntity(
         id: row.id,
@@ -26,10 +32,10 @@ class UserRepositoryImpl implements UserRepository {
       );
 
   @override
-  Future<UserEntity?> getUser() async {
-    final row = await _dao.getUser();
-    return row != null ? _toEntity(row) : null;
-  }
+  Future<UserEntity?> getUser() => _cached ??= () async {
+        final row = await _dao.getUser();
+        return row != null ? _toEntity(row) : null;
+      }();
 
   @override
   Future<UserEntity> createUser({
@@ -49,6 +55,7 @@ class UserRepositoryImpl implements UserRepository {
         isActivated: const Value(false),
       ),
     );
+    _invalidate();
     final row = await _dao.getUser();
     return _toEntity(row!);
   }
@@ -71,26 +78,34 @@ class UserRepositoryImpl implements UserRepository {
         createdAt: user.createdAt,
       ),
     );
+    _invalidate();
   }
 
   @override
-  Future<bool> isActivated() async {
-    final row = await _dao.getUser();
-    return row?.isActivated ?? false;
+  Future<bool> isActivated() async =>
+      (await getUser())?.isActivated ?? false;
+
+  @override
+  Future<void> setActivated(bool activated) async {
+    await _dao.setActivated(activated);
+    _invalidate();
   }
 
   @override
-  Future<void> setActivated(bool activated) => _dao.setActivated(activated);
+  Future<void> updateInitialBalance(int userId, int balance) async {
+    await _dao.updateInitialBalance(userId, balance);
+    _invalidate();
+  }
 
   @override
-  Future<void> updateInitialBalance(int userId, int balance) =>
-      _dao.updateInitialBalance(userId, balance);
+  Future<void> updateFinancialSetupStep(int userId, int? step) async {
+    await _dao.updateFinancialSetupStep(userId, step);
+    _invalidate();
+  }
 
   @override
-  Future<void> updateFinancialSetupStep(int userId, int? step) =>
-      _dao.updateFinancialSetupStep(userId, step);
-
-  @override
-  Future<void> completeFinancialSetup(int userId) =>
-      _dao.completeFinancialSetup(userId);
+  Future<void> completeFinancialSetup(int userId) async {
+    await _dao.completeFinancialSetup(userId);
+    _invalidate();
+  }
 }

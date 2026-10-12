@@ -7,6 +7,7 @@ import '../../../core/constants/wilayas.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../shared/widgets/salary_day_picker.dart';
 import '../cubits/onboarding_cubit.dart';
 
 
@@ -36,17 +37,9 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
   }
 
   Future<void> _pickDay() async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime(now.year, now.month, _salaryDay.clamp(1, 28)),
-      firstDate: DateTime(now.year, now.month, 1),
-      lastDate: DateTime(now.year, now.month, 28),
-      helpText: context.l10n.salarySetupPickDayHelp,
-      locale: const Locale('ar'),
-    );
+    final picked = await showSalaryDayPicker(context, selected: _salaryDay);
     if (picked != null) {
-      setState(() => _salaryDay = picked.day);
+      setState(() => _salaryDay = picked);
     }
   }
 

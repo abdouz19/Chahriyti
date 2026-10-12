@@ -6,6 +6,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'stat_widgets.dart';
 
 class IncomeBreakdownChart extends StatefulWidget {
   final IncomeBreakdownResult breakdown;
@@ -39,12 +40,8 @@ class _IncomeBreakdownChartState extends State<IncomeBreakdownChart> {
     final keys = amounts.keys.toList();
 
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
+      padding: const EdgeInsets.all(18),
+      decoration: statCardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -52,7 +49,7 @@ class _IncomeBreakdownChartState extends State<IncomeBreakdownChart> {
             children: [
               Icon(Icons.trending_up_rounded, size: 18, color: AppColors.positive),
               const SizedBox(width: 8),
-              Text(context.l10n.incomeBreakdownTitle, style: AppTypography.headlineSmall),
+              Text(context.l10n.incomeBreakdownTitle, style: statCardTitleStyle),
             ],
           ),
           if (widget.breakdown.total > 0) ...[

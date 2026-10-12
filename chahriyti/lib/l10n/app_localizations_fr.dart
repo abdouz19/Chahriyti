@@ -589,7 +589,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String newSalaryDayConfirmBody(int day) {
-    return 'Le nouveau jour de salaire (Jour $day) s\'appliquera dès votre prochain cycle.\nLe cycle actuel ne sera pas affecté.';
+    return 'Le nouveau jour de salaire (le $day) s\'applique. Votre cycle actuel se terminera la veille du prochain salaire.';
   }
 
   @override
@@ -602,7 +602,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get salaryRequired => 'Salaire requis';
 
   @override
-  String get salaryMustBePositive => 'Le salaire doit être supérieur à zéro';
+  String get salaryMustBePositive => 'Entrez un nombre valide (0 ou plus)';
 
   @override
   String get confirmEditSalary => 'Confirmer la modification du salaire';
@@ -626,7 +626,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get resetWarningBody =>
-      'Vous allez supprimer toutes vos données financières, notamment :\n\n• Toutes les dépenses\n• Toutes les dettes et paiements\n• Tous les prêts\n• Tous les objectifs et l\'épargne\n• L\'historique des cycles financiers\n\nSeuls votre salaire et son jour seront conservés.\n\nCette action est irréversible.';
+      'Vous allez effacer toutes vos données financières, dont :\n\n• toutes les dépenses et revenus\n• toutes les dettes et paiements\n• tous les prêts\n• tous les objectifs et l\'épargne\n• les catégories personnalisées\n• l\'historique des cycles\n\nVotre compte, votre activation, votre salaire et votre jour de paie sont conservés.\n\nCette action est définitive.';
 
   @override
   String get cannotBeUndone =>
@@ -865,14 +865,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get amountMustBePositive => 'Le montant doit être supérieur à zéro';
 
   @override
-  String get debtIsSpentQuestion => 'Ce montant a-t-il été dépensé ?';
+  String get debtIsSpentQuestion =>
+      'Avez-vous dépensé ce montant avant de l\'enregistrer ?';
 
   @override
-  String get debtIsSpentDesc =>
-      'Le montant a été dépensé et n\'est plus dans votre solde';
+  String get debtIsSpentDesc => 'Déjà dépensé, non compté dans votre solde';
 
   @override
-  String get debtNotSpentDesc => 'Le montant est encore dans votre solde';
+  String get debtNotSpentDesc =>
+      'Compté dans votre solde, enregistrez ses dépenses plus tard';
 
   @override
   String get currentBalance => 'Solde actuel';
@@ -1567,11 +1568,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get deleteCategory => 'Delete Category';
+  String get deleteCategory => 'Masquer la catégorie';
 
   @override
   String deleteCategoryConfirm(String name) {
-    return 'Do you want to delete the \"$name\" category?';
+    return '« $name » disparaîtra de la liste. Les dépenses déjà enregistrées restent inchangées.';
   }
 
   @override
@@ -1800,7 +1801,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get celebrationWelcome => 'Welcome to Chahriyti!';
 
   @override
-  String get celebrationTagline => 'Chahriyti is happy to have you';
+  String get celebrationTagline =>
+      'Plus qu\'une étape pour maîtriser votre salaire';
 
   @override
   String get celebrationBody =>
@@ -2007,4 +2009,566 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get amountMillionShort => 'M';
+
+  @override
+  String debtImpactAdd(String amount) {
+    return '$amount sera ajouté à votre solde actuel';
+  }
+
+  @override
+  String debtImpactDeduct(String amount) {
+    return '$amount sera déduit de votre solde actuel';
+  }
+
+  @override
+  String get debtImpactNone => 'Aucun effet sur votre solde actuel';
+
+  @override
+  String get debtImpactPastCycle =>
+      'Cette dette appartient à un cycle précédent. La modifier n\'affecte pas votre solde actuel';
+
+  @override
+  String debtImpactInsufficientBalance(String balance, String amount) {
+    return 'Votre solde actuel ($balance) ne suffit pas pour déduire $amount.';
+  }
+
+  @override
+  String get debtSpentDoubleCountHint =>
+      'Si vous avez déjà enregistré des dépenses avec cet argent, elles sont déjà déduites de votre solde. N\'activez pas cette option.';
+
+  @override
+  String get debtConfirmEditTitle => 'Confirmer la modification';
+
+  @override
+  String debtAmountBelowPaid(String paid) {
+    return 'Le montant ne peut pas être inférieur à ce que vous avez déjà payé ($paid)';
+  }
+
+  @override
+  String lendingAmountBelowCollected(String collected) {
+    return 'Le montant ne peut pas être inférieur à ce qui a déjà été récupéré ($collected)';
+  }
+
+  @override
+  String purchasePriceQuestion(String name) {
+    return 'Combien avez-vous réellement payé pour « $name » ?';
+  }
+
+  @override
+  String get purchaseDeductNote => 'Ce montant sera déduit de votre épargne.';
+
+  @override
+  String purchasedFor(String amount) {
+    return 'Acheté pour $amount';
+  }
+
+  @override
+  String get undoPurchase => 'Annuler l\'achat';
+
+  @override
+  String undoPurchaseBody(String amount) {
+    return '$amount sera remis dans votre épargne et l\'objectif redeviendra actif.';
+  }
+
+  @override
+  String get purchaseUndone => 'Achat annulé';
+
+  @override
+  String get goalsShareSavingsNote =>
+      'Votre épargne est partagée entre tous vos objectifs. Acheter un objectif réduit la progression des autres.';
+
+  @override
+  String get applySalaryToCurrentCycle => 'Appliquer aussi au cycle actuel';
+
+  @override
+  String get applySalaryToCurrentCycleDesc =>
+      'Pour corriger une erreur ou une augmentation reçue ce mois-ci';
+
+  @override
+  String newSalaryConfirmBodyNow(String amount) {
+    return 'Le nouveau salaire ($amount) s\'appliquera au cycle actuel et aux suivants.';
+  }
+
+  @override
+  String salaryDayChangeConfirmBody(String endDate, String startDate) {
+    return 'Votre cycle actuel se terminera le $endDate et le nouveau commencera le $startDate.';
+  }
+
+  @override
+  String get pastCycleExpenseLocked =>
+      'Les dépenses des cycles précédents sont clôturées et ne peuvent pas être modifiées';
+
+  @override
+  String get savDescInitial => 'Épargne initiale';
+
+  @override
+  String get savDescDepositFromBalance => 'Dépôt depuis le solde';
+
+  @override
+  String get savDescWithdrawToBalance => 'Retrait vers le solde';
+
+  @override
+  String get savDescCycleEnd => 'Épargne de fin de cycle';
+
+  @override
+  String get savDescSalarySplit => 'Part du salaire épargnée';
+
+  @override
+  String savDescGoalPurchase(String name) {
+    return 'Achat objectif - $name';
+  }
+
+  @override
+  String savDescGoalPurchaseUndo(String name) {
+    return 'Annulation achat objectif - $name';
+  }
+
+  @override
+  String savDescLending(String name) {
+    return 'Prêt - $name';
+  }
+
+  @override
+  String savDescLendingCollection(String name) {
+    return 'Remboursement prêt - $name';
+  }
+
+  @override
+  String savDescLendingEdit(String name) {
+    return 'Modification prêt - $name';
+  }
+
+  @override
+  String savDescDebtPayment(String name) {
+    return 'Remboursement dette - $name';
+  }
+
+  @override
+  String savDescIncome(String name) {
+    return 'Revenu - $name';
+  }
+
+  @override
+  String savingsImpactAdd(String amount) {
+    return '$amount sera ajouté à votre épargne';
+  }
+
+  @override
+  String savingsImpactDeduct(String amount) {
+    return '$amount sera déduit de votre épargne';
+  }
+
+  @override
+  String get savingsImpactNone => 'Aucun effet sur votre épargne';
+
+  @override
+  String savingsImpactInsufficient(String balance, String amount) {
+    return 'Votre épargne ($balance) ne suffit pas pour déduire $amount.';
+  }
+
+  @override
+  String get incomeToBalanceTag => 'Solde';
+
+  @override
+  String get incomeToSavingsTag => 'Épargne';
+
+  @override
+  String get openingBalance => 'Solde initial';
+
+  @override
+  String get statSectionThisCycle => 'Ce cycle';
+
+  @override
+  String get statSectionIncome => 'Revenus';
+
+  @override
+  String get statSectionSavings => 'Épargne';
+
+  @override
+  String get statRemainingThisCycle => 'Reste pour ce cycle';
+
+  @override
+  String statSpentOfAvailable(String spent, String available) {
+    return '$spent dépensés sur $available';
+  }
+
+  @override
+  String get notifChannelName => 'Alertes financières';
+
+  @override
+  String get notifChannelDesc => 'Alertes sur votre budget et vos dépenses';
+
+  @override
+  String get notifWelcomeTitle => 'Bienvenue sur Chahriyti ! 🎉';
+
+  @override
+  String get notifWelcomeBody =>
+      'Les alertes sont activées — on vous aidera à suivre vos dépenses et à tenir jusqu\'au salaire 💪';
+
+  @override
+  String notifWeekTitle(int days) {
+    return '📅 $days jours avant le salaire';
+  }
+
+  @override
+  String notifWeekBody(String amount) {
+    return 'Ne dépensez pas plus de $amount par jour et vous y arriverez 💪';
+  }
+
+  @override
+  String get notifWeekBodyTight =>
+      'Derniers jours — l\'essentiel seulement et ça passera !';
+
+  @override
+  String get notifExcellentTitle => '🏆 Excellent mois !';
+
+  @override
+  String notifExcellentBody(int percent, String balance) {
+    return 'La moitié du mois est passée et vous n\'avez dépensé que $percent% — il reste $balance. Continuez !';
+  }
+
+  @override
+  String get notifCycleSavedTitle => '✅ Cycle réussi !';
+
+  @override
+  String notifCycleSavedBody(String amount) {
+    return 'Bravo ! Vous avez économisé $amount le mois dernier, ajoutés à votre épargne.';
+  }
+
+  @override
+  String get notifCycleNewTitle => '🔄 Nouveau cycle';
+
+  @override
+  String get notifCycleNewBody =>
+      'Nouveau mois, nouvelle chance d\'économiser — planifiez dès le début !';
+
+  @override
+  String get notifDailyReminderTitle =>
+      'Avez-vous noté vos dépenses du jour ? 📝';
+
+  @override
+  String get notifDailyReminderBody =>
+      'Aucune dépense notée aujourd\'hui — une minute suffit pour suivre votre argent.';
+
+  @override
+  String get notifSalaryDayTitle => '💰 Jour de salaire !';
+
+  @override
+  String get notifSalaryDayBody =>
+      'Avant de dépenser : décidez combien épargner ce mois-ci.';
+
+  @override
+  String get notificationsSetting => 'Notifications';
+
+  @override
+  String get notificationsSettingDesc =>
+      'Rappel quotidien, jour de salaire et alertes budget';
+
+  @override
+  String get notifOnTimeTitle => 'Les rappels peuvent arriver en retard';
+
+  @override
+  String get notifOnTimeDesc =>
+      'Autorisez « Alarmes et rappels » pour les recevoir à l\'heure';
+
+  @override
+  String get notifOnTimeAction => 'Autoriser';
+
+  @override
+  String get notifPaceTitle =>
+      '⚠️ À ce rythme, l\'argent finira avant le salaire';
+
+  @override
+  String notifPaceBody(String date, int days) {
+    return 'Vers le $date — $days jours avant le salaire. Ralentissez un peu pour tenir.';
+  }
+
+  @override
+  String notifGoalTitle(String name) {
+    return '🎉 Vous pouvez acheter « $name »';
+  }
+
+  @override
+  String get notifGoalBody =>
+      'Votre épargne a atteint l\'objectif. Ouvrez Chahriyti pour enregistrer l\'achat.';
+
+  @override
+  String notifSalaryDayBodyWithDebt(String amount, String name) {
+    return 'Avant de dépenser : décidez combien épargner, et n\'oubliez pas $amount pour $name.';
+  }
+
+  @override
+  String get notifLendingTitle => '🤝 Rappel de prêt';
+
+  @override
+  String notifLendingBodyOne(String name, String amount) {
+    return '$name vous doit encore $amount. C\'est le moment idéal pour le lui rappeler.';
+  }
+
+  @override
+  String notifLendingBodyMany(String name, int count, String amount) {
+    return '$name et $count autres vous doivent $amount. Bon moment pour leur rappeler.';
+  }
+
+  @override
+  String get securitySection => 'Sécurité';
+
+  @override
+  String get appLockTitle => 'Verrouiller l\'application';
+
+  @override
+  String get appLockSubtitle => 'Face ID / empreinte / code du téléphone';
+
+  @override
+  String get appLockAfterLabel => 'Verrouiller après';
+
+  @override
+  String get appLockImmediately => 'Immédiatement';
+
+  @override
+  String appLockAfterMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get hideAmountsInNotifications =>
+      'Masquer les montants dans les notifications';
+
+  @override
+  String get appLockNoDeviceLock =>
+      'Activez d\'abord un verrouillage d\'écran dans les réglages du téléphone';
+
+  @override
+  String get appLockReason => 'Déverrouiller Chahriyti';
+
+  @override
+  String get appLockedTitle => 'Chahriyti est verrouillée';
+
+  @override
+  String get appLockedSubtitle => 'Vos données financières sont protégées';
+
+  @override
+  String get appUnlock => 'Déverrouiller';
+
+  @override
+  String get tourNext => 'Suivant';
+
+  @override
+  String get tourBack => 'Retour';
+
+  @override
+  String get tourSkip => 'Passer';
+
+  @override
+  String get tourDone => 'C\'est parti';
+
+  @override
+  String tourStepOf(int current, int total) {
+    return '$current/$total';
+  }
+
+  @override
+  String get tourBalanceTitle => 'Votre solde';
+
+  @override
+  String get tourBalanceBody =>
+      'L\'argent qu\'il vous reste pour ce cycle. Il se met à jour à chaque dépense, revenu, dette ou prêt.';
+
+  @override
+  String get tourSpendingTitle => 'Vos dépenses';
+
+  @override
+  String get tourSpendingBody =>
+      'Le total dépensé ce cycle. Plus bas : le taux de consommation et le montant sûr par jour.';
+
+  @override
+  String get tourIncomeTitle => 'Ajouter un revenu';
+
+  @override
+  String get tourIncomeBody =>
+      'De l\'argent en plus du salaire ? Ajoutez-le ici, vers le solde ou l\'épargne.';
+
+  @override
+  String get tourAddExpenseTitle => 'Noter une dépense';
+
+  @override
+  String get tourAddExpenseBody =>
+      'Le bouton le plus important : à chaque achat, notez-le ici en quelques secondes.';
+
+  @override
+  String get tourGoalsTitle => 'Vos objectifs';
+
+  @override
+  String get tourGoalsBody =>
+      'Choisissez un achat (téléphone, voiture…) et suivez votre progression grâce à votre épargne.';
+
+  @override
+  String get tourDebtsTitle => 'Dettes';
+
+  @override
+  String get tourDebtsBody =>
+      'L\'argent qu\'on vous a prêté. Notez-le, remboursez par étapes ; rappel le jour du salaire.';
+
+  @override
+  String get tourLendingsTitle => 'Prêts';
+
+  @override
+  String get tourLendingsBody =>
+      'L\'argent que vous avez prêté. Notez chaque remboursement ; rappel après le salaire.';
+
+  @override
+  String get tourStatsTitle => 'Statistiques';
+
+  @override
+  String get tourStatsBody =>
+      'Voyez où va votre argent : par catégorie, rythme quotidien et prévision de fin de cycle.';
+
+  @override
+  String get tourSavingsTitle => 'Épargne';
+
+  @override
+  String get tourSavingsBody =>
+      'Dans les réglages ⚙️ : votre épargne, les transferts avec le solde et tout l\'historique.';
+
+  @override
+  String get tourCyclesTitle => 'Cycles';
+
+  @override
+  String get tourCyclesBody =>
+      'Chaque cycle commence le jour du salaire. Dans les réglages ⚙️ : salaire, jour de paie et anciens cycles.';
+
+  @override
+  String get tourLockTitle => 'Verrouillage';
+
+  @override
+  String get tourLockBody =>
+      'Protégez vos données avec Face ID ou l\'empreinte : Réglages ⚙️ → Sécurité.';
+
+  @override
+  String get offerLabel => 'Votre commande';
+
+  @override
+  String get offerTitle => 'Le livre Chahriyti + l\'application à vie';
+
+  @override
+  String get offerPriceNote => 'Paiement unique — sans abonnement';
+
+  @override
+  String offerPerDay(String amount) {
+    return 'Soit moins de $amount par jour sur une seule année';
+  }
+
+  @override
+  String get offerInclude1 => 'Le livre Chahriyti imprimé, livré chez vous';
+
+  @override
+  String get offerInclude2 =>
+      'L\'application activée à vie sur votre téléphone';
+
+  @override
+  String get offerInclude3 =>
+      'Toutes les fonctions : budget, dettes, prêts, objectifs, statistiques';
+
+  @override
+  String get nextStepsTitle => 'Et maintenant ?';
+
+  @override
+  String get nextStep1 =>
+      'Nous vous appelons très bientôt pour confirmer votre commande';
+
+  @override
+  String get nextStep2 =>
+      'Pendant cet appel, nous convenons ensemble de la livraison';
+
+  @override
+  String get nextStep3 =>
+      'Vous recevez le livre avec votre code d\'activation, et c\'est parti';
+
+  @override
+  String get reassuranceKeepPhone =>
+      'Rien à faire pour l\'instant, gardez simplement votre téléphone à portée 📞';
+
+  @override
+  String get completeAllFieldsHint =>
+      'Répondez à toutes les questions pour continuer';
+
+  @override
+  String get notifSpentNothingAction => 'Rien dépensé aujourd\'hui';
+
+  @override
+  String get notifGoalTitleHidden =>
+      '🎉 Votre épargne atteint un de vos objectifs';
+
+  @override
+  String get notifSalaryDayBodyWithDebtHidden =>
+      'Avant de dépenser : décidez combien épargner, et n\'oubliez pas vos dettes.';
+
+  @override
+  String get notifLendingBodyHidden =>
+      'On vous doit encore de l\'argent. Bon moment pour le rappeler.';
+
+  @override
+  String get notifInactiveTitle => 'Votre budget vous attend 👋';
+
+  @override
+  String get notifInactiveBody =>
+      'Notez vos dépenses des derniers jours en une minute et reprenez le contrôle.';
+
+  @override
+  String get notifRemindersChannelName => 'Rappels quotidiens';
+
+  @override
+  String get notifRemindersChannelDesc =>
+      'Rappel du soir, compte à rebours du salaire et prêts';
+
+  @override
+  String get notifAskTitle => 'Laissez Chahriyti vous rappeler';
+
+  @override
+  String get notifAskPoint1 =>
+      'Jour de salaire : décidez combien épargner avant de dépenser';
+
+  @override
+  String get notifAskPoint2 =>
+      'Un petit rappel le soir si vous n\'avez rien noté';
+
+  @override
+  String get notifAskPoint3 =>
+      'Une alerte avant que l\'argent ne finisse avant le salaire';
+
+  @override
+  String get notifAskEnable => 'Activer les notifications';
+
+  @override
+  String get notifAskLater => 'Pas maintenant';
+
+  @override
+  String get leadSendFailed =>
+      'Impossible d\'envoyer votre demande. Vérifiez votre connexion puis appuyez à nouveau sur « Suivant ».';
+
+  @override
+  String get pastCyclesButton => 'Mois précédents';
+
+  @override
+  String get pastCyclesEmptyHint =>
+      'Quand votre cycle actuel se termine, son résumé apparaît ici.';
+
+  @override
+  String get pastCycleIncome => 'Revenus';
+
+  @override
+  String get pastCycleSpent => 'Dépenses';
+
+  @override
+  String get pastCycleSaved => 'Épargné';
+
+  @override
+  String pastCycleSavedShare(String percent) {
+    return '$percent% de vos revenus';
+  }
+
+  @override
+  String statFirstCycleNote(String balance, String date, String salary) {
+    return 'Votre premier cycle a commencé avec un solde de $balance à l\'inscription. À partir du $date, le calcul se base sur votre salaire de $salary.';
+  }
 }

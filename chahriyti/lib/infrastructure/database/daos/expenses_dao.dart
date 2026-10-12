@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 
 import '../app_database.dart';
 import '../tables/expenses_table.dart';
+import '../../../domain/value_objects/setup_adjustment.dart';
 
 part 'expenses_dao.g.dart';
 
@@ -91,13 +92,31 @@ class ExpensesDao extends DatabaseAccessor<AppDatabase> with _$ExpensesDaoMixin 
     return result;
   }
 
+  /// Excludes money spent before the app (recorded at setup): it is in the
+  /// balance but not spending to analyse.
+  Expression<bool> get _notSetupAdjustment =>
+      (expenses.category.equals(SetupAdjustment.expenseCategory) &
+              expenses.itemName.equals(SetupAdjustment.expenseItem))
+          .not();
+
+  /// Amount recorded at setup as spent before the app, for [cycleId].
+  Future<int> getSetupAdjustmentForCycle(int cycleId) async {
+    final sum = expenses.amount.sum();
+    final query = selectOnly(expenses)
+      ..addColumns([sum])
+      ..where(expenses.cycleId.equals(cycleId) &
+          expenses.category.equals(SetupAdjustment.expenseCategory) &
+          expenses.itemName.equals(SetupAdjustment.expenseItem));
+    return (await query.getSingle()).read(sum) ?? 0;
+  }
+
   Future<Map<String, int>> getExpensesByCategory(int cycleId) async {
     final category = expenses.category;
     final sum = expenses.amount.sum();
 
     final query = selectOnly(expenses)
       ..addColumns([category, sum])
-      ..where(expenses.cycleId.equals(cycleId))
+      ..where(expenses.cycleId.equals(cycleId) & _notSetupAdjustment)
       ..groupBy([category]);
 
     final rows = await query.get();

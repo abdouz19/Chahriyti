@@ -5,7 +5,9 @@ import '../../../application/use_cases/savings/withdraw_to_balance_use_case.dart
 import '../../../application/use_cases/savings/get_savings_balance_use_case.dart';
 import '../../../application/use_cases/savings/get_savings_history_use_case.dart';
 import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dart';
-import '../../../domain/repositories/savings_repository.dart';
+import '../../../application/use_cases/savings/manage_savings_record_use_case.dart';
+import '../../../domain/entities/savings_history_entity.dart';
+import '../../../domain/repositories/cycle_repository.dart';
 import 'savings_state.dart';
 
 class SavingsCubit extends Cubit<SavingsState> {
@@ -14,7 +16,9 @@ class SavingsCubit extends Cubit<SavingsState> {
   final DepositFromBalanceUseCase _depositFromBalance;
   final WithdrawToBalanceUseCase _withdrawToBalance;
   final GetDashboardDataUseCase _getDashboardData;
-  final SavingsRepository _savingsRepo;
+  final ManageSavingsRecordUseCase _manageRecord;
+  final CycleRepository _cycleRepo;
+  int? _activeCycleId;
 
   static const _pageSize = 10;
   bool _isLoadingMore = false;
@@ -25,12 +29,14 @@ class SavingsCubit extends Cubit<SavingsState> {
     this._depositFromBalance,
     this._withdrawToBalance,
     this._getDashboardData,
-    this._savingsRepo,
+    this._manageRecord,
+    this._cycleRepo,
   ) : super(const SavingsState.loading());
 
   Future<void> loadSavings() async {
     emit(const SavingsState.loading());
     try {
+      _activeCycleId = (await _cycleRepo.getActiveCycle())?.id;
       final balance = await _getBalance();
       final history = await _getHistory(limit: _pageSize, offset: 0);
       emit(SavingsState.loaded(
@@ -69,9 +75,12 @@ class SavingsCubit extends Cubit<SavingsState> {
     }
   }
 
-  Future<String?> deleteTransaction(int id) async {
+  bool canModify(SavingsHistoryEntity record) =>
+      _manageRecord.canModify(record, _activeCycleId);
+
+  Future<String?> deleteTransaction(SavingsHistoryEntity record) async {
     try {
-      await _savingsRepo.deleteTransaction(id);
+      await _manageRecord.delete(record);
       await loadSavings();
       return null;
     } catch (e) {
@@ -79,10 +88,12 @@ class SavingsCubit extends Cubit<SavingsState> {
     }
   }
 
-  Future<String?> editTransaction(int id, {required int amount, required String description}) async {
+  Future<String?> editTransaction(SavingsHistoryEntity record,
+      {required int amount, required String description}) async {
     if (amount <= 0) return 'المبلغ يجب أن يكون أكبر من صفر';
     try {
-      await _savingsRepo.updateTransaction(id, amount: amount, description: description);
+      await _manageRecord.edit(record,
+          amount: amount, description: description);
       await loadSavings();
       return null;
     } catch (e) {

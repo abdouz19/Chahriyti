@@ -1,5 +1,5 @@
 import '../../../domain/repositories/cycle_repository.dart';
-import '../../../domain/repositories/expense_repository.dart';
+import '../dashboard/get_dashboard_data_use_case.dart';
 
 class SpendingInsightsResult {
   final bool hasData;
@@ -46,20 +46,24 @@ class SpendingInsightsResult {
 
 class GetSpendingInsightsUseCase {
   final CycleRepository _cycleRepository;
-  final ExpenseRepository _expenseRepository;
+  final GetDashboardDataUseCase _getDashboardData;
 
   const GetSpendingInsightsUseCase({
     required CycleRepository cycleRepository,
-    required ExpenseRepository expenseRepository,
+    required GetDashboardDataUseCase getDashboardData,
   })  : _cycleRepository = cycleRepository,
-        _expenseRepository = expenseRepository;
+        _getDashboardData = getDashboardData;
 
+  /// Budget = money available this cycle = spent from the balance + what's
+  /// left in it (same base as the home screen); remaining = home balance.
   Future<SpendingInsightsResult> call() async {
     final cycle = await _cycleRepository.getActiveCycle();
     if (cycle == null) return SpendingInsightsResult.empty;
 
-    final spendable = cycle.salaryAmount - cycle.salarySplitAmount;
-    if (spendable <= 0) return SpendingInsightsResult.empty;
+    final data = await _getDashboardData();
+    final spent = data.totalExpenses;
+    final available = spent + data.currentBalance;
+    if (available <= 0) return SpendingInsightsResult.empty;
 
     final now = DateTime.now();
     final start = DateTime(
@@ -67,26 +71,25 @@ class GetSpendingInsightsUseCase {
     final end = DateTime(
         cycle.endDate.year, cycle.endDate.month, cycle.endDate.day);
     final today = DateTime(now.year, now.month, now.day);
-
     final totalDays = end.difference(start).inDays + 1;
     final daysElapsed =
         (today.difference(start).inDays + 1).clamp(1, totalDays);
-    final daysRemaining = (totalDays - daysElapsed).clamp(0, totalDays);
+    // Days still to live on the money, today included (same as home): on
+    // the last day the balance is still there to spend
+    final daysRemaining =
+        (end.difference(today).inDays + 1).clamp(0, totalDays);
 
-    final spent = await _expenseRepository.getTotalExpenses(cycle.id);
-    final remaining = spendable - spent;
-
+    final remaining = data.currentBalance;
     final dailyRemaining =
         daysRemaining > 0 ? remaining / daysRemaining : 0.0;
 
-    // Forecast: current daily rate × remaining days + already spent
+    // Forecast: current daily rate × the days after today + already spent
     final dailyRate = spent / daysElapsed;
-    final projected = spent + dailyRate * daysRemaining;
-    final ratio = projected / spendable;
+    final projected = spent + dailyRate * (daysRemaining - 1).clamp(0, totalDays);
 
     return SpendingInsightsResult(
       hasData: true,
-      spendableBudget: spendable,
+      spendableBudget: available,
       totalSpent: spent,
       remainingBudget: remaining,
       dailyRemaining: dailyRemaining,
@@ -94,7 +97,7 @@ class GetSpendingInsightsUseCase {
       daysElapsed: daysElapsed,
       totalDays: totalDays,
       projectedTotal: projected,
-      projectedRatio: ratio,
+      projectedRatio: projected / available,
     );
   }
 }

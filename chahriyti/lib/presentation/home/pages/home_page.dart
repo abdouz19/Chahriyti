@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/extensions/l10n_extension.dart';
-import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -22,6 +21,7 @@ import '../../../core/extensions/money_extensions.dart';
 import '../../../domain/entities/expense_entity.dart';
 import '../../expense/cubits/expense_cubit.dart';
 import '../../shared/widgets/confirmation_dialog.dart';
+import '../../shared/widgets/feature_tour.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -30,13 +30,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => DashboardCubit(
-        getDashboardData: GetDashboardDataUseCase(
-          cycleRepository: Injection.cycleRepository,
-          expenseRepository: Injection.expenseRepository,
-          incomeRepository: Injection.incomeRepository,
-          debtRepository: Injection.debtRepository,
-          lendingRepository: Injection.lendingRepository,
-        ),
+        getDashboardData: Injection.getDashboardDataUseCase,
         cycleRepository: Injection.cycleRepository,
         expenseRepository: Injection.expenseRepository,
         debtRepository: Injection.debtRepository,
@@ -58,9 +52,91 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView> {
+  final _scroll = ScrollController();
+  bool _tourChecked = false;
+
+  // Guided tour targets
+  final _balanceKey = GlobalKey();
+  final _expensesKey = GlobalKey();
+  final _incomeKey = GlobalKey();
+  final _addExpenseKey = GlobalKey();
+  final _goalsKey = GlobalKey();
+  final _debtsKey = GlobalKey();
+  final _lendingsKey = GlobalKey();
+  final _statsKey = GlobalKey();
+  final _settingsKey = GlobalKey();
+
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  /// Once, after setup and the tour: explain the reminders, then let the
+  /// system ask. Asking at first launch gets refused far more often.
+  Future<void> _maybeAskNotifications() async {
+    final notifications = Injection.notificationService;
+    if (await notifications.hasAskedPermission() || !mounted) return;
+    await notifications.markPermissionAsked();
+    // Already allowed (e.g. by an earlier version): nothing to ask
+    if (await notifications.isPermissionGranted()) return;
+    if (!mounted) return;
+    final enable = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => const _NotificationsExplainer(),
+    );
+    if (enable == true) {
+      await notifications.requestPermissionsAndShowWelcome();
+    }
+  }
+
+  /// First dashboard visit: walk the user through the main features.
+  Future<void> _maybeStartTour() async {
+    if (_tourChecked) return;
+    _tourChecked = true;
+    if (await FeatureTour.hasSeen()) {
+      _maybeAskNotifications();
+      return;
+    }
+    if (!mounted) return;
+    // Let the dashboard lay out first
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    if (!mounted) return;
+    final l = context.l10n;
+    FeatureTour.show(
+      context,
+      scrollController: _scroll,
+      onClosed: _maybeAskNotifications,
+      steps: [
+        TourStep(target: _balanceKey, icon: Icons.account_balance_wallet_rounded,
+            title: l.tourBalanceTitle, body: l.tourBalanceBody),
+        TourStep(target: _expensesKey, icon: Icons.trending_up_rounded,
+            title: l.tourSpendingTitle, body: l.tourSpendingBody),
+        TourStep(target: _incomeKey, icon: Icons.add_card_rounded,
+            title: l.tourIncomeTitle, body: l.tourIncomeBody, atTop: true),
+        TourStep(target: _addExpenseKey, icon: Icons.add_rounded,
+            title: l.tourAddExpenseTitle, body: l.tourAddExpenseBody),
+        TourStep(target: _goalsKey, icon: Icons.flag_rounded,
+            title: l.tourGoalsTitle, body: l.tourGoalsBody),
+        TourStep(target: _debtsKey, icon: Icons.paid_rounded,
+            title: l.tourDebtsTitle, body: l.tourDebtsBody),
+        TourStep(target: _lendingsKey, icon: Icons.handshake_rounded,
+            title: l.tourLendingsTitle, body: l.tourLendingsBody),
+        TourStep(target: _statsKey, icon: Icons.bar_chart_rounded,
+            title: l.tourStatsTitle, body: l.tourStatsBody),
+        TourStep(target: _settingsKey, icon: Icons.savings_rounded,
+            title: l.tourSavingsTitle, body: l.tourSavingsBody, atTop: true),
+        TourStep(target: _settingsKey, icon: Icons.calendar_month_rounded,
+            title: l.tourCyclesTitle, body: l.tourCyclesBody, atTop: true),
+        TourStep(target: _settingsKey, icon: Icons.fingerprint_rounded,
+            title: l.tourLockTitle, body: l.tourLockBody, atTop: true),
+      ],
+    );
   }
 
   Future<void> _navigateAndRefresh(
@@ -128,6 +204,8 @@ class _HomeViewState extends State<_HomeView> {
               return _buildError(context, state.message);
             }
             if (state is DashboardLoaded) {
+              WidgetsBinding.instance
+                  .addPostFrameCallback((_) => _maybeStartTour());
               return _buildLoaded(context, state);
             }
             return const SizedBox.shrink();
@@ -221,6 +299,7 @@ class _HomeViewState extends State<_HomeView> {
       actions: showActions
           ? [
               IconButton(
+                key: _incomeKey,
                 onPressed: () => _navigateAndRefresh(context, '/income/add'),
                 icon: Icon(
                   Icons.add_card_rounded,
@@ -229,6 +308,7 @@ class _HomeViewState extends State<_HomeView> {
                 tooltip: context.l10n.addIncomeTooltip,
               ),
               IconButton(
+                key: _settingsKey,
                 onPressed: () => _navigateAndRefresh(context, '/settings'),
                 icon: Icon(
                   Icons.settings_rounded,
@@ -245,6 +325,7 @@ class _HomeViewState extends State<_HomeView> {
     final data = state.data;
 
     return CustomScrollView(
+      controller: _scroll,
       slivers: [
         _buildAppBar(context),
         SliverToBoxAdapter(
@@ -259,6 +340,7 @@ class _HomeViewState extends State<_HomeView> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Expanded(
+                        key: _balanceKey,
                         child: BalanceCard(
                           amount: data.currentBalance,
                           cycleTotal: data.totalIn,
@@ -266,6 +348,7 @@ class _HomeViewState extends State<_HomeView> {
                       ),
                       const SizedBox(width: 12),
                       Expanded(
+                        key: _expensesKey,
                         child: ExpensesCard(
                           expenses: data.totalExpenses,
                           savingsAmount: data.totalExpensesFromSavings,
@@ -318,6 +401,7 @@ class _HomeViewState extends State<_HomeView> {
 
                 // Add expense button
                 SizedBox(
+                  key: _addExpenseKey,
                   width: double.infinity,
                   height: 52,
                   child: ElevatedButton.icon(
@@ -379,6 +463,7 @@ class _HomeViewState extends State<_HomeView> {
 
                 // Goals section
                 GestureDetector(
+                  key: _goalsKey,
                   onTap: () => _navigateAndRefresh(context, '/goals'),
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -436,6 +521,7 @@ class _HomeViewState extends State<_HomeView> {
 
                 // Debts section
                 GestureDetector(
+                  key: _debtsKey,
                   onTap: () => _navigateAndRefresh(context, '/debts'),
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -492,6 +578,7 @@ class _HomeViewState extends State<_HomeView> {
 
                 // Lendings section
                 GestureDetector(
+                  key: _lendingsKey,
                   onTap: () => _navigateAndRefresh(context, '/lendings'),
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -557,6 +644,7 @@ class _HomeViewState extends State<_HomeView> {
 
                 // Quick actions row
                 OutlinedButton.icon(
+                  key: _statsKey,
                   onPressed: () => context.push('/statistics'),
                   icon: Icon(
                     Icons.bar_chart_rounded,
@@ -655,6 +743,70 @@ class _CycleAmountCard extends StatelessWidget {
                 ),
               ),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Why reminders are worth turning on, shown before the system prompt.
+class _NotificationsExplainer extends StatelessWidget {
+  const _NotificationsExplainer();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final points = [
+      (Icons.payments_rounded, l.notifAskPoint1),
+      (Icons.edit_note_rounded, l.notifAskPoint2),
+      (Icons.warning_amber_rounded, l.notifAskPoint3),
+    ];
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.notifications_active_rounded,
+                  size: 34, color: AppColors.primary),
+            ),
+            const SizedBox(height: 16),
+            Text(l.notifAskTitle,
+                style: AppTypography.headlineSmall, textAlign: TextAlign.center),
+            const SizedBox(height: 16),
+            for (final p in points)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Row(
+                  children: [
+                    Icon(p.$1, color: AppColors.primary, size: 22),
+                    const SizedBox(width: 12),
+                    Expanded(
+                        child: Text(p.$2, style: AppTypography.bodyMedium)),
+                  ],
+                ),
+              ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(l.notifAskEnable),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l.notifAskLater,
+                  style: TextStyle(color: AppColors.textSecondary)),
+            ),
           ],
         ),
       ),

@@ -1,14 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../core/storage/app_secure_storage.dart';
 
-/// Persists onboarding profile locally so the user can resume after a cold restart.
+/// Persists the onboarding answers once the server received them, so the
+/// user returns to the order screen after a cold restart.
 class LeadStorage {
   static const _profileKey = 'onboarding_profile';
   final FlutterSecureStorage _storage;
 
   const LeadStorage({FlutterSecureStorage? storage})
-      : _storage = storage ?? const FlutterSecureStorage();
+      : _storage = storage ?? appSecureStorage;
 
   Future<void> save({
     required String name,
@@ -16,17 +18,28 @@ class LeadStorage {
     required int wilayaCode,
     required int salary,
     required int salaryDay,
-  }) =>
-      _storage.write(
-        key: _profileKey,
-        value: jsonEncode({
-          'name': name,
-          'phone': phone,
-          'wilayaCode': wilayaCode,
-          'salary': salary,
-          'salaryDay': salaryDay,
-        }),
-      );
+    String? commune,
+    String? ageGroup,
+    String? maritalStatus,
+    bool? tracksExpenses,
+    List<String> goals = const [],
+  }) async {
+    await _storage.write(
+      key: _profileKey,
+      value: jsonEncode({
+        'name': name,
+        'phone': phone,
+        'wilayaCode': wilayaCode,
+        'salary': salary,
+        'salaryDay': salaryDay,
+        'commune': commune,
+        'ageGroup': ageGroup,
+        'maritalStatus': maritalStatus,
+        'tracksExpenses': tracksExpenses,
+        'goals': goals,
+      }),
+    );
+  }
 
   /// Returns profile map if saved, null otherwise.
   Future<Map<String, dynamic>?> load() async {

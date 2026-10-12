@@ -14,6 +14,7 @@ _AdditionalIncomeEntity _$AdditionalIncomeEntityFromJson(
   description: json['description'] as String,
   amount: (json['amount'] as num).toInt(),
   createdAt: DateTime.parse(json['createdAt'] as String),
+  toSavings: json['toSavings'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$AdditionalIncomeEntityToJson(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$AdditionalIncomeEntityToJson(
   'description': instance.description,
   'amount': instance.amount,
   'createdAt': instance.createdAt.toIso8601String(),
+  'toSavings': instance.toSavings,
 };

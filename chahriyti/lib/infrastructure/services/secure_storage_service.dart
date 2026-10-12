@@ -1,9 +1,9 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../core/storage/app_secure_storage.dart';
 
 class SecureStorageService {
   static const _licenseKeyStorageKey = 'chahriyti_license_key';
 
-  final _storage = const FlutterSecureStorage();
+  final _storage = appSecureStorage;
 
   Future<void> saveLicenseKey(String key) =>
       _storage.write(key: _licenseKeyStorageKey, value: key);

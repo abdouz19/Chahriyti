@@ -3304,6 +3304,27 @@ class $SavingsGoalsTable extends SavingsGoals
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _purchasedAmountMeta = const VerificationMeta(
+    'purchasedAmount',
+  );
+  @override
+  late final GeneratedColumn<int> purchasedAmount = GeneratedColumn<int>(
+    'purchased_amount',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _purchaseTransactionIdMeta =
+      const VerificationMeta('purchaseTransactionId');
+  @override
+  late final GeneratedColumn<int> purchaseTransactionId = GeneratedColumn<int>(
+    'purchase_transaction_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -3323,6 +3344,8 @@ class $SavingsGoalsTable extends SavingsGoals
     targetAmount,
     savedAmount,
     isAchieved,
+    purchasedAmount,
+    purchaseTransactionId,
     createdAt,
   ];
   @override
@@ -3374,6 +3397,24 @@ class $SavingsGoalsTable extends SavingsGoals
         isAchieved.isAcceptableOrUnknown(data['is_achieved']!, _isAchievedMeta),
       );
     }
+    if (data.containsKey('purchased_amount')) {
+      context.handle(
+        _purchasedAmountMeta,
+        purchasedAmount.isAcceptableOrUnknown(
+          data['purchased_amount']!,
+          _purchasedAmountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('purchase_transaction_id')) {
+      context.handle(
+        _purchaseTransactionIdMeta,
+        purchaseTransactionId.isAcceptableOrUnknown(
+          data['purchase_transaction_id']!,
+          _purchaseTransactionIdMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -3409,6 +3450,14 @@ class $SavingsGoalsTable extends SavingsGoals
         DriftSqlType.bool,
         data['${effectivePrefix}is_achieved'],
       )!,
+      purchasedAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}purchased_amount'],
+      ),
+      purchaseTransactionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}purchase_transaction_id'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -3428,6 +3477,8 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
   final int targetAmount;
   final int savedAmount;
   final bool isAchieved;
+  final int? purchasedAmount;
+  final int? purchaseTransactionId;
   final DateTime createdAt;
   const SavingsGoalRow({
     required this.id,
@@ -3435,6 +3486,8 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
     required this.targetAmount,
     required this.savedAmount,
     required this.isAchieved,
+    this.purchasedAmount,
+    this.purchaseTransactionId,
     required this.createdAt,
   });
   @override
@@ -3445,6 +3498,12 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
     map['target_amount'] = Variable<int>(targetAmount);
     map['saved_amount'] = Variable<int>(savedAmount);
     map['is_achieved'] = Variable<bool>(isAchieved);
+    if (!nullToAbsent || purchasedAmount != null) {
+      map['purchased_amount'] = Variable<int>(purchasedAmount);
+    }
+    if (!nullToAbsent || purchaseTransactionId != null) {
+      map['purchase_transaction_id'] = Variable<int>(purchaseTransactionId);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -3456,6 +3515,12 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
       targetAmount: Value(targetAmount),
       savedAmount: Value(savedAmount),
       isAchieved: Value(isAchieved),
+      purchasedAmount: purchasedAmount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(purchasedAmount),
+      purchaseTransactionId: purchaseTransactionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(purchaseTransactionId),
       createdAt: Value(createdAt),
     );
   }
@@ -3471,6 +3536,10 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
       targetAmount: serializer.fromJson<int>(json['targetAmount']),
       savedAmount: serializer.fromJson<int>(json['savedAmount']),
       isAchieved: serializer.fromJson<bool>(json['isAchieved']),
+      purchasedAmount: serializer.fromJson<int?>(json['purchasedAmount']),
+      purchaseTransactionId: serializer.fromJson<int?>(
+        json['purchaseTransactionId'],
+      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -3483,6 +3552,8 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
       'targetAmount': serializer.toJson<int>(targetAmount),
       'savedAmount': serializer.toJson<int>(savedAmount),
       'isAchieved': serializer.toJson<bool>(isAchieved),
+      'purchasedAmount': serializer.toJson<int?>(purchasedAmount),
+      'purchaseTransactionId': serializer.toJson<int?>(purchaseTransactionId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -3493,6 +3564,8 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
     int? targetAmount,
     int? savedAmount,
     bool? isAchieved,
+    Value<int?> purchasedAmount = const Value.absent(),
+    Value<int?> purchaseTransactionId = const Value.absent(),
     DateTime? createdAt,
   }) => SavingsGoalRow(
     id: id ?? this.id,
@@ -3500,6 +3573,12 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
     targetAmount: targetAmount ?? this.targetAmount,
     savedAmount: savedAmount ?? this.savedAmount,
     isAchieved: isAchieved ?? this.isAchieved,
+    purchasedAmount: purchasedAmount.present
+        ? purchasedAmount.value
+        : this.purchasedAmount,
+    purchaseTransactionId: purchaseTransactionId.present
+        ? purchaseTransactionId.value
+        : this.purchaseTransactionId,
     createdAt: createdAt ?? this.createdAt,
   );
   SavingsGoalRow copyWithCompanion(SavingsGoalsCompanion data) {
@@ -3515,6 +3594,12 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
       isAchieved: data.isAchieved.present
           ? data.isAchieved.value
           : this.isAchieved,
+      purchasedAmount: data.purchasedAmount.present
+          ? data.purchasedAmount.value
+          : this.purchasedAmount,
+      purchaseTransactionId: data.purchaseTransactionId.present
+          ? data.purchaseTransactionId.value
+          : this.purchaseTransactionId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -3527,14 +3612,24 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
           ..write('targetAmount: $targetAmount, ')
           ..write('savedAmount: $savedAmount, ')
           ..write('isAchieved: $isAchieved, ')
+          ..write('purchasedAmount: $purchasedAmount, ')
+          ..write('purchaseTransactionId: $purchaseTransactionId, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, targetAmount, savedAmount, isAchieved, createdAt);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    targetAmount,
+    savedAmount,
+    isAchieved,
+    purchasedAmount,
+    purchaseTransactionId,
+    createdAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3544,6 +3639,8 @@ class SavingsGoalRow extends DataClass implements Insertable<SavingsGoalRow> {
           other.targetAmount == this.targetAmount &&
           other.savedAmount == this.savedAmount &&
           other.isAchieved == this.isAchieved &&
+          other.purchasedAmount == this.purchasedAmount &&
+          other.purchaseTransactionId == this.purchaseTransactionId &&
           other.createdAt == this.createdAt);
 }
 
@@ -3553,6 +3650,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoalRow> {
   final Value<int> targetAmount;
   final Value<int> savedAmount;
   final Value<bool> isAchieved;
+  final Value<int?> purchasedAmount;
+  final Value<int?> purchaseTransactionId;
   final Value<DateTime> createdAt;
   const SavingsGoalsCompanion({
     this.id = const Value.absent(),
@@ -3560,6 +3659,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoalRow> {
     this.targetAmount = const Value.absent(),
     this.savedAmount = const Value.absent(),
     this.isAchieved = const Value.absent(),
+    this.purchasedAmount = const Value.absent(),
+    this.purchaseTransactionId = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   SavingsGoalsCompanion.insert({
@@ -3568,6 +3669,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoalRow> {
     required int targetAmount,
     this.savedAmount = const Value.absent(),
     this.isAchieved = const Value.absent(),
+    this.purchasedAmount = const Value.absent(),
+    this.purchaseTransactionId = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : name = Value(name),
        targetAmount = Value(targetAmount);
@@ -3577,6 +3680,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoalRow> {
     Expression<int>? targetAmount,
     Expression<int>? savedAmount,
     Expression<bool>? isAchieved,
+    Expression<int>? purchasedAmount,
+    Expression<int>? purchaseTransactionId,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -3585,6 +3690,9 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoalRow> {
       if (targetAmount != null) 'target_amount': targetAmount,
       if (savedAmount != null) 'saved_amount': savedAmount,
       if (isAchieved != null) 'is_achieved': isAchieved,
+      if (purchasedAmount != null) 'purchased_amount': purchasedAmount,
+      if (purchaseTransactionId != null)
+        'purchase_transaction_id': purchaseTransactionId,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -3595,6 +3703,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoalRow> {
     Value<int>? targetAmount,
     Value<int>? savedAmount,
     Value<bool>? isAchieved,
+    Value<int?>? purchasedAmount,
+    Value<int?>? purchaseTransactionId,
     Value<DateTime>? createdAt,
   }) {
     return SavingsGoalsCompanion(
@@ -3603,6 +3713,9 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoalRow> {
       targetAmount: targetAmount ?? this.targetAmount,
       savedAmount: savedAmount ?? this.savedAmount,
       isAchieved: isAchieved ?? this.isAchieved,
+      purchasedAmount: purchasedAmount ?? this.purchasedAmount,
+      purchaseTransactionId:
+          purchaseTransactionId ?? this.purchaseTransactionId,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -3625,6 +3738,14 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoalRow> {
     if (isAchieved.present) {
       map['is_achieved'] = Variable<bool>(isAchieved.value);
     }
+    if (purchasedAmount.present) {
+      map['purchased_amount'] = Variable<int>(purchasedAmount.value);
+    }
+    if (purchaseTransactionId.present) {
+      map['purchase_transaction_id'] = Variable<int>(
+        purchaseTransactionId.value,
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -3639,6 +3760,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoalRow> {
           ..write('targetAmount: $targetAmount, ')
           ..write('savedAmount: $savedAmount, ')
           ..write('isAchieved: $isAchieved, ')
+          ..write('purchasedAmount: $purchasedAmount, ')
+          ..write('purchaseTransactionId: $purchaseTransactionId, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -5473,6 +5596,26 @@ class $SavingsHistoryTable extends SavingsHistory
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _relatedIncomeIdMeta = const VerificationMeta(
+    'relatedIncomeId',
+  );
+  @override
+  late final GeneratedColumn<int> relatedIncomeId = GeneratedColumn<int>(
+    'related_income_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -5495,6 +5638,8 @@ class $SavingsHistoryTable extends SavingsHistory
     relatedExpenseId,
     relatedDebtPaymentId,
     relatedLendingId,
+    relatedIncomeId,
+    kind,
     createdAt,
   ];
   @override
@@ -5575,6 +5720,21 @@ class $SavingsHistoryTable extends SavingsHistory
         ),
       );
     }
+    if (data.containsKey('related_income_id')) {
+      context.handle(
+        _relatedIncomeIdMeta,
+        relatedIncomeId.isAcceptableOrUnknown(
+          data['related_income_id']!,
+          _relatedIncomeIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -5622,6 +5782,14 @@ class $SavingsHistoryTable extends SavingsHistory
         DriftSqlType.int,
         data['${effectivePrefix}related_lending_id'],
       ),
+      relatedIncomeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}related_income_id'],
+      ),
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -5645,6 +5813,8 @@ class SavingsHistoryRow extends DataClass
   final int? relatedExpenseId;
   final int? relatedDebtPaymentId;
   final int? relatedLendingId;
+  final int? relatedIncomeId;
+  final String? kind;
   final DateTime createdAt;
   const SavingsHistoryRow({
     required this.id,
@@ -5655,6 +5825,8 @@ class SavingsHistoryRow extends DataClass
     this.relatedExpenseId,
     this.relatedDebtPaymentId,
     this.relatedLendingId,
+    this.relatedIncomeId,
+    this.kind,
     required this.createdAt,
   });
   @override
@@ -5675,6 +5847,12 @@ class SavingsHistoryRow extends DataClass
     }
     if (!nullToAbsent || relatedLendingId != null) {
       map['related_lending_id'] = Variable<int>(relatedLendingId);
+    }
+    if (!nullToAbsent || relatedIncomeId != null) {
+      map['related_income_id'] = Variable<int>(relatedIncomeId);
+    }
+    if (!nullToAbsent || kind != null) {
+      map['kind'] = Variable<String>(kind);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -5698,6 +5876,10 @@ class SavingsHistoryRow extends DataClass
       relatedLendingId: relatedLendingId == null && nullToAbsent
           ? const Value.absent()
           : Value(relatedLendingId),
+      relatedIncomeId: relatedIncomeId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relatedIncomeId),
+      kind: kind == null && nullToAbsent ? const Value.absent() : Value(kind),
       createdAt: Value(createdAt),
     );
   }
@@ -5718,6 +5900,8 @@ class SavingsHistoryRow extends DataClass
         json['relatedDebtPaymentId'],
       ),
       relatedLendingId: serializer.fromJson<int?>(json['relatedLendingId']),
+      relatedIncomeId: serializer.fromJson<int?>(json['relatedIncomeId']),
+      kind: serializer.fromJson<String?>(json['kind']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -5733,6 +5917,8 @@ class SavingsHistoryRow extends DataClass
       'relatedExpenseId': serializer.toJson<int?>(relatedExpenseId),
       'relatedDebtPaymentId': serializer.toJson<int?>(relatedDebtPaymentId),
       'relatedLendingId': serializer.toJson<int?>(relatedLendingId),
+      'relatedIncomeId': serializer.toJson<int?>(relatedIncomeId),
+      'kind': serializer.toJson<String?>(kind),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -5746,6 +5932,8 @@ class SavingsHistoryRow extends DataClass
     Value<int?> relatedExpenseId = const Value.absent(),
     Value<int?> relatedDebtPaymentId = const Value.absent(),
     Value<int?> relatedLendingId = const Value.absent(),
+    Value<int?> relatedIncomeId = const Value.absent(),
+    Value<String?> kind = const Value.absent(),
     DateTime? createdAt,
   }) => SavingsHistoryRow(
     id: id ?? this.id,
@@ -5764,6 +5952,10 @@ class SavingsHistoryRow extends DataClass
     relatedLendingId: relatedLendingId.present
         ? relatedLendingId.value
         : this.relatedLendingId,
+    relatedIncomeId: relatedIncomeId.present
+        ? relatedIncomeId.value
+        : this.relatedIncomeId,
+    kind: kind.present ? kind.value : this.kind,
     createdAt: createdAt ?? this.createdAt,
   );
   SavingsHistoryRow copyWithCompanion(SavingsHistoryCompanion data) {
@@ -5786,6 +5978,10 @@ class SavingsHistoryRow extends DataClass
       relatedLendingId: data.relatedLendingId.present
           ? data.relatedLendingId.value
           : this.relatedLendingId,
+      relatedIncomeId: data.relatedIncomeId.present
+          ? data.relatedIncomeId.value
+          : this.relatedIncomeId,
+      kind: data.kind.present ? data.kind.value : this.kind,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -5801,6 +5997,8 @@ class SavingsHistoryRow extends DataClass
           ..write('relatedExpenseId: $relatedExpenseId, ')
           ..write('relatedDebtPaymentId: $relatedDebtPaymentId, ')
           ..write('relatedLendingId: $relatedLendingId, ')
+          ..write('relatedIncomeId: $relatedIncomeId, ')
+          ..write('kind: $kind, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -5816,6 +6014,8 @@ class SavingsHistoryRow extends DataClass
     relatedExpenseId,
     relatedDebtPaymentId,
     relatedLendingId,
+    relatedIncomeId,
+    kind,
     createdAt,
   );
   @override
@@ -5830,6 +6030,8 @@ class SavingsHistoryRow extends DataClass
           other.relatedExpenseId == this.relatedExpenseId &&
           other.relatedDebtPaymentId == this.relatedDebtPaymentId &&
           other.relatedLendingId == this.relatedLendingId &&
+          other.relatedIncomeId == this.relatedIncomeId &&
+          other.kind == this.kind &&
           other.createdAt == this.createdAt);
 }
 
@@ -5842,6 +6044,8 @@ class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
   final Value<int?> relatedExpenseId;
   final Value<int?> relatedDebtPaymentId;
   final Value<int?> relatedLendingId;
+  final Value<int?> relatedIncomeId;
+  final Value<String?> kind;
   final Value<DateTime> createdAt;
   const SavingsHistoryCompanion({
     this.id = const Value.absent(),
@@ -5852,6 +6056,8 @@ class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
     this.relatedExpenseId = const Value.absent(),
     this.relatedDebtPaymentId = const Value.absent(),
     this.relatedLendingId = const Value.absent(),
+    this.relatedIncomeId = const Value.absent(),
+    this.kind = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   SavingsHistoryCompanion.insert({
@@ -5863,6 +6069,8 @@ class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
     this.relatedExpenseId = const Value.absent(),
     this.relatedDebtPaymentId = const Value.absent(),
     this.relatedLendingId = const Value.absent(),
+    this.relatedIncomeId = const Value.absent(),
+    this.kind = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : type = Value(type),
        amount = Value(amount),
@@ -5876,6 +6084,8 @@ class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
     Expression<int>? relatedExpenseId,
     Expression<int>? relatedDebtPaymentId,
     Expression<int>? relatedLendingId,
+    Expression<int>? relatedIncomeId,
+    Expression<String>? kind,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -5888,6 +6098,8 @@ class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
       if (relatedDebtPaymentId != null)
         'related_debt_payment_id': relatedDebtPaymentId,
       if (relatedLendingId != null) 'related_lending_id': relatedLendingId,
+      if (relatedIncomeId != null) 'related_income_id': relatedIncomeId,
+      if (kind != null) 'kind': kind,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -5901,6 +6113,8 @@ class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
     Value<int?>? relatedExpenseId,
     Value<int?>? relatedDebtPaymentId,
     Value<int?>? relatedLendingId,
+    Value<int?>? relatedIncomeId,
+    Value<String?>? kind,
     Value<DateTime>? createdAt,
   }) {
     return SavingsHistoryCompanion(
@@ -5912,6 +6126,8 @@ class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
       relatedExpenseId: relatedExpenseId ?? this.relatedExpenseId,
       relatedDebtPaymentId: relatedDebtPaymentId ?? this.relatedDebtPaymentId,
       relatedLendingId: relatedLendingId ?? this.relatedLendingId,
+      relatedIncomeId: relatedIncomeId ?? this.relatedIncomeId,
+      kind: kind ?? this.kind,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -5945,6 +6161,12 @@ class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
     if (relatedLendingId.present) {
       map['related_lending_id'] = Variable<int>(relatedLendingId.value);
     }
+    if (relatedIncomeId.present) {
+      map['related_income_id'] = Variable<int>(relatedIncomeId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -5962,6 +6184,8 @@ class SavingsHistoryCompanion extends UpdateCompanion<SavingsHistoryRow> {
           ..write('relatedExpenseId: $relatedExpenseId, ')
           ..write('relatedDebtPaymentId: $relatedDebtPaymentId, ')
           ..write('relatedLendingId: $relatedLendingId, ')
+          ..write('relatedIncomeId: $relatedIncomeId, ')
+          ..write('kind: $kind, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -6074,6 +6298,21 @@ class $LendingsTable extends Lendings
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _isArchivedMeta = const VerificationMeta(
+    'isArchived',
+  );
+  @override
+  late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
+    'is_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _notesMeta = const VerificationMeta('notes');
   @override
   late final GeneratedColumn<String> notes = GeneratedColumn<String>(
@@ -6105,6 +6344,7 @@ class $LendingsTable extends Lendings
     fromSavings,
     savingsAmount,
     cycleId,
+    isArchived,
     notes,
     createdAt,
   ];
@@ -6187,6 +6427,12 @@ class $LendingsTable extends Lendings
         cycleId.isAcceptableOrUnknown(data['cycle_id']!, _cycleIdMeta),
       );
     }
+    if (data.containsKey('is_archived')) {
+      context.handle(
+        _isArchivedMeta,
+        isArchived.isAcceptableOrUnknown(data['is_archived']!, _isArchivedMeta),
+      );
+    }
     if (data.containsKey('notes')) {
       context.handle(
         _notesMeta,
@@ -6240,6 +6486,10 @@ class $LendingsTable extends Lendings
         DriftSqlType.int,
         data['${effectivePrefix}cycle_id'],
       ),
+      isArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_archived'],
+      )!,
       notes: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
@@ -6266,6 +6516,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
   final bool fromSavings;
   final int savingsAmount;
   final int? cycleId;
+  final bool isArchived;
   final String? notes;
   final DateTime createdAt;
   const LendingRow({
@@ -6277,6 +6528,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
     required this.fromSavings,
     required this.savingsAmount,
     this.cycleId,
+    required this.isArchived,
     this.notes,
     required this.createdAt,
   });
@@ -6293,6 +6545,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
     if (!nullToAbsent || cycleId != null) {
       map['cycle_id'] = Variable<int>(cycleId);
     }
+    map['is_archived'] = Variable<bool>(isArchived);
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
     }
@@ -6312,6 +6565,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
       cycleId: cycleId == null && nullToAbsent
           ? const Value.absent()
           : Value(cycleId),
+      isArchived: Value(isArchived),
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
@@ -6333,6 +6587,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
       fromSavings: serializer.fromJson<bool>(json['fromSavings']),
       savingsAmount: serializer.fromJson<int>(json['savingsAmount']),
       cycleId: serializer.fromJson<int?>(json['cycleId']),
+      isArchived: serializer.fromJson<bool>(json['isArchived']),
       notes: serializer.fromJson<String?>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -6349,6 +6604,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
       'fromSavings': serializer.toJson<bool>(fromSavings),
       'savingsAmount': serializer.toJson<int>(savingsAmount),
       'cycleId': serializer.toJson<int?>(cycleId),
+      'isArchived': serializer.toJson<bool>(isArchived),
       'notes': serializer.toJson<String?>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -6363,6 +6619,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
     bool? fromSavings,
     int? savingsAmount,
     Value<int?> cycleId = const Value.absent(),
+    bool? isArchived,
     Value<String?> notes = const Value.absent(),
     DateTime? createdAt,
   }) => LendingRow(
@@ -6374,6 +6631,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
     fromSavings: fromSavings ?? this.fromSavings,
     savingsAmount: savingsAmount ?? this.savingsAmount,
     cycleId: cycleId.present ? cycleId.value : this.cycleId,
+    isArchived: isArchived ?? this.isArchived,
     notes: notes.present ? notes.value : this.notes,
     createdAt: createdAt ?? this.createdAt,
   );
@@ -6399,6 +6657,9 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
           ? data.savingsAmount.value
           : this.savingsAmount,
       cycleId: data.cycleId.present ? data.cycleId.value : this.cycleId,
+      isArchived: data.isArchived.present
+          ? data.isArchived.value
+          : this.isArchived,
       notes: data.notes.present ? data.notes.value : this.notes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
@@ -6415,6 +6676,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
           ..write('fromSavings: $fromSavings, ')
           ..write('savingsAmount: $savingsAmount, ')
           ..write('cycleId: $cycleId, ')
+          ..write('isArchived: $isArchived, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -6431,6 +6693,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
     fromSavings,
     savingsAmount,
     cycleId,
+    isArchived,
     notes,
     createdAt,
   );
@@ -6446,6 +6709,7 @@ class LendingRow extends DataClass implements Insertable<LendingRow> {
           other.fromSavings == this.fromSavings &&
           other.savingsAmount == this.savingsAmount &&
           other.cycleId == this.cycleId &&
+          other.isArchived == this.isArchived &&
           other.notes == this.notes &&
           other.createdAt == this.createdAt);
 }
@@ -6459,6 +6723,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
   final Value<bool> fromSavings;
   final Value<int> savingsAmount;
   final Value<int?> cycleId;
+  final Value<bool> isArchived;
   final Value<String?> notes;
   final Value<DateTime> createdAt;
   const LendingsCompanion({
@@ -6470,6 +6735,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
     this.fromSavings = const Value.absent(),
     this.savingsAmount = const Value.absent(),
     this.cycleId = const Value.absent(),
+    this.isArchived = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
@@ -6482,6 +6748,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
     this.fromSavings = const Value.absent(),
     this.savingsAmount = const Value.absent(),
     this.cycleId = const Value.absent(),
+    this.isArchived = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : borrowerName = Value(borrowerName),
@@ -6495,6 +6762,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
     Expression<bool>? fromSavings,
     Expression<int>? savingsAmount,
     Expression<int>? cycleId,
+    Expression<bool>? isArchived,
     Expression<String>? notes,
     Expression<DateTime>? createdAt,
   }) {
@@ -6507,6 +6775,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
       if (fromSavings != null) 'from_savings': fromSavings,
       if (savingsAmount != null) 'savings_amount': savingsAmount,
       if (cycleId != null) 'cycle_id': cycleId,
+      if (isArchived != null) 'is_archived': isArchived,
       if (notes != null) 'notes': notes,
       if (createdAt != null) 'created_at': createdAt,
     });
@@ -6521,6 +6790,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
     Value<bool>? fromSavings,
     Value<int>? savingsAmount,
     Value<int?>? cycleId,
+    Value<bool>? isArchived,
     Value<String?>? notes,
     Value<DateTime>? createdAt,
   }) {
@@ -6533,6 +6803,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
       fromSavings: fromSavings ?? this.fromSavings,
       savingsAmount: savingsAmount ?? this.savingsAmount,
       cycleId: cycleId ?? this.cycleId,
+      isArchived: isArchived ?? this.isArchived,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -6565,6 +6836,9 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
     if (cycleId.present) {
       map['cycle_id'] = Variable<int>(cycleId.value);
     }
+    if (isArchived.present) {
+      map['is_archived'] = Variable<bool>(isArchived.value);
+    }
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
     }
@@ -6585,6 +6859,7 @@ class LendingsCompanion extends UpdateCompanion<LendingRow> {
           ..write('fromSavings: $fromSavings, ')
           ..write('savingsAmount: $savingsAmount, ')
           ..write('cycleId: $cycleId, ')
+          ..write('isArchived: $isArchived, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -6646,6 +6921,32 @@ class $LendingCollectionsTable extends LendingCollections
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _cycleIdMeta = const VerificationMeta(
+    'cycleId',
+  );
+  @override
+  late final GeneratedColumn<int> cycleId = GeneratedColumn<int>(
+    'cycle_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isAdjustmentMeta = const VerificationMeta(
+    'isAdjustment',
+  );
+  @override
+  late final GeneratedColumn<bool> isAdjustment = GeneratedColumn<bool>(
+    'is_adjustment',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_adjustment" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -6664,6 +6965,8 @@ class $LendingCollectionsTable extends LendingCollections
     lendingId,
     amount,
     toSavings,
+    cycleId,
+    isAdjustment,
     createdAt,
   ];
   @override
@@ -6703,6 +7006,21 @@ class $LendingCollectionsTable extends LendingCollections
         toSavings.isAcceptableOrUnknown(data['to_savings']!, _toSavingsMeta),
       );
     }
+    if (data.containsKey('cycle_id')) {
+      context.handle(
+        _cycleIdMeta,
+        cycleId.isAcceptableOrUnknown(data['cycle_id']!, _cycleIdMeta),
+      );
+    }
+    if (data.containsKey('is_adjustment')) {
+      context.handle(
+        _isAdjustmentMeta,
+        isAdjustment.isAcceptableOrUnknown(
+          data['is_adjustment']!,
+          _isAdjustmentMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -6734,6 +7052,14 @@ class $LendingCollectionsTable extends LendingCollections
         DriftSqlType.bool,
         data['${effectivePrefix}to_savings'],
       )!,
+      cycleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cycle_id'],
+      ),
+      isAdjustment: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_adjustment'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -6753,12 +7079,16 @@ class LendingCollectionRow extends DataClass
   final int lendingId;
   final int amount;
   final bool toSavings;
+  final int? cycleId;
+  final bool isAdjustment;
   final DateTime createdAt;
   const LendingCollectionRow({
     required this.id,
     required this.lendingId,
     required this.amount,
     required this.toSavings,
+    this.cycleId,
+    required this.isAdjustment,
     required this.createdAt,
   });
   @override
@@ -6768,6 +7098,10 @@ class LendingCollectionRow extends DataClass
     map['lending_id'] = Variable<int>(lendingId);
     map['amount'] = Variable<int>(amount);
     map['to_savings'] = Variable<bool>(toSavings);
+    if (!nullToAbsent || cycleId != null) {
+      map['cycle_id'] = Variable<int>(cycleId);
+    }
+    map['is_adjustment'] = Variable<bool>(isAdjustment);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -6778,6 +7112,10 @@ class LendingCollectionRow extends DataClass
       lendingId: Value(lendingId),
       amount: Value(amount),
       toSavings: Value(toSavings),
+      cycleId: cycleId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cycleId),
+      isAdjustment: Value(isAdjustment),
       createdAt: Value(createdAt),
     );
   }
@@ -6792,6 +7130,8 @@ class LendingCollectionRow extends DataClass
       lendingId: serializer.fromJson<int>(json['lendingId']),
       amount: serializer.fromJson<int>(json['amount']),
       toSavings: serializer.fromJson<bool>(json['toSavings']),
+      cycleId: serializer.fromJson<int?>(json['cycleId']),
+      isAdjustment: serializer.fromJson<bool>(json['isAdjustment']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -6803,6 +7143,8 @@ class LendingCollectionRow extends DataClass
       'lendingId': serializer.toJson<int>(lendingId),
       'amount': serializer.toJson<int>(amount),
       'toSavings': serializer.toJson<bool>(toSavings),
+      'cycleId': serializer.toJson<int?>(cycleId),
+      'isAdjustment': serializer.toJson<bool>(isAdjustment),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -6812,12 +7154,16 @@ class LendingCollectionRow extends DataClass
     int? lendingId,
     int? amount,
     bool? toSavings,
+    Value<int?> cycleId = const Value.absent(),
+    bool? isAdjustment,
     DateTime? createdAt,
   }) => LendingCollectionRow(
     id: id ?? this.id,
     lendingId: lendingId ?? this.lendingId,
     amount: amount ?? this.amount,
     toSavings: toSavings ?? this.toSavings,
+    cycleId: cycleId.present ? cycleId.value : this.cycleId,
+    isAdjustment: isAdjustment ?? this.isAdjustment,
     createdAt: createdAt ?? this.createdAt,
   );
   LendingCollectionRow copyWithCompanion(LendingCollectionsCompanion data) {
@@ -6826,6 +7172,10 @@ class LendingCollectionRow extends DataClass
       lendingId: data.lendingId.present ? data.lendingId.value : this.lendingId,
       amount: data.amount.present ? data.amount.value : this.amount,
       toSavings: data.toSavings.present ? data.toSavings.value : this.toSavings,
+      cycleId: data.cycleId.present ? data.cycleId.value : this.cycleId,
+      isAdjustment: data.isAdjustment.present
+          ? data.isAdjustment.value
+          : this.isAdjustment,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -6837,13 +7187,23 @@ class LendingCollectionRow extends DataClass
           ..write('lendingId: $lendingId, ')
           ..write('amount: $amount, ')
           ..write('toSavings: $toSavings, ')
+          ..write('cycleId: $cycleId, ')
+          ..write('isAdjustment: $isAdjustment, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, lendingId, amount, toSavings, createdAt);
+  int get hashCode => Object.hash(
+    id,
+    lendingId,
+    amount,
+    toSavings,
+    cycleId,
+    isAdjustment,
+    createdAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -6852,6 +7212,8 @@ class LendingCollectionRow extends DataClass
           other.lendingId == this.lendingId &&
           other.amount == this.amount &&
           other.toSavings == this.toSavings &&
+          other.cycleId == this.cycleId &&
+          other.isAdjustment == this.isAdjustment &&
           other.createdAt == this.createdAt);
 }
 
@@ -6861,12 +7223,16 @@ class LendingCollectionsCompanion
   final Value<int> lendingId;
   final Value<int> amount;
   final Value<bool> toSavings;
+  final Value<int?> cycleId;
+  final Value<bool> isAdjustment;
   final Value<DateTime> createdAt;
   const LendingCollectionsCompanion({
     this.id = const Value.absent(),
     this.lendingId = const Value.absent(),
     this.amount = const Value.absent(),
     this.toSavings = const Value.absent(),
+    this.cycleId = const Value.absent(),
+    this.isAdjustment = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   LendingCollectionsCompanion.insert({
@@ -6874,6 +7240,8 @@ class LendingCollectionsCompanion
     required int lendingId,
     required int amount,
     this.toSavings = const Value.absent(),
+    this.cycleId = const Value.absent(),
+    this.isAdjustment = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : lendingId = Value(lendingId),
        amount = Value(amount);
@@ -6882,6 +7250,8 @@ class LendingCollectionsCompanion
     Expression<int>? lendingId,
     Expression<int>? amount,
     Expression<bool>? toSavings,
+    Expression<int>? cycleId,
+    Expression<bool>? isAdjustment,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -6889,6 +7259,8 @@ class LendingCollectionsCompanion
       if (lendingId != null) 'lending_id': lendingId,
       if (amount != null) 'amount': amount,
       if (toSavings != null) 'to_savings': toSavings,
+      if (cycleId != null) 'cycle_id': cycleId,
+      if (isAdjustment != null) 'is_adjustment': isAdjustment,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -6898,6 +7270,8 @@ class LendingCollectionsCompanion
     Value<int>? lendingId,
     Value<int>? amount,
     Value<bool>? toSavings,
+    Value<int?>? cycleId,
+    Value<bool>? isAdjustment,
     Value<DateTime>? createdAt,
   }) {
     return LendingCollectionsCompanion(
@@ -6905,6 +7279,8 @@ class LendingCollectionsCompanion
       lendingId: lendingId ?? this.lendingId,
       amount: amount ?? this.amount,
       toSavings: toSavings ?? this.toSavings,
+      cycleId: cycleId ?? this.cycleId,
+      isAdjustment: isAdjustment ?? this.isAdjustment,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -6924,6 +7300,12 @@ class LendingCollectionsCompanion
     if (toSavings.present) {
       map['to_savings'] = Variable<bool>(toSavings.value);
     }
+    if (cycleId.present) {
+      map['cycle_id'] = Variable<int>(cycleId.value);
+    }
+    if (isAdjustment.present) {
+      map['is_adjustment'] = Variable<bool>(isAdjustment.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -6937,6 +7319,8 @@ class LendingCollectionsCompanion
           ..write('lendingId: $lendingId, ')
           ..write('amount: $amount, ')
           ..write('toSavings: $toSavings, ')
+          ..write('cycleId: $cycleId, ')
+          ..write('isAdjustment: $isAdjustment, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -6986,6 +7370,21 @@ class $CustomCategoriesTable extends CustomCategories
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isArchivedMeta = const VerificationMeta(
+    'isArchived',
+  );
+  @override
+  late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
+    'is_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -6999,7 +7398,13 @@ class $CustomCategoriesTable extends CustomCategories
     defaultValue: currentDateAndTime,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, name, iconCodePoint, createdAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    iconCodePoint,
+    isArchived,
+    createdAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -7034,6 +7439,12 @@ class $CustomCategoriesTable extends CustomCategories
     } else if (isInserting) {
       context.missing(_iconCodePointMeta);
     }
+    if (data.containsKey('is_archived')) {
+      context.handle(
+        _isArchivedMeta,
+        isArchived.isAcceptableOrUnknown(data['is_archived']!, _isArchivedMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -7061,6 +7472,10 @@ class $CustomCategoriesTable extends CustomCategories
         DriftSqlType.int,
         data['${effectivePrefix}icon_code_point'],
       )!,
+      isArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_archived'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -7079,11 +7494,13 @@ class CustomCategoryRow extends DataClass
   final int id;
   final String name;
   final int iconCodePoint;
+  final bool isArchived;
   final DateTime createdAt;
   const CustomCategoryRow({
     required this.id,
     required this.name,
     required this.iconCodePoint,
+    required this.isArchived,
     required this.createdAt,
   });
   @override
@@ -7092,6 +7509,7 @@ class CustomCategoryRow extends DataClass
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     map['icon_code_point'] = Variable<int>(iconCodePoint);
+    map['is_archived'] = Variable<bool>(isArchived);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -7101,6 +7519,7 @@ class CustomCategoryRow extends DataClass
       id: Value(id),
       name: Value(name),
       iconCodePoint: Value(iconCodePoint),
+      isArchived: Value(isArchived),
       createdAt: Value(createdAt),
     );
   }
@@ -7114,6 +7533,7 @@ class CustomCategoryRow extends DataClass
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       iconCodePoint: serializer.fromJson<int>(json['iconCodePoint']),
+      isArchived: serializer.fromJson<bool>(json['isArchived']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -7124,6 +7544,7 @@ class CustomCategoryRow extends DataClass
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'iconCodePoint': serializer.toJson<int>(iconCodePoint),
+      'isArchived': serializer.toJson<bool>(isArchived),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -7132,11 +7553,13 @@ class CustomCategoryRow extends DataClass
     int? id,
     String? name,
     int? iconCodePoint,
+    bool? isArchived,
     DateTime? createdAt,
   }) => CustomCategoryRow(
     id: id ?? this.id,
     name: name ?? this.name,
     iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+    isArchived: isArchived ?? this.isArchived,
     createdAt: createdAt ?? this.createdAt,
   );
   CustomCategoryRow copyWithCompanion(CustomCategoriesCompanion data) {
@@ -7146,6 +7569,9 @@ class CustomCategoryRow extends DataClass
       iconCodePoint: data.iconCodePoint.present
           ? data.iconCodePoint.value
           : this.iconCodePoint,
+      isArchived: data.isArchived.present
+          ? data.isArchived.value
+          : this.isArchived,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -7156,13 +7582,15 @@ class CustomCategoryRow extends DataClass
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('iconCodePoint: $iconCodePoint, ')
+          ..write('isArchived: $isArchived, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, iconCodePoint, createdAt);
+  int get hashCode =>
+      Object.hash(id, name, iconCodePoint, isArchived, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -7170,6 +7598,7 @@ class CustomCategoryRow extends DataClass
           other.id == this.id &&
           other.name == this.name &&
           other.iconCodePoint == this.iconCodePoint &&
+          other.isArchived == this.isArchived &&
           other.createdAt == this.createdAt);
 }
 
@@ -7177,17 +7606,20 @@ class CustomCategoriesCompanion extends UpdateCompanion<CustomCategoryRow> {
   final Value<int> id;
   final Value<String> name;
   final Value<int> iconCodePoint;
+  final Value<bool> isArchived;
   final Value<DateTime> createdAt;
   const CustomCategoriesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.iconCodePoint = const Value.absent(),
+    this.isArchived = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   CustomCategoriesCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     required int iconCodePoint,
+    this.isArchived = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : name = Value(name),
        iconCodePoint = Value(iconCodePoint);
@@ -7195,12 +7627,14 @@ class CustomCategoriesCompanion extends UpdateCompanion<CustomCategoryRow> {
     Expression<int>? id,
     Expression<String>? name,
     Expression<int>? iconCodePoint,
+    Expression<bool>? isArchived,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (iconCodePoint != null) 'icon_code_point': iconCodePoint,
+      if (isArchived != null) 'is_archived': isArchived,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -7209,12 +7643,14 @@ class CustomCategoriesCompanion extends UpdateCompanion<CustomCategoryRow> {
     Value<int>? id,
     Value<String>? name,
     Value<int>? iconCodePoint,
+    Value<bool>? isArchived,
     Value<DateTime>? createdAt,
   }) {
     return CustomCategoriesCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       iconCodePoint: iconCodePoint ?? this.iconCodePoint,
+      isArchived: isArchived ?? this.isArchived,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -7231,6 +7667,9 @@ class CustomCategoriesCompanion extends UpdateCompanion<CustomCategoryRow> {
     if (iconCodePoint.present) {
       map['icon_code_point'] = Variable<int>(iconCodePoint.value);
     }
+    if (isArchived.present) {
+      map['is_archived'] = Variable<bool>(isArchived.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -7243,6 +7682,7 @@ class CustomCategoriesCompanion extends UpdateCompanion<CustomCategoryRow> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('iconCodePoint: $iconCodePoint, ')
+          ..write('isArchived: $isArchived, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -8913,6 +9353,8 @@ typedef $$SavingsGoalsTableCreateCompanionBuilder =
       required int targetAmount,
       Value<int> savedAmount,
       Value<bool> isAchieved,
+      Value<int?> purchasedAmount,
+      Value<int?> purchaseTransactionId,
       Value<DateTime> createdAt,
     });
 typedef $$SavingsGoalsTableUpdateCompanionBuilder =
@@ -8922,6 +9364,8 @@ typedef $$SavingsGoalsTableUpdateCompanionBuilder =
       Value<int> targetAmount,
       Value<int> savedAmount,
       Value<bool> isAchieved,
+      Value<int?> purchasedAmount,
+      Value<int?> purchaseTransactionId,
       Value<DateTime> createdAt,
     });
 
@@ -8956,6 +9400,16 @@ class $$SavingsGoalsTableFilterComposer
 
   ColumnFilters<bool> get isAchieved => $composableBuilder(
     column: $table.isAchieved,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get purchasedAmount => $composableBuilder(
+    column: $table.purchasedAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get purchaseTransactionId => $composableBuilder(
+    column: $table.purchaseTransactionId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8999,6 +9453,16 @@ class $$SavingsGoalsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get purchasedAmount => $composableBuilder(
+    column: $table.purchasedAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get purchaseTransactionId => $composableBuilder(
+    column: $table.purchaseTransactionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -9032,6 +9496,16 @@ class $$SavingsGoalsTableAnnotationComposer
 
   GeneratedColumn<bool> get isAchieved => $composableBuilder(
     column: $table.isAchieved,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get purchasedAmount => $composableBuilder(
+    column: $table.purchasedAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get purchaseTransactionId => $composableBuilder(
+    column: $table.purchaseTransactionId,
     builder: (column) => column,
   );
 
@@ -9075,6 +9549,8 @@ class $$SavingsGoalsTableTableManager
                 Value<int> targetAmount = const Value.absent(),
                 Value<int> savedAmount = const Value.absent(),
                 Value<bool> isAchieved = const Value.absent(),
+                Value<int?> purchasedAmount = const Value.absent(),
+                Value<int?> purchaseTransactionId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => SavingsGoalsCompanion(
                 id: id,
@@ -9082,6 +9558,8 @@ class $$SavingsGoalsTableTableManager
                 targetAmount: targetAmount,
                 savedAmount: savedAmount,
                 isAchieved: isAchieved,
+                purchasedAmount: purchasedAmount,
+                purchaseTransactionId: purchaseTransactionId,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -9091,6 +9569,8 @@ class $$SavingsGoalsTableTableManager
                 required int targetAmount,
                 Value<int> savedAmount = const Value.absent(),
                 Value<bool> isAchieved = const Value.absent(),
+                Value<int?> purchasedAmount = const Value.absent(),
+                Value<int?> purchaseTransactionId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => SavingsGoalsCompanion.insert(
                 id: id,
@@ -9098,6 +9578,8 @@ class $$SavingsGoalsTableTableManager
                 targetAmount: targetAmount,
                 savedAmount: savedAmount,
                 isAchieved: isAchieved,
+                purchasedAmount: purchasedAmount,
+                purchaseTransactionId: purchaseTransactionId,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -10093,6 +10575,8 @@ typedef $$SavingsHistoryTableCreateCompanionBuilder =
       Value<int?> relatedExpenseId,
       Value<int?> relatedDebtPaymentId,
       Value<int?> relatedLendingId,
+      Value<int?> relatedIncomeId,
+      Value<String?> kind,
       Value<DateTime> createdAt,
     });
 typedef $$SavingsHistoryTableUpdateCompanionBuilder =
@@ -10105,6 +10589,8 @@ typedef $$SavingsHistoryTableUpdateCompanionBuilder =
       Value<int?> relatedExpenseId,
       Value<int?> relatedDebtPaymentId,
       Value<int?> relatedLendingId,
+      Value<int?> relatedIncomeId,
+      Value<String?> kind,
       Value<DateTime> createdAt,
     });
 
@@ -10154,6 +10640,16 @@ class $$SavingsHistoryTableFilterComposer
 
   ColumnFilters<int> get relatedLendingId => $composableBuilder(
     column: $table.relatedLendingId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get relatedIncomeId => $composableBuilder(
+    column: $table.relatedIncomeId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10212,6 +10708,16 @@ class $$SavingsHistoryTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get relatedIncomeId => $composableBuilder(
+    column: $table.relatedIncomeId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -10260,6 +10766,14 @@ class $$SavingsHistoryTableAnnotationComposer
     column: $table.relatedLendingId,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get relatedIncomeId => $composableBuilder(
+    column: $table.relatedIncomeId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -10310,6 +10824,8 @@ class $$SavingsHistoryTableTableManager
                 Value<int?> relatedExpenseId = const Value.absent(),
                 Value<int?> relatedDebtPaymentId = const Value.absent(),
                 Value<int?> relatedLendingId = const Value.absent(),
+                Value<int?> relatedIncomeId = const Value.absent(),
+                Value<String?> kind = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => SavingsHistoryCompanion(
                 id: id,
@@ -10320,6 +10836,8 @@ class $$SavingsHistoryTableTableManager
                 relatedExpenseId: relatedExpenseId,
                 relatedDebtPaymentId: relatedDebtPaymentId,
                 relatedLendingId: relatedLendingId,
+                relatedIncomeId: relatedIncomeId,
+                kind: kind,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -10332,6 +10850,8 @@ class $$SavingsHistoryTableTableManager
                 Value<int?> relatedExpenseId = const Value.absent(),
                 Value<int?> relatedDebtPaymentId = const Value.absent(),
                 Value<int?> relatedLendingId = const Value.absent(),
+                Value<int?> relatedIncomeId = const Value.absent(),
+                Value<String?> kind = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => SavingsHistoryCompanion.insert(
                 id: id,
@@ -10342,6 +10862,8 @@ class $$SavingsHistoryTableTableManager
                 relatedExpenseId: relatedExpenseId,
                 relatedDebtPaymentId: relatedDebtPaymentId,
                 relatedLendingId: relatedLendingId,
+                relatedIncomeId: relatedIncomeId,
+                kind: kind,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -10379,6 +10901,7 @@ typedef $$LendingsTableCreateCompanionBuilder =
       Value<bool> fromSavings,
       Value<int> savingsAmount,
       Value<int?> cycleId,
+      Value<bool> isArchived,
       Value<String?> notes,
       Value<DateTime> createdAt,
     });
@@ -10392,6 +10915,7 @@ typedef $$LendingsTableUpdateCompanionBuilder =
       Value<bool> fromSavings,
       Value<int> savingsAmount,
       Value<int?> cycleId,
+      Value<bool> isArchived,
       Value<String?> notes,
       Value<DateTime> createdAt,
     });
@@ -10442,6 +10966,11 @@ class $$LendingsTableFilterComposer
 
   ColumnFilters<int> get cycleId => $composableBuilder(
     column: $table.cycleId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10505,6 +11034,11 @@ class $$LendingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get notes => $composableBuilder(
     column: $table.notes,
     builder: (column) => ColumnOrderings(column),
@@ -10561,6 +11095,11 @@ class $$LendingsTableAnnotationComposer
   GeneratedColumn<int> get cycleId =>
       $composableBuilder(column: $table.cycleId, builder: (column) => column);
 
+  GeneratedColumn<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
 
@@ -10607,6 +11146,7 @@ class $$LendingsTableTableManager
                 Value<bool> fromSavings = const Value.absent(),
                 Value<int> savingsAmount = const Value.absent(),
                 Value<int?> cycleId = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => LendingsCompanion(
@@ -10618,6 +11158,7 @@ class $$LendingsTableTableManager
                 fromSavings: fromSavings,
                 savingsAmount: savingsAmount,
                 cycleId: cycleId,
+                isArchived: isArchived,
                 notes: notes,
                 createdAt: createdAt,
               ),
@@ -10631,6 +11172,7 @@ class $$LendingsTableTableManager
                 Value<bool> fromSavings = const Value.absent(),
                 Value<int> savingsAmount = const Value.absent(),
                 Value<int?> cycleId = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => LendingsCompanion.insert(
@@ -10642,6 +11184,7 @@ class $$LendingsTableTableManager
                 fromSavings: fromSavings,
                 savingsAmount: savingsAmount,
                 cycleId: cycleId,
+                isArchived: isArchived,
                 notes: notes,
                 createdAt: createdAt,
               ),
@@ -10673,6 +11216,8 @@ typedef $$LendingCollectionsTableCreateCompanionBuilder =
       required int lendingId,
       required int amount,
       Value<bool> toSavings,
+      Value<int?> cycleId,
+      Value<bool> isAdjustment,
       Value<DateTime> createdAt,
     });
 typedef $$LendingCollectionsTableUpdateCompanionBuilder =
@@ -10681,6 +11226,8 @@ typedef $$LendingCollectionsTableUpdateCompanionBuilder =
       Value<int> lendingId,
       Value<int> amount,
       Value<bool> toSavings,
+      Value<int?> cycleId,
+      Value<bool> isAdjustment,
       Value<DateTime> createdAt,
     });
 
@@ -10710,6 +11257,16 @@ class $$LendingCollectionsTableFilterComposer
 
   ColumnFilters<bool> get toSavings => $composableBuilder(
     column: $table.toSavings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cycleId => $composableBuilder(
+    column: $table.cycleId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isAdjustment => $composableBuilder(
+    column: $table.isAdjustment,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10748,6 +11305,16 @@ class $$LendingCollectionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get cycleId => $composableBuilder(
+    column: $table.cycleId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isAdjustment => $composableBuilder(
+    column: $table.isAdjustment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -10774,6 +11341,14 @@ class $$LendingCollectionsTableAnnotationComposer
 
   GeneratedColumn<bool> get toSavings =>
       $composableBuilder(column: $table.toSavings, builder: (column) => column);
+
+  GeneratedColumn<int> get cycleId =>
+      $composableBuilder(column: $table.cycleId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isAdjustment => $composableBuilder(
+    column: $table.isAdjustment,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -10823,12 +11398,16 @@ class $$LendingCollectionsTableTableManager
                 Value<int> lendingId = const Value.absent(),
                 Value<int> amount = const Value.absent(),
                 Value<bool> toSavings = const Value.absent(),
+                Value<int?> cycleId = const Value.absent(),
+                Value<bool> isAdjustment = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => LendingCollectionsCompanion(
                 id: id,
                 lendingId: lendingId,
                 amount: amount,
                 toSavings: toSavings,
+                cycleId: cycleId,
+                isAdjustment: isAdjustment,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -10837,12 +11416,16 @@ class $$LendingCollectionsTableTableManager
                 required int lendingId,
                 required int amount,
                 Value<bool> toSavings = const Value.absent(),
+                Value<int?> cycleId = const Value.absent(),
+                Value<bool> isAdjustment = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => LendingCollectionsCompanion.insert(
                 id: id,
                 lendingId: lendingId,
                 amount: amount,
                 toSavings: toSavings,
+                cycleId: cycleId,
+                isAdjustment: isAdjustment,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -10879,6 +11462,7 @@ typedef $$CustomCategoriesTableCreateCompanionBuilder =
       Value<int> id,
       required String name,
       required int iconCodePoint,
+      Value<bool> isArchived,
       Value<DateTime> createdAt,
     });
 typedef $$CustomCategoriesTableUpdateCompanionBuilder =
@@ -10886,6 +11470,7 @@ typedef $$CustomCategoriesTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> name,
       Value<int> iconCodePoint,
+      Value<bool> isArchived,
       Value<DateTime> createdAt,
     });
 
@@ -10910,6 +11495,11 @@ class $$CustomCategoriesTableFilterComposer
 
   ColumnFilters<int> get iconCodePoint => $composableBuilder(
     column: $table.iconCodePoint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10943,6 +11533,11 @@ class $$CustomCategoriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -10966,6 +11561,11 @@ class $$CustomCategoriesTableAnnotationComposer
 
   GeneratedColumn<int> get iconCodePoint => $composableBuilder(
     column: $table.iconCodePoint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
     builder: (column) => column,
   );
 
@@ -11013,11 +11613,13 @@ class $$CustomCategoriesTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<int> iconCodePoint = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => CustomCategoriesCompanion(
                 id: id,
                 name: name,
                 iconCodePoint: iconCodePoint,
+                isArchived: isArchived,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -11025,11 +11627,13 @@ class $$CustomCategoriesTableTableManager
                 Value<int> id = const Value.absent(),
                 required String name,
                 required int iconCodePoint,
+                Value<bool> isArchived = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => CustomCategoriesCompanion.insert(
                 id: id,
                 name: name,
                 iconCodePoint: iconCodePoint,
+                isArchived: isArchived,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0

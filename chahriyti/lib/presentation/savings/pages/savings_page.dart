@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../application/use_cases/dashboard/get_dashboard_data_use_case.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/money_extensions.dart';
@@ -25,14 +24,9 @@ class SavingsPage extends StatelessWidget {
         Injection.getSavingsHistoryUseCase,
         Injection.depositFromBalanceUseCase,
         Injection.withdrawToBalanceUseCase,
-        GetDashboardDataUseCase(
-          cycleRepository: Injection.cycleRepository,
-          expenseRepository: Injection.expenseRepository,
-          incomeRepository: Injection.incomeRepository,
-          debtRepository: Injection.debtRepository,
-          lendingRepository: Injection.lendingRepository,
-        ),
-        Injection.savingsRepository,
+        Injection.getDashboardDataUseCase,
+        Injection.manageSavingsRecordUseCase,
+        Injection.cycleRepository,
       )..loadSavings(),
       child: const _SavingsView(),
     );
@@ -42,7 +36,8 @@ class SavingsPage extends StatelessWidget {
 class _SavingsView extends StatelessWidget {
   const _SavingsView();
 
-  Future<void> _confirmDelete(BuildContext context, int id) async {
+  Future<void> _confirmDelete(
+      BuildContext context, SavingsHistoryEntity record) async {
     final cubit = context.read<SavingsCubit>();
     final confirmed = await showDialog<bool>(
       context: context,
@@ -63,7 +58,7 @@ class _SavingsView extends StatelessWidget {
       ),
     );
     if (confirmed == true && context.mounted) {
-      final error = await cubit.deleteTransaction(id);
+      final error = await cubit.deleteTransaction(record);
       if (error != null && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error), backgroundColor: AppColors.negative),
@@ -86,7 +81,7 @@ class _SavingsView extends StatelessWidget {
         onConfirm: (amount, description) async {
           Navigator.of(sheetContext).pop();
           final error = await cubit.editTransaction(
-            record.id,
+            record,
             amount: amount,
             description: description,
           );
@@ -310,10 +305,18 @@ class _SavingsView extends StatelessWidget {
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
                             final record = history[index];
+                            // Linked records change from their source only
+                            final editable = context
+                                .read<SavingsCubit>()
+                                .canModify(record);
                             return SavingsHistoryItem(
                               record: record,
-                              onDelete: () => _confirmDelete(context, record.id),
-                              onEdit: () => _showEditSheet(context, record),
+                              onDelete: editable
+                                  ? () => _confirmDelete(context, record)
+                                  : null,
+                              onEdit: editable
+                                  ? () => _showEditSheet(context, record)
+                                  : null,
                             );
                           },
                           childCount: history.length,

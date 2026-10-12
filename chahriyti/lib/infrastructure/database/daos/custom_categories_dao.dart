@@ -20,8 +20,9 @@ class CustomCategoriesDao extends DatabaseAccessor<AppDatabase>
         CustomCategoriesCompanion.insert(name: name, iconCodePoint: iconCodePoint),
       );
 
-  Future<void> deleteById(int id) =>
-      (delete(customCategories)..where((t) => t.id.equals(id))).go();
+  Future<void> archiveById(int id) =>
+      (update(customCategories)..where((t) => t.id.equals(id)))
+          .write(const CustomCategoriesCompanion(isArchived: Value(true)));
 
   Future<int> count() async {
     final countExp = customCategories.id.count();

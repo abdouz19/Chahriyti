@@ -84,6 +84,28 @@ class GoalsDao extends DatabaseAccessor<AppDatabase> with _$GoalsDaoMixin {
     );
   }
 
+  Future<void> markGoalPurchased({
+    required int id,
+    required int amount,
+    required int transactionId,
+  }) =>
+      (update(savingsGoals)..where((t) => t.id.equals(id))).write(
+        SavingsGoalsCompanion(
+          isAchieved: const Value(true),
+          purchasedAmount: Value(amount),
+          purchaseTransactionId: Value(transactionId),
+        ),
+      );
+
+  Future<void> undoGoalPurchase(int id) =>
+      (update(savingsGoals)..where((t) => t.id.equals(id))).write(
+        const SavingsGoalsCompanion(
+          isAchieved: Value(false),
+          purchasedAmount: Value(null),
+          purchaseTransactionId: Value(null),
+        ),
+      );
+
   Future<int> getTotalContributionsForCycle(int cycleId) async {
     final sum = savingsContributions.amount.sum();
     final query = selectOnly(savingsContributions)

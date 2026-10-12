@@ -17,6 +17,7 @@ class IncomeRepositoryImpl implements IncomeRepository {
         description: row.description,
         amount: row.amount,
         createdAt: row.createdAt,
+        toSavings: row.toSavings,
       );
 
   @override

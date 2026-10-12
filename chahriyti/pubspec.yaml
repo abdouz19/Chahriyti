@@ -1,7 +1,7 @@
 name: chahriyti
 description: "شهريتي — Personal salary and expense management app for Algerian employees."
 publish_to: 'none'
-version: 1.0.0+14
+version: 1.0.0+16
 
 environment:
   sdk: ^3.9.2
@@ -61,6 +61,7 @@ dependencies:
   firebase_core: ^4.15.0
   cloud_firestore: ^6.10.0
   firebase_messaging: ^16.7.0
+  local_auth: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +81,8 @@ flutter:
     - assets/icons/
     - assets/illustrations/
     - assets/animations/
+    - assets/fonts/
+    - shorebird.yaml
 
 flutter_launcher_icons:
   image_path: "assets/icons/CHAHRIYTI 512.png"

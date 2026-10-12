@@ -46,17 +46,27 @@ class DebtsDao extends DatabaseAccessor<AppDatabase> with _$DebtsDaoMixin {
     int? totalAmount,
     String? notes,
     bool? isSpent,
-  }) =>
-      (update(debts)..where((t) => t.id.equals(id))).write(
-        DebtsCompanion(
-          creditorName:
-              creditorName != null ? Value(creditorName) : const Value.absent(),
-          totalAmount:
-              totalAmount != null ? Value(totalAmount) : const Value.absent(),
-          notes: notes != null ? Value(notes) : const Value.absent(),
-          isSpent: isSpent != null ? Value(isSpent) : const Value.absent(),
-        ),
-      );
+  }) async {
+    // Amount edits can complete a debt or reopen a paid one
+    bool? isFullyPaid;
+    if (totalAmount != null) {
+      final row =
+          await (select(debts)..where((t) => t.id.equals(id))).getSingle();
+      isFullyPaid = row.paidAmount >= totalAmount;
+    }
+    await (update(debts)..where((t) => t.id.equals(id))).write(
+      DebtsCompanion(
+        creditorName:
+            creditorName != null ? Value(creditorName) : const Value.absent(),
+        totalAmount:
+            totalAmount != null ? Value(totalAmount) : const Value.absent(),
+        notes: notes != null ? Value(notes) : const Value.absent(),
+        isSpent: isSpent != null ? Value(isSpent) : const Value.absent(),
+        isFullyPaid:
+            isFullyPaid != null ? Value(isFullyPaid) : const Value.absent(),
+      ),
+    );
+  }
 
   Future<void> deleteDebtById(int id) async {
     await transaction(() async {

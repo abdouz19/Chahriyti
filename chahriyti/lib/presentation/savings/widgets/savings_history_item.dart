@@ -6,6 +6,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/savings_history_entity.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
+import 'savings_description.dart';
 
 class SavingsHistoryItem extends StatelessWidget {
   final SavingsHistoryEntity record;
@@ -51,7 +52,7 @@ class SavingsHistoryItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  record.description,
+                  localizedSavingsDescription(context, record),
                   style: AppTypography.bodyMedium,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -68,7 +69,7 @@ class SavingsHistoryItem extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           MoneyText(
-            amount: Money(record.amount),
+            amount: Money(isDeposit ? record.amount : -record.amount),
             style: AppTypography.labelLarge,
             color: color,
             showSign: true,

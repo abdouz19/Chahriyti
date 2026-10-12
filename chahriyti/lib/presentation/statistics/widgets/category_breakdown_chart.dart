@@ -8,6 +8,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'stat_widgets.dart';
 
 class CategoryBreakdownChart extends StatefulWidget {
   final CategoryBreakdownResult breakdown;
@@ -71,16 +72,12 @@ class _CategoryBreakdownChartState extends State<CategoryBreakdownChart> {
     final keys = percentages.keys.toList();
 
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
+      padding: const EdgeInsets.all(18),
+      decoration: statCardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.l10n.categoryBreakdownTitle, style: AppTypography.headlineSmall),
+          Text(context.l10n.categoryBreakdownTitle, style: statCardTitleStyle),
           const SizedBox(height: 20),
           if (percentages.isEmpty)
             Center(

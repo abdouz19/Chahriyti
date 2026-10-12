@@ -45,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 19;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -106,8 +106,14 @@ class AppDatabase extends _$AppDatabase {
             await customStatement(
                 'ALTER TABLE lendings RENAME TO _lendings_old');
             await m.create(lendings);
+            // Explicit columns: the new table follows the current schema,
+            // which may have columns added after v11
+            const v10Columns = 'id, borrower_name, total_amount, '
+                'collected_amount, is_fully_collected, from_savings, '
+                'savings_amount, cycle_id, notes, created_at';
             await customStatement(
-                'INSERT INTO lendings SELECT * FROM _lendings_old');
+                'INSERT INTO lendings ($v10Columns) '
+                'SELECT $v10Columns FROM _lendings_old');
             await customStatement('DROP TABLE _lendings_old');
           }
           if (from < 12) {
@@ -121,12 +127,71 @@ class AppDatabase extends _$AppDatabase {
             await customStatement('DROP TABLE IF EXISTS custom_categories');
             await m.create(customCategories);
           }
+          if (from < 16) {
+            // Guarded: the v11 rebuild of lendings already includes newer
+            // columns, and dev builds may have run a partial v15
+            await _addColumnIfMissing(m, lendings, lendings.isArchived);
+            await _addColumnIfMissing(
+                m, lendingCollections, lendingCollections.cycleId);
+            await _addColumnIfMissing(
+                m, lendingCollections, lendingCollections.isAdjustment);
+            await _addColumnIfMissing(
+                m, savingsGoals, savingsGoals.purchasedAmount);
+            await _addColumnIfMissing(
+                m, savingsGoals, savingsGoals.purchaseTransactionId);
+          }
+          if (from < 17) {
+            await _addColumnIfMissing(m, savingsHistory, savingsHistory.kind);
+            // Older transfers stay untagged: their effect already lives in
+            // the cycle's salary split, so they must not be counted twice
+            await customStatement(
+              "UPDATE savings_history SET kind = 'initial' "
+              "WHERE description = 'رصيد الادخار الأولي'",
+            );
+          }
+          if (from < 18) {
+            await _addColumnIfMissing(
+                m, customCategories, customCategories.isArchived);
+          }
+          if (from < 19) {
+            await _addColumnIfMissing(
+                m, savingsHistory, savingsHistory.relatedIncomeId);
+            // Link existing income deposits to their income: same name and
+            // amount first, then same name alone (amount edited before the
+            // link existed). Each income gets at most one deposit.
+            for (final sameAmount in [true, false]) {
+              await customStatement(
+                "UPDATE savings_history SET related_income_id = ("
+                "SELECT ai.id FROM additional_incomes ai "
+                "WHERE ai.to_savings = 1 "
+                "AND 'مدخول - ' || ai.description = savings_history.description "
+                "${sameAmount ? 'AND ai.amount = savings_history.amount ' : ''}"
+                "AND ai.id NOT IN (SELECT related_income_id FROM savings_history "
+                "WHERE related_income_id IS NOT NULL) "
+                "ORDER BY ai.id LIMIT 1) "
+                "WHERE type = 'deposit' AND related_income_id IS NULL "
+                "AND description LIKE 'مدخول - %'",
+              );
+            }
+          }
         },
         beforeOpen: (details) async {
           await customStatement('PRAGMA journal_mode=WAL;');
           await customStatement('PRAGMA foreign_keys = ON;');
         },
       );
+
+  Future<void> _addColumnIfMissing(
+    Migrator m,
+    TableInfo table,
+    GeneratedColumn column,
+  ) async {
+    final existing = await customSelect(
+      'PRAGMA table_info(${table.actualTableName})',
+    ).get();
+    if (existing.any((row) => row.read<String>('name') == column.name)) return;
+    await m.addColumn(table, column);
+  }
 
   /// Deletes all financial data, keeping users and license_activations intact.
   Future<void> resetFinancialData() async {
@@ -143,6 +208,7 @@ class AppDatabase extends _$AppDatabase {
       await delete(financialInsights).go();
       await delete(weeklyChallenges).go();
       await delete(financialCycles).go();
+      await delete(customCategories).go();
     });
   }
 }

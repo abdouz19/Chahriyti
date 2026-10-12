@@ -288,28 +288,7 @@ class _FormStepState extends State<_FormStep> {
     widget.onSave(itemName: itemName, amount: amount, notes: notes, savingsAmount: 0);
   }
 
-  Future<int> _getCurrentBalance(int cycleId) async {
-    final totalExpenses =
-        await Injection.expenseRepository.getTotalExpenses(cycleId);
-    final totalIncome =
-        await Injection.incomeRepository.getTotalIncomeForCycle(cycleId);
-    final totalDebtPayments =
-        await Injection.debtRepository.getTotalDebtPaymentsForCycle(cycleId);
-    final totalDebtsCreated =
-        await Injection.debtRepository.getTotalDebtsCreatedForCycle(cycleId);
-    final totalLendings =
-        await Injection.lendingRepository.getTotalLendingsFromBalanceForCycle(cycleId);
-    final totalCollections =
-        await Injection.lendingRepository.getTotalCollectionsToBalanceForCycle(cycleId);
-    final cycle = await Injection.cycleRepository.getCycleById(cycleId);
-    if (cycle == null) return 0;
-    return cycle.salaryAmount -
-        cycle.salarySplitAmount +
-        totalIncome +
-        totalDebtsCreated -
-        totalExpenses -
-        totalDebtPayments -
-        totalLendings +
-        totalCollections;
-  }
+  Future<int> _getCurrentBalance(int cycleId) async =>
+      // Shared formula: the active cycle balance, same as the dashboard
+      (await Injection.getDashboardDataUseCase()).currentBalance;
 }

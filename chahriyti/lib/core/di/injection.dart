@@ -23,6 +23,7 @@ import '../../application/use_cases/savings/withdraw_savings_use_case.dart';
 import '../../application/use_cases/savings/deposit_salary_split_use_case.dart';
 import '../../application/use_cases/savings/deposit_from_balance_use_case.dart';
 import '../../application/use_cases/savings/withdraw_to_balance_use_case.dart';
+import '../../application/use_cases/savings/manage_savings_record_use_case.dart';
 import '../../infrastructure/repositories/user_repository_impl.dart';
 import '../../infrastructure/repositories/cycle_repository_impl.dart';
 import '../../infrastructure/repositories/expense_repository_impl.dart';
@@ -35,6 +36,7 @@ import '../../infrastructure/services/device_info_service.dart';
 import '../../infrastructure/services/secure_storage_service.dart';
 import '../../infrastructure/services/license_service.dart';
 import '../../infrastructure/services/online_license_service.dart';
+import '../../infrastructure/services/app_lock_service.dart';
 import '../../infrastructure/services/notification_service.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../../domain/repositories/cycle_repository.dart';
@@ -67,11 +69,12 @@ import '../../application/use_cases/debt/get_debts_use_case.dart';
 import '../../application/use_cases/debt/update_debt_use_case.dart';
 import '../../application/use_cases/goal/calculate_goal_progress_use_case.dart';
 import '../../application/use_cases/goal/create_goal_use_case.dart';
+import '../../application/use_cases/goal/purchase_goal_use_case.dart';
+import '../../application/use_cases/goal/undo_goal_purchase_use_case.dart';
 import '../../application/use_cases/goal/delete_goal_use_case.dart';
 import '../../application/use_cases/goal/get_goals_use_case.dart';
 import '../../application/use_cases/goal/update_goal_use_case.dart';
 import '../../application/use_cases/statistics/get_category_breakdown_use_case.dart';
-import '../../application/use_cases/statistics/get_monthly_comparison_use_case.dart';
 import '../../application/use_cases/statistics/get_financial_classification_use_case.dart';
 import '../../application/use_cases/insights/calculate_financial_classification_use_case.dart' as insight_classification;
 import '../../application/use_cases/insights/detect_financial_leaks_use_case.dart' as insight_leaks;
@@ -101,6 +104,7 @@ import '../../application/use_cases/financial_setup/get_setup_summary_use_case.d
 import '../../application/use_cases/financial_setup/set_initial_balance_use_case.dart';
 import '../../application/use_cases/financial_setup/set_initial_savings_use_case.dart';
 import '../../application/use_cases/notification/generate_notification_use_case.dart';
+import '../../application/use_cases/notification/build_reminder_plan_use_case.dart';
 import '../../presentation/financial_setup/cubits/financial_setup_cubit.dart';
 
 abstract final class Injection {
@@ -143,6 +147,7 @@ abstract final class Injection {
   static OnlineLicenseService get onlineLicenseService => _onlineLicenseService;
   static AppDatabase get database => _database;
   static late final NotificationService notificationService;
+  static final AppLockService appLockService = AppLockService();
 
   // Use Cases — Onboarding
   static late final SetupSalaryUseCase setupSalaryUseCase;
@@ -183,6 +188,8 @@ abstract final class Injection {
 
   // Use Cases — Goal
   static late final CreateGoalUseCase createGoalUseCase;
+  static late final PurchaseGoalUseCase purchaseGoalUseCase;
+  static late final UndoGoalPurchaseUseCase undoGoalPurchaseUseCase;
   static late final GetGoalsUseCase getGoalsUseCase;
   static late final UpdateGoalUseCase updateGoalUseCase;
   static late final DeleteGoalUseCase deleteGoalUseCase;
@@ -190,7 +197,6 @@ abstract final class Injection {
 
   // Use Cases — Statistics
   static late final GetCategoryBreakdownUseCase getCategoryBreakdownUseCase;
-  static late final GetMonthlyComparisonUseCase getMonthlyComparisonUseCase;
   static late final GetFinancialClassificationUseCase getFinancialClassificationUseCase;
 
   // Use Cases — Insights
@@ -243,6 +249,7 @@ abstract final class Injection {
   static late final WithdrawSavingsUseCase withdrawSavingsUseCase;
   static late final DepositFromBalanceUseCase depositFromBalanceUseCase;
   static late final WithdrawToBalanceUseCase withdrawToBalanceUseCase;
+  static late final ManageSavingsRecordUseCase manageSavingsRecordUseCase;
   static late final DepositSalarySplitUseCase depositSalarySplitUseCase;
 
   // Use Cases — Financial Setup
@@ -317,6 +324,7 @@ abstract final class Injection {
       incomeRepository: incomeRepository,
       debtRepository: debtRepository,
       lendingRepository: lendingRepository,
+      savingsRepository: savingsRepository,
     );
     getSafeBalanceUseCase = const GetSafeBalanceUseCase();
 
@@ -339,6 +347,12 @@ abstract final class Injection {
     depositFromBalanceUseCase = DepositFromBalanceUseCase(
       savingsRepository,
       cycleRepository,
+      getDashboardDataUseCase,
+    );
+    manageSavingsRecordUseCase = ManageSavingsRecordUseCase(
+      savingsRepository,
+      cycleRepository,
+      getDashboardDataUseCase,
     );
     withdrawToBalanceUseCase = WithdrawToBalanceUseCase(
       savingsRepository,
@@ -374,9 +388,12 @@ abstract final class Injection {
       savingsRepository,
     );
     getLendingsUseCase = GetLendingsUseCase(lendingRepository);
-    addLendingCollectionUseCase = AddLendingCollectionUseCase(lendingRepository, savingsRepository);
-    deleteLendingUseCase = DeleteLendingUseCase(lendingRepository);
-    updateLendingUseCase = UpdateLendingUseCase(lendingRepository);
+    addLendingCollectionUseCase = AddLendingCollectionUseCase(
+        lendingRepository, savingsRepository, cycleRepository);
+    deleteLendingUseCase =
+        DeleteLendingUseCase(lendingRepository, addLendingCollectionUseCase);
+    updateLendingUseCase = UpdateLendingUseCase(
+        lendingRepository, cycleRepository, savingsRepository);
 
     // Use Cases — Custom Categories
     getCustomCategoriesUseCase = GetCustomCategoriesUseCase(customCategoryRepository);
@@ -396,8 +413,10 @@ abstract final class Injection {
 
     // Use Cases — Income
     addIncomeUseCase = AddIncomeUseCase(incomeRepository, savingsRepository);
-    updateIncomeUseCase = UpdateIncomeUseCase(incomeRepository);
-    deleteIncomeUseCase = DeleteIncomeUseCase(incomeRepository);
+    updateIncomeUseCase = UpdateIncomeUseCase(
+        incomeRepository, savingsRepository, getDashboardDataUseCase);
+    deleteIncomeUseCase = DeleteIncomeUseCase(
+        incomeRepository, savingsRepository, getDashboardDataUseCase);
     getIncomeSuggestionsUseCase = GetIncomeSuggestionsUseCase(_incomesDao);
 
     // Use Cases — Debt
@@ -414,6 +433,10 @@ abstract final class Injection {
 
     // Use Cases — Goal
     createGoalUseCase = CreateGoalUseCase(goalRepository);
+    purchaseGoalUseCase =
+        PurchaseGoalUseCase(goalRepository, withdrawSavingsUseCase);
+    undoGoalPurchaseUseCase = UndoGoalPurchaseUseCase(
+        goalRepository, savingsRepository, cycleRepository);
     getGoalsUseCase = GetGoalsUseCase(goalRepository);
     updateGoalUseCase = UpdateGoalUseCase(goalRepository);
     deleteGoalUseCase = DeleteGoalUseCase(goalRepository);
@@ -428,13 +451,9 @@ abstract final class Injection {
       expenseRepository: expenseRepository,
       customCategoryRepository: customCategoryRepository,
     );
-    getMonthlyComparisonUseCase = GetMonthlyComparisonUseCase(
-      cycleRepository: cycleRepository,
-      expenseRepository: expenseRepository,
-    );
     getFinancialClassificationUseCase = GetFinancialClassificationUseCase(
       cycleRepository: cycleRepository,
-      expenseRepository: expenseRepository,
+      getDashboardData: getDashboardDataUseCase,
     );
     // Use Cases — Insights
     calculateFinancialClassificationUseCase =
@@ -478,15 +497,23 @@ abstract final class Injection {
     // Use Cases — Notification
     generateNotificationUseCase = GenerateNotificationUseCase(
       cycleRepository: cycleRepository,
-      expenseRepository: expenseRepository,
-      incomeRepository: incomeRepository,
-      debtRepository: debtRepository,
-      lendingRepository: lendingRepository,
+      getDashboardData: getDashboardDataUseCase,
+      goalRepository: goalRepository,
+      savingsRepository: savingsRepository,
     );
 
     // Notification Service
     notificationService = NotificationService(
       generateNotificationUseCase: generateNotificationUseCase,
+      buildReminderPlan: BuildReminderPlanUseCase(
+        userRepository: userRepository,
+        cycleRepository: cycleRepository,
+        getDashboardData: getDashboardDataUseCase,
+        expenseRepository: expenseRepository,
+        debtRepository: debtRepository,
+        lendingRepository: lendingRepository,
+      ),
+      appLock: appLockService,
     );
     await notificationService.initialize();
   }

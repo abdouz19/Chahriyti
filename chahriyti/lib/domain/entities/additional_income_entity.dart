@@ -13,7 +13,12 @@ abstract class AdditionalIncomeEntity with _$AdditionalIncomeEntity {
     required String description,
     required int amount,
     required DateTime createdAt,
+    @Default(false) bool toSavings,
   }) = _AdditionalIncomeEntity;
+
+  /// Opening balance entered at setup, stored as an income.
+  bool get isInitialBalance =>
+      description == 'رصيد أولي' || description == 'رصيد اولي';
 
   factory AdditionalIncomeEntity.fromJson(Map<String, dynamic> json) =>
       _$AdditionalIncomeEntityFromJson(json);

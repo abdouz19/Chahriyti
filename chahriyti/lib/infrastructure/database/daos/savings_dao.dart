@@ -30,6 +30,26 @@ class SavingsDao extends DatabaseAccessor<AppDatabase>
     return result.data['balance'] as int? ?? 0;
   }
 
+  /// Money moved from savings to the balance minus the reverse, for [cycleId].
+  Future<int> getNetTransfersToBalanceForCycle(int cycleId) async {
+    final result = await customSelect(
+      'SELECT COALESCE(SUM(CASE WHEN type = \'withdrawal\' '
+      'THEN amount ELSE -amount END), 0) AS net '
+      'FROM savings_history WHERE kind = \'transfer\' AND related_cycle_id = ?',
+      variables: [Variable.withInt(cycleId)],
+      readsFrom: {savingsHistory},
+    ).getSingle();
+    return result.read<int>('net');
+  }
+
+  Future<void> deleteByRelatedIncomeId(int incomeId) =>
+      (delete(savingsHistory)..where((t) => t.relatedIncomeId.equals(incomeId)))
+          .go();
+
+  Future<void> updateAmountByRelatedIncomeId(int incomeId, int newAmount) =>
+      (update(savingsHistory)..where((t) => t.relatedIncomeId.equals(incomeId)))
+          .write(SavingsHistoryCompanion(amount: Value(newAmount)));
+
   Future<void> deleteByRelatedExpenseId(int expenseId) =>
       (delete(savingsHistory)
             ..where((t) => t.relatedExpenseId.equals(expenseId)))
