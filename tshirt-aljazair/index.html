@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تيشرت الجزائر — أبدعت الموضة الجزائرية</title>
+  <meta name="description" content="تيشرت الجزائر — موضة من الجزء العميق من الهوية الجزائرية. ثقافة، فخر، أناقة.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900;1000&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green: #006233;
+      --green-light: #00874a;
+      --green-dark: #004422;
+      --red: #C41E3A;
+      --red-light: #e0253f;
+      --white: #FFFFFF;
+      --cream: #FAF8F5;
+      --dark: #0A0F0A;
+      --dark-2: #111711;
+      --dark-3: #1a231a;
+      --text-muted: rgba(255,255,255,0.55);
+      --gold: #C9A84C;
+    }
+
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 2px; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-28px) rotate(2deg); }
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-14px) rotate(1deg) scale(1.01); }
+    }
+    @keyframes starSpin {
+      0% { transform: rotate(0deg) scale(1); opacity: 0.12; }
+      50% { transform: rotate(180deg) scale(1.15); opacity: 0.22; }
+      100% { transform: rotate(360deg) scale(1); opacity: 0.12; }
+    }
+    @keyframes starSpinReverse {
+      0% { transform: rotate(0deg) scale(1); opacity: 0.08; }
+      50% { transform: rotate(-180deg) scale(1.1); opacity: 0.18; }
+      100% { transform: rotate(-360deg) scale(1); opacity: 0.08; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(70px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-80px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(80px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 30px rgba(0,98,51,0.3); }
+      50% { box-shadow: 0 0 60px rgba(0,98,51,0.7), 0 0 100px rgba(0,98,51,0.3); }
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.05); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.03); }
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ─── LANG TOGGLE ─── */
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50px;
+      padding: 4px;
+    }
+    .lang-btn {
+      padding: 7px 18px;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: transparent;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+    .lang-btn.active {
+      background: var(--green);
+      color: white;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(10,15,10,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,98,51,0.2);
+      padding: 14px 48px;
+    }
+    .nav-logo {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: white;
+    }
+    .nav-logo-star {
+      color: var(--red);
+      font-size: 20px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: white; }
+    .nav-cta {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 11px 28px;
+      border-radius: 50px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .nav-cta:hover {
+      background: var(--green-light);
+      transform: translateY(-2px);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--dark);
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(0,98,51,0.18) 0%, transparent 65%),
+                  radial-gradient(ellipse 40% 40% at 20% 80%, rgba(196,30,58,0.08) 0%, transparent 60%);
+    }
+    .hero-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,98,51,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,98,51,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+    }
+    .bg-star-1 {
+      position: absolute;
+      top: 10%;
+      right: 8%;
+      width: 420px;
+      height: 420px;
+      opacity: 0.1;
+      animation: starSpin 20s linear infinite;
+    }
+    .bg-star-2 {
+      position: absolute;
+      bottom: 5%;
+      left: 5%;
+      width: 280px;
+      height: 280px;
+      opacity: 0.07;
+      animation: starSpinReverse 30s linear infinite;
+    }
+
+    .hero-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 48px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      padding-top: 100px;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,98,51,0.15);
+      border: 1px solid rgba(0,98,51,0.35);
+      border-radius: 50px;
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #4ddb8a;
+      margin-bottom: 28px;
+      animation: slideUp 0.8s ease both;
+    }
+    .hero-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ddb8a;
+      animation: pulse 2s ease infinite;
+    }
+    .hero-title {
+      font-size: clamp(52px, 6vw, 86px);
+      font-weight: 1000;
+      line-height: 1.05;
+      margin-bottom: 12px;
+      animation: slideUp 0.9s ease 0.1s both;
+    }
+    .hero-title-ar .t1 { color: var(--white); }
+    .hero-title-ar .t2 {
+      color: var(--green);
+      display: block;
+    }
+    .hero-title-ar .t3 {
+      color: var(--red);
+      display: block;
+    }
+    .hero-title-fr { display: none; }
+
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 460px;
+      animation: slideUp 1s ease 0.2s both;
+    }
+    .hero-sub strong { color: white; font-weight: 700; }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      animation: slideUp 1s ease 0.3s both;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: glowPulse 3s ease infinite;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary:hover {
+      background: var(--green-light);
+      transform: translateY(-3px) scale(1.02);
+    }
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      padding: 16px 36px;
+      border-radius: 50px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-2px);
+    }
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 52px;
+      animation: slideUp 1s ease 0.4s both;
+    }
+    .hero-stat-num {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--green);
+    }
+    .hero-stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ─── HERO IMAGE SIDE ─── */
+    .hero-visual {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: slideInLeft 1s ease 0.2s both;
+    }
+    [dir="ltr"] .hero-visual { animation-name: slideInRight; }
+
+    .hero-tshirt-wrap {
+      position: relative;
+      width: 480px;
+      height: 520px;
+    }
+    .hero-tshirt-main {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 340px;
+      object-fit: contain;
+      filter: drop-shadow(0 40px 80px rgba(0,0,0,0.6));
+      animation: float 6s ease-in-out infinite;
+      z-index: 3;
+    }
+    .hero-tshirt-shadow {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 40px;
+      background: radial-gradient(ellipse, rgba(0,98,51,0.4) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: floatSlow 6s ease-in-out infinite;
+    }
+    .hero-tshirt-bg-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(ellipse, rgba(0,98,51,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .floating-tag {
+      position: absolute;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 5;
+      animation: floatSlow 4s ease-in-out infinite;
+    }
+    .tag-green {
+      top: 60px;
+      right: 20px;
+      color: #4ddb8a;
+      border-color: rgba(0,98,51,0.3);
+      animation-delay: 0.5s;
+    }
+    .tag-red {
+      bottom: 100px;
+      left: 10px;
+      color: #ff6b7a;
+      border-color: rgba(196,30,58,0.3);
+      animation-delay: 1.5s;
+    }
+    .tag-white {
+      top: 180px;
+      right: -10px;
+      color: white;
+      animation-delay: 1s;
+    }
+
+    /* ─── MARQUEE ─── */
+    .marquee-section {
+      overflow: hidden;
+      background: var(--green);
+      padding: 18px 0;
+      position: relative;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 18s linear infinite;
+      gap: 0;
+    }
+    .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 0 30px;
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+      color: white;
+      letter-spacing: 0.5px;
+    }
+    .marquee-star {
+      color: white;
+      font-size: 18px;
+    }
+
+    /* ─── SECTION BASE ─── */
+    section { position: relative; }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--green);
+      margin-bottom: 16px;
+    }
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 2px;
+      background: var(--green);
+      border-radius: 2px;
+    }
+    .section-title {
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 560px;
+    }
+
+    /* ─── PRODUCTS ─── */
+    .products-section {
+      padding: 120px 0;
+      background: var(--dark-2);
+    }
+    .products-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+    .products-header .section-sub { margin: 0 auto; }
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .product-card {
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    .product-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .product-card:nth-child(1) { transition-delay: 0.1s; }
+    .product-card:nth-child(2) { transition-delay: 0.25s; }
+    .product-card:hover { transform: translateY(-12px) scale(1.01); }
+
+    .product-card-inner {
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card-bg {
+      position: absolute;
+      inset: 0;
+      transition: opacity 0.5s ease;
+    }
+    .card-green .product-card-bg {
+      background: linear-gradient(135deg, #003d1f 0%, #006233 60%, #004422 100%);
+    }
+    .card-white .product-card-bg {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 60%, #111 100%);
+    }
+    .product-card-img-wrap {
+      position: relative;
+      height: 420px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 0px;
+      overflow: hidden;
+    }
+    .product-img {
+      height: 90%;
+      object-fit: contain;
+      position: relative;
+      z-index: 2;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5));
+    }
+    .product-card:hover .product-img {
+      transform: translateY(-20px) scale(1.05);
+    }
+    .product-img-glow {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      height: 100px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .card-green .product-img-glow {
+      background: radial-gradient(ellipse, rgba(0,98,51,0.5) 0%, transparent 70%);
+    }
+    .card-white .product-img-glow {
+      background: radial-gradient(ellipse, rgba(255,255,255,0.15) 0%, transparent 70%);
+    }
+    .product-card-info {
+      padding: 32px 36px 36px;
+      position: relative;
+      z-index: 2;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+    }
+    .product-name {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .product-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .product-colors {
+      display: flex;
+      gap: 8px;
+    }
+    .color-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+    .product-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .product-btn:hover {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .product-badge {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: var(--red);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 800;
+      z-index: 10;
+    }
+    [dir="ltr"] .product-badge { right: auto; left: 24px; }
+
+    /* ─── STORY SECTION ─── */
+    .story-section {
+      padding: 140px 0;
+      background: var(--dark);
+      overflow: hidden;
+    }
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+    }
+    .story-visual {
+      position: relative;
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: all 0.8s ease;
+    }
+    .story-visual.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    [dir="ltr"] .story-visual {
+      transform: translateX(60px);
+    }
+    [dir="ltr"] .story-visual.visible {
+      transform: translateX(0);
+    }
+    .story-img-main {
+      width: 100%;
+      border-radius: 24px;
+      object-fit: cover;
+      height: 560px;
+      filter: grayscale(15%) contrast(1.05);
+    }
+    .story-img-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: linear-gradient(to top, rgba(0,98,51,0.5) 0%, transparent 50%);
+    }
+    .story-caption {
+      position: absolute;
+      bottom: 32px;
+      right: 32px;
+      left: 32px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .story-caption-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .story-caption-text {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    .story-caption-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .story-content {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all 0.8s ease 0.2s;
+    }
+    .story-content.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    [dir="ltr"] .story-content {
+      transform: translateX(-60px);
+    }
+    [dir="ltr"] .story-content.visible {
+      transform: translateX(0);
+    }
+    .story-quote {
+      font-size: clamp(38px, 4vw, 58px);
+      font-weight: 1000;
+      line-height: 1.1;
+      margin-bottom: 28px;
+    }
+    .story-quote .highlight-green { color: var(--green); }
+    .story-quote .highlight-red { color: var(--red); }
+    .story-body {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 40px;
+    }
+    .story-body strong { color: white; font-weight: 700; }
+    .story-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .pill {
+      background: rgba(0,98,51,0.15);
+      border: 1px solid rgba(0,98,51,0.35);
+      color: #4ddb8a;
+      padding: 9px 20px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* ─── VALUES ─── */
+    .values-section {
+      padding: 120px 0;
+      background: var(--dark-2);
+    }
+    .values-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .value-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 24px;
+      padding: 48px 36px;
+      text-align: center;
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateY(40px);
+      cursor: default;
+    }
+    .value-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .value-card:nth-child(1) { transition-delay: 0.05s; }
+    .value-card:nth-child(2) { transition-delay: 0.15s; }
+    .value-card:nth-child(3) { transition-delay: 0.25s; }
+    .value-card:hover {
+      background: rgba(0,98,51,0.08);
+      border-color: rgba(0,98,51,0.3);
+      transform: translateY(-8px);
+    }
+    .value-icon {
+      font-size: 52px;
+      margin-bottom: 20px;
+      display: block;
+      animation: heartbeat 4s ease infinite;
+    }
+    .value-card:nth-child(2) .value-icon { animation-delay: 0.5s; }
+    .value-card:nth-child(3) .value-icon { animation-delay: 1s; }
+    .value-name {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+    .value-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      padding: 140px 0;
+      background: var(--dark);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,98,51,0.15) 0%, transparent 70%);
+    }
+    .cta-star-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      opacity: 0.04;
+      animation: starSpin 25s linear infinite;
+    }
+    .cta-inner {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .cta-overline {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--green);
+      margin-bottom: 24px;
+      display: block;
+    }
+    .cta-title {
+      font-size: clamp(42px, 5vw, 72px);
+      font-weight: 1000;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+    .cta-sub {
+      font-size: 18px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 48px;
+    }
+    .cta-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-social {
+      margin-top: 48px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .cta-social-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .cta-social-icon:hover {
+      border-color: var(--green);
+      color: var(--green);
+      transform: translateY(-3px);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--dark-2);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .footer-flag {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .flag-block {
+      width: 24px;
+      height: 16px;
+      display: flex;
+    }
+    .flag-green { background: var(--green); width: 50%; }
+    .flag-white { background: white; width: 50%; position: relative; display: flex; align-items: center; justify-content: center; }
+
+    /* ─── LANG CONTENT SWITCHING ─── */
+    [data-lang="ar"] .text-fr { display: none; }
+    [data-lang="fr"] .text-ar { display: none; }
+    [data-lang="fr"] .hero-title-ar { display: none; }
+    [data-lang="fr"] .hero-title-fr { display: block; }
+    [data-lang="ar"] .hero-title-fr { display: none; }
+    [data-lang="ar"] .hero-title-ar { display: block; }
+
+    /* ─── ORDER SECTION ─── */
+    .order-section {
+      padding: 120px 0;
+      background: var(--dark);
+    }
+    .order-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .order-card {
+      max-width: 720px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 28px;
+      padding: 48px;
+    }
+    /* ─ Color ─ */
+    .order-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    .required { color: var(--red); }
+    .color-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    .color-card {
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+    }
+    .color-card:hover { border-color: rgba(0,98,51,0.4); background: rgba(0,98,51,0.05); }
+    .color-card.selected { border-color: var(--green); background: rgba(0,98,51,0.1); box-shadow: 0 0 20px rgba(0,98,51,0.2); }
+    .color-card input[type="radio"] { display: none; }
+    .color-card-img { width: 120px; height: 120px; object-fit: contain; margin: 0 auto 10px; display: block; filter: drop-shadow(0 10px 24px rgba(0,0,0,0.5)); transition: transform 0.3s ease; }
+    .color-card:hover .color-card-img, .color-card.selected .color-card-img { transform: translateY(-6px) scale(1.04); }
+    .color-card-name { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+    .color-card-sub { font-size: 12px; color: var(--text-muted); }
+    .color-card-check { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--green); display: none; align-items: center; justify-content: center; font-size: 12px; }
+    [dir="ltr"] .color-card-check { right: auto; left: 12px; }
+    .color-card.selected .color-card-check { display: flex; }
+
+    /* ─ Size ─ */
+    .size-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .size-card {
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      background: rgba(255,255,255,0.02);
+    }
+    .size-card:hover { border-color: rgba(0,98,51,0.4); }
+    .size-card.selected { border-color: var(--green); background: rgba(0,98,51,0.1); }
+    .size-card input[type="radio"] { display: none; }
+    .size-card-num { font-size: 22px; font-weight: 900; color: var(--green); margin-bottom: 4px; }
+    .size-card-range { font-size: 11px; color: var(--text-muted); line-height: 1.6; }
+    .size-card-label { font-size: 13px; font-weight: 700; margin-top: 4px; }
+
+    /* ─ Divider ─ */
+    .form-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+      margin: 28px 0;
+    }
+
+    /* ─ Inputs ─ */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group input,
+    .form-group select {
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      color: white;
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
+    }
+    .form-group input::placeholder { color: var(--text-muted); }
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--green); }
+    .form-group select option { background: #111; color: white; }
+    .form-group select:disabled { opacity: 0.4; cursor: not-allowed; }
+    [dir="ltr"] .form-group input[name="phone"] { direction: ltr; }
+
+    /* ─ Submit ─ */
+    .btn-submit {
+      width: 100%;
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 18px;
+      border-radius: 16px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 24px;
+      animation: glowPulse 3s ease infinite;
+    }
+    .btn-submit:hover { background: var(--green-light); transform: translateY(-2px); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .form-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ─ Success ─ */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+    }
+    .form-success.show { display: block; }
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(0,98,51,0.2);
+      border: 2px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+      color: var(--green);
+    }
+    .form-success h3 { font-size: 24px; font-weight: 900; margin-bottom: 12px; }
+    .form-success p { color: var(--text-muted); line-height: 1.8; }
+
+    /* ─ Order mobile ─ */
+    @media (max-width: 900px) {
+      .order-card { padding: 28px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      .size-grid { grid-template-columns: repeat(3,1fr); gap: 8px; }
+      .color-card-img { width: 80px; height: 80px; }
+    }
+
+    /* ─ Delivery ─ */
+    .delivery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+      margin-top: 4px;
+    }
+    .delivery-card {
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 18px 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      background: rgba(255,255,255,0.02);
+      position: relative;
+    }
+    .delivery-card:hover { border-color: rgba(0,98,51,0.4); background: rgba(0,98,51,0.05); }
+    .delivery-card.selected { border-color: var(--green); background: rgba(0,98,51,0.1); box-shadow: 0 0 20px rgba(0,98,51,0.2); }
+    .delivery-card.unavailable { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+    .delivery-card input[type="radio"] { display: none; }
+    .delivery-card-check { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; border-radius: 50%; background: var(--green); display: none; align-items: center; justify-content: center; font-size: 11px; }
+    [dir="ltr"] .delivery-card-check { right: auto; left: 10px; }
+    .delivery-card.selected .delivery-card-check { display: flex; }
+    .delivery-card-icon { font-size: 26px; margin-bottom: 6px; }
+    .delivery-card-name { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+    .delivery-card-price { font-size: 14px; font-weight: 700; color: #4ddb8a; direction: ltr; unicode-bidi: bidi-override; min-height: 20px; }
+    .delivery-card-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ─ Price Breakdown ─ */
+    .price-breakdown {
+      background: rgba(0,98,51,0.06);
+      border: 1px solid rgba(0,98,51,0.2);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+    .breakdown-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 0;
+    }
+    .breakdown-label { font-size: 13px; color: var(--text-muted); }
+    .breakdown-value { direction: ltr; unicode-bidi: bidi-override; font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.85); white-space: nowrap; }
+    .breakdown-sep { height: 1px; background: rgba(255,255,255,0.08); margin: 8px 0; }
+    .breakdown-total .breakdown-label { color: white; font-weight: 800; font-size: 14px; }
+    .breakdown-total .breakdown-value { color: #4ddb8a; font-size: 19px; font-weight: 900; }
+
+    /* ─── STAR SVG ─── */
+    .star-svg { pointer-events: none; }
+
+    /* ─── RESPONSIVE ─── */
+    /* ─── MOBILE BOTTOM CTA ─── */
+    .mobile-cta-bar {
+      display: none;
+    }
+    @media (max-width: 900px) {
+      .mobile-cta-bar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 500;
+        padding: 12px 20px 24px;
+        background: linear-gradient(to top, rgba(10,15,10,0.98) 60%, transparent);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+      .mobile-cta-bar .btn-primary {
+        width: 100%;
+        text-align: center;
+        font-size: 18px;
+        padding: 17px;
+        border-radius: 16px;
+        animation: glowPulse 3s ease infinite;
+      }
+      nav { padding: 14px 20px; }
+      nav.scrolled { padding: 11px 20px; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .lang-toggle { flex-shrink: 0; }
+
+      /* ── Hero ── */
+      .hero-container {
+        grid-template-columns: 1fr;
+        padding: 90px 24px 140px;
+        gap: 0;
+        text-align: center;
+      }
+      .hero-visual { order: -1; margin-bottom: 20px; width: 100%; display: flex; justify-content: center; }
+      .hero-tshirt-wrap { width: 260px; height: 280px; margin: 0 auto; }
+      .hero-tshirt-main { width: 200px; }
+      /* Hide floating tags — too cluttered on mobile */
+      .floating-tag { display: none; }
+      /* Compact badge */
+      .hero-badge { font-size: 12px; padding: 6px 16px; margin-bottom: 16px; }
+      /* Tighter title */
+      .hero-title { font-size: clamp(44px, 13vw, 68px); margin-bottom: 12px; }
+      /* Shorter sub */
+      .hero-sub { font-size: 15px; margin-bottom: 24px; }
+      /* Buttons stack nicely */
+      .hero-actions { flex-direction: column; gap: 10px; }
+      .hero-actions .btn-outline { display: none; }
+      .btn-primary { width: 100%; text-align: center; }
+      /* Stats row — compact */
+      .hero-stats { gap: 20px; margin-top: 28px; flex-wrap: wrap; justify-content: center; }
+      .hero-stat-num { font-size: 22px; }
+      .hero-stat-label { font-size: 11px; }
+
+      .container { padding: 0 20px; }
+      .products-grid { grid-template-columns: 1fr; }
+      .story-grid { grid-template-columns: 1fr; gap: 40px; }
+      .story-img-main { height: 380px; }
+      .values-grid { grid-template-columns: 1fr !important; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ─── NAV ─── -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">
+<span class="text-ar">تيشرت الجزائر</span>
+      <span class="text-fr">Tshirt Aljazair</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#products" class="text-ar">منتجاتنا</a><a href="#products" class="text-fr">Produits</a></li>
+      <li><a href="#story" class="text-ar">قصتنا</a><a href="#story" class="text-fr">Notre histoire</a></li>
+      <li><a href="#values" class="text-ar">قيمنا</a><a href="#values" class="text-fr">Nos valeurs</a></li>
+    </ul>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('ar')">عربي</button>
+        <button class="lang-btn" onclick="setLang('fr')">FR</button>
+      </div>
+      <button class="nav-cta" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">
+        <span class="text-ar">اطلب ضرك</span>
+        <span class="text-fr">Commander</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-overlay"></div>
+
+    <!-- Background stars -->
+    <svg class="bg-star-1 star-svg" viewBox="0 0 100 100" fill="none">
+      <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35" fill="white"/>
+    </svg>
+    <svg class="bg-star-2 star-svg" viewBox="0 0 100 100" fill="none">
+      <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35" fill="white"/>
+    </svg>
+
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          <span class="text-ar">صنع بفخر جزائري 🇩🇿</span>
+          <span class="text-fr">Fièrement algérien 🇩🇿</span>
+        </div>
+
+        <h1 class="hero-title">
+          <div class="hero-title-ar">
+            <span class="t1">أبدعت</span>
+            <span class="t2">الموضة</span>
+            <span class="t3">الجزائرية</span>
+          </div>
+          <div class="hero-title-fr">
+            <span style="color:white">La mode</span>
+            <span style="color:var(--green); display:block">algérienne</span>
+            <span style="color:var(--red); display:block">s'est levée</span>
+          </div>
+        </h1>
+
+        <p class="hero-sub">
+          <span class="text-ar">
+            الجزائر… ليست مجرد مكان نعود إليه، بل <strong>شعور نحمله معنا</strong> أينما كنا.
+          </span>
+          <span class="text-fr">
+            L'Algérie… ce n'est pas juste un endroit où l'on revient, c'est un <strong>sentiment qu'on porte partout</strong> où l'on va.
+          </span>
+        </p>
+
+        <div class="hero-actions">
+          <a href="#products" class="btn-primary">
+            <span class="text-ar">شوف المجموعة</span>
+            <span class="text-fr">Voir la collection</span>
+          </a>
+          <a href="#story" class="btn-outline">
+            <span class="text-ar">قصتنا</span>
+            <span class="text-fr">Notre histoire</span>
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">1962</div>
+            <div class="hero-stat-label text-ar">سنة الثورة</div>
+            <div class="hero-stat-label text-fr">Révolution</div>
+          </div>
+          <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+          <div>
+            <div class="hero-stat-num">69</div>
+            <div class="hero-stat-label text-ar">ولاية، ثقافة واحدة</div>
+            <div class="hero-stat-label text-fr">Wilayas, une culture</div>
+          </div>
+          <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+          <div>
+            <div class="hero-stat-num">100%</div>
+            <div class="hero-stat-label text-ar">جزائري أصيل</div>
+            <div class="hero-stat-label text-fr">Authenticité</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-tshirt-wrap">
+          <div class="hero-tshirt-bg-glow"></div>
+          <img src="white.png" alt="تيشرت الجزائر" class="hero-tshirt-main">
+          <div class="hero-tshirt-shadow"></div>
+
+          <div class="floating-tag tag-green">
+            <span class="text-ar">★ النجمة الجزائرية</span>
+            <span class="text-fr">★ L'étoile algérienne</span>
+          </div>
+          <div class="floating-tag tag-red">
+            <span class="text-ar">🔥 محدود — اطلب ضرك</span>
+            <span class="text-fr">🔥 Édition limitée</span>
+          </div>
+          <div class="floating-tag tag-white">
+            <span class="text-ar">👕 Oversize مريح</span>
+            <span class="text-fr">👕 Oversize confortable</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MARQUEE ─── -->
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">ثقافة</span><span class="text-fr">Culture</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">هوية</span><span class="text-fr">Identité</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">فخر جزائري</span><span class="text-fr">Fierté algérienne</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">أبدعت الموضة</span><span class="text-fr">La mode s'est levée</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">من الجزائر للعالم</span><span class="text-fr">De l'Algérie au monde</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">أصالة وأناقة</span><span class="text-fr">Authenticité & élégance</span></div>
+      <!-- duplicate for seamless loop -->
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">ثقافة</span><span class="text-fr">Culture</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">هوية</span><span class="text-fr">Identité</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">فخر جزائري</span><span class="text-fr">Fierté algérienne</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">أبدعت الموضة</span><span class="text-fr">La mode s'est levée</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">من الجزائر للعالم</span><span class="text-fr">De l'Algérie au monde</span></div>
+      <div class="marquee-item"><span class="marquee-star">★</span><span class="text-ar">أصالة وأناقة</span><span class="text-fr">Authenticité & élégance</span></div>
+    </div>
+  </div>
+
+  <!-- ─── PRODUCTS ─── -->
+  <section class="products-section" id="products">
+    <div class="container">
+      <div class="products-header">
+        <div class="section-label">
+          <span class="text-ar">مجموعتنا</span>
+          <span class="text-fr">La collection</span>
+        </div>
+        <h2 class="section-title">
+          <span class="text-ar">إختار لونك، إختار هويتك</span>
+          <span class="text-fr">Choisissez votre couleur, votre identité</span>
+        </h2>
+        <p class="section-sub">
+          <span class="text-ar">كل موديل يحكي قصة — نجمة الجزائر على صدرك دايما.</span>
+          <span class="text-fr">Chaque modèle raconte une histoire — l'étoile d'Algérie sur ta poitrine.</span>
+        </p>
+      </div>
+
+      <div class="products-grid">
+        <!-- Green card -->
+        <div class="product-card card-green">
+          <div class="product-badge text-ar">الأكثر طلباً</div>
+          <div class="product-badge text-fr" style="display:none">Le plus demandé</div>
+          <div class="product-card-inner">
+            <div class="product-card-bg"></div>
+            <div class="product-card-img-wrap">
+              <div class="product-img-glow"></div>
+              <img src="green.png" alt="تيشرت أخضر" class="product-img">
+            </div>
+            <div class="product-card-info">
+              <div class="product-name">
+                <span class="text-ar">الإصدار الأخضر</span>
+                <span class="text-fr">L'édition verte</span>
+              </div>
+              <div class="product-desc">
+                <span class="text-ar">💚 نسخة باللون الأخضر تحمل نجمة على الكم كتفصيل بسيط يرمز للانتماء.</span>
+                <span class="text-fr">💚 La version verte porte une étoile sur la manche — un détail simple qui symbolise l'appartenance.</span>
+              </div>
+              <div class="product-footer">
+                <div class="product-colors">
+                  <div class="color-dot" style="background:#006233; border-color:rgba(0,98,51,0.5)"></div>
+                  <div class="color-dot" style="background:#8B1A1A;"></div>
+                  <div class="color-dot" style="background:white;"></div>
+                </div>
+                <button class="product-btn" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">
+                  <span class="text-ar">اطلب الآن</span>
+                  <span class="text-fr">Commander</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- White card -->
+        <div class="product-card card-white">
+          <div class="product-card-inner">
+            <div class="product-card-bg"></div>
+            <div class="product-card-img-wrap">
+              <div class="product-img-glow"></div>
+              <img src="white.png" alt="تيشرت أبيض" class="product-img">
+            </div>
+            <div class="product-card-info">
+              <div class="product-name">
+                <span class="text-ar">الإصدار الأبيض</span>
+                <span class="text-fr">L'édition blanche</span>
+              </div>
+              <div class="product-desc">
+                <span class="text-ar">🤍 نسخة باللون الأبيض تتوسطها نجمة كبيرة تعكس حضورًا قويًا وفخرًا لا يُخفى.</span>
+                <span class="text-fr">🤍 La version blanche est ornée d'une grande étoile centrale, reflétant une présence forte et une fierté assumée.</span>
+              </div>
+              <div class="product-footer">
+                <div class="product-colors">
+                  <div class="color-dot" style="background:white; border-color:rgba(255,255,255,0.3)"></div>
+                  <div class="color-dot" style="background:#006233;"></div>
+                  <div class="color-dot" style="background:#8B1A1A;"></div>
+                </div>
+                <button class="product-btn" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">
+                  <span class="text-ar">اطلب الآن</span>
+                  <span class="text-fr">Commander</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── STORY ─── -->
+  <section class="story-section" id="story">
+    <div class="container">
+      <div class="story-grid">
+        <div class="story-visual">
+          <img src="image copy.png" alt="شاب جزائري" class="story-img-main">
+          <div class="story-img-overlay"></div>
+          <div class="story-caption">
+            <div class="story-caption-icon">🇩🇿</div>
+            <div>
+              <div class="story-caption-text text-ar">من شوارع الجزائر للعالم</div>
+              <div class="story-caption-text text-fr">Des rues d'Algérie au monde</div>
+              <div class="story-caption-sub text-ar">ثقافة تتكلم بدون كلام</div>
+              <div class="story-caption-sub text-fr">Une culture qui parle sans mots</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-content">
+          <div class="section-label">
+            <span class="text-ar">قصتنا</span>
+            <span class="text-fr">Notre histoire</span>
+          </div>
+          <h2 class="story-quote">
+            <span class="text-ar">
+              <span class="highlight-green">ثقافة</span> ما<br>
+              تموت — <span class="highlight-red">أبدعت</span>
+            </span>
+            <span class="text-fr">
+              Une <span class="highlight-green">culture</span><br>
+              qui ne meurt <span class="highlight-red">jamais</span>
+            </span>
+          </h2>
+          <p class="story-body">
+            <span class="text-ar">
+              من شوارع المدن إلى هدوء القرى، ومن داخل الوطن إلى أبعد بقاع العالم، يبقى <strong>الانتماء للجزائر</strong> جزءًا من هويتنا.<br><br>
+              لهذا جاء <strong>تيشيرت الجزاير Oversize</strong>، قطعة مستوحاة من ألوان الوطن، صُممت لكل من يفتخر بأصوله، ويحب أن يعبر عن هويته بأسلوب <strong>عصري وأنيق</strong>.
+            </span>
+            <span class="text-fr">
+              Des rues des villes aux calmes villages, de l'intérieur du pays aux coins les plus lointains du monde, <strong>l'appartenance à l'Algérie</strong> reste une part de notre identité.<br><br>
+              C'est pour cela qu'est né le <strong>Tshirt Aljazair Oversize</strong> — une pièce inspirée des couleurs de la patrie, conçue pour tous ceux qui sont fiers de leurs origines et aiment exprimer leur identité avec un style <strong>moderne et élégant</strong>.
+            </span>
+          </p>
+          <div class="story-pills">
+            <div class="pill">
+              <span class="text-ar">★ ثقافة أصيلة</span>
+              <span class="text-fr">★ Culture authentique</span>
+            </div>
+            <div class="pill">
+              <span class="text-ar">★ موضة جزائرية</span>
+              <span class="text-fr">★ Mode algérienne</span>
+            </div>
+            <div class="pill">
+              <span class="text-ar">★ فخر وهوية</span>
+              <span class="text-fr">★ Fierté & identité</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── LIFESTYLE PHOTO ─── -->
+  <section style="padding: 0; overflow:hidden; position:relative; height:500px;">
+    <img src="image.png" alt="lifestyle" style="width:100%; height:100%; object-fit:cover; object-position:center 20%; filter:brightness(0.6) saturate(1.2);">
+    <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(10,15,10,0.6) 0%, transparent 30%, transparent 70%, rgba(10,15,10,0.8) 100%);"></div>
+    <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px; text-align:center;">
+      <div style="font-size:clamp(36px,5.5vw,76px); font-weight:1000; line-height:1.1; text-shadow:0 4px 40px rgba(0,0,0,0.6);">
+        <span class="text-ar">🇩🇿 الجزائر تُعاش… وتُرتدى.</span>
+        <span class="text-fr">🇩🇿 L'Algérie se vit… et se porte.</span>
+      </div>
+      <div style="font-size:18px; color:rgba(255,255,255,0.65); font-weight:500; margin-top:8px;">
+        <span class="text-ar">تيشرت الجزائر Oversize — الهوية على صدرك</span>
+        <span class="text-fr">Tshirt Aljazair Oversize — l'identité sur ta poitrine</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── VALUES ─── -->
+  <section class="values-section" id="values">
+    <div class="container">
+      <div class="values-header">
+        <div class="section-label">
+          <span class="text-ar">قيمنا</span>
+          <span class="text-fr">Nos valeurs</span>
+        </div>
+        <h2 class="section-title">
+          <span class="text-ar">علاش تيشرت الجزائر؟</span>
+          <span class="text-fr">Pourquoi Tshirt Aljazair ?</span>
+        </h2>
+      </div>
+      <div class="values-grid" style="grid-template-columns: repeat(2,1fr);">
+        <div class="value-card">
+          <span class="value-icon">👕</span>
+          <div class="value-name">
+            <span class="text-ar">Oversize مريح وعصري</span>
+            <span class="text-fr">Oversize confortable & moderne</span>
+          </div>
+          <p class="value-desc">
+            <span class="text-ar">قصة واسعة مريحة تناسب كل الأجسام، تعطيك ستايل عصري بدون ما تفقد الراحة.</span>
+            <span class="text-fr">Coupe large et confortable pour toutes les morphologies — un style moderne sans sacrifier le confort.</span>
+          </p>
+        </div>
+        <div class="value-card">
+          <span class="value-icon">🇩🇿</span>
+          <div class="value-name">
+            <span class="text-ar">مستوحى من الهوية الجزائرية</span>
+            <span class="text-fr">Inspiré de l'identité algérienne</span>
+          </div>
+          <p class="value-desc">
+            <span class="text-ar">كل تفصيل في هذا التيشرت مستوحى من ألوان الوطن ورموزه — نجمة، أخضر، أبيض.</span>
+            <span class="text-fr">Chaque détail est inspiré des couleurs et symboles de la patrie — étoile, vert, blanc.</span>
+          </p>
+        </div>
+        <div class="value-card">
+          <span class="value-icon">✅</span>
+          <div class="value-name">
+            <span class="text-ar">جودة عالية — صناعة جزائرية</span>
+            <span class="text-fr">Haute qualité — fabrication algérienne</span>
+          </div>
+          <p class="value-desc">
+            <span class="text-ar">خامات ممتازة، خياطة محكمة، وصناعة وطنية تفتخر بكل قطعة تخرج منها.</span>
+            <span class="text-fr">Matières premium, couture soignée, fabrication nationale dont chaque pièce est une fierté.</span>
+          </p>
+        </div>
+        <div class="value-card">
+          <span class="value-icon">✈️</span>
+          <div class="value-name">
+            <span class="text-ar">مناسب للإطلالات اليومية والسفر</span>
+            <span class="text-fr">Idéal au quotidien & en voyage</span>
+          </div>
+          <p class="value-desc">
+            <span class="text-ar">سواء كنت في شوارع الجزائر أو في مطار بعيد، هذا التيشرت يعبر عنك أينما كنت.</span>
+            <span class="text-fr">Que ce soit dans les rues d'Algérie ou dans un aéroport lointain, ce t-shirt vous représente partout.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ORDER ─── -->
+  <section class="order-section" id="order">
+    <div class="container">
+      <div class="order-header">
+        <div class="section-label">
+          <span class="text-ar">اطلب ضرك</span>
+          <span class="text-fr">Commander maintenant</span>
+        </div>
+        <h2 class="section-title">
+          <span class="text-ar">عمّر الفورم واطلب تاعك</span>
+          <span class="text-fr">Remplissez le formulaire et commandez</span>
+        </h2>
+        <p class="section-sub" style="margin:0 auto; text-align:center;">
+          <span class="text-ar">توصيل لكل الجزائر — الدفع عند الاستلام 🚚</span>
+          <span class="text-fr">Livraison partout en Algérie — Paiement à la livraison 🚚</span>
+        </p>
+      </div>
+
+      <div class="order-card">
+        <form id="orderForm" onsubmit="return handleTshirtOrder(event)">
+
+          <!-- ── Color ── -->
+          <label class="order-label">
+            <span class="text-ar">اختر اللون <span class="required">*</span></span>
+            <span class="text-fr">Choisissez la couleur <span class="required">*</span></span>
+          </label>
+          <div class="color-grid">
+            <div class="color-card" onclick="selectColor(this,'أخضر')">
+              <input type="radio" name="color" value="أخضر">
+              <div class="color-card-check">✓</div>
+              <img src="green.png" alt="أخضر" class="color-card-img">
+              <div class="color-card-name text-ar">الأخضر</div>
+              <div class="color-card-name text-fr">Vert</div>
+              <div class="color-card-sub text-ar">نجمة على الكم</div>
+              <div class="color-card-sub text-fr">Étoile sur la manche</div>
+            </div>
+            <div class="color-card" onclick="selectColor(this,'أبيض')">
+              <input type="radio" name="color" value="أبيض">
+              <div class="color-card-check">✓</div>
+              <img src="white.png" alt="أبيض" class="color-card-img">
+              <div class="color-card-name text-ar">الأبيض</div>
+              <div class="color-card-name text-fr">Blanc</div>
+              <div class="color-card-sub text-ar">نجمة كبيرة في الوسط</div>
+              <div class="color-card-sub text-fr">Grande étoile centrale</div>
+            </div>
+          </div>
+
+          <!-- ── Size ── -->
+          <label class="order-label">
+            <span class="text-ar">اختر المقاس <span class="required">*</span></span>
+            <span class="text-fr">Choisissez la taille <span class="required">*</span></span>
+          </label>
+          <div class="size-grid">
+            <div class="size-card" onclick="selectSize(this,'Taille 1 l 55KG-80KG l S-L')">
+              <input type="radio" name="size" value="Taille 1 l 55KG-80KG l S-L">
+              <div class="size-card-num">1</div>
+              <div class="size-card-range">55 — 80 كغ</div>
+              <div class="size-card-label">S → L</div>
+            </div>
+            <div class="size-card" onclick="selectSize(this,'Taille 2 l 75KG-100KG l L-XL')">
+              <input type="radio" name="size" value="Taille 2 l 75KG-100KG l L-XL">
+              <div class="size-card-num">2</div>
+              <div class="size-card-range">75 — 100 كغ</div>
+              <div class="size-card-label">L → XL</div>
+            </div>
+            <div class="size-card" onclick="selectSize(this,'Taille 3 l 95KG-120KG l XL-XXL')">
+              <input type="radio" name="size" value="Taille 3 l 95KG-120KG l XL-XXL">
+              <div class="size-card-num">3</div>
+              <div class="size-card-range">95 — 120 كغ</div>
+              <div class="size-card-label">XL → XXL</div>
+            </div>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <!-- ── Personal Info ── -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="order-label" style="margin-bottom:0">
+                <span class="text-ar">الاسم الكامل <span class="required">*</span></span>
+                <span class="text-fr">Nom complet <span class="required">*</span></span>
+              </label>
+              <input type="text" name="fullName" placeholder="محمد بن علي" required>
+            </div>
+            <div class="form-group">
+              <label class="order-label" style="margin-bottom:0">
+                <span class="text-ar">رقم الهاتف <span class="required">*</span></span>
+                <span class="text-fr">Numéro de téléphone <span class="required">*</span></span>
+              </label>
+              <input type="tel" name="phone" placeholder="07XXXXXXXX" required pattern="0[5-7][0-9]{8}" dir="ltr" style="text-align:right">
+            </div>
+          </div>
+
+          <!-- ── Location ── -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="order-label" style="margin-bottom:0">
+                <span class="text-ar">الولاية <span class="required">*</span></span>
+                <span class="text-fr">Wilaya <span class="required">*</span></span>
+              </label>
+              <select id="tshirtWilaya" name="wilaya" required>
+                <option value="" disabled selected>
+                  <span class="text-ar">اختر الولاية</span>
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="order-label" style="margin-bottom:0">
+                <span class="text-ar">البلدية <span class="required">*</span></span>
+                <span class="text-fr">Commune <span class="required">*</span></span>
+              </label>
+              <select id="tshirtCommune" name="commune" required disabled>
+                <option value="" disabled selected>
+                  <span class="text-ar">اختر الولاية أولاً</span>
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ── Delivery Type ── -->
+          <label class="order-label" style="margin-top:14px;margin-bottom:12px;">
+            <span class="text-ar">طريقة التوصيل <span class="required">*</span></span>
+            <span class="text-fr">Mode de livraison <span class="required">*</span></span>
+          </label>
+          <div class="delivery-grid">
+            <div class="delivery-card" id="bureauCard" onclick="selectDelivery(this,'bureau')">
+              <input type="radio" name="delivery_type" value="bureau">
+              <div class="delivery-card-check">✓</div>
+              <div class="delivery-card-icon">🏢</div>
+              <div class="delivery-card-name text-ar">للمكتب</div>
+              <div class="delivery-card-name text-fr">Bureau</div>
+              <div class="delivery-card-price" id="bureauPrice">—</div>
+              <div class="delivery-card-sub text-ar">أسرع وأرخص</div>
+              <div class="delivery-card-sub text-fr">Plus rapide</div>
+            </div>
+            <div class="delivery-card" id="domicileCard" onclick="selectDelivery(this,'domicile')">
+              <input type="radio" name="delivery_type" value="domicile">
+              <div class="delivery-card-check">✓</div>
+              <div class="delivery-card-icon">🏠</div>
+              <div class="delivery-card-name text-ar">للبيت</div>
+              <div class="delivery-card-name text-fr">Domicile</div>
+              <div class="delivery-card-price" id="domicilePrice">—</div>
+              <div class="delivery-card-sub text-ar">توصيل لعندك</div>
+              <div class="delivery-card-sub text-fr">À votre porte</div>
+            </div>
+          </div>
+
+          <!-- ── Note ── -->
+          <div class="form-group" style="margin-top:14px;">
+            <label class="order-label" style="margin-bottom:0">
+              <span class="text-ar">ملاحظة (اختياري)</span>
+              <span class="text-fr">Note (optionnel)</span>
+            </label>
+            <textarea name="note" rows="3" placeholder="أي تفاصيل إضافية..." style="background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;font-family:'Cairo',sans-serif;font-size:15px;color:white;outline:none;resize:vertical;width:100%;transition:border-color 0.3s;" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"></textarea>
+          </div>
+
+          <div class="price-breakdown" id="priceBreakdown" style="margin-top:24px;margin-bottom:20px;">
+            <div class="breakdown-row">
+              <span class="breakdown-label">
+                <span class="text-ar">👕 تيشرت الجزائر</span>
+                <span class="text-fr">👕 T-shirt Algérie</span>
+              </span>
+              <span class="breakdown-value">ج.د 3 900</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="breakdown-label">
+                <span class="text-ar">🚚 التوصيل</span>
+                <span class="text-fr">🚚 Livraison</span>
+              </span>
+              <span class="breakdown-value" id="deliveryFeeDisplay" style="font-size:12px;color:var(--text-muted);font-weight:400;">
+                <span class="text-ar">اختر الولاية وطريقة التوصيل</span>
+                <span class="text-fr">Choisissez la wilaya et le mode</span>
+              </span>
+            </div>
+            <div class="breakdown-sep"></div>
+            <div class="breakdown-row breakdown-total">
+              <span class="breakdown-label">
+                <span class="text-ar">💳 الإجمالي — الدفع عند الاستلام</span>
+                <span class="text-fr">💳 Total — Paiement à la livraison</span>
+              </span>
+              <span class="breakdown-value" id="totalDisplay">ج.د 3 900</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="tshirtSubmitBtn">
+            <span class="text-ar">🛒 تأكيد الطلب — الدفع عند الاستلام</span>
+            <span class="text-fr">🛒 Confirmer — Paiement à la livraison</span>
+          </button>
+          <div class="form-note">
+            🔒
+            <span class="text-ar">معلوماتك آمنة — الدفع فقط عند الاستلام</span>
+            <span class="text-fr">Vos données sont sécurisées — Paiement uniquement à la livraison</span>
+          </div>
+        </form>
+
+        <div class="form-success" id="tshirtFormSuccess">
+          <div class="success-icon">✓</div>
+          <h3>
+            <span class="text-ar">تم تسجيل طلبك بنجاح! 🎉</span>
+            <span class="text-fr">Commande enregistrée avec succès ! 🎉</span>
+          </h3>
+          <p id="tshirtSuccessMsg">
+            <span class="text-ar">راح نتواصلو معاك قريب باش نأكدو الطلب تاعك.<br>شكراً أنك اخترت تيشرت الجزائر 🇩🇿</span>
+            <span class="text-fr">Nous vous contacterons bientôt pour confirmer votre commande.<br>Merci d'avoir choisi Tshirt Aljazair 🇩🇿</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-logo">
+      <span style="color:var(--green)">★</span>
+      <span class="text-ar">تيشرت الجزائر</span>
+      <span class="text-fr">Tshirt Aljazair</span>
+    </div>
+    <div class="footer-copy">
+      <span class="text-ar">© ٢٠٢٥ تيشرت الجزائر — كل الحقوق محفوظة</span>
+      <span class="text-fr">© 2025 Tshirt Aljazair — Tous droits réservés</span>
+    </div>
+    <div class="footer-flag">
+      <div class="flag-block">
+        <div class="flag-green"></div>
+        <div class="flag-white"></div>
+      </div>
+      <span class="text-ar">صنع بفخر جزائري</span>
+      <span class="text-fr">Made with Algerian pride</span>
+    </div>
+  </footer>
+
+  <!-- ─── MOBILE FIXED BOTTOM CTA ─── -->
+  <div class="mobile-cta-bar">
+    <a href="#cta" class="btn-primary" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'}); return false;">
+      <span class="text-ar">🛒 اطلب ضرك — الكمية محدودة 🔥</span>
+      <span class="text-fr">🛒 Commander — Stock limité 🔥</span>
+    </a>
+  </div>
+
+  <script>
+    // ─── LANG SWITCH ───
+    function setLang(lang) {
+      const html = document.documentElement;
+      html.setAttribute('data-lang', lang);
+      html.setAttribute('lang', lang === 'ar' ? 'ar' : 'fr');
+      html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Fix product badge display in FR mode
+      const badgeAr = document.querySelector('.product-badge.text-ar');
+      const badgeFr = document.querySelector('.product-badge.text-fr');
+      if (badgeAr && badgeFr) {
+        badgeAr.style.display = lang === 'ar' ? '' : 'none';
+        badgeFr.style.display = lang === 'fr' ? '' : 'none';
+      }
+    }
+
+    // ─── NAV SCROLL ───
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ─── SCROLL REVEAL ───
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.product-card, .story-visual, .story-content, .value-card').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ─── ORDER FORM ───
+    function selectColor(card, value) {
+      document.querySelectorAll('.color-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      card.querySelector('input[type="radio"]').checked = true;
+    }
+    function selectSize(card, value) {
+      document.querySelectorAll('.size-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      card.querySelector('input[type="radio"]').checked = true;
+    }
+
+    function selectDelivery(card, type) {
+      if (card.classList.contains('unavailable')) return;
+      document.querySelectorAll('.delivery-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      card.querySelector('input[type="radio"]').checked = true;
+      updateTotal();
+    }
+
+
+    function fmtDZD(n) {
+      return 'ج.د ' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    }
+
+    function updateTotal() {
+      const wilaya = document.getElementById('tshirtWilaya').value;
+      const rates = deliveryRates[wilaya];
+      const bureauCard = document.getElementById('bureauCard');
+      const domicileCard = document.getElementById('domicileCard');
+      const bureauPriceEl = document.getElementById('bureauPrice');
+      const domicilePriceEl = document.getElementById('domicilePrice');
+      const feeEl = document.getElementById('deliveryFeeDisplay');
+      const totalEl = document.getElementById('totalDisplay');
+      const PRODUCT = 3900;
+
+      if (rates) {
+        // Update card prices
+        bureauPriceEl.textContent = rates.bureau > 0 ? fmtDZD(rates.bureau) : '—';
+        domicilePriceEl.textContent = fmtDZD(rates.domicile);
+
+        // Bureau unavailable if rate is 0
+        if (rates.bureau === 0) {
+          bureauCard.classList.add('unavailable');
+          if (bureauCard.classList.contains('selected')) {
+            bureauCard.classList.remove('selected');
+            bureauCard.querySelector('input').checked = false;
+          }
+        } else {
+          bureauCard.classList.remove('unavailable');
+        }
+
+        // If delivery type already selected, update breakdown
+        const checked = document.querySelector('input[name="delivery_type"]:checked');
+        if (checked) {
+          const fee = rates[checked.value];
+          feeEl.style.fontSize = '14px';
+          feeEl.style.fontWeight = '700';
+          feeEl.style.color = 'rgba(255,255,255,0.85)';
+          feeEl.textContent = fmtDZD(fee);
+          totalEl.textContent = fmtDZD(PRODUCT + fee);
+        } else {
+          feeEl.style.fontSize = '12px';
+          feeEl.style.fontWeight = '400';
+          feeEl.style.color = 'var(--text-muted)';
+          feeEl.innerHTML = '<span class="text-ar">اختر طريقة التوصيل</span><span class="text-fr">Choisissez le mode</span>';
+          totalEl.textContent = fmtDZD(PRODUCT);
+        }
+      } else {
+        bureauPriceEl.textContent = '—';
+        domicilePriceEl.textContent = '—';
+        feeEl.style.fontSize = '12px';
+        feeEl.style.fontWeight = '400';
+        feeEl.style.color = 'var(--text-muted)';
+        feeEl.innerHTML = '<span class="text-ar">اختر الولاية أولاً</span><span class="text-fr">Choisissez la wilaya d\'abord</span>';
+        totalEl.textContent = fmtDZD(PRODUCT);
+      }
+    }
+
+    function handleTshirtOrder(e) {
+      e.preventDefault();
+      const form = document.getElementById('orderForm');
+      const btn = document.getElementById('tshirtSubmitBtn');
+      const formData = new FormData(form);
+
+      // Validate color + size (radio buttons)
+      if (!formData.get('color')) {
+        alert(document.documentElement.getAttribute('data-lang') === 'fr' ? 'Choisissez une couleur' : 'اختر اللون');
+        return false;
+      }
+      if (!formData.get('size')) {
+        alert(document.documentElement.getAttribute('data-lang') === 'fr' ? 'Choisissez une taille' : 'اختر المقاس');
+        return false;
+      }
+      if (!formData.get('delivery_type')) {
+        alert(document.documentElement.getAttribute('data-lang') === 'fr' ? 'Choisissez un mode de livraison' : 'اختر طريقة التوصيل');
+        return false;
+      }
+
+      // Compute and append delivery fee
+      const wilayaVal = formData.get('wilaya');
+      const deliveryType = formData.get('delivery_type');
+      const deliveryFee = (wilayaVal && deliveryRates[wilayaVal]) ? deliveryRates[wilayaVal][deliveryType] : 0;
+      formData.append('delivery_fee', deliveryFee);
+
+      btn.disabled = true;
+      btn.textContent = document.documentElement.getAttribute('data-lang') === 'fr' ? 'Envoi en cours...' : 'جاري التسجيل...';
+
+      if (window.tshirt_ajax) {
+        formData.append('action', 'tshirt_create_order');
+        formData.append('nonce', window.tshirt_ajax.nonce);
+
+        fetch(window.tshirt_ajax.url, { method: 'POST', body: formData })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              form.style.display = 'none';
+              const msg = document.getElementById('tshirtSuccessMsg');
+              const isAr = document.documentElement.getAttribute('data-lang') !== 'fr';
+              msg.innerHTML = isAr
+                ? 'رقم الطلب: <strong>#' + data.data.order_number + '</strong><br>راح نتواصلو معاك قريب 🇩🇿'
+                : 'N° commande: <strong>#' + data.data.order_number + '</strong><br>Nous vous contacterons bientôt 🇩🇿';
+              document.getElementById('tshirtFormSuccess').classList.add('show');
+            } else {
+              alert(data.data.message || 'حدث خطأ، حاول مرة أخرى');
+              btn.disabled = false;
+              btn.textContent = '🛒 تأكيد الطلب';
+            }
+          })
+          .catch(() => {
+            alert('خطأ في الاتصال، حاول مرة أخرى');
+            btn.disabled = false;
+            btn.textContent = '🛒 تأكيد الطلب';
+          });
+      } else {
+        // Static mode — no WP
+        form.style.display = 'none';
+        document.getElementById('tshirtFormSuccess').classList.add('show');
+      }
+      return false;
+    }
+
+    // ─── Data ───
+    const ALGERIA_CITIES = [{"c":"تيمقتن","wc":"01","wn":"أدرار"},{"c":"بودة","wc":"01","wn":"أدرار"},{"c":"أولاد أحمد تيمي","wc":"01","wn":"أدرار"},{"c":"أدرار","wc":"01","wn":"أدرار"},{"c":"فنوغيل","wc":"01","wn":"أدرار"},{"c":"إن زغمير","wc":"01","wn":"أدرار"},{"c":"رقان","wc":"01","wn":"أدرار"},{"c":"سالي","wc":"01","wn":"أدرار"},{"c":"السبع","wc":"01","wn":"أدرار"},{"c":"تسابيت","wc":"01","wn":"أدرار"},{"c":"تامست","wc":"01","wn":"أدرار"},{"c":"تامنطيط","wc":"01","wn":"أدرار"},{"c":"تيت","wc":"01","wn":"أدرار"},{"c":"زاوية كنتة","wc":"01","wn":"أدرار"},{"c":"اقبلي","wc":"01","wn":"أدرار"},{"c":"أولف","wc":"01","wn":"أدرار"},{"c":"تلعصة","wc":"02","wn":"الشلف"},{"c":"الزبوجة","wc":"02","wn":"الشلف"},{"c":"الحجاج","wc":"02","wn":"الشلف"},{"c":"أولاد بن عبد القادر","wc":"02","wn":"الشلف"},{"c":"عين مران","wc":"02","wn":"الشلف"},{"c":"بريرة","wc":"02","wn":"الشلف"},{"c":"أولاد عباس","wc":"02","wn":"الشلف"},{"c":"وادي الفضة","wc":"02","wn":"الشلف"},{"c":"بني راشد","wc":"02","wn":"الشلف"},{"c":"الهرانفة","wc":"02","wn":"الشلف"},{"c":"تاجنة","wc":"02","wn":"الشلف"},{"c":"المرسى","wc":"02","wn":"الشلف"},{"c":"الشلف","wc":"02","wn":"الشلف"},{"c":"أم الدروع","wc":"02","wn":"الشلف"},{"c":"سنجاس","wc":"02","wn":"الشلف"},{"c":"سيدي عبد الرحمن","wc":"02","wn":"الشلف"},{"c":"سيدي عكاشة","wc":"02","wn":"الشلف"},{"c":"تنس","wc":"02","wn":"الشلف"},{"c":"بني بوعتاب","wc":"02","wn":"الشلف"},{"c":"الكريمية","wc":"02","wn":"الشلف"},{"c":"حرشون","wc":"02","wn":"الشلف"},{"c":"بوزغاية","wc":"02","wn":"الشلف"},{"c":"تاوقريت","wc":"02","wn":"الشلف"},{"c":"بني حواء","wc":"02","wn":"الشلف"},{"c":"أبو الحسن","wc":"02","wn":"الشلف"},{"c":"وادي قوسين","wc":"02","wn":"الشلف"},{"c":"الشطية","wc":"02","wn":"الشلف"},{"c":"مصدق","wc":"02","wn":"الشلف"},{"c":"أولاد فارس","wc":"02","wn":"الشلف"},{"c":"بوقادير","wc":"02","wn":"الشلف"},{"c":"وادي سلي","wc":"02","wn":"الشلف"},{"c":"الصبحة","wc":"02","wn":"الشلف"},{"c":"بنايرية","wc":"02","wn":"الشلف"},{"c":"الأبيض مجاجة","wc":"02","wn":"الشلف"},{"c":"الظهرة","wc":"02","wn":"الشلف"},{"c":"البيضاء","wc":"03","wn":"الأغواط"},{"c":"قلتة سيدي سعد","wc":"03","wn":"الأغواط"},{"c":"بريدة","wc":"03","wn":"الأغواط"},{"c":"عين سيدي علي","wc":"03","wn":"الأغواط"},{"c":"تاجموت","wc":"03","wn":"الأغواط"},{"c":"الحاج مشري","wc":"03","wn":"الأغواط"},{"c":"تاويالة","wc":"03","wn":"الأغواط"},{"c":"الغيشة","wc":"03","wn":"الأغواط"},{"c":"تاجرونة","wc":"03","wn":"الأغواط"},{"c":"سبقاق","wc":"03","wn":"الأغواط"},{"c":"سيدي بوزيد","wc":"03","wn":"الأغواط"},{"c":"وادي مرة","wc":"03","wn":"الأغواط"},{"c":"الأغواط","wc":"03","wn":"الأغواط"},{"c":"وادي مزي","wc":"03","wn":"الأغواط"},{"c":"قصر الحيران","wc":"03","wn":"الأغواط"},{"c":"العسافية","wc":"03","wn":"الأغواط"},{"c":"سيدي مخلوف","wc":"03","wn":"الأغواط"},{"c":"حاسي الدلاعة","wc":"03","wn":"الأغواط"},{"c":"حاسي الرمل","wc":"03","wn":"الأغواط"},{"c":"عين ماضي","wc":"03","wn":"الأغواط"},{"c":"الحويطة","wc":"03","wn":"الأغواط"},{"c":"الخنق","wc":"03","wn":"الأغواط"},{"c":"بن ناصر بن شهرة","wc":"03","wn":"الأغواط"},{"c":"أفلو","wc":"03","wn":"الأغواط"},{"c":"فكيرينة","wc":"04","wn":"أم البواقي"},{"c":"الفجوج بوغرارة سعودي","wc":"04","wn":"أم البواقي"},{"c":"عين فكرون","wc":"04","wn":"أم البواقي"},{"c":"الرحية","wc":"04","wn":"أم البواقي"},{"c":"مسكيانة","wc":"04","wn":"أم البواقي"},{"c":"البلالة","wc":"04","wn":"أم البواقي"},{"c":"بحير الشرقي","wc":"04","wn":"أم البواقي"},{"c":"قصر الصباحي","wc":"04","wn":"أم البواقي"},{"c":"سوق نعمان","wc":"04","wn":"أم البواقي"},{"c":"أولاد زواي","wc":"04","wn":"أم البواقي"},{"c":"أم البواقي","wc":"04","wn":"أم البواقي"},{"c":"عين ببوش","wc":"04","wn":"أم البواقي"},{"c":"عين الزيتون","wc":"04","wn":"أم البواقي"},{"c":"بئر الشهداء","wc":"04","wn":"أم البواقي"},{"c":"عين البيضاء","wc":"04","wn":"أم البواقي"},{"c":"بريش","wc":"04","wn":"أم البواقي"},{"c":"الزرق","wc":"04","wn":"أم البواقي"},{"c":"عين مليلة","wc":"04","wn":"أم البواقي"},{"c":"أولاد قاسم","wc":"04","wn":"أم البواقي"},{"c":"أولاد حملة","wc":"04","wn":"أم البواقي"},{"c":"العامرية","wc":"04","wn":"أم البواقي"},{"c":"سيقوس","wc":"04","wn":"أم البواقي"},{"c":"وادي نيني","wc":"04","wn":"أم البواقي"},{"c":"عين الديس","wc":"04","wn":"أم البواقي"},{"c":"الضلعة","wc":"04","wn":"أم البواقي"},{"c":"الجازية","wc":"04","wn":"أم البواقي"},{"c":"عين كرشة","wc":"04","wn":"أم البواقي"},{"c":"الحرملية","wc":"04","wn":"أم البواقي"},{"c":"هنشير تومغني","wc":"04","wn":"أم البواقي"},{"c":"معافة","wc":"05","wn":"باتنة"},{"c":"القصبات","wc":"05","wn":"باتنة"},{"c":"تيمقاد","wc":"05","wn":"باتنة"},{"c":"تاكسلانت","wc":"05","wn":"باتنة"},{"c":"أولاد سي سليمان","wc":"05","wn":"باتنة"},{"c":"لمسان","wc":"05","wn":"باتنة"},{"c":"تالخمت","wc":"05","wn":"باتنة"},{"c":"رأس العيون","wc":"05","wn":"باتنة"},{"c":"الرحبات","wc":"05","wn":"باتنة"},{"c":"أولاد سلام","wc":"05","wn":"باتنة"},{"c":"القيقبة","wc":"05","wn":"باتنة"},{"c":"ثنية العابد","wc":"05","wn":"باتنة"},{"c":"باتنة","wc":"05","wn":"باتنة"},{"c":"فسديس","wc":"05","wn":"باتنة"},{"c":"وادي الشعبة","wc":"05","wn":"باتنة"},{"c":"حيدوسة","wc":"05","wn":"باتنة"},{"c":"قصر بلزمة","wc":"05","wn":"باتنة"},{"c":"مروانة","wc":"05","wn":"باتنة"},{"c":"وادي الماء","wc":"05","wn":"باتنة"},{"c":"لازرو","wc":"05","wn":"باتنة"},{"c":"سريانة","wc":"05","wn":"باتنة"},{"c":"زانة البيضاء","wc":"05","wn":"باتنة"},{"c":"منعة","wc":"05","wn":"باتنة"},{"c":"تغرغار","wc":"05","wn":"باتنة"},{"c":"عين ياقوت","wc":"05","wn":"باتنة"},{"c":"بومية","wc":"05","wn":"باتنة"},{"c":"جرمة","wc":"05","wn":"باتنة"},{"c":"المعذر","wc":"05","wn":"باتنة"},{"c":"عيون العصافير","wc":"05","wn":"باتنة"},{"c":"تازولت","wc":"05","wn":"باتنة"},{"c":"بومقر","wc":"05","wn":"باتنة"},{"c":"نقاوس","wc":"05","wn":"باتنة"},{"c":"سفيان","wc":"05","wn":"باتنة"},{"c":"أريس","wc":"05","wn":"باتنة"},{"c":"تيغانمين","wc":"05","wn":"باتنة"},{"c":"عين جاسر","wc":"05","wn":"باتنة"},{"c":"الحاسي","wc":"05","wn":"باتنة"},{"c":"سقانة","wc":"05","wn":"باتنة"},{"c":"تيلاطو","wc":"05","wn":"باتنة"},{"c":"فم الطوب","wc":"05","wn":"باتنة"},{"c":"إشمول","wc":"05","wn":"باتنة"},{"c":"إينوغيسن","wc":"05","wn":"باتنة"},{"c":"بوزينة","wc":"05","wn":"باتنة"},{"c":"لارباع","wc":"05","wn":"باتنة"},{"c":"بولهيلات","wc":"05","wn":"باتنة"},{"c":"الشمرة","wc":"05","wn":"باتنة"},{"c":"بريكة","wc":"05","wn":"باتنة"},{"c":"بيطام","wc":"05","wn":"باتنة"},{"c":"إمدوكل","wc":"05","wn":"باتنة"},{"c":"عزيل عبد القادر","wc":"05","wn":"باتنة"},{"c":"الجزار","wc":"05","wn":"باتنة"},{"c":"أولاد عمار","wc":"05","wn":"باتنة"},{"c":"غسيرة","wc":"05","wn":"باتنة"},{"c":"كيمل","wc":"05","wn":"باتنة"},{"c":"تكوت","wc":"05","wn":"باتنة"},{"c":"عين التوتة","wc":"05","wn":"باتنة"},{"c":"بني فضالة الحقانية","wc":"05","wn":"باتنة"},{"c":"أولاد فاضل","wc":"05","wn":"باتنة"},{"c":"أولاد عوف","wc":"05","wn":"باتنة"},{"c":"شير","wc":"05","wn":"باتنة"},{"c":"وادي الطاقة","wc":"05","wn":"باتنة"},{"c":"سيدي عياد","wc":"06","wn":"بجاية"},{"c":"برباشة","wc":"06","wn":"بجاية"},{"c":"الفلاي","wc":"06","wn":"بجاية"},{"c":"كنديرة","wc":"06","wn":"بجاية"},{"c":"سيدي عيش","wc":"06","wn":"بجاية"},{"c":"تيفرة","wc":"06","wn":"بجاية"},{"c":"تينبدار","wc":"06","wn":"بجاية"},{"c":"القصر","wc":"06","wn":"بجاية"},{"c":"فناية الماثن","wc":"06","wn":"بجاية"},{"c":"توجة","wc":"06","wn":"بجاية"},{"c":"ذراع القايد","wc":"06","wn":"بجاية"},{"c":"خراطة","wc":"06","wn":"بجاية"},{"c":"بجاية","wc":"06","wn":"بجاية"},{"c":"وادي غير","wc":"06","wn":"بجاية"},{"c":"بني معوش","wc":"06","wn":"بجاية"},{"c":"بني جليل","wc":"06","wn":"بجاية"},{"c":"فرعون","wc":"06","wn":"بجاية"},{"c":"سمعون","wc":"06","wn":"بجاية"},{"c":"تيمزريت","wc":"06","wn":"بجاية"},{"c":"مالبو","wc":"06","wn":"بجاية"},{"c":"سوق لإثنين","wc":"06","wn":"بجاية"},{"c":"تامريجت","wc":"06","wn":"بجاية"},{"c":"بوخليفة","wc":"06","wn":"بجاية"},{"c":"تالة حمزة","wc":"06","wn":"بجاية"},{"c":"تيشي","wc":"06","wn":"بجاية"},{"c":"أيت رزين","wc":"06","wn":"بجاية"},{"c":"إغيل علي","wc":"06","wn":"بجاية"},{"c":"أيت إسماعيل","wc":"06","wn":"بجاية"},{"c":"درقينة","wc":"06","wn":"بجاية"},{"c":"تاسكريوت","wc":"06","wn":"بجاية"},{"c":"أوقاس","wc":"06","wn":"بجاية"},{"c":"تيزي نبربر","wc":"06","wn":"بجاية"},{"c":"أدكار","wc":"06","wn":"بجاية"},{"c":"بني كسيلة","wc":"06","wn":"بجاية"},{"c":"تاوريرت إغيل","wc":"06","wn":"بجاية"},{"c":"أقبو","wc":"06","wn":"بجاية"},{"c":"شلاطة","wc":"06","wn":"بجاية"},{"c":"اغرم","wc":"06","wn":"بجاية"},{"c":"تامقرة","wc":"06","wn":"بجاية"},{"c":"أمالو","wc":"06","wn":"بجاية"},{"c":"بوحمزة","wc":"06","wn":"بجاية"},{"c":"مسيسنة","wc":"06","wn":"بجاية"},{"c":"صدوق","wc":"06","wn":"بجاية"},{"c":"بني مليكش","wc":"06","wn":"بجاية"},{"c":"بو جليل","wc":"06","wn":"بجاية"},{"c":"تازمالت","wc":"06","wn":"بجاية"},{"c":"أكفادو","wc":"06","wn":"بجاية"},{"c":"شميني","wc":"06","wn":"بجاية"},{"c":"سوق اوفلا","wc":"06","wn":"بجاية"},{"c":"طيبان","wc":"06","wn":"بجاية"},{"c":"أوزلاقن","wc":"06","wn":"بجاية"},{"c":"أميزور","wc":"06","wn":"بجاية"},{"c":"الفيض","wc":"07","wn":"بسكرة"},{"c":"ليشانة","wc":"07","wn":"بسكرة"},{"c":"بوشقرون","wc":"07","wn":"بسكرة"},{"c":"مخادمة","wc":"07","wn":"بسكرة"},{"c":"جمورة","wc":"07","wn":"بسكرة"},{"c":"برانيس","wc":"07","wn":"بسكرة"},{"c":"الوطاية","wc":"07","wn":"بسكرة"},{"c":"القنطرة","wc":"07","wn":"بسكرة"},{"c":"خنقة سيدي ناجي","wc":"07","wn":"بسكرة"},{"c":"عين زعطوط","wc":"07","wn":"بسكرة"},{"c":"زريبة الوادي","wc":"07","wn":"بسكرة"},{"c":"المزيرعة","wc":"07","wn":"بسكرة"},{"c":"بسكرة","wc":"07","wn":"بسكرة"},{"c":"الحاجب","wc":"07","wn":"بسكرة"},{"c":"مليلي","wc":"07","wn":"بسكرة"},{"c":"فوغالة","wc":"07","wn":"بسكرة"},{"c":"الغروس","wc":"07","wn":"بسكرة"},{"c":"برج بن عزوز","wc":"07","wn":"بسكرة"},{"c":"أورلال","wc":"07","wn":"بسكرة"},{"c":"أوماش","wc":"07","wn":"بسكرة"},{"c":"عين الناقة","wc":"07","wn":"بسكرة"},{"c":"شتمة","wc":"07","wn":"بسكرة"},{"c":"الحوش","wc":"07","wn":"بسكرة"},{"c":"سيدي عقبة","wc":"07","wn":"بسكرة"},{"c":"مشونش","wc":"07","wn":"بسكرة"},{"c":"ليوة","wc":"07","wn":"بسكرة"},{"c":"طولقة","wc":"07","wn":"بسكرة"},{"c":"بشار","wc":"08","wn":"بشار"},{"c":"بوكايس","wc":"08","wn":"بشار"},{"c":"لحمر","wc":"08","wn":"بشار"},{"c":"موغل","wc":"08","wn":"بشار"},{"c":"المريجة","wc":"08","wn":"بشار"},{"c":"تاغيت","wc":"08","wn":"بشار"},{"c":"العبادلة","wc":"08","wn":"بشار"},{"c":"عرق فراج","wc":"08","wn":"بشار"},{"c":"مشرع هواري بومدين","wc":"08","wn":"بشار"},{"c":"بني ونيف","wc":"08","wn":"بشار"},{"c":"تبلبالة","wc":"08","wn":"بشار"},{"c":"القنادسة","wc":"08","wn":"بشار"},{"c":"بني مراد","wc":"09","wn":"البليدة"},{"c":"اولاد سلامة","wc":"09","wn":"البليدة"},{"c":"موزاية","wc":"09","wn":"البليدة"},{"c":"حمام ملوان","wc":"09","wn":"البليدة"},{"c":"بوقرة","wc":"09","wn":"البليدة"},{"c":"صوحان","wc":"09","wn":"البليدة"},{"c":"الأربعاء","wc":"09","wn":"البليدة"},{"c":"الصومعة","wc":"09","wn":"البليدة"},{"c":"قرواو","wc":"09","wn":"البليدة"},{"c":"بوفاريك","wc":"09","wn":"البليدة"},{"c":"مفتاح","wc":"09","wn":"البليدة"},{"c":"الشفة","wc":"09","wn":"البليدة"},{"c":"عين الرمانة","wc":"09","wn":"البليدة"},{"c":"وادي جر","wc":"09","wn":"البليدة"},{"c":"العفرون","wc":"09","wn":"البليدة"},{"c":"أولاد يعيش","wc":"09","wn":"البليدة"},{"c":"الشريعة","wc":"09","wn":"البليدة"},{"c":"جبابرة","wc":"09","wn":"البليدة"},{"c":"وادي العلايق","wc":"09","wn":"البليدة"},{"c":"بن خليل","wc":"09","wn":"البليدة"},{"c":"بني تامو","wc":"09","wn":"البليدة"},{"c":"الشبلي","wc":"09","wn":"البليدة"},{"c":"بوعينان","wc":"09","wn":"البليدة"},{"c":"بوعرفة","wc":"09","wn":"البليدة"},{"c":"البليدة","wc":"09","wn":"البليدة"},{"c":"عين العلوي","wc":"10","wn":"البويرة"},{"c":"الحجرة الزرقاء","wc":"10","wn":"البويرة"},{"c":"مزدور","wc":"10","wn":"البويرة"},{"c":"تاقديت","wc":"10","wn":"البويرة"},{"c":"ريدان","wc":"10","wn":"البويرة"},{"c":"المعمورة","wc":"10","wn":"البويرة"},{"c":"الحاكمية","wc":"10","wn":"البويرة"},{"c":"أهل القصر","wc":"10","wn":"البويرة"},{"c":"ديرة","wc":"10","wn":"البويرة"},{"c":"الدشمية","wc":"10","wn":"البويرة"},{"c":"بشلول","wc":"10","wn":"البويرة"},{"c":"آث  منصور","wc":"10","wn":"البويرة"},{"c":"سحاريج","wc":"10","wn":"البويرة"},{"c":"العجيبة","wc":"10","wn":"البويرة"},{"c":"الأسنام","wc":"10","wn":"البويرة"},{"c":"أمشدالة","wc":"10","wn":"البويرة"},{"c":"برج أوخريص","wc":"10","wn":"البويرة"},{"c":"سور الغزلان","wc":"10","wn":"البويرة"},{"c":"حنيف","wc":"10","wn":"البويرة"},{"c":"شرفة","wc":"10","wn":"البويرة"},{"c":"أولاد راشد","wc":"10","wn":"البويرة"},{"c":"عين الحجر","wc":"10","wn":"البويرة"},{"c":"أغبالو","wc":"10","wn":"البويرة"},{"c":"روراوة","wc":"10","wn":"البويرة"},{"c":"الخبوزية","wc":"10","wn":"البويرة"},{"c":"بئر غبالو","wc":"10","wn":"البويرة"},{"c":"البويرة","wc":"10","wn":"البويرة"},{"c":"عين الترك","wc":"10","wn":"البويرة"},{"c":"أيت لعزيز","wc":"10","wn":"البويرة"},{"c":"عين بسام","wc":"10","wn":"البويرة"},{"c":"المقراني","wc":"10","wn":"البويرة"},{"c":"سوق الخميس","wc":"10","wn":"البويرة"},{"c":"أعمر","wc":"10","wn":"البويرة"},{"c":"جباحية","wc":"10","wn":"البويرة"},{"c":"الهاشمية","wc":"10","wn":"البويرة"},{"c":"حيزر","wc":"10","wn":"البويرة"},{"c":"تاغزوت","wc":"10","wn":"البويرة"},{"c":"بودربالة","wc":"10","wn":"البويرة"},{"c":"بوكرم","wc":"10","wn":"البويرة"},{"c":"قرومة","wc":"10","wn":"البويرة"},{"c":"الأخضرية","wc":"10","wn":"البويرة"},{"c":"معلة","wc":"10","wn":"البويرة"},{"c":"قادرية","wc":"10","wn":"البويرة"},{"c":"زبربر","wc":"10","wn":"البويرة"},{"c":"وادي البردي","wc":"10","wn":"البويرة"},{"c":"تاظروك","wc":"11","wn":"تمنراست"},{"c":"ابلسة","wc":"11","wn":"تمنراست"},{"c":"تمنراست","wc":"11","wn":"تمنراست"},{"c":"عين امقل","wc":"11","wn":"تمنراست"},{"c":"أدلس","wc":"11","wn":"تمنراست"},{"c":"الحويجبات","wc":"12","wn":"تبسة"},{"c":"العوينات","wc":"12","wn":"تبسة"},{"c":"فركان","wc":"12","wn":"تبسة"},{"c":"نقرين","wc":"12","wn":"تبسة"},{"c":"بئر مقدم","wc":"12","wn":"تبسة"},{"c":"بئر الذهب","wc":"12","wn":"تبسة"},{"c":"صفصاف الوسرى","wc":"12","wn":"تبسة"},{"c":"قريقر","wc":"12","wn":"تبسة"},{"c":"بكارية","wc":"12","wn":"تبسة"},{"c":"بولحاف الدير","wc":"12","wn":"تبسة"},{"c":"أم علي","wc":"12","wn":"تبسة"},{"c":"بوخضرة","wc":"12","wn":"تبسة"},{"c":"الماء الابيض","wc":"12","wn":"تبسة"},{"c":"الونزة","wc":"12","wn":"تبسة"},{"c":"المريج","wc":"12","wn":"تبسة"},{"c":"عين الزرقاء","wc":"12","wn":"تبسة"},{"c":"سطح قنطيس","wc":"12","wn":"تبسة"},{"c":"العقلة","wc":"12","wn":"تبسة"},{"c":"المزرعة","wc":"12","wn":"تبسة"},{"c":"بجن","wc":"12","wn":"تبسة"},{"c":"مرسط","wc":"12","wn":"تبسة"},{"c":"ثليجان","wc":"12","wn":"تبسة"},{"c":"الشريعة","wc":"12","wn":"تبسة"},{"c":"العقلة المالحة","wc":"12","wn":"تبسة"},{"c":"بئر العاتر","wc":"12","wn":"تبسة"},{"c":"تبسة","wc":"12","wn":"تبسة"},{"c":"الحمامات","wc":"12","wn":"تبسة"},{"c":"الكويف","wc":"12","wn":"تبسة"},{"c":"باب العسة","wc":"13","wn":"تلمسان"},{"c":"تيرني بني هديل","wc":"13","wn":"تلمسان"},{"c":"منصورة","wc":"13","wn":"تلمسان"},{"c":"بني مستر","wc":"13","wn":"تلمسان"},{"c":"عين غرابة","wc":"13","wn":"تلمسان"},{"c":"شتوان","wc":"13","wn":"تلمسان"},{"c":"عمير","wc":"13","wn":"تلمسان"},{"c":"عين فزة","wc":"13","wn":"تلمسان"},{"c":"هنين","wc":"13","wn":"تلمسان"},{"c":"بني خلاد","wc":"13","wn":"تلمسان"},{"c":"سيدي الجيلالي","wc":"13","wn":"تلمسان"},{"c":"البويهي","wc":"13","wn":"تلمسان"},{"c":"ندرومة","wc":"13","wn":"تلمسان"},{"c":"مسيردة الفواقة","wc":"13","wn":"تلمسان"},{"c":"مرسى بن مهيدي","wc":"13","wn":"تلمسان"},{"c":"سيدي مجاهد","wc":"13","wn":"تلمسان"},{"c":"بني بوسعيد","wc":"13","wn":"تلمسان"},{"c":"سبدو","wc":"13","wn":"تلمسان"},{"c":"القور","wc":"13","wn":"تلمسان"},{"c":"العريشة","wc":"13","wn":"تلمسان"},{"c":"بوحلو","wc":"13","wn":"تلمسان"},{"c":"مغنية","wc":"13","wn":"تلمسان"},{"c":"حمام بوغرارة","wc":"13","wn":"تلمسان"},{"c":"زناتة","wc":"13","wn":"تلمسان"},{"c":"أولاد رياح","wc":"13","wn":"تلمسان"},{"c":"الحناية","wc":"13","wn":"تلمسان"},{"c":"سيدي العبدلي","wc":"13","wn":"تلمسان"},{"c":"سوق الثلاثاء","wc":"13","wn":"تلمسان"},{"c":"بن سكران","wc":"13","wn":"تلمسان"},{"c":"فلاوسن","wc":"13","wn":"تلمسان"},{"c":"عين الكبيرة","wc":"13","wn":"تلمسان"},{"c":"عين فتاح","wc":"13","wn":"تلمسان"},{"c":"تلمسان","wc":"13","wn":"تلمسان"},{"c":"عين النحالة","wc":"13","wn":"تلمسان"},{"c":"عين تالوت","wc":"13","wn":"تلمسان"},{"c":"عين يوسف","wc":"13","wn":"تلمسان"},{"c":"بني وارسوس","wc":"13","wn":"تلمسان"},{"c":"الفحول","wc":"13","wn":"تلمسان"},{"c":"الرمشي","wc":"13","wn":"تلمسان"},{"c":"سبعة شيوخ","wc":"13","wn":"تلمسان"},{"c":"السواني","wc":"13","wn":"تلمسان"},{"c":"صبرة","wc":"13","wn":"تلمسان"},{"c":"دار يغمراسن","wc":"13","wn":"تلمسان"},{"c":"الغزوات","wc":"13","wn":"تلمسان"},{"c":"السواحلية","wc":"13","wn":"تلمسان"},{"c":"تيانت","wc":"13","wn":"تلمسان"},{"c":"بني صميل","wc":"13","wn":"تلمسان"},{"c":"وادي الخضر","wc":"13","wn":"تلمسان"},{"c":"أولاد ميمون","wc":"13","wn":"تلمسان"},{"c":"بني بهدل","wc":"13","wn":"تلمسان"},{"c":"بني سنوس","wc":"13","wn":"تلمسان"},{"c":"العزايل","wc":"13","wn":"تلمسان"},{"c":"جبالة","wc":"13","wn":"تلمسان"},{"c":"مهدية","wc":"14","wn":"تيارت"},{"c":"عين دزاريت","wc":"14","wn":"تيارت"},{"c":"السبعين","wc":"14","wn":"تيارت"},{"c":"الفايجة","wc":"14","wn":"تيارت"},{"c":"سي عبد الغني","wc":"14","wn":"تيارت"},{"c":"السوقر","wc":"14","wn":"تيارت"},{"c":"توسنينة","wc":"14","wn":"تيارت"},{"c":"مغيلة","wc":"14","wn":"تيارت"},{"c":"السبت","wc":"14","wn":"تيارت"},{"c":"سيدي حسني","wc":"14","wn":"تيارت"},{"c":"عين الحديد","wc":"14","wn":"تيارت"},{"c":"فرندة","wc":"14","wn":"تيارت"},{"c":"تخمرت","wc":"14","wn":"تيارت"},{"c":"عين كرمس","wc":"14","wn":"تيارت"},{"c":"جبيلات الرصفاء","wc":"14","wn":"تيارت"},{"c":"مادنة","wc":"14","wn":"تيارت"},{"c":"مدريسة","wc":"14","wn":"تيارت"},{"c":"سيدي عبد الرحمن","wc":"14","wn":"تيارت"},{"c":"قصر الشلالة","wc":"14","wn":"تيارت"},{"c":"قرطوفة","wc":"14","wn":"تيارت"},{"c":"سرغين","wc":"14","wn":"تيارت"},{"c":"زمالة  الأمير عبد القادر","wc":"14","wn":"تيارت"},{"c":"وادي ليلي","wc":"14","wn":"تيارت"},{"c":"سيدي علي ملال","wc":"14","wn":"تيارت"},{"c":"جيلالي بن عمار","wc":"14","wn":"تيارت"},{"c":"مشرع الصفا","wc":"14","wn":"تيارت"},{"c":"تاقدمت","wc":"14","wn":"تيارت"},{"c":"بوقرة","wc":"14","wn":"تيارت"},{"c":"حمادية","wc":"14","wn":"تيارت"},{"c":"الرشايقة","wc":"14","wn":"تيارت"},{"c":"تيدة","wc":"14","wn":"تيارت"},{"c":"الناظورة","wc":"14","wn":"تيارت"},{"c":"تيارت","wc":"14","wn":"تيارت"},{"c":"مدروسة","wc":"14","wn":"تيارت"},{"c":"ملاكو","wc":"14","wn":"تيارت"},{"c":"سيدي بختي","wc":"14","wn":"تيارت"},{"c":"عين الذهب","wc":"14","wn":"تيارت"},{"c":"شحيمة","wc":"14","wn":"تيارت"},{"c":"النعيمة","wc":"14","wn":"تيارت"},{"c":"عين بوشقيف","wc":"14","wn":"تيارت"},{"c":"دحموني","wc":"14","wn":"تيارت"},{"c":"الرحوية","wc":"14","wn":"تيارت"},{"c":"ميزرانـــة","wc":"15","wn":"تيزي وزو"},{"c":"إيجــار","wc":"15","wn":"تيزي وزو"},{"c":"بني دوالة","wc":"15","wn":"تيزي وزو"},{"c":"بني زيكــي","wc":"15","wn":"تيزي وزو"},{"c":"إيلولة أومـــالو","wc":"15","wn":"تيزي وزو"},{"c":"أقني قغران","wc":"15","wn":"تيزي وزو"},{"c":"أيت بــوادو","wc":"15","wn":"تيزي وزو"},{"c":"واضية","wc":"15","wn":"تيزي وزو"},{"c":"تيزي نثلاثة","wc":"15","wn":"تيزي وزو"},{"c":"أغريب","wc":"15","wn":"تيزي وزو"},{"c":"أيت شافع","wc":"15","wn":"تيزي وزو"},{"c":"أقرو","wc":"15","wn":"تيزي وزو"},{"c":"أزفون","wc":"15","wn":"تيزي وزو"},{"c":"إفليـــسن","wc":"15","wn":"تيزي وزو"},{"c":"تيقـزيرت","wc":"15","wn":"تيزي وزو"},{"c":"أسي يوسف","wc":"15","wn":"تيزي وزو"},{"c":"بوغني","wc":"15","wn":"تيزي وزو"},{"c":"بونوح","wc":"15","wn":"تيزي وزو"},{"c":"مشطراس","wc":"15","wn":"تيزي وزو"},{"c":"ذراع بن خدة","wc":"15","wn":"تيزي وزو"},{"c":"سيدي نعمان","wc":"15","wn":"تيزي وزو"},{"c":"تادمايت","wc":"15","wn":"تيزي وزو"},{"c":"تيرمتين","wc":"15","wn":"تيزي وزو"},{"c":"أيت بومهدي","wc":"15","wn":"تيزي وزو"},{"c":"أيت تودرت","wc":"15","wn":"تيزي وزو"},{"c":"بني عيسي","wc":"15","wn":"تيزي وزو"},{"c":"واسيف","wc":"15","wn":"تيزي وزو"},{"c":"أيت خليلي","wc":"15","wn":"تيزي وزو"},{"c":"مقــلع","wc":"15","wn":"تيزي وزو"},{"c":"صوامـــع","wc":"15","wn":"تيزي وزو"},{"c":"بني يني","wc":"15","wn":"تيزي وزو"},{"c":"إبودرارن","wc":"15","wn":"تيزي وزو"},{"c":"تيزي وزو","wc":"15","wn":"تيزي وزو"},{"c":"أبي يوسف","wc":"15","wn":"تيزي وزو"},{"c":"عين الحمام","wc":"15","wn":"تيزي وزو"},{"c":"أيت يحيى","wc":"15","wn":"تيزي وزو"},{"c":"اقبيل","wc":"15","wn":"تيزي وزو"},{"c":"بوجيمة","wc":"15","wn":"تيزي وزو"},{"c":"ماكودة","wc":"15","wn":"تيزي وزو"},{"c":"عين الزاوية","wc":"15","wn":"تيزي وزو"},{"c":"أيت يحي موسى","wc":"15","wn":"تيزي وزو"},{"c":"ذراع الميزان","wc":"15","wn":"تيزي وزو"},{"c":"فريقات","wc":"15","wn":"تيزي وزو"},{"c":"مكيرة","wc":"15","wn":"تيزي وزو"},{"c":"تيزي غنيف","wc":"15","wn":"تيزي وزو"},{"c":"يطــافن","wc":"15","wn":"تيزي وزو"},{"c":"إيلـيــلتـن","wc":"15","wn":"تيزي وزو"},{"c":"إمســوحال","wc":"15","wn":"تيزي وزو"},{"c":"عزازقة","wc":"15","wn":"تيزي وزو"},{"c":"فريحة","wc":"15","wn":"تيزي وزو"},{"c":"إيفيغاء","wc":"15","wn":"تيزي وزو"},{"c":"إعــكورن","wc":"15","wn":"تيزي وزو"},{"c":"زكري","wc":"15","wn":"تيزي وزو"},{"c":"أيت عقـواشة","wc":"15","wn":"تيزي وزو"},{"c":"إيرجـــن","wc":"15","wn":"تيزي وزو"},{"c":"الأربعــاء ناث إيراثن","wc":"15","wn":"تيزي وزو"},{"c":"أيت  أومالو","wc":"15","wn":"تيزي وزو"},{"c":"تيزي راشد","wc":"15","wn":"تيزي وزو"},{"c":"أيت عيسى ميمون","wc":"15","wn":"تيزي وزو"},{"c":"واقنون","wc":"15","wn":"تيزي وزو"},{"c":"تيمـيزار","wc":"15","wn":"تيزي وزو"},{"c":"معـــاتقة","wc":"15","wn":"تيزي وزو"},{"c":"سوق الإثنين","wc":"15","wn":"تيزي وزو"},{"c":"أيت محمود","wc":"15","wn":"تيزي وزو"},{"c":"بنــــي زمنزار","wc":"15","wn":"تيزي وزو"},{"c":"إفــرحــونان","wc":"15","wn":"تيزي وزو"},{"c":"بوزقــن","wc":"15","wn":"تيزي وزو"},{"c":"حسين داي","wc":"16","wn":"الجزائر"},{"c":"الكاليتوس","wc":"16","wn":"الجزائر"},{"c":"سيدي موسى","wc":"16","wn":"الجزائر"},{"c":"القبة","wc":"16","wn":"الجزائر"},{"c":"محمد بلوزداد","wc":"16","wn":"الجزائر"},{"c":"عين طاية","wc":"16","wn":"الجزائر"},{"c":"باب الزوار","wc":"16","wn":"الجزائر"},{"c":"برج الكيفان","wc":"16","wn":"الجزائر"},{"c":"الدار البيضاء","wc":"16","wn":"الجزائر"},{"c":"المرسى","wc":"16","wn":"الجزائر"},{"c":"المحمدية","wc":"16","wn":"الجزائر"},{"c":"بئر توتة","wc":"16","wn":"الجزائر"},{"c":"اولاد شبل","wc":"16","wn":"الجزائر"},{"c":"تسالة المرجة","wc":"16","wn":"الجزائر"},{"c":"هراوة","wc":"16","wn":"الجزائر"},{"c":"رغاية","wc":"16","wn":"الجزائر"},{"c":"الرويبة","wc":"16","wn":"الجزائر"},{"c":"المعالمة","wc":"16","wn":"الجزائر"},{"c":"الرحمانية","wc":"16","wn":"الجزائر"},{"c":"سويدانية","wc":"16","wn":"الجزائر"},{"c":"سطاوالي","wc":"16","wn":"الجزائر"},{"c":"زرالدة","wc":"16","wn":"الجزائر"},{"c":"بابا حسن","wc":"16","wn":"الجزائر"},{"c":"الدويرة","wc":"16","wn":"الجزائر"},{"c":"الدرارية","wc":"16","wn":"الجزائر"},{"c":"العاشور","wc":"16","wn":"الجزائر"},{"c":"الخرايسية","wc":"16","wn":"الجزائر"},{"c":"عين بنيان","wc":"16","wn":"الجزائر"},{"c":"الشراقة","wc":"16","wn":"الجزائر"},{"c":"دالي ابراهيم","wc":"16","wn":"الجزائر"},{"c":"الحمامات","wc":"16","wn":"الجزائر"},{"c":"اولاد فايت","wc":"16","wn":"الجزائر"},{"c":"الجزائر الوسطى","wc":"16","wn":"الجزائر"},{"c":"المدنية","wc":"16","wn":"الجزائر"},{"c":"المرادية","wc":"16","wn":"الجزائر"},{"c":"سيدي امحمد","wc":"16","wn":"الجزائر"},{"c":"السحاولة","wc":"16","wn":"الجزائر"},{"c":"بولوغين بن زيري","wc":"16","wn":"الجزائر"},{"c":"القصبة","wc":"16","wn":"الجزائر"},{"c":"وادي قريش","wc":"16","wn":"الجزائر"},{"c":"الرايس حميدو","wc":"16","wn":"الجزائر"},{"c":"بئر مراد رايس","wc":"16","wn":"الجزائر"},{"c":"بئر خادم","wc":"16","wn":"الجزائر"},{"c":"جسر قسنطينة","wc":"16","wn":"الجزائر"},{"c":"حيدرة","wc":"16","wn":"الجزائر"},{"c":"المغارية","wc":"16","wn":"الجزائر"},{"c":"ابن عكنون","wc":"16","wn":"الجزائر"},{"c":"بني مسوس","wc":"16","wn":"الجزائر"},{"c":"بوزريعة","wc":"16","wn":"الجزائر"},{"c":"الابيار","wc":"16","wn":"الجزائر"},{"c":"باش جراح","wc":"16","wn":"الجزائر"},{"c":"بوروبة","wc":"16","wn":"الجزائر"},{"c":"الحراش","wc":"16","wn":"الجزائر"},{"c":"وادي السمار","wc":"16","wn":"الجزائر"},{"c":"براقي","wc":"16","wn":"الجزائر"},{"c":"برج البحري","wc":"16","wn":"الجزائر"},{"c":"باب الوادي","wc":"16","wn":"الجزائر"},{"c":"حاسي العش","wc":"17","wn":"الجلفة"},{"c":"عين الإبل","wc":"17","wn":"الجلفة"},{"c":"القديد","wc":"17","wn":"الجلفة"},{"c":"الشارف","wc":"17","wn":"الجلفة"},{"c":"بن يعقوب","wc":"17","wn":"الجلفة"},{"c":"سيدي بايزيد","wc":"17","wn":"الجلفة"},{"c":"مليليحة","wc":"17","wn":"الجلفة"},{"c":"دار الشيوخ","wc":"17","wn":"الجلفة"},{"c":"تعظميت","wc":"17","wn":"الجلفة"},{"c":"حد الصحاري","wc":"17","wn":"الجلفة"},{"c":"بويرة الأحداب","wc":"17","wn":"الجلفة"},{"c":"عين فقه","wc":"17","wn":"الجلفة"},{"c":"سيدي لعجال","wc":"17","wn":"الجلفة"},{"c":"حاسي فدول","wc":"17","wn":"الجلفة"},{"c":"الخميس","wc":"17","wn":"الجلفة"},{"c":"سلمانة","wc":"17","wn":"الجلفة"},{"c":"سد الرحال","wc":"17","wn":"الجلفة"},{"c":"مسعد","wc":"17","wn":"الجلفة"},{"c":"قطارة","wc":"17","wn":"الجلفة"},{"c":"دلدول","wc":"17","wn":"الجلفة"},{"c":"زكار","wc":"17","wn":"الجلفة"},{"c":"دويس","wc":"17","wn":"الجلفة"},{"c":"الادريسية","wc":"17","wn":"الجلفة"},{"c":"عين الشهداء","wc":"17","wn":"الجلفة"},{"c":"الجلفة","wc":"17","wn":"الجلفة"},{"c":"بيرين","wc":"17","wn":"الجلفة"},{"c":"أم العظام","wc":"17","wn":"الجلفة"},{"c":"فيض البطمة","wc":"17","wn":"الجلفة"},{"c":"عمورة","wc":"17","wn":"الجلفة"},{"c":"زعفران","wc":"17","wn":"الجلفة"},{"c":"قرنيني","wc":"17","wn":"الجلفة"},{"c":"عين وسارة","wc":"17","wn":"الجلفة"},{"c":"بنهار","wc":"17","wn":"الجلفة"},{"c":"عين معبد","wc":"17","wn":"الجلفة"},{"c":"حاسي بحبح","wc":"17","wn":"الجلفة"},{"c":"مجبارة","wc":"17","wn":"الجلفة"},{"c":"جيجل","wc":"18","wn":"جيجل"},{"c":"العوانة","wc":"18","wn":"جيجل"},{"c":"سلمى بن زيادة","wc":"18","wn":"جيجل"},{"c":"أراقن سويسي","wc":"18","wn":"جيجل"},{"c":"بوسيف أولاد عسكر","wc":"18","wn":"جيجل"},{"c":"زيامة منصورية","wc":"18","wn":"جيجل"},{"c":"الشحنة","wc":"18","wn":"جيجل"},{"c":"الامير عبد القادر","wc":"18","wn":"جيجل"},{"c":"وجانة","wc":"18","wn":"جيجل"},{"c":"الطاهير","wc":"18","wn":"جيجل"},{"c":"الشقفة","wc":"18","wn":"جيجل"},{"c":"القنار نشفي","wc":"18","wn":"جيجل"},{"c":"سيدي عبد العزيز","wc":"18","wn":"جيجل"},{"c":"الميلية","wc":"18","wn":"جيجل"},{"c":"أولاد يحيى خدروش","wc":"18","wn":"جيجل"},{"c":"أولاد رابح","wc":"18","wn":"جيجل"},{"c":"سيدي معروف","wc":"18","wn":"جيجل"},{"c":"غبالة","wc":"18","wn":"جيجل"},{"c":"السطارة","wc":"18","wn":"جيجل"},{"c":"بوراوي بلهادف","wc":"18","wn":"جيجل"},{"c":"العنصر","wc":"18","wn":"جيجل"},{"c":"خيري واد عجول","wc":"18","wn":"جيجل"},{"c":"جيملة","wc":"18","wn":"جيجل"},{"c":"قاوس","wc":"18","wn":"جيجل"},{"c":"تاكسنة","wc":"18","wn":"جيجل"},{"c":"برج الطهر","wc":"18","wn":"جيجل"},{"c":"بودريعة بني  ياجيس","wc":"18","wn":"جيجل"},{"c":"الجمعة بني حبيبي","wc":"18","wn":"جيجل"},{"c":"الرصفة","wc":"19","wn":"سطيف"},{"c":"واد البارد","wc":"19","wn":"سطيف"},{"c":"تيزي نبشار","wc":"19","wn":"سطيف"},{"c":"مزلوق","wc":"19","wn":"سطيف"},{"c":"قلال","wc":"19","wn":"سطيف"},{"c":"قصر الابطال","wc":"19","wn":"سطيف"},{"c":"أولاد سي أحمد","wc":"19","wn":"سطيف"},{"c":"أيت نوال مزادة","wc":"19","wn":"سطيف"},{"c":"ايت تيزي","wc":"19","wn":"سطيف"},{"c":"بوعنداس","wc":"19","wn":"سطيف"},{"c":"بوسلام","wc":"19","wn":"سطيف"},{"c":"حمام السخنة","wc":"19","wn":"سطيف"},{"c":"الطاية","wc":"19","wn":"سطيف"},{"c":"التلة","wc":"19","wn":"سطيف"},{"c":"عين ولمان","wc":"19","wn":"سطيف"},{"c":"بوطالب","wc":"19","wn":"سطيف"},{"c":"الحامة","wc":"19","wn":"سطيف"},{"c":"أولاد تبان","wc":"19","wn":"سطيف"},{"c":"عموشة","wc":"19","wn":"سطيف"},{"c":"صالح باي","wc":"19","wn":"سطيف"},{"c":"عين أزال","wc":"19","wn":"سطيف"},{"c":"عين الحجر","wc":"19","wn":"سطيف"},{"c":"بيضاء برج","wc":"19","wn":"سطيف"},{"c":"بئر حدادة","wc":"19","wn":"سطيف"},{"c":"قنزات","wc":"19","wn":"سطيف"},{"c":"حربيل","wc":"19","wn":"سطيف"},{"c":"عين الروى","wc":"19","wn":"سطيف"},{"c":"بني وسين","wc":"19","wn":"سطيف"},{"c":"أوريسيا","wc":"19","wn":"سطيف"},{"c":"بوقاعة","wc":"19","wn":"سطيف"},{"c":"ذراع قبيلة","wc":"19","wn":"سطيف"},{"c":"حمام قرقور","wc":"19","wn":"سطيف"},{"c":"سطيف","wc":"19","wn":"سطيف"},{"c":"عين الكبيرة","wc":"19","wn":"سطيف"},{"c":"الدهامشة","wc":"19","wn":"سطيف"},{"c":"أولاد عدوان","wc":"19","wn":"سطيف"},{"c":"عين السبت","wc":"19","wn":"سطيف"},{"c":"بني عزيز","wc":"19","wn":"سطيف"},{"c":"معاوية","wc":"19","wn":"سطيف"},{"c":"بلاعة","wc":"19","wn":"سطيف"},{"c":"بئر العرش","wc":"19","wn":"سطيف"},{"c":"الولجة","wc":"19","wn":"سطيف"},{"c":"تاشودة","wc":"19","wn":"سطيف"},{"c":"تالة إيفاسن","wc":"19","wn":"سطيف"},{"c":"سرج الغول","wc":"19","wn":"سطيف"},{"c":"قجال","wc":"19","wn":"سطيف"},{"c":"أولاد صابر","wc":"19","wn":"سطيف"},{"c":"بازر سكرة","wc":"19","wn":"سطيف"},{"c":"العلمة","wc":"19","wn":"سطيف"},{"c":"قلتة زرقاء","wc":"19","wn":"سطيف"},{"c":"بني فودة","wc":"19","wn":"سطيف"},{"c":"جميلة","wc":"19","wn":"سطيف"},{"c":"عين لقراج","wc":"19","wn":"سطيف"},{"c":"بني شبانة","wc":"19","wn":"سطيف"},{"c":"بني ورتيلان","wc":"19","wn":"سطيف"},{"c":"بني موحلي","wc":"19","wn":"سطيف"},{"c":"عين عباسة","wc":"19","wn":"سطيف"},{"c":"عين أرنات","wc":"19","wn":"سطيف"},{"c":"بابور","wc":"19","wn":"سطيف"},{"c":"ماوكلان","wc":"19","wn":"سطيف"},{"c":"سعيدة","wc":"20","wn":"سعيدة"},{"c":"تيرسين","wc":"20","wn":"سعيدة"},{"c":"أولاد إبراهيم","wc":"20","wn":"سعيدة"},{"c":"عين السلطان","wc":"20","wn":"سعيدة"},{"c":"المعمورة","wc":"20","wn":"سعيدة"},{"c":"الحساسنة","wc":"20","wn":"سعيدة"},{"c":"عين السخونة","wc":"20","wn":"سعيدة"},{"c":"سيدي بوبكر","wc":"20","wn":"سعيدة"},{"c":"أولاد خالد","wc":"20","wn":"سعيدة"},{"c":"هونت","wc":"20","wn":"سعيدة"},{"c":"يوب","wc":"20","wn":"سعيدة"},{"c":"دوي ثابت","wc":"20","wn":"سعيدة"},{"c":"سيدي احمد","wc":"20","wn":"سعيدة"},{"c":"مولاي العربي","wc":"20","wn":"سعيدة"},{"c":"عين الحجر","wc":"20","wn":"سعيدة"},{"c":"سيدي عمر","wc":"20","wn":"سعيدة"},{"c":"عين بوزيان","wc":"21","wn":"سكيكدة"},{"c":"صالح بو الشعور","wc":"21","wn":"سكيكدة"},{"c":"الحدائق","wc":"21","wn":"سكيكدة"},{"c":"زردازة","wc":"21","wn":"سكيكدة"},{"c":"أولاد حبابة","wc":"21","wn":"سكيكدة"},{"c":"بني ولبان","wc":"21","wn":"سكيكدة"},{"c":"سيدي مزغيش","wc":"21","wn":"سكيكدة"},{"c":"بني بشير","wc":"21","wn":"سكيكدة"},{"c":"رمضان جمال","wc":"21","wn":"سكيكدة"},{"c":"بين الويدان","wc":"21","wn":"سكيكدة"},{"c":"مجاز الدشيش","wc":"21","wn":"سكيكدة"},{"c":"تمالوس","wc":"21","wn":"سكيكدة"},{"c":"عين قشرة","wc":"21","wn":"سكيكدة"},{"c":"الولجة بولبلوط","wc":"21","wn":"سكيكدة"},{"c":"أم الطوب","wc":"21","wn":"سكيكدة"},{"c":"الغدير","wc":"21","wn":"سكيكدة"},{"c":"الكركرة","wc":"21","wn":"سكيكدة"},{"c":"الحروش","wc":"21","wn":"سكيكدة"},{"c":"الزيتونة","wc":"21","wn":"سكيكدة"},{"c":"أولاد عطية","wc":"21","wn":"سكيكدة"},{"c":"وادي الزهور","wc":"21","wn":"سكيكدة"},{"c":"القل","wc":"21","wn":"سكيكدة"},{"c":"الشرايع","wc":"21","wn":"سكيكدة"},{"c":"بني زيد","wc":"21","wn":"سكيكدة"},{"c":"خناق مايو","wc":"21","wn":"سكيكدة"},{"c":"المرسى","wc":"21","wn":"سكيكدة"},{"c":"بن عزوز","wc":"21","wn":"سكيكدة"},{"c":"بكوش لخضر","wc":"21","wn":"سكيكدة"},{"c":"السبت","wc":"21","wn":"سكيكدة"},{"c":"عين شرشار","wc":"21","wn":"سكيكدة"},{"c":"عزابة","wc":"21","wn":"سكيكدة"},{"c":"بوشطاطة","wc":"21","wn":"سكيكدة"},{"c":"فلفلة","wc":"21","wn":"سكيكدة"},{"c":"حمادي كرومة","wc":"21","wn":"سكيكدة"},{"c":"سكيكدة","wc":"21","wn":"سكيكدة"},{"c":"عين زويت","wc":"21","wn":"سكيكدة"},{"c":"جندل سعدي محمد","wc":"21","wn":"سكيكدة"},{"c":"قنواع","wc":"21","wn":"سكيكدة"},{"c":"سيدي علي بن يوب","wc":"22","wn":"سيدي بلعباس"},{"c":"مولاي سليسن","wc":"22","wn":"سيدي بلعباس"},{"c":"الحصيبة","wc":"22","wn":"سيدي بلعباس"},{"c":"عين تندمين","wc":"22","wn":"سيدي بلعباس"},{"c":"تنيرة","wc":"22","wn":"سيدي بلعباس"},{"c":"وادي سفيون","wc":"22","wn":"سيدي بلعباس"},{"c":"حاسي دحو","wc":"22","wn":"سيدي بلعباس"},{"c":"وادي تاوريرة","wc":"22","wn":"سيدي بلعباس"},{"c":"بن عشيبة شلية","wc":"22","wn":"سيدي بلعباس"},{"c":"سيدي يعقوب","wc":"22","wn":"سيدي بلعباس"},{"c":"سيدي لحسن","wc":"22","wn":"سيدي بلعباس"},{"c":"سيدي خالد","wc":"22","wn":"سيدي بلعباس"},{"c":"طابية","wc":"22","wn":"سيدي بلعباس"},{"c":"سيدي ابراهيم","wc":"22","wn":"سيدي بلعباس"},{"c":"العمارنة","wc":"22","wn":"سيدي بلعباس"},{"c":"بوخنفيس","wc":"22","wn":"سيدي بلعباس"},{"c":"حاسي زهانة","wc":"22","wn":"سيدي بلعباس"},{"c":"شيطوان البلايلة","wc":"22","wn":"سيدي بلعباس"},{"c":"بن باديس","wc":"22","wn":"سيدي بلعباس"},{"c":"بضرابين المقراني","wc":"22","wn":"سيدي بلعباس"},{"c":"سفيزف","wc":"22","wn":"سيدي بلعباس"},{"c":"مسيد","wc":"22","wn":"سيدي بلعباس"},{"c":"بوجبهة البرج","wc":"22","wn":"سيدي بلعباس"},{"c":"عين أدن","wc":"22","wn":"سيدي بلعباس"},{"c":"سيدي حمادوش","wc":"22","wn":"سيدي بلعباس"},{"c":"سيدي شعيب","wc":"22","wn":"سيدي بلعباس"},{"c":"مكدرة","wc":"22","wn":"سيدي بلعباس"},{"c":"عين البرد","wc":"22","wn":"سيدي بلعباس"},{"c":"رجم دموش","wc":"22","wn":"سيدي بلعباس"},{"c":"راس الماء","wc":"22","wn":"سيدي بلعباس"},{"c":"وادي السبع","wc":"22","wn":"سيدي بلعباس"},{"c":"مرحوم","wc":"22","wn":"سيدي بلعباس"},{"c":"سيدي بلعباس","wc":"22","wn":"سيدي بلعباس"},{"c":"عين الثريد","wc":"22","wn":"سيدي بلعباس"},{"c":"السهالة الثورة","wc":"22","wn":"سيدي بلعباس"},{"c":"تسالة","wc":"22","wn":"سيدي بلعباس"},{"c":"بلعربي","wc":"22","wn":"سيدي بلعباس"},{"c":"مصطفى بن ابراهيم","wc":"22","wn":"سيدي بلعباس"},{"c":"تلموني","wc":"22","wn":"سيدي بلعباس"},{"c":"زروالة","wc":"22","wn":"سيدي بلعباس"},{"c":"الضاية","wc":"22","wn":"سيدي بلعباس"},{"c":"مزاورو","wc":"22","wn":"سيدي بلعباس"},{"c":"تغاليمت","wc":"22","wn":"سيدي بلعباس"},{"c":"تلاغ","wc":"22","wn":"سيدي بلعباس"},{"c":"عين قادة","wc":"22","wn":"سيدي بلعباس"},{"c":"لمطار","wc":"22","wn":"سيدي بلعباس"},{"c":"سيدي علي بوسيدي","wc":"22","wn":"سيدي بلعباس"},{"c":"سيدي دحو الزاير","wc":"22","wn":"سيدي بلعباس"},{"c":"بئر الحمام","wc":"22","wn":"سيدي بلعباس"},{"c":"مرين","wc":"22","wn":"سيدي بلعباس"},{"c":"تفسور","wc":"22","wn":"سيدي بلعباس"},{"c":"تاودموت","wc":"22","wn":"سيدي بلعباس"},{"c":"عنابة","wc":"23","wn":"عنابة"},{"c":"سرايدي","wc":"23","wn":"عنابة"},{"c":"برحال","wc":"23","wn":"عنابة"},{"c":"واد العنب","wc":"23","wn":"عنابة"},{"c":"الحجار","wc":"23","wn":"عنابة"},{"c":"سيدي عمار","wc":"23","wn":"عنابة"},{"c":"البوني","wc":"23","wn":"عنابة"},{"c":"عين الباردة","wc":"23","wn":"عنابة"},{"c":"الشرفة","wc":"23","wn":"عنابة"},{"c":"العلمة","wc":"23","wn":"عنابة"},{"c":"التريعات","wc":"23","wn":"عنابة"},{"c":"شطايبي","wc":"23","wn":"عنابة"},{"c":"نشماية","wc":"24","wn":"قالمة"},{"c":"بوحمدان","wc":"24","wn":"قالمة"},{"c":"حمام دباغ","wc":"24","wn":"قالمة"},{"c":"الركنية","wc":"24","wn":"قالمة"},{"c":"الدهوارة","wc":"24","wn":"قالمة"},{"c":"حمام النبايل","wc":"24","wn":"قالمة"},{"c":"قالمة","wc":"24","wn":"قالمة"},{"c":"بومهرة أحمد","wc":"24","wn":"قالمة"},{"c":"عين بن بيضاء","wc":"24","wn":"قالمة"},{"c":"بوشقوف","wc":"24","wn":"قالمة"},{"c":"مجاز الصفاء","wc":"24","wn":"قالمة"},{"c":"وادي فراغة","wc":"24","wn":"قالمة"},{"c":"بوعاتي محمود","wc":"24","wn":"قالمة"},{"c":"الفجوج","wc":"24","wn":"قالمة"},{"c":"هيليوبوليس","wc":"24","wn":"قالمة"},{"c":"مجاز عمار","wc":"24","wn":"قالمة"},{"c":"هواري بومدين","wc":"24","wn":"قالمة"},{"c":"رأس العقبة","wc":"24","wn":"قالمة"},{"c":"سلاوة عنونة","wc":"24","wn":"قالمة"},{"c":"جبالة الخميسي","wc":"24","wn":"قالمة"},{"c":"برج صباط","wc":"24","wn":"قالمة"},{"c":"وادي الزناتي","wc":"24","wn":"قالمة"},{"c":"عين رقادة","wc":"24","wn":"قالمة"},{"c":"عين العربي","wc":"24","wn":"قالمة"},{"c":"عين مخلوف","wc":"24","wn":"قالمة"},{"c":"تاملوكة","wc":"24","wn":"قالمة"},{"c":"عين صندل","wc":"24","wn":"قالمة"},{"c":"بوحشانة","wc":"24","wn":"قالمة"},{"c":"لخزارة","wc":"24","wn":"قالمة"},{"c":"بلخير","wc":"24","wn":"قالمة"},{"c":"بني مزلين","wc":"24","wn":"قالمة"},{"c":"قلعة بوصبع","wc":"24","wn":"قالمة"},{"c":"وادي الشحم","wc":"24","wn":"قالمة"},{"c":"بن جراح","wc":"24","wn":"قالمة"},{"c":"ديدوش مراد","wc":"25","wn":"قسنطينة"},{"c":"حامة بوزيان","wc":"25","wn":"قسنطينة"},{"c":"بني حميدان","wc":"25","wn":"قسنطينة"},{"c":"زيغود يوسف","wc":"25","wn":"قسنطينة"},{"c":"عين السمارة","wc":"25","wn":"قسنطينة"},{"c":"الخروب","wc":"25","wn":"قسنطينة"},{"c":"أولاد رحمون","wc":"25","wn":"قسنطينة"},{"c":"عين عبيد","wc":"25","wn":"قسنطينة"},{"c":"أبن باديس الهرية","wc":"25","wn":"قسنطينة"},{"c":"ابن زياد","wc":"25","wn":"قسنطينة"},{"c":"بوجريو مسعود","wc":"25","wn":"قسنطينة"},{"c":"قسنطينة","wc":"25","wn":"قسنطينة"},{"c":"أولاد هلال","wc":"26","wn":"المدية"},{"c":"السواقي","wc":"26","wn":"المدية"},{"c":"قصر البخاري","wc":"26","wn":"المدية"},{"c":"مفاتحة","wc":"26","wn":"المدية"},{"c":"السانق","wc":"26","wn":"المدية"},{"c":"العزيزية","wc":"26","wn":"المدية"},{"c":"مغراوة","wc":"26","wn":"المدية"},{"c":"ميهوب","wc":"26","wn":"المدية"},{"c":"بوعيش","wc":"26","wn":"المدية"},{"c":"بوغزول","wc":"26","wn":"المدية"},{"c":"الشهبونية","wc":"26","wn":"المدية"},{"c":"حناشة","wc":"26","wn":"المدية"},{"c":"عوامري","wc":"26","wn":"المدية"},{"c":"وادي حربيل","wc":"26","wn":"المدية"},{"c":"بني سليمان","wc":"26","wn":"المدية"},{"c":"بوعيشون","wc":"26","wn":"المدية"},{"c":"أولاد بوعشرة","wc":"26","wn":"المدية"},{"c":"سي المحجوب","wc":"26","wn":"المدية"},{"c":"بوسكن","wc":"26","wn":"المدية"},{"c":"سيدي الربيع","wc":"26","wn":"المدية"},{"c":"البرواقية","wc":"26","wn":"المدية"},{"c":"أولاد دايد","wc":"26","wn":"المدية"},{"c":"الربعية","wc":"26","wn":"المدية"},{"c":"مجبر","wc":"26","wn":"المدية"},{"c":"ثلاث دوائر","wc":"26","wn":"المدية"},{"c":"الزبيرية","wc":"26","wn":"المدية"},{"c":"العيساوية","wc":"26","wn":"المدية"},{"c":"الحوضان","wc":"26","wn":"المدية"},{"c":"مزغنة","wc":"26","wn":"المدية"},{"c":"تابلاط","wc":"26","wn":"المدية"},{"c":"بوغار","wc":"26","wn":"المدية"},{"c":"سغوان","wc":"26","wn":"المدية"},{"c":"ذراع السمار","wc":"26","wn":"المدية"},{"c":"المدية","wc":"26","wn":"المدية"},{"c":"تمسقيدة","wc":"26","wn":"المدية"},{"c":"بن شكاو","wc":"26","wn":"المدية"},{"c":"الحمدانية","wc":"26","wn":"المدية"},{"c":"وزرة","wc":"26","wn":"المدية"},{"c":"تيزي مهدي","wc":"26","wn":"المدية"},{"c":"عين بوسيف","wc":"26","wn":"المدية"},{"c":"العوينات","wc":"26","wn":"المدية"},{"c":"الكاف الاخضر","wc":"26","wn":"المدية"},{"c":"أولاد امعرف","wc":"26","wn":"المدية"},{"c":"سيدي دامد","wc":"26","wn":"المدية"},{"c":"بعطة","wc":"26","wn":"المدية"},{"c":"العمارية","wc":"26","wn":"المدية"},{"c":"أولاد إبراهيم","wc":"26","wn":"المدية"},{"c":"بئر بن عابد","wc":"26","wn":"المدية"},{"c":"القلب الكبير","wc":"26","wn":"المدية"},{"c":"سدراية","wc":"26","wn":"المدية"},{"c":"عين اقصير","wc":"26","wn":"المدية"},{"c":"شلالة العذاورة","wc":"26","wn":"المدية"},{"c":"شنيقل","wc":"26","wn":"المدية"},{"c":"تفراوت","wc":"26","wn":"المدية"},{"c":"بوشراحيل","wc":"26","wn":"المدية"},{"c":"خمس جوامع","wc":"26","wn":"المدية"},{"c":"سيدي نعمان","wc":"26","wn":"المدية"},{"c":"عزيز","wc":"26","wn":"المدية"},{"c":"دراق","wc":"26","wn":"المدية"},{"c":"أم الجليل","wc":"26","wn":"المدية"},{"c":"جواب","wc":"26","wn":"المدية"},{"c":"سيدي زهار","wc":"26","wn":"المدية"},{"c":"سيدي زيان","wc":"26","wn":"المدية"},{"c":"أولاد عنتر","wc":"26","wn":"المدية"},{"c":"فرناقة","wc":"27","wn":"مستغانم"},{"c":"وادي الخير","wc":"27","wn":"مستغانم"},{"c":"الحسيان (بني ياحي","wc":"27","wn":"مستغانم"},{"c":"حاسي ماماش","wc":"27","wn":"مستغانم"},{"c":"مزغران","wc":"27","wn":"مستغانم"},{"c":"ستيدية","wc":"27","wn":"مستغانم"},{"c":"عين تادلس","wc":"27","wn":"مستغانم"},{"c":"سيدي بلعطار","wc":"27","wn":"مستغانم"},{"c":"سور","wc":"27","wn":"مستغانم"},{"c":"عين بودينار","wc":"27","wn":"مستغانم"},{"c":"خير الدين","wc":"27","wn":"مستغانم"},{"c":"صيادة","wc":"27","wn":"مستغانم"},{"c":"سيدي علي","wc":"27","wn":"مستغانم"},{"c":"تزقايت","wc":"27","wn":"مستغانم"},{"c":"بن عبد المالك رمضان","wc":"27","wn":"مستغانم"},{"c":"مستغانم","wc":"27","wn":"مستغانم"},{"c":"حجاج","wc":"27","wn":"مستغانم"},{"c":"سيدي لخضر","wc":"27","wn":"مستغانم"},{"c":"عشعاشة","wc":"27","wn":"مستغانم"},{"c":"خضرة","wc":"27","wn":"مستغانم"},{"c":"نكمارية","wc":"27","wn":"مستغانم"},{"c":"أولاد بوغالم","wc":"27","wn":"مستغانم"},{"c":"بوقيراط","wc":"27","wn":"مستغانم"},{"c":"صفصاف","wc":"27","wn":"مستغانم"},{"c":"سيرات","wc":"27","wn":"مستغانم"},{"c":"السوافلية","wc":"27","wn":"مستغانم"},{"c":"عين سيدي الشريف","wc":"27","wn":"مستغانم"},{"c":"منصورة","wc":"27","wn":"مستغانم"},{"c":"ماسرة","wc":"27","wn":"مستغانم"},{"c":"الطواهرية","wc":"27","wn":"مستغانم"},{"c":"عين نويسي","wc":"27","wn":"مستغانم"},{"c":"أولاد مع الله","wc":"27","wn":"مستغانم"},{"c":"شلال","wc":"28","wn":"المسيلة"},{"c":"أولاد ماضي","wc":"28","wn":"المسيلة"},{"c":"خطوطي سد الجير","wc":"28","wn":"المسيلة"},{"c":"بلعايبة","wc":"28","wn":"المسيلة"},{"c":"برهوم","wc":"28","wn":"المسيلة"},{"c":"دهاهنة","wc":"28","wn":"المسيلة"},{"c":"مقرة","wc":"28","wn":"المسيلة"},{"c":"بني يلمان","wc":"28","wn":"المسيلة"},{"c":"بوطي السايح","wc":"28","wn":"المسيلة"},{"c":"سيدي عيسى","wc":"28","wn":"المسيلة"},{"c":"عين الحجل","wc":"28","wn":"المسيلة"},{"c":"سيدي هجرس","wc":"28","wn":"المسيلة"},{"c":"بوسعادة","wc":"28","wn":"المسيلة"},{"c":"الهامل","wc":"28","wn":"المسيلة"},{"c":"ولتام","wc":"28","wn":"المسيلة"},{"c":"بن زوه","wc":"28","wn":"المسيلة"},{"c":"أولاد سيدي ابراهيم","wc":"28","wn":"المسيلة"},{"c":"سيدي عامر","wc":"28","wn":"المسيلة"},{"c":"تامسة","wc":"28","wn":"المسيلة"},{"c":"بن سرور","wc":"28","wn":"المسيلة"},{"c":"محمد بوضياف","wc":"28","wn":"المسيلة"},{"c":"أولاد سليمان","wc":"28","wn":"المسيلة"},{"c":"زرزور","wc":"28","wn":"المسيلة"},{"c":"عين الملح","wc":"28","wn":"المسيلة"},{"c":"عين فارس","wc":"28","wn":"المسيلة"},{"c":"عين الريش","wc":"28","wn":"المسيلة"},{"c":"بئر فضة","wc":"28","wn":"المسيلة"},{"c":"سيدي امحمد","wc":"28","wn":"المسيلة"},{"c":"امجدل","wc":"28","wn":"المسيلة"},{"c":"مناعة","wc":"28","wn":"المسيلة"},{"c":"جبل مساعد","wc":"28","wn":"المسيلة"},{"c":"سليم","wc":"28","wn":"المسيلة"},{"c":"المسيلة","wc":"28","wn":"المسيلة"},{"c":"حمام الضلعة","wc":"28","wn":"المسيلة"},{"c":"ونوغة","wc":"28","wn":"المسيلة"},{"c":"أولاد منصور","wc":"28","wn":"المسيلة"},{"c":"تارمونت","wc":"28","wn":"المسيلة"},{"c":"المعاضيد","wc":"28","wn":"المسيلة"},{"c":"المطارفة","wc":"28","wn":"المسيلة"},{"c":"معاريف","wc":"28","wn":"المسيلة"},{"c":"أولاد دراج","wc":"28","wn":"المسيلة"},{"c":"السوامع","wc":"28","wn":"المسيلة"},{"c":"الحوامد","wc":"28","wn":"المسيلة"},{"c":"خبانة","wc":"28","wn":"المسيلة"},{"c":"مسيف","wc":"28","wn":"المسيلة"},{"c":"عين الخضراء","wc":"28","wn":"المسيلة"},{"c":"أولاد عدي لقبالة","wc":"28","wn":"المسيلة"},{"c":"وادي الأبطال","wc":"29","wn":"معسكر"},{"c":"سيدي عبد المومن","wc":"29","wn":"معسكر"},{"c":"سجرارة","wc":"29","wn":"معسكر"},{"c":"المحمدية","wc":"29","wn":"معسكر"},{"c":"تيغنيف","wc":"29","wn":"معسكر"},{"c":"مقطع الدوز","wc":"29","wn":"معسكر"},{"c":"فراقيق","wc":"29","wn":"معسكر"},{"c":"الغمري","wc":"29","wn":"معسكر"},{"c":"زهانة","wc":"29","wn":"معسكر"},{"c":"القعدة","wc":"29","wn":"معسكر"},{"c":"رأس عين عميروش","wc":"29","wn":"معسكر"},{"c":"عقاز","wc":"29","wn":"معسكر"},{"c":"العلايمية","wc":"29","wn":"معسكر"},{"c":"سيق","wc":"29","wn":"معسكر"},{"c":"الشرفاء","wc":"29","wn":"معسكر"},{"c":"بوهني","wc":"29","wn":"معسكر"},{"c":"المأمونية","wc":"29","wn":"معسكر"},{"c":"القطنة","wc":"29","wn":"معسكر"},{"c":"عين فارس","wc":"29","wn":"معسكر"},{"c":"غروس","wc":"29","wn":"معسكر"},{"c":"بنيان","wc":"29","wn":"معسكر"},{"c":"عوف","wc":"29","wn":"معسكر"},{"c":"قرجوم","wc":"29","wn":"معسكر"},{"c":"عين أفرص","wc":"29","wn":"معسكر"},{"c":"عين فكان","wc":"29","wn":"معسكر"},{"c":"خلوية","wc":"29","wn":"معسكر"},{"c":"المنور","wc":"29","wn":"معسكر"},{"c":"البرج","wc":"29","wn":"معسكر"},{"c":"سيدي بوسعيد","wc":"29","wn":"معسكر"},{"c":"المطمور","wc":"29","wn":"معسكر"},{"c":"سيدي قادة","wc":"29","wn":"معسكر"},{"c":"ماقضة","wc":"29","wn":"معسكر"},{"c":"معسكر","wc":"29","wn":"معسكر"},{"c":"بوحنيفية","wc":"29","wn":"معسكر"},{"c":"غريس","wc":"29","wn":"معسكر"},{"c":"حسين","wc":"29","wn":"معسكر"},{"c":"القرط","wc":"29","wn":"معسكر"},{"c":"فروحة","wc":"29","wn":"معسكر"},{"c":"تيزي","wc":"29","wn":"معسكر"},{"c":"السهايلية","wc":"29","wn":"معسكر"},{"c":"ماوسة","wc":"29","wn":"معسكر"},{"c":"سيدي عبد الجبار","wc":"29","wn":"معسكر"},{"c":"الحشم","wc":"29","wn":"معسكر"},{"c":"نسمط","wc":"29","wn":"معسكر"},{"c":"زلامطة","wc":"29","wn":"معسكر"},{"c":"عين فراح","wc":"29","wn":"معسكر"},{"c":"وادي التاغية","wc":"29","wn":"معسكر"},{"c":"ورقلة","wc":"30","wn":"ورقلة"},{"c":"حاسي مسعود","wc":"30","wn":"ورقلة"},{"c":"عين البيضاء","wc":"30","wn":"ورقلة"},{"c":"حاسي بن عبد الله","wc":"30","wn":"ورقلة"},{"c":"سيدي خويلد","wc":"30","wn":"ورقلة"},{"c":"البرمة","wc":"30","wn":"ورقلة"},{"c":"الرويسات","wc":"30","wn":"ورقلة"},{"c":"انقوسة","wc":"30","wn":"ورقلة"},{"c":"سيدي الشحمي","wc":"31","wn":"وهران"},{"c":"حاسي مفسوخ","wc":"31","wn":"وهران"},{"c":"بئر الجير","wc":"31","wn":"وهران"},{"c":"حاسي بن عقبة","wc":"31","wn":"وهران"},{"c":"قديل","wc":"31","wn":"وهران"},{"c":"حاسي بونيف","wc":"31","wn":"وهران"},{"c":"الكرمة","wc":"31","wn":"وهران"},{"c":"السانية","wc":"31","wn":"وهران"},{"c":"بن فريحة","wc":"31","wn":"وهران"},{"c":"أرزيو","wc":"31","wn":"وهران"},{"c":"سيدي بن يبقى","wc":"31","wn":"وهران"},{"c":"عين البية","wc":"31","wn":"وهران"},{"c":"بطيوة","wc":"31","wn":"وهران"},{"c":"مرسى الحجاج","wc":"31","wn":"وهران"},{"c":"عين الترك","wc":"31","wn":"وهران"},{"c":"وهران","wc":"31","wn":"وهران"},{"c":"العنصر","wc":"31","wn":"وهران"},{"c":"المرسى الكبير","wc":"31","wn":"وهران"},{"c":"بوفاتيس","wc":"31","wn":"وهران"},{"c":"البراية","wc":"31","wn":"وهران"},{"c":"وادي تليلات","wc":"31","wn":"وهران"},{"c":"عين الكرمة","wc":"31","wn":"وهران"},{"c":"بوتليليس","wc":"31","wn":"وهران"},{"c":"مسرغين","wc":"31","wn":"وهران"},{"c":"بوسفر","wc":"31","wn":"وهران"},{"c":"طفراوي","wc":"31","wn":"وهران"},{"c":"عين العراك","wc":"32","wn":"البيض"},{"c":"كراكدة","wc":"32","wn":"البيض"},{"c":"سيدي سليمان","wc":"32","wn":"البيض"},{"c":"سيدي عامر","wc":"32","wn":"البيض"},{"c":"بوعلام","wc":"32","wn":"البيض"},{"c":"البنود","wc":"32","wn":"البيض"},{"c":"بوقطب","wc":"32","wn":"البيض"},{"c":"الخيثر","wc":"32","wn":"البيض"},{"c":"توسمولين","wc":"32","wn":"البيض"},{"c":"سيدي طيفور","wc":"32","wn":"البيض"},{"c":"ستيتن","wc":"32","wn":"البيض"},{"c":"البيض","wc":"32","wn":"البيض"},{"c":"رقاصة","wc":"32","wn":"البيض"},{"c":"المحرة","wc":"32","wn":"البيض"},{"c":"الكاف الأحمر","wc":"32","wn":"البيض"},{"c":"بريزينة","wc":"32","wn":"البيض"},{"c":"الغاسول","wc":"32","wn":"البيض"},{"c":"الأبيض سيدي الشيخ","wc":"32","wn":"البيض"},{"c":"بوسمغون","wc":"32","wn":"البيض"},{"c":"الشقيق","wc":"32","wn":"البيض"},{"c":"شلالة","wc":"32","wn":"البيض"},{"c":"اربوات","wc":"32","wn":"البيض"},{"c":"برج عمر إدريس","wc":"33","wn":"إليزي"},{"c":"دبداب","wc":"33","wn":"إليزي"},{"c":"إن أمناس","wc":"33","wn":"إليزي"},{"c":"إيليزي","wc":"33","wn":"إليزي"},{"c":"الحمادية","wc":"34","wn":"برج بوعريريج"},{"c":"أولاد سيدي ابراهيم","wc":"34","wn":"برج بوعريريج"},{"c":"عين تاغروت","wc":"34","wn":"برج بوعريريج"},{"c":"تيكستار","wc":"34","wn":"برج بوعريريج"},{"c":"بليمور","wc":"34","wn":"برج بوعريريج"},{"c":"العناصر","wc":"34","wn":"برج بوعريريج"},{"c":"غيلاسة","wc":"34","wn":"برج بوعريريج"},{"c":"تقلعيت","wc":"34","wn":"برج بوعريريج"},{"c":"برج الغدير","wc":"34","wn":"برج بوعريريج"},{"c":"العش","wc":"34","wn":"برج بوعريريج"},{"c":"سيدي أمبارك","wc":"34","wn":"برج بوعريريج"},{"c":"خليل","wc":"34","wn":"برج بوعريريج"},{"c":"بئر قاصد علي","wc":"34","wn":"برج بوعريريج"},{"c":"تفرق","wc":"34","wn":"برج بوعريريج"},{"c":"الماين","wc":"34","wn":"برج بوعريريج"},{"c":"جعافرة","wc":"34","wn":"برج بوعريريج"},{"c":"القلة","wc":"34","wn":"برج بوعريريج"},{"c":"ثنية النصر","wc":"34","wn":"برج بوعريريج"},{"c":"المهير","wc":"34","wn":"برج بوعريريج"},{"c":"القصور","wc":"34","wn":"برج بوعريريج"},{"c":"المنصورة","wc":"34","wn":"برج بوعريريج"},{"c":"حرازة","wc":"34","wn":"برج بوعريريج"},{"c":"الرابطة","wc":"34","wn":"برج بوعريريج"},{"c":"الياشير","wc":"34","wn":"برج بوعريريج"},{"c":"حسناوة","wc":"34","wn":"برج بوعريريج"},{"c":"مجانة","wc":"34","wn":"برج بوعريريج"},{"c":"عين تسرة","wc":"34","wn":"برج بوعريريج"},{"c":"أولاد أبراهم","wc":"34","wn":"برج بوعريريج"},{"c":"رأس الوادي","wc":"34","wn":"برج بوعريريج"},{"c":"برج زمورة","wc":"34","wn":"برج بوعريريج"},{"c":"أولاد دحمان","wc":"34","wn":"برج بوعريريج"},{"c":"تسامرت","wc":"34","wn":"برج بوعريريج"},{"c":"برج بوعريرج","wc":"34","wn":"برج بوعريريج"},{"c":"بن داود","wc":"34","wn":"برج بوعريريج"},{"c":"الخروبة","wc":"35","wn":"بومرداس"},{"c":"دلس","wc":"35","wn":"بومرداس"},{"c":"بن شود","wc":"35","wn":"بومرداس"},{"c":"أعفير","wc":"35","wn":"بومرداس"},{"c":"الثنية","wc":"35","wn":"بومرداس"},{"c":"بني عمران","wc":"35","wn":"بومرداس"},{"c":"خميس الخشنة","wc":"35","wn":"بومرداس"},{"c":"عمال","wc":"35","wn":"بومرداس"},{"c":"تيمزريت","wc":"35","wn":"بومرداس"},{"c":"زموري","wc":"35","wn":"بومرداس"},{"c":"الاربعطاش","wc":"35","wn":"بومرداس"},{"c":"يسر","wc":"35","wn":"بومرداس"},{"c":"شعبة العامر","wc":"35","wn":"بومرداس"},{"c":"أولاد عيسى","wc":"35","wn":"بومرداس"},{"c":"الناصرية","wc":"35","wn":"بومرداس"},{"c":"بوزقزة قدارة","wc":"35","wn":"بومرداس"},{"c":"سوق الحد","wc":"35","wn":"بومرداس"},{"c":"سيدي داود","wc":"35","wn":"بومرداس"},{"c":"بغلية","wc":"35","wn":"بومرداس"},{"c":"لقاطة","wc":"35","wn":"بومرداس"},{"c":"جنات","wc":"35","wn":"بومرداس"},{"c":"تيجلابين","wc":"35","wn":"بومرداس"},{"c":"سي مصطفى","wc":"35","wn":"بومرداس"},{"c":"أولاد هداج","wc":"35","wn":"بومرداس"},{"c":"أولاد موسى","wc":"35","wn":"بومرداس"},{"c":"بومرداس","wc":"35","wn":"بومرداس"},{"c":"قورصو","wc":"35","wn":"بومرداس"},{"c":"برج منايل","wc":"35","wn":"بومرداس"},{"c":"بودواو","wc":"35","wn":"بومرداس"},{"c":"بودواو البحري","wc":"35","wn":"بومرداس"},{"c":"تاورقة","wc":"35","wn":"بومرداس"},{"c":"حمادي","wc":"35","wn":"بومرداس"},{"c":"عين العسل","wc":"36","wn":"الطارف"},{"c":"بوقوس","wc":"36","wn":"الطارف"},{"c":"الطارف","wc":"36","wn":"الطارف"},{"c":"الزيتونة","wc":"36","wn":"الطارف"},{"c":"البسباس","wc":"36","wn":"الطارف"},{"c":"عين الكرمة","wc":"36","wn":"الطارف"},{"c":"بوحجار","wc":"36","wn":"الطارف"},{"c":"حمام بني صالح","wc":"36","wn":"الطارف"},{"c":"وادي الزيتون","wc":"36","wn":"الطارف"},{"c":"بن مهيدي","wc":"36","wn":"الطارف"},{"c":"بريحان","wc":"36","wn":"الطارف"},{"c":"شبيطة مختار","wc":"36","wn":"الطارف"},{"c":"الشط","wc":"36","wn":"الطارف"},{"c":"العيون","wc":"36","wn":"الطارف"},{"c":"القالة","wc":"36","wn":"الطارف"},{"c":"السوارخ","wc":"36","wn":"الطارف"},{"c":"زريزر","wc":"36","wn":"الطارف"},{"c":"بوثلجة","wc":"36","wn":"الطارف"},{"c":"الشافية","wc":"36","wn":"الطارف"},{"c":"بحيرة الطيور","wc":"36","wn":"الطارف"},{"c":"شحاني","wc":"36","wn":"الطارف"},{"c":"رمل السوق","wc":"36","wn":"الطارف"},{"c":"عصفور","wc":"36","wn":"الطارف"},{"c":"الذرعـان","wc":"36","wn":"الطارف"},{"c":"تندوف","wc":"37","wn":"تندوف"},{"c":"أم العسل","wc":"37","wn":"تندوف"},{"c":"خميستي","wc":"38","wn":"تيسمسيلت"},{"c":"ثنية الاحد","wc":"38","wn":"تيسمسيلت"},{"c":"أولاد بسام","wc":"38","wn":"تيسمسيلت"},{"c":"سيدي بوتوشنت","wc":"38","wn":"تيسمسيلت"},{"c":"تيسمسيلت","wc":"38","wn":"تيسمسيلت"},{"c":"سيدي العنتري","wc":"38","wn":"تيسمسيلت"},{"c":"بني شعيب","wc":"38","wn":"تيسمسيلت"},{"c":"بني لحسن","wc":"38","wn":"تيسمسيلت"},{"c":"سيدي عابد","wc":"38","wn":"تيسمسيلت"},{"c":"سيدي سليمان","wc":"38","wn":"تيسمسيلت"},{"c":"بوقائد","wc":"38","wn":"تيسمسيلت"},{"c":"الأربعاء","wc":"38","wn":"تيسمسيلت"},{"c":"الأزهرية","wc":"38","wn":"تيسمسيلت"},{"c":"لرجام","wc":"38","wn":"تيسمسيلت"},{"c":"الملعب","wc":"38","wn":"تيسمسيلت"},{"c":"العيون","wc":"38","wn":"تيسمسيلت"},{"c":"تملاحت","wc":"38","wn":"تيسمسيلت"},{"c":"اليوسفية","wc":"38","wn":"تيسمسيلت"},{"c":"برج الأمير عبد القادر","wc":"38","wn":"تيسمسيلت"},{"c":"عماري","wc":"38","wn":"تيسمسيلت"},{"c":"المعاصم","wc":"38","wn":"تيسمسيلت"},{"c":"برج بونعامة","wc":"38","wn":"تيسمسيلت"},{"c":"دوار الماء","wc":"39","wn":"الوادي"},{"c":"العقلة","wc":"39","wn":"الوادي"},{"c":"المقرن","wc":"39","wn":"الوادي"},{"c":"سيدي عون","wc":"39","wn":"الوادي"},{"c":"اميه وانسة","wc":"39","wn":"الوادي"},{"c":"كوينين","wc":"39","wn":"الوادي"},{"c":"البياضة","wc":"39","wn":"الوادي"},{"c":"النخلة","wc":"39","wn":"الوادي"},{"c":"الرباح","wc":"39","wn":"الوادي"},{"c":"قمار","wc":"39","wn":"الوادي"},{"c":"بن  قشة","wc":"39","wn":"الوادي"},{"c":"ورماس","wc":"39","wn":"الوادي"},{"c":"تغزوت","wc":"39","wn":"الوادي"},{"c":"الحمراية","wc":"39","wn":"الوادي"},{"c":"الرقيبة","wc":"39","wn":"الوادي"},{"c":"الدبيلة","wc":"39","wn":"الوادي"},{"c":"حساني عبد الكريم","wc":"39","wn":"الوادي"},{"c":"حاسي خليفة","wc":"39","wn":"الوادي"},{"c":"الطريفاوي","wc":"39","wn":"الوادي"},{"c":"الطالب العربي","wc":"39","wn":"الوادي"},{"c":"وادي العلندة","wc":"39","wn":"الوادي"},{"c":"الوادي","wc":"39","wn":"الوادي"},{"c":"خيران","wc":"40","wn":"خنشلة"},{"c":"بابار","wc":"40","wn":"خنشلة"},{"c":"المحمل","wc":"40","wn":"خنشلة"},{"c":"أولاد رشاش","wc":"40","wn":"خنشلة"},{"c":"جلال","wc":"40","wn":"خنشلة"},{"c":"يابوس","wc":"40","wn":"خنشلة"},{"c":"خنشلة","wc":"40","wn":"خنشلة"},{"c":"قايس","wc":"40","wn":"خنشلة"},{"c":"شلية","wc":"40","wn":"خنشلة"},{"c":"الرميلة","wc":"40","wn":"خنشلة"},{"c":"تاوزيانت","wc":"40","wn":"خنشلة"},{"c":"بغاي","wc":"40","wn":"خنشلة"},{"c":"الحامة","wc":"40","wn":"خنشلة"},{"c":"انسيغة","wc":"40","wn":"خنشلة"},{"c":"طامزة","wc":"40","wn":"خنشلة"},{"c":"عين الطويلة","wc":"40","wn":"خنشلة"},{"c":"متوسة","wc":"40","wn":"خنشلة"},{"c":"بوحمامة","wc":"40","wn":"خنشلة"},{"c":"الولجة","wc":"40","wn":"خنشلة"},{"c":"مصارة","wc":"40","wn":"خنشلة"},{"c":"ششار","wc":"40","wn":"خنشلة"},{"c":"سوق أهراس","wc":"41","wn":"سوق أهراس"},{"c":"عين سلطان","wc":"41","wn":"سوق أهراس"},{"c":"سدراتة","wc":"41","wn":"سوق أهراس"},{"c":"الحنانشة","wc":"41","wn":"سوق أهراس"},{"c":"المشروحة","wc":"41","wn":"سوق أهراس"},{"c":"عين الزانة","wc":"41","wn":"سوق أهراس"},{"c":"أولاد إدريس","wc":"41","wn":"سوق أهراس"},{"c":"ترقالت","wc":"41","wn":"سوق أهراس"},{"c":"أم العظايم","wc":"41","wn":"سوق أهراس"},{"c":"وادي الكبريت","wc":"41","wn":"سوق أهراس"},{"c":"تيفاش","wc":"41","wn":"سوق أهراس"},{"c":"الراقوبة","wc":"41","wn":"سوق أهراس"},{"c":"الدريعة","wc":"41","wn":"سوق أهراس"},{"c":"تاورة","wc":"41","wn":"سوق أهراس"},{"c":"الزعرورية","wc":"41","wn":"سوق أهراس"},{"c":"الحدادة","wc":"41","wn":"سوق أهراس"},{"c":"الخضارة","wc":"41","wn":"سوق أهراس"},{"c":"أولاد مومن","wc":"41","wn":"سوق أهراس"},{"c":"المراهنة","wc":"41","wn":"سوق أهراس"},{"c":"ويلان","wc":"41","wn":"سوق أهراس"},{"c":"سيدي فرج","wc":"41","wn":"سوق أهراس"},{"c":"بئر بوحوش","wc":"41","wn":"سوق أهراس"},{"c":"سافل الويدان","wc":"41","wn":"سوق أهراس"},{"c":"خميسة","wc":"41","wn":"سوق أهراس"},{"c":"مداوروش","wc":"41","wn":"سوق أهراس"},{"c":"الزوابي","wc":"41","wn":"سوق أهراس"},{"c":"حجوط","wc":"42","wn":"تيبازة"},{"c":"مراد","wc":"42","wn":"تيبازة"},{"c":"مناصر","wc":"42","wn":"تيبازة"},{"c":"أغبال","wc":"42","wn":"تيبازة"},{"c":"الناظور","wc":"42","wn":"تيبازة"},{"c":"سيدي عامر","wc":"42","wn":"تيبازة"},{"c":"قوراية","wc":"42","wn":"تيبازة"},{"c":"مسلمون","wc":"42","wn":"تيبازة"},{"c":"شرشال","wc":"42","wn":"تيبازة"},{"c":"حجرة النص","wc":"42","wn":"تيبازة"},{"c":"سيدي غيلاس","wc":"42","wn":"تيبازة"},{"c":"الداموس","wc":"42","wn":"تيبازة"},{"c":"الأرهاط","wc":"42","wn":"تيبازة"},{"c":"فوكة","wc":"42","wn":"تيبازة"},{"c":"عين تاقورايت","wc":"42","wn":"تيبازة"},{"c":"بوهارون","wc":"42","wn":"تيبازة"},{"c":"بواسماعيل","wc":"42","wn":"تيبازة"},{"c":"خميستي","wc":"42","wn":"تيبازة"},{"c":"أحمر العين","wc":"42","wn":"تيبازة"},{"c":"بورقيقة","wc":"42","wn":"تيبازة"},{"c":"دواودة","wc":"42","wn":"تيبازة"},{"c":"سيدي راشد","wc":"42","wn":"تيبازة"},{"c":"الحطاطبة","wc":"42","wn":"تيبازة"},{"c":"الشعيبة","wc":"42","wn":"تيبازة"},{"c":"القليعة","wc":"42","wn":"تيبازة"},{"c":"سيدي سميان","wc":"42","wn":"تيبازة"},{"c":"تيبازة","wc":"42","wn":"تيبازة"},{"c":"بني ميلك","wc":"42","wn":"تيبازة"},{"c":"مشيرة","wc":"43","wn":"ميلة"},{"c":"العياضي برباس","wc":"43","wn":"ميلة"},{"c":"عين البيضاء أحريش","wc":"43","wn":"ميلة"},{"c":"تسالة لمطاعي","wc":"43","wn":"ميلة"},{"c":"ترعي باينان","wc":"43","wn":"ميلة"},{"c":"اعميرة اراس","wc":"43","wn":"ميلة"},{"c":"تسدان حدادة","wc":"43","wn":"ميلة"},{"c":"مينار زارزة","wc":"43","wn":"ميلة"},{"c":"سيدي مروان","wc":"43","wn":"ميلة"},{"c":"الشيقارة","wc":"43","wn":"ميلة"},{"c":"حمالة","wc":"43","wn":"ميلة"},{"c":"القرارم قوقة","wc":"43","wn":"ميلة"},{"c":"تيبرقنت","wc":"43","wn":"ميلة"},{"c":"الرواشد","wc":"43","wn":"ميلة"},{"c":"دراحي بوصلاح","wc":"43","wn":"ميلة"},{"c":"زغاية","wc":"43","wn":"ميلة"},{"c":"وادي النجاء","wc":"43","wn":"ميلة"},{"c":"أحمد راشدي","wc":"43","wn":"ميلة"},{"c":"تاجنانت","wc":"43","wn":"ميلة"},{"c":"عين الملوك","wc":"43","wn":"ميلة"},{"c":"أولاد اخلوف","wc":"43","wn":"ميلة"},{"c":"بن يحي عبد الرحمن","wc":"43","wn":"ميلة"},{"c":"التلاغمة","wc":"43","wn":"ميلة"},{"c":"وادي سقان","wc":"43","wn":"ميلة"},{"c":"وادي العثمانية","wc":"43","wn":"ميلة"},{"c":"عين التين","wc":"43","wn":"ميلة"},{"c":"شلغوم العيد","wc":"43","wn":"ميلة"},{"c":"يحي بني قشة","wc":"43","wn":"ميلة"},{"c":"فرجيوة","wc":"43","wn":"ميلة"},{"c":"سيدي خليفة","wc":"43","wn":"ميلة"},{"c":"ميلة","wc":"43","wn":"ميلة"},{"c":"بوحاتم","wc":"43","wn":"ميلة"},{"c":"خميس مليانة","wc":"44","wn":"عين الدفلة"},{"c":"سيدي الأخضر","wc":"44","wn":"عين الدفلة"},{"c":"عين البنيان","wc":"44","wn":"عين الدفلة"},{"c":"عين التركي","wc":"44","wn":"عين الدفلة"},{"c":"حمام ريغة","wc":"44","wn":"عين الدفلة"},{"c":"بوراشد","wc":"44","wn":"عين الدفلة"},{"c":"الحسينية","wc":"44","wn":"عين الدفلة"},{"c":"جليدة","wc":"44","wn":"عين الدفلة"},{"c":"عريب","wc":"44","wn":"عين الدفلة"},{"c":"جمعة أولاد الشيخ","wc":"44","wn":"عين الدفلة"},{"c":"العامرة","wc":"44","wn":"عين الدفلة"},{"c":"العطاف","wc":"44","wn":"عين الدفلة"},{"c":"تبركانين","wc":"44","wn":"عين الدفلة"},{"c":"عين بويحيى","wc":"44","wn":"عين الدفلة"},{"c":"العبادية","wc":"44","wn":"عين الدفلة"},{"c":"تاشتة زقاغة","wc":"44","wn":"عين الدفلة"},{"c":"بربوش","wc":"44","wn":"عين الدفلة"},{"c":"جندل","wc":"44","wn":"عين الدفلة"},{"c":"بن علال","wc":"44","wn":"عين الدفلة"},{"c":"وادي الشرفاء","wc":"44","wn":"عين الدفلة"},{"c":"بومدفع","wc":"44","wn":"عين الدفلة"},{"c":"عين الاشياخ","wc":"44","wn":"عين الدفلة"},{"c":"عين السلطان","wc":"44","wn":"عين الدفلة"},{"c":"واد الجمعة","wc":"44","wn":"عين الدفلة"},{"c":"الماين","wc":"44","wn":"عين الدفلة"},{"c":"الروينة","wc":"44","wn":"عين الدفلة"},{"c":"زدين","wc":"44","wn":"عين الدفلة"},{"c":"بئر ولد خليفة","wc":"44","wn":"عين الدفلة"},{"c":"برج الأمير خالد","wc":"44","wn":"عين الدفلة"},{"c":"طارق بن زياد","wc":"44","wn":"عين الدفلة"},{"c":"بطحية","wc":"44","wn":"عين الدفلة"},{"c":"بلعاص","wc":"44","wn":"عين الدفلة"},{"c":"الحسانية","wc":"44","wn":"عين الدفلة"},{"c":"عين الدفلى","wc":"44","wn":"عين الدفلة"},{"c":"مليانة","wc":"44","wn":"عين الدفلة"},{"c":"المخاطرية","wc":"44","wn":"عين الدفلة"},{"c":"تيوت","wc":"45","wn":"النعامة"},{"c":"مغرار","wc":"45","wn":"النعامة"},{"c":"عسلة","wc":"45","wn":"النعامة"},{"c":"القصدير","wc":"45","wn":"النعامة"},{"c":"مكمن بن عمار","wc":"45","wn":"النعامة"},{"c":"عين الصفراء","wc":"45","wn":"النعامة"},{"c":"المشرية","wc":"45","wn":"النعامة"},{"c":"البيوض","wc":"45","wn":"النعامة"},{"c":"عين بن خليل","wc":"45","wn":"النعامة"},{"c":"النعامة","wc":"45","wn":"النعامة"},{"c":"جنين بورزق","wc":"45","wn":"النعامة"},{"c":"سفيسيفة","wc":"45","wn":"النعامة"},{"c":"سيدي بومدين","wc":"46","wn":"عين تيموشنت"},{"c":"تامزورة","wc":"46","wn":"عين تيموشنت"},{"c":"شعبة اللحم","wc":"46","wn":"عين تيموشنت"},{"c":"المالح","wc":"46","wn":"عين تيموشنت"},{"c":"أولاد الكيحل","wc":"46","wn":"عين تيموشنت"},{"c":"شنتوف","wc":"46","wn":"عين تيموشنت"},{"c":"تارقة","wc":"46","wn":"عين تيموشنت"},{"c":"وادي الصباح","wc":"46","wn":"عين تيموشنت"},{"c":"العامرية","wc":"46","wn":"عين تيموشنت"},{"c":"حاسي الغلة","wc":"46","wn":"عين تيموشنت"},{"c":"أولاد بوجمعة","wc":"46","wn":"عين تيموشنت"},{"c":"أغلال","wc":"46","wn":"عين تيموشنت"},{"c":"عين الكيحل","wc":"46","wn":"عين تيموشنت"},{"c":"عين الطلبة","wc":"46","wn":"عين تيموشنت"},{"c":"عقب الليل","wc":"46","wn":"عين تيموشنت"},{"c":"بني صاف","wc":"46","wn":"عين تيموشنت"},{"c":"الحساسنة","wc":"46","wn":"عين تيموشنت"},{"c":"الأمير عبد القادر","wc":"46","wn":"عين تيموشنت"},{"c":"سيدي صافي","wc":"46","wn":"عين تيموشنت"},{"c":"ولهاصة الغرابة","wc":"46","wn":"عين تيموشنت"},{"c":"سيدي ورياش","wc":"46","wn":"عين تيموشنت"},{"c":"عين الأربعاء","wc":"46","wn":"عين تيموشنت"},{"c":"المساعيد","wc":"46","wn":"عين تيموشنت"},{"c":"وادي برقش","wc":"46","wn":"عين تيموشنت"},{"c":"سيدي بن عدة","wc":"46","wn":"عين تيموشنت"},{"c":"عين تموشنت","wc":"46","wn":"عين تيموشنت"},{"c":"بوزجار","wc":"46","wn":"عين تيموشنت"},{"c":"حمام بوحجر","wc":"46","wn":"عين تيموشنت"},{"c":"ضاية بن ضحوة","wc":"47","wn":"غرداية"},{"c":"المنصورة","wc":"47","wn":"غرداية"},{"c":"العطف","wc":"47","wn":"غرداية"},{"c":"بونورة","wc":"47","wn":"غرداية"},{"c":"زلفانة","wc":"47","wn":"غرداية"},{"c":"القرارة","wc":"47","wn":"غرداية"},{"c":"سبسب","wc":"47","wn":"غرداية"},{"c":"متليلي","wc":"47","wn":"غرداية"},{"c":"بريان","wc":"47","wn":"غرداية"},{"c":"غرداية","wc":"47","wn":"غرداية"},{"c":"القطار","wc":"48","wn":"غليزان"},{"c":"أولاد يعيش","wc":"48","wn":"غليزان"},{"c":"بني درقن","wc":"48","wn":"غليزان"},{"c":"دار بن عبد الله","wc":"48","wn":"غليزان"},{"c":"زمورة","wc":"48","wn":"غليزان"},{"c":"جديوية","wc":"48","wn":"غليزان"},{"c":"حمري","wc":"48","wn":"غليزان"},{"c":"بلعسل بوزقزة","wc":"48","wn":"غليزان"},{"c":"المطمر","wc":"48","wn":"غليزان"},{"c":"سيدي  خطاب","wc":"48","wn":"غليزان"},{"c":"سيدي امحمد بن عودة","wc":"48","wn":"غليزان"},{"c":"عين طارق","wc":"48","wn":"غليزان"},{"c":"حد الشكالة","wc":"48","wn":"غليزان"},{"c":"الولجة","wc":"48","wn":"غليزان"},{"c":"مازونة","wc":"48","wn":"غليزان"},{"c":"عين الرحمة","wc":"48","wn":"غليزان"},{"c":"القلعة","wc":"48","wn":"غليزان"},{"c":"سيدي سعادة","wc":"48","wn":"غليزان"},{"c":"يلل","wc":"48","wn":"غليزان"},{"c":"سوق الحد","wc":"48","wn":"غليزان"},{"c":"منداس","wc":"48","wn":"غليزان"},{"c":"وادي السلام","wc":"48","wn":"غليزان"},{"c":"سيدي لزرق","wc":"48","wn":"غليزان"},{"c":"عمي موسى","wc":"48","wn":"غليزان"},{"c":"واريزان","wc":"48","wn":"غليزان"},{"c":"مرجة سيدي عابد","wc":"48","wn":"غليزان"},{"c":"أولاد سيدي الميهوب","wc":"48","wn":"غليزان"},{"c":"بن داود","wc":"48","wn":"غليزان"},{"c":"وادي رهيو","wc":"48","wn":"غليزان"},{"c":"الحاسي","wc":"48","wn":"غليزان"},{"c":"سيدي أمحمد بن علي","wc":"48","wn":"غليزان"},{"c":"مديونة","wc":"48","wn":"غليزان"},{"c":"بني زنطيس","wc":"48","wn":"غليزان"},{"c":"وادي الجمعة","wc":"48","wn":"غليزان"},{"c":"لحلاف","wc":"48","wn":"غليزان"},{"c":"غليزان","wc":"48","wn":"غليزان"},{"c":"الحمادنة","wc":"48","wn":"غليزان"},{"c":"الرمكة","wc":"48","wn":"غليزان"},{"c":"تنركوك","wc":"49","wn":"تيميمون"},{"c":"تيميمون","wc":"49","wn":"تيميمون"},{"c":"أولاد السعيد","wc":"49","wn":"تيميمون"},{"c":"المطارفة","wc":"49","wn":"تيميمون"},{"c":"طالمين","wc":"49","wn":"تيميمون"},{"c":"أولاد عيسى","wc":"49","wn":"تيميمون"},{"c":"شروين","wc":"49","wn":"تيميمون"},{"c":"أوقروت","wc":"49","wn":"تيميمون"},{"c":"دلدول","wc":"49","wn":"تيميمون"},{"c":"قصر قدور","wc":"49","wn":"تيميمون"},{"c":"تيمياوين","wc":"50","wn":"برج باجي مختار"},{"c":"برج باجي مختار","wc":"50","wn":"برج باجي مختار"},{"c":"رأس الميعاد","wc":"51","wn":"أولاد جلال"},{"c":"بسباس","wc":"51","wn":"أولاد جلال"},{"c":"سيدي  خالد","wc":"51","wn":"أولاد جلال"},{"c":"الدوسن","wc":"51","wn":"أولاد جلال"},{"c":"الشعيبة","wc":"51","wn":"أولاد جلال"},{"c":"أولاد جلال","wc":"51","wn":"أولاد جلال"},{"c":"بني عباس","wc":"52","wn":"بني عباس"},{"c":"تامترت","wc":"52","wn":"بني عباس"},{"c":"إقلي","wc":"52","wn":"بني عباس"},{"c":"الواتة","wc":"52","wn":"بني عباس"},{"c":"أولاد خضير","wc":"52","wn":"بني عباس"},{"c":"كرزاز","wc":"52","wn":"بني عباس"},{"c":"تيمودي","wc":"52","wn":"بني عباس"},{"c":"القصابي","wc":"52","wn":"بني عباس"},{"c":"بن يخلف","wc":"52","wn":"بني عباس"},{"c":"إينغر","wc":"53","wn":"عين صالح"},{"c":"عين صالح","wc":"53","wn":"عين صالح"},{"c":"فقارة الزوى","wc":"53","wn":"عين صالح"},{"c":"تين زواتين","wc":"54","wn":"عين قزام"},{"c":"عين قزام","wc":"54","wn":"عين قزام"},{"c":"تماسين","wc":"55","wn":"تقرت"},{"c":"سيدي سليمان","wc":"55","wn":"تقرت"},{"c":"المقارين","wc":"55","wn":"تقرت"},{"c":"النزلة","wc":"55","wn":"تقرت"},{"c":"بلدة اعمر","wc":"55","wn":"تقرت"},{"c":"تبسبست","wc":"55","wn":"تقرت"},{"c":"تقرت","wc":"55","wn":"تقرت"},{"c":"الطيبات","wc":"55","wn":"تقرت"},{"c":"العالية","wc":"55","wn":"تقرت"},{"c":"الحجيرة","wc":"55","wn":"تقرت"},{"c":"بن ناصر","wc":"55","wn":"تقرت"},{"c":"المنقر","wc":"55","wn":"تقرت"},{"c":"الزاوية العابدية","wc":"55","wn":"تقرت"},{"c":"جانت","wc":"56","wn":"جانت"},{"c":"برج الحواس","wc":"56","wn":"جانت"},{"c":"أم الطيور","wc":"57","wn":"المغير"},{"c":"سيدي عمران","wc":"57","wn":"المغير"},{"c":"المرارة","wc":"57","wn":"المغير"},{"c":"جامعة","wc":"57","wn":"المغير"},{"c":"تندلة","wc":"57","wn":"المغير"},{"c":"المغير","wc":"57","wn":"المغير"},{"c":"سطيل","wc":"57","wn":"المغير"},{"c":"سيدي خليل","wc":"57","wn":"المغير"},{"c":"المنيعة","wc":"58","wn":"المنيعة"},{"c":"حاسي القارة","wc":"58","wn":"المنيعة"},{"c":"حاسي الفحل","wc":"58","wn":"المنيعة"}];
+    const DELIVERY_TARIFS = [{"Code":1,"Wilaya":"Adrar","Livraison à domicile":1100,"Livraison bureau":600},{"Code":2,"Wilaya":"Chlef","Livraison à domicile":700,"Livraison bureau":400},{"Code":3,"Wilaya":"Laghouat","Livraison à domicile":900,"Livraison bureau":500},{"Code":4,"Wilaya":"Oum El Bouaghi","Livraison à domicile":800,"Livraison bureau":400},{"Code":5,"Wilaya":"Batna","Livraison à domicile":800,"Livraison bureau":400},{"Code":6,"Wilaya":"Béjaïa","Livraison à domicile":600,"Livraison bureau":400},{"Code":7,"Wilaya":"Biskra","Livraison à domicile":900,"Livraison bureau":500},{"Code":8,"Wilaya":"Béchar","Livraison à domicile":1100,"Livraison bureau":600},{"Code":9,"Wilaya":"Blida","Livraison à domicile":500,"Livraison bureau":350},{"Code":10,"Wilaya":"Bouira","Livraison à domicile":450,"Livraison bureau":350},{"Code":11,"Wilaya":"Tamanrasset","Livraison à domicile":1300,"Livraison bureau":800},{"Code":12,"Wilaya":"Tébessa","Livraison à domicile":800,"Livraison bureau":400},{"Code":13,"Wilaya":"Tlemcen","Livraison à domicile":800,"Livraison bureau":400},{"Code":14,"Wilaya":"Tiaret","Livraison à domicile":700,"Livraison bureau":400},{"Code":15,"Wilaya":"Tizi Ouzou","Livraison à domicile":600,"Livraison bureau":400},{"Code":16,"Wilaya":"Alger","Livraison à domicile":500,"Livraison bureau":350},{"Code":17,"Wilaya":"Djelfa","Livraison à domicile":800,"Livraison bureau":500},{"Code":18,"Wilaya":"Jijel","Livraison à domicile":700,"Livraison bureau":400},{"Code":19,"Wilaya":"Sétif","Livraison à domicile":600,"Livraison bureau":400},{"Code":20,"Wilaya":"Saïda","Livraison à domicile":800,"Livraison bureau":400},{"Code":21,"Wilaya":"Skikda","Livraison à domicile":700,"Livraison bureau":400},{"Code":22,"Wilaya":"Sidi Bel Abbès","Livraison à domicile":800,"Livraison bureau":400},{"Code":23,"Wilaya":"Annaba","Livraison à domicile":700,"Livraison bureau":400},{"Code":24,"Wilaya":"Guelma","Livraison à domicile":800,"Livraison bureau":400},{"Code":25,"Wilaya":"Constantine","Livraison à domicile":700,"Livraison bureau":400},{"Code":26,"Wilaya":"Médéa","Livraison à domicile":650,"Livraison bureau":400},{"Code":27,"Wilaya":"Mostaganem","Livraison à domicile":700,"Livraison bureau":400},{"Code":28,"Wilaya":"M'Sila","Livraison à domicile":650,"Livraison bureau":500},{"Code":29,"Wilaya":"Mascara","Livraison à domicile":700,"Livraison bureau":400},{"Code":30,"Wilaya":"Ouargla","Livraison à domicile":1000,"Livraison bureau":500},{"Code":32,"Wilaya":"El Bayadh","Livraison à domicile":1000,"Livraison bureau":500},{"Code":33,"Wilaya":"Illizi","Livraison à domicile":1300,"Livraison bureau":600},{"Code":34,"Wilaya":"Bordj Bou Arreridj","Livraison à domicile":600,"Livraison bureau":400},{"Code":35,"Wilaya":"Boumerdès","Livraison à domicile":600,"Livraison bureau":400},{"Code":36,"Wilaya":"El Tarf","Livraison à domicile":800,"Livraison bureau":400},{"Code":37,"Wilaya":"Tindouf","Livraison à domicile":1300,"Livraison bureau":600},{"Code":38,"Wilaya":"Tissemsilt","Livraison à domicile":700,"Livraison bureau":400},{"Code":39,"Wilaya":"El Oued","Livraison à domicile":900,"Livraison bureau":500},{"Code":40,"Wilaya":"Khenchela","Livraison à domicile":800,"Livraison bureau":500},{"Code":41,"Wilaya":"Souk Ahras","Livraison à domicile":800,"Livraison bureau":500},{"Code":42,"Wilaya":"Tipaza","Livraison à domicile":700,"Livraison bureau":400},{"Code":43,"Wilaya":"Mila","Livraison à domicile":700,"Livraison bureau":400},{"Code":44,"Wilaya":"Aïn Defla","Livraison à domicile":700,"Livraison bureau":400},{"Code":45,"Wilaya":"Naâma","Livraison à domicile":1000,"Livraison bureau":500},{"Code":46,"Wilaya":"Aïn Témouchent","Livraison à domicile":800,"Livraison bureau":400},{"Code":47,"Wilaya":"Ghardaïa","Livraison à domicile":900,"Livraison bureau":500},{"Code":48,"Wilaya":"Relizane","Livraison à domicile":800,"Livraison bureau":400},{"Code":49,"Wilaya":"Timimoun","Livraison à domicile":1300,"Livraison bureau":600},{"Code":51,"Wilaya":"Ouled Djellal","Livraison à domicile":900,"Livraison bureau":500},{"Code":52,"Wilaya":"Beni Abbes","Livraison à domicile":1300,"Livraison bureau":0},{"Code":53,"Wilaya":"In Salah","Livraison à domicile":1300,"Livraison bureau":600},{"Code":55,"Wilaya":"Touggourt","Livraison à domicile":900,"Livraison bureau":500},{"Code":57,"Wilaya":"El M'Ghair","Livraison à domicile":900,"Livraison bureau":0},{"Code":58,"Wilaya":"El Meniaa","Livraison à domicile":1000,"Livraison bureau":500}];
+
+    // Build wilaya map: code -> {name, communes[]}
+    const wilayaMap = {};
+    ALGERIA_CITIES.forEach(function(r) {
+      if (!wilayaMap[r.wc]) wilayaMap[r.wc] = {name: r.wn, communes: []};
+      wilayaMap[r.wc].communes.push(r.c);
+    });
+
+    // Build delivery rates keyed by "code - arabicName"
+    const deliveryRates = {};
+    DELIVERY_TARIFS.forEach(function(t) {
+      const code = String(t.Code).padStart(2, '0');
+      const w = wilayaMap[code];
+      if (w) deliveryRates[code + ' - ' + w.name] = {bureau: t['Livraison bureau'], domicile: t['Livraison à domicile']};
+    });
+
+    // Populate wilaya <select>
+    const tshirtWilayaEl = document.getElementById('tshirtWilaya');
+    const tshirtCommuneEl = document.getElementById('tshirtCommune');
+    Object.keys(wilayaMap).sort().forEach(function(code) {
+      const key = code + ' - ' + wilayaMap[code].name;
+      const opt = document.createElement('option');
+      opt.value = key; opt.textContent = key;
+      tshirtWilayaEl.appendChild(opt);
+    });
+
+    // Wilaya -> Communes
+    tshirtWilayaEl.addEventListener('change', function() {
+      const code = this.value.split(' - ')[0];
+      const communes = (wilayaMap[code] || {}).communes || [];
+      tshirtCommuneEl.innerHTML = '<option value="" disabled selected>اختر البلدية</option>';
+      communes.forEach(function(c) {
+        const opt = document.createElement('option');
+        opt.value = c; opt.textContent = c;
+        tshirtCommuneEl.appendChild(opt);
+      });
+      tshirtCommuneEl.disabled = false;
+      updateTotal();
+    });
+
+    // Scroll "اطلب ضرك" buttons to order form
+    document.querySelectorAll('.nav-cta, .mobile-cta-bar a').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const orderSection = document.getElementById('order');
+        if (orderSection) {
+          e.preventDefault();
+          orderSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Hide mobile CTA bar when checkout section is visible
+    const mobileCta = document.querySelector('.mobile-cta-bar');
+    const orderSection = document.getElementById('order');
+    if (mobileCta && orderSection) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              mobileCta.style.opacity = '0';
+              mobileCta.style.pointerEvents = 'none';
+              mobileCta.style.transform = 'translateY(100%)';
+            } else {
+              mobileCta.style.opacity = '';
+              mobileCta.style.pointerEvents = '';
+              mobileCta.style.transform = '';
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      observer.observe(orderSection);
+    }
+  </script>
+</body>
+</html>
