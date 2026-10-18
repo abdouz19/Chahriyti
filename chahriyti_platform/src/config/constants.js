@@ -11,6 +11,7 @@ export const COLLECTIONS = {
 export const ROLES = {
   ADMIN: 'admin',
   MANAGER: 'manager',
+  AGENT: 'agent',
 };
 
 // User status
@@ -23,6 +24,8 @@ export const STATUS = {
 export const FUNCTIONS = {
   GENERATE_LICENSE: 'generateLicense',
   CREATE_MANAGER: 'createManager',
+  CREATE_LEADS_AGENT: 'createLeadsAgent',
+  SET_LEADS_AGENT_STATUS: 'setLeadsAgentStatus',
   UPDATE_USER_STATUS: 'updateUserStatus',
   GET_DASHBOARD_STATS: 'getDashboardStats',
   SEND_TO_DELIVERY: 'sendToDelivery',

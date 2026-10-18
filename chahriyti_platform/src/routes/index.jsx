@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { ProtectedRoute } from './ProtectedRoute';
+import { ProtectedRoute, AdminOnly } from './ProtectedRoute';
 import { Spinner } from '../components/ui';
 import { ROLES } from '../config/constants';
 
@@ -25,6 +25,11 @@ const LicensePoolPage = lazy(() =>
 );
 const BatchGeneratePage = lazy(() =>
   import('../features/pool/pages/BatchGeneratePage').then(m => ({ default: m.BatchGeneratePage }))
+);
+
+// Lazy-loaded pages — Team
+const TeamPage = lazy(() =>
+  import('../features/team/pages/TeamPage').then(m => ({ default: m.TeamPage }))
 );
 
 // Lazy-loaded pages — Leads
@@ -61,16 +66,17 @@ export const router = createBrowserRouter([
   {
     path: '/admin',
     element: (
-      <ProtectedRoute allowedRole={ROLES.ADMIN}>
+      <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.AGENT]}>
         <LazyPage>
           <AdminLayout />
         </LazyPage>
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <LazyPage><AdminDashboardPage /></LazyPage> },
-      { path: 'pool', element: <LazyPage><LicensePoolPage /></LazyPage> },
-      { path: 'pool/generate', element: <LazyPage><BatchGeneratePage /></LazyPage> },
+      { index: true, element: <AdminOnly><LazyPage><AdminDashboardPage /></LazyPage></AdminOnly> },
+      { path: 'pool', element: <AdminOnly><LazyPage><LicensePoolPage /></LazyPage></AdminOnly> },
+      { path: 'pool/generate', element: <AdminOnly><LazyPage><BatchGeneratePage /></LazyPage></AdminOnly> },
+      { path: 'team', element: <AdminOnly><LazyPage><TeamPage /></LazyPage></AdminOnly> },
       { path: 'leads', element: <LazyPage><LeadsPage /></LazyPage> },
     ],
   },

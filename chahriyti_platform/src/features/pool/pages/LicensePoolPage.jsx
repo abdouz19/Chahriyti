@@ -27,6 +27,7 @@ export function LicensePoolPage() {
     setPrintedFilter,
     deviceSearch,
     setDeviceSearch,
+    hasFilters,
     hasMore,
     loadMore,
     refresh,
@@ -105,10 +106,10 @@ export function LicensePoolPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold text-text-primary">مجموعة التراخيص</h2>
-          <p className="text-sm text-text-secondary mt-0.5">
+          <h1 className="text-2xl font-bold text-text-primary">مجموعة التراخيص</h1>
+          <p className="text-text-secondary mt-1">
             إدارة التراخيص المولدة مسبقاً
           </p>
         </div>
@@ -144,7 +145,7 @@ export function LicensePoolPage() {
       <PoolStats stats={poolStats} />
 
       {/* Filters */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <PoolFilters
           statusFilter={statusFilter}
           onStatusChange={setStatusFilter}
@@ -153,7 +154,17 @@ export function LicensePoolPage() {
           deviceSearch={deviceSearch}
           onDeviceSearchChange={setDeviceSearch}
         />
-        <Button variant="ghost" size="sm" onClick={refresh}>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={refresh}
+          disabled={loading}
+          icon={
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+          }
+        >
           تحديث
         </Button>
       </div>
@@ -171,6 +182,11 @@ export function LicensePoolPage() {
         <div className="flex items-center justify-center min-h-[300px]">
           <Spinner size="lg" />
         </div>
+      ) : licenses.length === 0 && hasFilters ? (
+        <EmptyState
+          title="لا توجد نتائج"
+          description="لا توجد تراخيص تطابق هذه الفلاتر"
+        />
       ) : licenses.length === 0 ? (
         <EmptyState
           icon={
@@ -184,11 +200,10 @@ export function LicensePoolPage() {
         />
       ) : (
         <>
-          <div className="card p-0 overflow-hidden">
+          <div className="rounded-2xl border border-border bg-white shadow-card overflow-hidden">
             <PoolTable
               licenses={licenses}
               onAssign={setAssignTarget}
-              loading={loading}
             />
           </div>
 

@@ -43,6 +43,22 @@ export function callCreateManager({ email, displayName, password }) {
 }
 
 /**
+ * Create a leads agent account (can only access the leads page).
+ * @param {{ email: string, displayName: string, password: string }} data
+ */
+export function callCreateLeadsAgent({ email, displayName, password }) {
+  return callFunction(FUNCTIONS.CREATE_LEADS_AGENT, { email, displayName, password });
+}
+
+/**
+ * Enable or disable a leads agent account.
+ * @param {{ uid: string, status: 'active'|'inactive' }} data
+ */
+export function callSetLeadsAgentStatus({ uid, status }) {
+  return callFunction(FUNCTIONS.SET_LEADS_AGENT_STATUS, { uid, status });
+}
+
+/**
  * Enable or disable a user account.
  * @param {{ uid: string, status: string }} data — status should be 'active' or 'inactive'.
  * @returns {Promise<object>} Confirmation from the backend.

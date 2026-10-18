@@ -4,6 +4,7 @@ const { generateLicense } = require('./generateLicense');
 const { getDashboardStats } = require('./getDashboardStats');
 
 const { createManager } = require('./createManager');
+const { createLeadsAgent, setLeadsAgentStatus } = require('./leadsAgents');
 const { updateUserStatus } = require('./updateUserStatus');
 const { sendToDelivery } = require('./sendToDelivery');
 
@@ -21,6 +22,8 @@ const { wooCommerceWebhook } = require('./wooCommerceWebhook');
 exports.generateLicense = generateLicense;
 exports.getDashboardStats = getDashboardStats;
 exports.createManager = createManager;
+exports.createLeadsAgent = createLeadsAgent;
+exports.setLeadsAgentStatus = setLeadsAgentStatus;
 exports.updateUserStatus = updateUserStatus;
 exports.sendToDelivery = sendToDelivery;
 

@@ -40,6 +40,8 @@ export function LoginPage() {
       // Route to correct portal based on role
       if (role === ROLES.ADMIN) {
         navigate('/admin', { replace: true });
+      } else if (role === ROLES.AGENT) {
+        navigate('/admin/leads', { replace: true });
       } else {
         navigate('/manager', { replace: true });
       }

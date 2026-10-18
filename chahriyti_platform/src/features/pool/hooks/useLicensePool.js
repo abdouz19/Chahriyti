@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { getLicenses, onPoolStatsSnapshot } from '../../../services/firestore';
+import { useState, useEffect, useCallback } from 'react';
+import { getLicenses, searchLicensesByDevice, onPoolStatsSnapshot } from '../../../services/firestore';
 
 /**
  * Hook for managing the license pool list with filtering and pagination.
+ * All filters run in Firestore, so they cover the whole pool, not just the loaded page.
  */
 export function useLicensePool() {
   const [licenses, setLicenses] = useState([]);
@@ -11,6 +12,7 @@ export function useLicensePool() {
   const [statusFilter, setStatusFilter] = useState(''); // '' = all
   const [printedFilter, setPrintedFilter] = useState(''); // '' | 'printed' | 'unprinted'
   const [deviceSearch, setDeviceSearch] = useState('');
+  const [deviceQuery, setDeviceQuery] = useState('');
   const [lastDoc, setLastDoc] = useState(null);
   const [hasMore, setHasMore] = useState(false);
   const [poolStats, setPoolStats] = useState(null);
@@ -21,22 +23,37 @@ export function useLicensePool() {
     return unsub;
   }, []);
 
-  // Fetch licenses
+  // Search once typing pauses; device IDs are stored uppercase
+  useEffect(() => {
+    const t = setTimeout(() => setDeviceQuery(deviceSearch.trim().toUpperCase()), 350);
+    return () => clearTimeout(t);
+  }, [deviceSearch]);
+
   const fetchLicenses = useCallback(async (resetPagination = true) => {
     setLoading(true);
     setError(null);
     try {
-      const opts = { pageSize: 50 };
-      if (statusFilter) opts.status = statusFilter;
-      if (!resetPagination && lastDoc) opts.lastDoc = lastDoc;
-
-      const result = await getLicenses(opts);
-
-      if (resetPagination) {
-        setLicenses(result.licenses);
-      } else {
-        setLicenses((prev) => [...prev, ...result.licenses]);
+      // Device search: one prefix query, other filters applied locally
+      if (deviceQuery) {
+        const found = await searchLicensesByDevice(deviceQuery);
+        setLicenses(found.filter((l) =>
+          (!statusFilter || l.status === statusFilter) &&
+          (printedFilter !== 'printed' || l.printed) &&
+          (printedFilter !== 'unprinted' || !l.printed)
+        ));
+        setLastDoc(null);
+        setHasMore(false);
+        return;
       }
+
+      const result = await getLicenses({
+        pageSize: 50,
+        status: statusFilter || undefined,
+        printed: printedFilter || undefined,
+        lastDoc: resetPagination ? null : lastDoc,
+      });
+
+      setLicenses((prev) => (resetPagination ? result.licenses : [...prev, ...result.licenses]));
       setLastDoc(result.lastDoc);
       setHasMore(result.hasMore);
     } catch (err) {
@@ -44,31 +61,13 @@ export function useLicensePool() {
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, lastDoc]);
+  }, [statusFilter, printedFilter, deviceQuery, lastDoc]);
 
-  // Refetch when status filter changes
+  // Refetch from the top whenever a filter changes
   useEffect(() => {
     fetchLicenses(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusFilter]);
-
-  // Client-side filtered results
-  const filteredLicenses = useMemo(() => {
-    let result = licenses;
-
-    if (printedFilter === 'printed') {
-      result = result.filter((l) => l.printed);
-    } else if (printedFilter === 'unprinted') {
-      result = result.filter((l) => !l.printed);
-    }
-
-    if (deviceSearch.trim()) {
-      const q = deviceSearch.trim().toLowerCase();
-      result = result.filter((l) => l.deviceId && l.deviceId.toLowerCase().includes(q));
-    }
-
-    return result;
-  }, [licenses, printedFilter, deviceSearch]);
+  }, [statusFilter, printedFilter, deviceQuery]);
 
   const loadMore = useCallback(() => {
     if (hasMore && !loading) {
@@ -76,14 +75,12 @@ export function useLicensePool() {
     }
   }, [hasMore, loading, fetchLicenses]);
 
-  const refresh = useCallback(() => {
-    setLastDoc(null);
-    fetchLicenses(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusFilter]);
+  const refresh = useCallback(() => fetchLicenses(true), [fetchLicenses]);
+
+  const hasFilters = !!(statusFilter || printedFilter || deviceQuery);
 
   return {
-    licenses: filteredLicenses,
+    licenses,
     loading,
     error,
     statusFilter,
@@ -92,6 +89,7 @@ export function useLicensePool() {
     setPrintedFilter,
     deviceSearch,
     setDeviceSearch,
+    hasFilters,
     hasMore,
     loadMore,
     refresh,

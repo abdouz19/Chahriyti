@@ -4,7 +4,7 @@ const { defineSecret } = require('firebase-functions/params');
 const wcKey = defineSecret('WC_KEY');
 const wcSecret = defineSecret('WC_SECRET');
 
-const WC_BASE = 'https://darkred-sheep-321101.hostingersite.com/wp-json/wc/v3';
+const WC_BASE = 'https://chahriyti.app/wp-json/wc/v3';
 const LICENSE_PRODUCT_ID = 12;
 
 exports.syncLeadToWooCommerce = onDocumentCreated(

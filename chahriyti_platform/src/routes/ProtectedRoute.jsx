@@ -7,9 +7,10 @@ import { ROLES } from '../config/constants';
  * Route guard — checks authentication and role
  * @param {Object} props
  * @param {string} props.allowedRole - Required role ('admin' | 'manager')
+ * @param {string[]} props.allowedRoles - Alternative: any of these roles
  * @param {React.ReactNode} props.children - Protected content
  */
-export function ProtectedRoute({ allowedRole, children }) {
+export function ProtectedRoute({ allowedRole, allowedRoles, children }) {
   const { user, role, loading } = useAuth();
 
   // Show loading spinner during initial auth check
@@ -30,10 +31,23 @@ export function ProtectedRoute({ allowedRole, children }) {
   }
 
   // Wrong role — redirect to correct portal
-  if (role !== allowedRole) {
-    const redirectTo = role === ROLES.ADMIN ? '/admin' : '/manager';
+  const allowed = allowedRoles ?? [allowedRole];
+  if (!allowed.includes(role)) {
+    const redirectTo = {
+      [ROLES.ADMIN]: '/admin',
+      [ROLES.AGENT]: '/admin/leads',
+    }[role] ?? '/manager';
     return <Navigate to={redirectTo} replace />;
   }
 
+  return children;
+}
+
+/**
+ * Admin-only page inside the admin portal: leads agents are sent to the leads page.
+ */
+export function AdminOnly({ children }) {
+  const { role } = useAuth();
+  if (role !== ROLES.ADMIN) return <Navigate to="/admin/leads" replace />;
   return children;
 }

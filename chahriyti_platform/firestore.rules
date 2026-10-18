@@ -21,6 +21,11 @@ service cloud.firestore {
       return isAuth() && getRole() == 'manager';
     }
 
+    // Helper: check if user is a leads agent (leads page only)
+    function isAgent() {
+      return isAuth() && getRole() == 'agent';
+    }
+
     // Users collection: admin reads all, manager reads own doc only. Writes via Cloud Functions only.
     match /users/{userId} {
       allow read: if isAdmin() || (isAuth() && request.auth.uid == userId);
@@ -71,8 +76,8 @@ service cloud.firestore {
     // Leads: unauthenticated app users submit before activation. Admin/manager can read/update.
     match /leads/{leadId} {
       allow create: if true;
-      allow read: if isAdmin() || isManager();
-      allow update: if isAdmin() || isManager();
+      allow read: if isAdmin() || isManager() || isAgent();
+      allow update: if isAdmin() || isManager() || isAgent();
       allow delete: if false;
     }
 

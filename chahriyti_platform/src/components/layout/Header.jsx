@@ -10,8 +10,8 @@ import { ROLES } from '../../config/constants';
 export function Header({ title }) {
   const { user, role, signOut } = useAuth();
 
-  const roleLabel = role === ROLES.ADMIN ? 'مدير النظام' : 'مسؤول';
-  const roleBadgeVariant = role === ROLES.ADMIN ? 'warning' : 'success';
+  const roleLabel = { [ROLES.ADMIN]: 'مدير النظام', [ROLES.AGENT]: 'متابع المسجلين' }[role] ?? 'مسؤول';
+  const roleBadgeVariant = { [ROLES.ADMIN]: 'warning', [ROLES.AGENT]: 'info' }[role] ?? 'success';
 
   return (
     <header className="h-16 bg-white border-b border-border/50 flex items-center justify-between px-6">

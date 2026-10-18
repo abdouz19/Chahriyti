@@ -1,6 +1,33 @@
 import React from 'react';
 import { LICENSE_STATUS } from '../../../config/constants';
 
+function Segmented({ label, options, value, onChange }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-xs font-medium text-text-secondary">{label}</span>
+      <div className="inline-flex p-1 rounded-xl bg-surface border border-border">
+        {options.map((opt) => {
+          const active = value === opt.value;
+          return (
+            <button
+              key={opt.value}
+              onClick={() => onChange(opt.value)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                active
+                  ? 'bg-white text-text-primary shadow-card'
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              {opt.dot && <span className={`w-1.5 h-1.5 rounded-full ${opt.dot}`} />}
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /**
  * Filter bar for the license pool table — status, printed, and device search.
  */
@@ -14,8 +41,8 @@ export function PoolFilters({
 }) {
   const statusOptions = [
     { value: '', label: 'الكل' },
-    { value: LICENSE_STATUS.AVAILABLE, label: 'متاحة' },
-    { value: LICENSE_STATUS.USED, label: 'مستخدمة' },
+    { value: LICENSE_STATUS.AVAILABLE, label: 'متاحة', dot: 'bg-emerald-500' },
+    { value: LICENSE_STATUS.USED, label: 'مستخدمة', dot: 'bg-amber-500' },
   ];
 
   const printedOptions = [
@@ -24,69 +51,28 @@ export function PoolFilters({
     { value: 'unprinted', label: 'غير مطبوعة' },
   ];
 
-  const btnClass = (active) => [
-    'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-150',
-    active
-      ? 'bg-primary text-white'
-      : 'bg-surface text-text-secondary hover:text-text-primary hover:bg-surface/80',
-  ].join(' ');
-
   return (
-    <div className="flex flex-wrap items-center gap-4">
-      {/* Status filter */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-text-secondary">الحالة:</span>
-        <div className="flex gap-1.5">
-          {statusOptions.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => onStatusChange(opt.value)}
-              className={btnClass(statusFilter === opt.value)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+      <div className="relative w-full sm:w-72">
+        <svg
+          className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary pointer-events-none"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+        </svg>
+        <input
+          type="text"
+          value={deviceSearch}
+          onChange={(e) => onDeviceSearchChange(e.target.value)}
+          placeholder="ابحث برقم الجهاز..."
+          className="w-full pr-10 pl-3 py-2.5 border border-border rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+        />
       </div>
-
-      {/* Printed filter */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-text-secondary">الطباعة:</span>
-        <div className="flex gap-1.5">
-          {printedOptions.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => onPrintedChange(opt.value)}
-              className={btnClass(printedFilter === opt.value)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Device ID search */}
-      <div className="flex items-center gap-2 mr-auto">
-        <div className="relative">
-          <svg
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary pointer-events-none"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-          </svg>
-          <input
-            type="text"
-            value={deviceSearch}
-            onChange={(e) => onDeviceSearchChange(e.target.value)}
-            placeholder="بحث برقم الجهاز..."
-            className="w-56 pr-9 pl-3 py-1.5 border border-border rounded-lg text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-            dir="ltr"
-          />
-        </div>
-      </div>
+      <Segmented label="الحالة" options={statusOptions} value={statusFilter} onChange={onStatusChange} />
+      <Segmented label="الطباعة" options={printedOptions} value={printedFilter} onChange={onPrintedChange} />
     </div>
   );
 }

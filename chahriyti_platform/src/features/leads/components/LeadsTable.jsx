@@ -1,87 +1,95 @@
-import React from 'react';
-import { Badge } from '../../../components/ui';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateLeadStatus } from '../../../services/firestore';
+import { formatLeadDate, formatSalary, formatPlace } from '../leadStatus';
+import { StatusSelect } from './StatusSelect';
+import { LeadDetailsModal } from './LeadDetailsModal';
+import { LeadAvatar, SourceTag } from './LeadBits';
 
-const STATUS_LABELS = {
-  pending:   { label: 'انتظار', color: 'yellow' },
-  contacted: { label: 'تم التواصل', color: 'blue' },
-  converted: { label: 'مُفعَّل', color: 'green' },
-  rejected:  { label: 'مرفوض', color: 'red' },
-};
-
-function formatDate(ts) {
-  if (!ts) return '—';
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleDateString('ar-DZ', { year: 'numeric', month: 'short', day: 'numeric' });
-}
+const HEADERS = ['المسجل', 'الولاية · البلدية', 'الراتب', 'المصدر', 'تاريخ التسجيل', 'الحالة', ''];
 
 export function LeadsTable({ leads, onRefresh }) {
+  const [selectedId, setSelectedId] = useState(null);
+  const [savingId, setSavingId] = useState(null);
+  const selected = leads.find((l) => l.id === selectedId) ?? null;
+
   const handleStatusChange = async (leadId, newStatus) => {
+    setSavingId(leadId);
     try {
       await updateLeadStatus(leadId, newStatus);
       toast.success('تم تحديث الحالة');
       onRefresh();
     } catch {
       toast.error('فشل تحديث الحالة');
+    } finally {
+      setSavingId(null);
     }
   };
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border bg-white">
-      <table className="w-full text-sm text-right">
-        <thead className="bg-surface border-b border-border">
-          <tr>
-            {['الاسم', 'الهاتف', 'الولاية / البلدية', 'الراتب', 'يوم الراتب', 'الفئة العمرية', 'الأهداف', 'تاريخ التسجيل', 'الحالة'].map((h) => (
-              <th key={h} className="px-4 py-3 font-semibold text-text-secondary whitespace-nowrap">{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border">
-          {leads.map((lead) => {
-            const statusInfo = STATUS_LABELS[lead.status] ?? STATUS_LABELS.pending;
-            return (
-              <tr key={lead.id} className="hover:bg-surface/50 transition-colors">
-                <td className="px-4 py-3 font-medium text-text-primary whitespace-nowrap">{lead.name ?? '—'}</td>
-                <td className="px-4 py-3 text-text-secondary ltr" dir="ltr">{lead.phone ?? '—'}</td>
-                <td className="px-4 py-3 text-text-secondary whitespace-nowrap">
-                  {lead.wilayaCode ? `ولاية ${lead.wilayaCode}` : '—'}
-                  {lead.commune ? ` / ${lead.commune}` : ''}
-                </td>
-                <td className="px-4 py-3 text-text-secondary whitespace-nowrap">
-                  {lead.salary ? `${lead.salary.toLocaleString('ar-DZ')} دج` : '—'}
-                </td>
-                <td className="px-4 py-3 text-text-secondary">{lead.salaryDay ?? '—'}</td>
-                <td className="px-4 py-3 text-text-secondary">{lead.ageGroup ?? '—'}</td>
-                <td className="px-4 py-3 text-text-secondary max-w-[160px]">
-                  {lead.goals?.length ? (
-                    <div className="flex flex-wrap gap-1">
-                      {lead.goals.slice(0, 2).map((g) => (
-                        <span key={g} className="text-xs bg-surface border border-border rounded-full px-2 py-0.5">{g}</span>
-                      ))}
-                      {lead.goals.length > 2 && (
-                        <span className="text-xs text-text-secondary">+{lead.goals.length - 2}</span>
-                      )}
-                    </div>
-                  ) : '—'}
-                </td>
-                <td className="px-4 py-3 text-text-secondary whitespace-nowrap">{formatDate(lead.submittedAt)}</td>
-                <td className="px-4 py-3">
-                  <select
-                    value={lead.status ?? 'pending'}
-                    onChange={(e) => handleStatusChange(lead.id, e.target.value)}
-                    className="text-xs border border-border rounded-lg px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-primary"
-                  >
-                    {Object.entries(STATUS_LABELS).map(([val, { label }]) => (
-                      <option key={val} value={val}>{label}</option>
-                    ))}
-                  </select>
-                </td>
+    <>
+      <div className="rounded-2xl border border-border bg-white shadow-card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-right whitespace-nowrap">
+            <thead>
+              <tr className="border-b border-border bg-surface/70">
+                {HEADERS.map((h, i) => (
+                  <th key={i} className="px-5 py-3 text-xs font-semibold text-text-secondary">{h}</th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+            </thead>
+            <tbody className="divide-y divide-divider">
+              {leads.map((lead) => (
+                <tr
+                  key={lead.id}
+                  onClick={() => setSelectedId(lead.id)}
+                  className="group cursor-pointer hover:bg-surface/80 transition-colors"
+                >
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-3">
+                      <LeadAvatar name={lead.name} />
+                      <div className="min-w-0">
+                        <div className="font-semibold text-text-primary truncate max-w-[200px]">{lead.name ?? '—'}</div>
+                        <div className="text-xs text-text-secondary tabular-nums text-right" dir="ltr">{lead.phone ?? '—'}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3 text-text-primary/80">{formatPlace(lead)}</td>
+                  <td className="px-5 py-3 font-medium text-text-primary tabular-nums">{formatSalary(lead.salary)}</td>
+                  <td className="px-5 py-3"><SourceTag source={lead.source} /></td>
+                  <td className="px-5 py-3 text-text-secondary">{formatLeadDate(lead.submittedAt)}</td>
+                  <td className="px-5 py-3">
+                    <StatusSelect
+                      lead={lead}
+                      disabled={savingId === lead.id}
+                      onChange={(s) => handleStatusChange(lead.id, s)}
+                    />
+                  </td>
+                  <td className="px-5 py-3 text-left">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setSelectedId(lead.id); }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-primary hover:bg-primary/10 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1 1 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178a1 1 0 010 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      عرض
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <LeadDetailsModal
+        lead={selected}
+        onClose={() => setSelectedId(null)}
+        onStatusChange={(s) => selected && handleStatusChange(selected.id, s)}
+        saving={selected && savingId === selected.id}
+      />
+    </>
   );
 }
