@@ -48,7 +48,7 @@ dependencies:
   http: ^1.2.2
 
   # QR Scanner
-  mobile_scanner: ^6.0.0
+  mobile_scanner: ^7.0.0
 
   # Utilities
   path_provider: ^2.1.5
@@ -75,6 +75,9 @@ dev_dependencies:
 
 flutter:
   generate: true
+  # iOS uses CocoaPods; SPM (default since Flutter 3.47) double-links Firebase and breaks simulator builds
+  config:
+    enable-swift-package-manager: false
   uses-material-design: true
 
   assets:
