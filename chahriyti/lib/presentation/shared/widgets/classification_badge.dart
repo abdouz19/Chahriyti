@@ -4,6 +4,7 @@ import '../../../application/use_cases/insights/calculate_financial_classificati
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class ClassificationBadge extends StatelessWidget {
   final FinancialClassification classification;
@@ -18,17 +19,17 @@ class ClassificationBadge extends StatelessWidget {
   IconData _getIcon() {
     switch (classification) {
       case FinancialClassification.legendarySaver:
-        return Icons.star_rounded;
+        return IconsaxPlusBold.star_1;
       case FinancialClassification.smartSaver:
-        return Icons.lightbulb_rounded;
+        return IconsaxPlusBold.lamp_on;
       case FinancialClassification.balanced:
-        return Icons.balance_rounded;
+        return IconsaxPlusBold.judge;
       case FinancialClassification.spendthrift:
-        return Icons.local_offer_rounded;
+        return IconsaxPlusBold.ticket_discount;
       case FinancialClassification.danger:
-        return Icons.warning_rounded;
+        return IconsaxPlusBold.warning_2;
       case FinancialClassification.earlyBankruptcy:
-        return Icons.dangerous_rounded;
+        return IconsaxPlusBold.close_circle;
     }
   }
 

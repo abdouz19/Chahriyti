@@ -1290,7 +1290,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Essayez d\'atteindre cet objectif cette semaine !';
 
   @override
-  String get challengeCompletedMsg => 'Bravo ! Vous avez relevé ce défi 🎉';
+  String get challengeCompletedMsg => 'Bravo! Vous avez relevé ce défi';
 
   @override
   String get currencySymbol => 'DA';
@@ -2199,20 +2199,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notifChannelDesc => 'Alertes sur votre budget et vos dépenses';
 
   @override
-  String get notifWelcomeTitle => 'Bienvenue sur Chahriyti ! 🎉';
+  String get notifWelcomeTitle => 'Bienvenue sur Chahriyti!';
 
   @override
   String get notifWelcomeBody =>
-      'Les alertes sont activées — on vous aidera à suivre vos dépenses et à tenir jusqu\'au salaire 💪';
+      'Les alertes sont activées — on vous aidera à suivre vos dépenses et à tenir jusqu\'au salaire';
 
   @override
   String notifWeekTitle(int days) {
-    return '📅 $days jours avant le salaire';
+    return '$days jours avant le salaire';
   }
 
   @override
   String notifWeekBody(String amount) {
-    return 'Ne dépensez pas plus de $amount par jour et vous y arriverez 💪';
+    return 'Ne dépensez pas plus de $amount par jour et vous y arriverez';
   }
 
   @override
@@ -2220,7 +2220,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Derniers jours — l\'essentiel seulement et ça passera !';
 
   @override
-  String get notifExcellentTitle => '🏆 Excellent mois !';
+  String get notifExcellentTitle => 'Excellent mois!';
 
   @override
   String notifExcellentBody(int percent, String balance) {
@@ -2228,7 +2228,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get notifCycleSavedTitle => '✅ Cycle réussi !';
+  String get notifCycleSavedTitle => 'Cycle réussi!';
 
   @override
   String notifCycleSavedBody(String amount) {
@@ -2236,22 +2236,21 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get notifCycleNewTitle => '🔄 Nouveau cycle';
+  String get notifCycleNewTitle => 'Nouveau cycle';
 
   @override
   String get notifCycleNewBody =>
       'Nouveau mois, nouvelle chance d\'économiser — planifiez dès le début !';
 
   @override
-  String get notifDailyReminderTitle =>
-      'Avez-vous noté vos dépenses du jour ? 📝';
+  String get notifDailyReminderTitle => 'Avez-vous noté vos dépenses du jour?';
 
   @override
   String get notifDailyReminderBody =>
       'Aucune dépense notée aujourd\'hui — une minute suffit pour suivre votre argent.';
 
   @override
-  String get notifSalaryDayTitle => '💰 Jour de salaire !';
+  String get notifSalaryDayTitle => 'Jour de salaire!';
 
   @override
   String get notifSalaryDayBody =>
@@ -2275,8 +2274,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notifOnTimeAction => 'Autoriser';
 
   @override
-  String get notifPaceTitle =>
-      '⚠️ À ce rythme, l\'argent finira avant le salaire';
+  String get notifPaceTitle => 'À ce rythme, l\'argent finira avant le salaire';
 
   @override
   String notifPaceBody(String date, int days) {
@@ -2285,7 +2283,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String notifGoalTitle(String name) {
-    return '🎉 Vous pouvez acheter « $name »';
+    return 'Vous pouvez acheter « $name »';
   }
 
   @override
@@ -2298,7 +2296,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get notifLendingTitle => '🤝 Rappel de prêt';
+  String get notifLendingTitle => 'Rappel de prêt';
 
   @override
   String notifLendingBodyOne(String name, String amount) {
@@ -2428,21 +2426,21 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tourSavingsBody =>
-      'Dans les réglages ⚙️ : votre épargne, les transferts avec le solde et tout l\'historique.';
+      'Dans les réglages: votre épargne, les transferts avec le solde et tout l\'historique.';
 
   @override
   String get tourCyclesTitle => 'Cycles';
 
   @override
   String get tourCyclesBody =>
-      'Chaque cycle commence le jour du salaire. Dans les réglages ⚙️ : salaire, jour de paie et anciens cycles.';
+      'Chaque cycle commence le jour du salaire. Dans les réglages: salaire, jour de paie et anciens cycles.';
 
   @override
   String get tourLockTitle => 'Verrouillage';
 
   @override
   String get tourLockBody =>
-      'Protégez vos données avec Face ID ou l\'empreinte : Réglages ⚙️ → Sécurité.';
+      'Protégez vos données avec Face ID ou l\'empreinte: Réglages → Sécurité.';
 
   @override
   String get offerLabel => 'Votre commande';
@@ -2486,7 +2484,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get reassuranceKeepPhone =>
-      'Rien à faire pour l\'instant, gardez simplement votre téléphone à portée 📞';
+      'Rien à faire pour l\'instant, gardez simplement votre téléphone à portée';
 
   @override
   String get completeAllFieldsHint =>
@@ -2497,7 +2495,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get notifGoalTitleHidden =>
-      '🎉 Votre épargne atteint un de vos objectifs';
+      'Votre épargne atteint un de vos objectifs';
 
   @override
   String get notifSalaryDayBodyWithDebtHidden =>
@@ -2508,7 +2506,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'On vous doit encore de l\'argent. Bon moment pour le rappeler.';
 
   @override
-  String get notifInactiveTitle => 'Votre budget vous attend 👋';
+  String get notifInactiveTitle => 'Votre budget vous attend';
 
   @override
   String get notifInactiveBody =>
@@ -2587,7 +2585,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le crédit, les petites dépenses, les occasions… et le mois n\'est pas encore fini.';
 
   @override
-  String get salesMirrorFineTitle => 'Et si tout va bien aujourd\'hui ? 👏';
+  String get salesMirrorFineTitle => 'Et si tout va bien aujourd\'hui?';
 
   @override
   String get salesMirrorFineBody =>
@@ -2636,7 +2634,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String salesOfferPerDay(String amount) {
-    return 'Soit $amount par jour sur un an — moins qu\'un café ☕';
+    return 'Soit $amount par jour sur un an, moins qu\'un café';
   }
 
   @override
@@ -2647,4 +2645,149 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get salesOfferCta => 'Commandez votre exemplaire';
+
+  @override
+  String get salesOfferHaveCode => 'J\'ai le livre, activer mon exemplaire';
+
+  @override
+  String get salesOfferOrderOnline => 'Je veux commander';
+
+  @override
+  String get quickSetupTitle => 'Préparons votre appli';
+
+  @override
+  String get quickSetupSubtitle =>
+      'Juste 3 informations, puis activez votre exemplaire avec le code.';
+
+  @override
+  String get quickSetupContinue => 'Continuer vers l\'activation';
+
+  @override
+  String get quickSetupFailed => 'Une erreur est survenue, réessayez';
+
+  @override
+  String get orderTitle => 'Commandez votre exemplaire';
+
+  @override
+  String get orderSubtitle => 'Paiement à la livraison, sans carte bancaire';
+
+  @override
+  String get orderDeliveryTitle => 'Mode de livraison';
+
+  @override
+  String get orderDeliveryDesk => 'Au bureau';
+
+  @override
+  String get orderDeliveryHome => 'À domicile';
+
+  @override
+  String get orderDeliveryPickWilaya =>
+      'Choisissez votre wilaya pour voir les prix';
+
+  @override
+  String get orderDeliveryUnavailable => 'Indisponible';
+
+  @override
+  String get orderDeliveryNone =>
+      'La livraison n\'est pas encore disponible pour cette wilaya';
+
+  @override
+  String get orderDeliveryRequired => 'Veuillez choisir un mode de livraison';
+
+  @override
+  String get orderBookLine => 'Livre Chahriyti + code d’activation';
+
+  @override
+  String get orderDeliveryLine => 'Livraison';
+
+  @override
+  String get orderTotalLine => 'Total à payer à la livraison';
+
+  @override
+  String get orderSubmit => 'Confirmer la commande';
+
+  @override
+  String get orderSendFailed =>
+      'Votre commande n\'a pas pu être envoyée. Vérifiez votre connexion et réessayez.';
+
+  @override
+  String thanksTitle(String name) {
+    return 'Merci $name, nous avons reçu votre commande!';
+  }
+
+  @override
+  String thanksCall(String phone) {
+    return 'Nous vous appellerons au $phone pour confirmer la commande.';
+  }
+
+  @override
+  String get thanksStep2 => 'Le livre arrive avec votre code d\'activation';
+
+  @override
+  String get thanksStep3 =>
+      'Vous activez l\'appli avec le code et commencez avec Chahriyti';
+
+  @override
+  String get thanksActivate => 'J\'ai reçu mon exemplaire, activer l\'appli';
+
+  @override
+  String get welcomeTitle => 'Votre salaire peut vous offrir plus';
+
+  @override
+  String get welcomeBody =>
+      'Pas besoin de gagner plus pour mieux vivre. Il faut savoir où va chaque dinar, et décider avant que le mois décide pour vous.';
+
+  @override
+  String get welcomeCta => 'Commençons';
+
+  @override
+  String get monthBarSalaryDay => 'Jour de paie';
+
+  @override
+  String get monthBarNextSalary => 'Prochaine paie';
+
+  @override
+  String get monthBarRunsOut => 'L\'argent s\'arrête ici';
+
+  @override
+  String get monthBarLeftOver => 'Il en reste';
+
+  @override
+  String get salesHowUrgency =>
+      'Chaque mois repoussé, c\'est un salaire entier dépensé sans plan. Celui qui commence aujourd\'hui prend de l\'avance.';
+
+  @override
+  String get salesOfferHeadline =>
+      'Votre décision d\'aujourd\'hui change tous les mois à venir';
+
+  @override
+  String get salesOfferOnce => 'Une fois, à vie';
+
+  @override
+  String get activationHeadline =>
+      'Une dernière étape, et votre nouveau mois commence';
+
+  @override
+  String get activationSub =>
+      'Le code est fourni avec le livre. Scannez-le ou tapez-le, et l\'appli s\'active en quelques secondes.';
+
+  @override
+  String salaryCheckTitle(String amount) {
+    return 'Vouliez-vous dire $amount ?';
+  }
+
+  @override
+  String salaryCheckBody(String typed) {
+    return '$typed semble très bas pour un salaire mensuel. On corrige ?';
+  }
+
+  @override
+  String salaryCheckYes(String amount) {
+    return 'Oui, $amount';
+  }
+
+  @override
+  String salaryCheckNo(String typed) {
+    return 'Non, garder $typed';
+  }
 }

@@ -6,6 +6,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class ExpensesCard extends StatelessWidget {
   final int expenses;
@@ -36,7 +37,7 @@ class ExpensesCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.trending_down_rounded,
+                  IconsaxPlusLinear.trend_down,
                   color: AppColors.negative,
                   size: 18,
                 ),

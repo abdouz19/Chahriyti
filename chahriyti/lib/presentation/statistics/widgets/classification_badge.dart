@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../../application/use_cases/statistics/get_financial_classification_use_case.dart';
 import '../../../core/extensions/l10n_extension.dart';
@@ -33,8 +34,7 @@ class ClassificationBadge extends StatelessWidget {
             // Left accent bar
             Container(width: 4, height: 52, color: color),
             const SizedBox(width: 12),
-            // Emoji
-            Text(tier.emoji, style: const TextStyle(fontSize: 20)),
+            Icon(tierIcon(tier), color: color, size: 22),
             const SizedBox(width: 8),
             // Tier name
             Text(
@@ -119,5 +119,23 @@ String tierDescription(BuildContext context, FinancialTier tier) {
       return context.l10n.tierDangerDesc;
     case FinancialTier.earlyBankrupt:
       return context.l10n.tierEarlyBankruptDesc;
+  }
+}
+
+/// Icon for each financial tier (shared with the cycle overview card).
+IconData tierIcon(FinancialTier tier) {
+  switch (tier) {
+    case FinancialTier.legendary:
+      return IconsaxPlusBold.cup;
+    case FinancialTier.smart:
+      return IconsaxPlusBold.lamp_on;
+    case FinancialTier.balanced:
+      return IconsaxPlusBold.judge;
+    case FinancialTier.spender:
+      return IconsaxPlusBold.money_remove;
+    case FinancialTier.danger:
+      return IconsaxPlusBold.warning_2;
+    case FinancialTier.earlyBankrupt:
+      return IconsaxPlusBold.danger;
   }
 }

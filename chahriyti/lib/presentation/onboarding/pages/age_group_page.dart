@@ -8,6 +8,7 @@ import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
 import '../widgets/onboarding_progress_dots.dart';
 import '../widgets/selection_card.dart';
+import '../../../core/theme/app_icons.dart';
 
 class AgeGroupPage extends StatefulWidget {
   const AgeGroupPage({super.key});
@@ -72,7 +73,7 @@ class _AgeGroupPageState extends State<AgeGroupPage>
                 alignment: AlignmentDirectional.centerStart,
                 child: IconButton(
                   onPressed: () => context.go('/onboarding/profile'),
-                  icon: const Icon(Icons.arrow_back_ios_rounded),
+                  icon: const Icon(AppIcons.backChevron),
                   color: AppColors.textSecondary,
                 ),
               ),

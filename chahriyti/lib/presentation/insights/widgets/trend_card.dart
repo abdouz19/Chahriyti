@@ -6,6 +6,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../shared/widgets/money_text.dart';
 import '../../../domain/value_objects/money.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../../core/theme/app_icons.dart';
 
 class TrendCard extends StatelessWidget {
   final SpendingTrend trend;
@@ -20,23 +22,23 @@ class TrendCard extends StatelessWidget {
   IconData _getCategoryIcon() {
     final category = trend.category.toLowerCase();
     if (category.contains('قهوة') || category.contains('مشروبات')) {
-      return Icons.local_cafe_rounded;
+      return IconsaxPlusBold.coffee;
     } else if (category.contains('طعام') || category.contains('مطعم')) {
-      return Icons.restaurant_rounded;
+      return IconsaxPlusBold.reserve;
     } else if (category.contains('تسوق') || category.contains('ملابس')) {
-      return Icons.shopping_bag_rounded;
+      return IconsaxPlusBold.shopping_bag;
     } else if (category.contains('مواصلات')) {
-      return Icons.directions_car_rounded;
+      return IconsaxPlusBold.car;
     } else if (category.contains('ترفيه')) {
-      return Icons.movie_rounded;
+      return IconsaxPlusBold.video_play;
     } else if (category.contains('صحة')) {
-      return Icons.local_hospital_rounded;
+      return IconsaxPlusBold.hospital;
     } else if (category.contains('تعليم')) {
-      return Icons.school_rounded;
+      return IconsaxPlusBold.teacher;
     } else if (category.contains('سكن')) {
-      return Icons.home_rounded;
+      return IconsaxPlusBold.home_2;
     } else {
-      return Icons.label_rounded;
+      return IconsaxPlusBold.tag;
     }
   }
 
@@ -92,8 +94,8 @@ class TrendCard extends StatelessWidget {
                         children: [
                           Icon(
                             trend.isIncreasing
-                                ? Icons.trending_up_rounded
-                                : Icons.trending_down_rounded,
+                                ? IconsaxPlusLinear.trend_up
+                                : IconsaxPlusLinear.trend_down,
                             color: _getTrendColor(),
                             size: 16,
                           ),
@@ -136,7 +138,7 @@ class TrendCard extends StatelessWidget {
                   ],
                 ),
                 Icon(
-                  Icons.arrow_forward_rounded,
+                  AppIcons.forward,
                   color: AppColors.textSecondary,
                   size: 20,
                 ),

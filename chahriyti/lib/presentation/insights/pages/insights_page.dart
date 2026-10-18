@@ -9,6 +9,7 @@ import '../../shared/widgets/classification_badge.dart';
 import '../cubits/insights_cubit.dart';
 import '../widgets/leak_card.dart';
 import '../widgets/trend_card.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class InsightsPage extends StatelessWidget {
   const InsightsPage({super.key});
@@ -93,7 +94,7 @@ class _InsightsView extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.insights_rounded,
+                              IconsaxPlusBold.chart_square,
                               size: 64,
                               color: AppColors.primary.withValues(alpha: 0.5),
                             ),
@@ -127,7 +128,7 @@ class _InsightsView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
-                      Icons.error_outline_rounded,
+                      IconsaxPlusLinear.danger,
                       size: 48,
                       color: AppColors.negative,
                     ),

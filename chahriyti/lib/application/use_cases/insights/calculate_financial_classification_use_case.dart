@@ -31,34 +31,34 @@ extension ClassificationDisplay on FinancialClassification {
   String get description {
     switch (this) {
       case FinancialClassification.legendarySaver:
-        return 'ادخار أكثر من 30% 🌟';
+        return 'ادخار أكثر من 30%';
       case FinancialClassification.smartSaver:
-        return 'ادخار من 15% إلى 30% 💡';
+        return 'ادخار من 15% إلى 30%';
       case FinancialClassification.balanced:
-        return 'إدارة جيدة للمصاريف ⚖️';
+        return 'إدارة جيدة للمصاريف';
       case FinancialClassification.spendthrift:
-        return 'صرف سريع 💸';
+        return 'صرف سريع';
       case FinancialClassification.danger:
-        return 'احتمال نفاد الرصيد ⚠️';
+        return 'احتمال نفاد الرصيد';
       case FinancialClassification.earlyBankruptcy:
-        return 'نفاد الرصيد قبل الراتب القادم 🚨';
+        return 'نفاد الرصيد قبل الراتب القادم';
     }
   }
 
   String get suggestion {
     switch (this) {
       case FinancialClassification.legendarySaver:
-        return 'أنت تحقق أحلامك المالية! استمر على هذا المنوال 🎯';
+        return 'أنت تحقق أحلامك المالية! استمر على هذا المنوال';
       case FinancialClassification.smartSaver:
-        return 'تدير أموالك بذكاء. حاول زيادة الادخار قليلاً 📈';
+        return 'تدير أموالك بذكاء. حاول زيادة الادخار قليلاً';
       case FinancialClassification.balanced:
-        return 'إدارتك جيدة. راقب المصاريف الإضافية 👀';
+        return 'إدارتك جيدة. راقب المصاريف الإضافية';
       case FinancialClassification.spendthrift:
-        return 'قلل المصاريف غير الضرورية لتحسين وضعك 🎯';
+        return 'قلل المصاريف غير الضرورية لتحسين وضعك';
       case FinancialClassification.danger:
-        return 'احذر! قد لا تكمل الشهرية بأمان. خطط أفضل 🚨';
+        return 'احذر! قد لا تكمل الشهرية بأمان. خطط أفضل';
       case FinancialClassification.earlyBankruptcy:
-        return 'أنفقت أكثر من دخلك. تحرك بسرعة! 🆘';
+        return 'أنفقت أكثر من دخلك. تحرك بسرعة!';
     }
   }
 }

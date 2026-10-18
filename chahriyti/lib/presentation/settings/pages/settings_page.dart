@@ -15,6 +15,7 @@ import '../../../infrastructure/services/app_lock_service.dart';
 import '../../shared/widgets/money_text.dart';
 import '../cubits/locale_cubit.dart';
 import '../cubits/settings_cubit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -98,7 +99,7 @@ class _SettingsView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
-                      Icons.error_outline_rounded,
+                      IconsaxPlusLinear.danger,
                       size: 48,
                       color: AppColors.negative,
                     ),
@@ -145,7 +146,7 @@ class _SettingsView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: const Icon(
-                      Icons.person_rounded,
+                      IconsaxPlusBold.profile,
                       color: AppColors.primary,
                       size: 28,
                     ),
@@ -164,8 +165,8 @@ class _SettingsView extends StatelessWidget {
                           children: [
                             Icon(
                               state.isActivated
-                                  ? Icons.verified_rounded
-                                  : Icons.warning_amber_rounded,
+                                  ? IconsaxPlusBold.verify
+                                  : IconsaxPlusLinear.warning_2,
                               size: 16,
                               color: state.isActivated
                                   ? AppColors.positive
@@ -231,7 +232,7 @@ class _SettingsView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(
-                            Icons.edit_rounded,
+                            IconsaxPlusLinear.edit_2,
                             size: 18,
                             color: AppColors.primary,
                           ),
@@ -283,7 +284,7 @@ class _SettingsView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(
-                            Icons.edit_rounded,
+                            IconsaxPlusLinear.edit_2,
                             size: 18,
                             color: AppColors.primary,
                           ),
@@ -312,7 +313,7 @@ class _SettingsView extends StatelessWidget {
                 height: 48,
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/goals'),
-                  icon: const Icon(Icons.flag_rounded),
+                  icon: const Icon(IconsaxPlusBold.flag),
                   label: Text(context.l10n.viewGoals),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
@@ -329,7 +330,7 @@ class _SettingsView extends StatelessWidget {
                 height: 48,
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/debts'),
-                  icon: const Icon(Icons.paid_rounded),
+                  icon: const Icon(IconsaxPlusBold.dollar_circle),
                   label: Text(context.l10n.viewDebts),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
@@ -346,7 +347,7 @@ class _SettingsView extends StatelessWidget {
                 height: 48,
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/savings'),
-                  icon: const Icon(Icons.savings_rounded),
+                  icon: const Icon(IconsaxPlusBold.strongbox),
                   label: Text(context.l10n.savings),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
@@ -376,7 +377,7 @@ class _SettingsView extends StatelessWidget {
                 height: 48,
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/cycle-history'),
-                  icon: const Icon(Icons.history_rounded),
+                  icon: const Icon(IconsaxPlusBold.clock),
                   label: Text(context.l10n.cycleHistory),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
@@ -410,7 +411,7 @@ class _SettingsView extends StatelessWidget {
                   title: Text(label, style: AppTypography.bodyMedium),
                   trailing: isSelected
                       ? const Icon(
-                          Icons.check_rounded,
+                          IconsaxPlusLinear.check,
                           color: AppColors.primary,
                           size: 20,
                         )
@@ -450,7 +451,7 @@ class _SettingsView extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.warning_rounded,
+                      IconsaxPlusBold.warning_2,
                       color: AppColors.negative,
                       size: 20,
                     ),
@@ -476,7 +477,7 @@ class _SettingsView extends StatelessWidget {
                   height: 48,
                   child: OutlinedButton.icon(
                     onPressed: () => _onResetAllData(context),
-                    icon: const Icon(Icons.delete_forever_rounded),
+                    icon: const Icon(IconsaxPlusBold.trash),
                     label: Text(context.l10n.clearAllData),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.negative,
@@ -515,7 +516,7 @@ class _SettingsView extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
-            Icon(Icons.warning_rounded, color: AppColors.negative, size: 24),
+            Icon(IconsaxPlusBold.warning_2, color: AppColors.negative, size: 24),
             const SizedBox(width: 8),
             Text(
               context.l10n.importantWarning,
@@ -673,7 +674,7 @@ class _SettingsView extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(
-                        Icons.info_outline_rounded,
+                        IconsaxPlusLinear.info_circle,
                         size: 14,
                         color: AppColors.textSecondary,
                       ),
@@ -931,7 +932,7 @@ class _EditSalarySheetState extends State<_EditSalarySheet> {
                 Row(
                   children: [
                     const Icon(
-                      Icons.info_outline_rounded,
+                      IconsaxPlusLinear.info_circle,
                       size: 14,
                       color: AppColors.textSecondary,
                     ),
@@ -1049,7 +1050,7 @@ class _NotificationsSwitchState extends State<_NotificationsSwitch> {
             },
       activeThumbColor: AppColors.primary,
       secondary: const Icon(
-        Icons.notifications_active_outlined,
+        IconsaxPlusLinear.notification_bing,
         color: AppColors.primary,
       ),
       title: Text(
@@ -1064,7 +1065,7 @@ class _NotificationsSwitchState extends State<_NotificationsSwitch> {
     final onTime = _enabled == true && !_onTime
         ? ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.alarm_outlined, color: AppColors.warning),
+            leading: const Icon(IconsaxPlusLinear.alarm, color: AppColors.warning),
             title: Text(
               context.l10n.notifOnTimeTitle,
               style: AppTypography.labelLarge,
@@ -1103,7 +1104,7 @@ class _NotificationsSwitchState extends State<_NotificationsSwitch> {
                   );
                 }
               },
-              icon: const Icon(Icons.bug_report_outlined, size: 18),
+              icon: const Icon(IconsaxPlusLinear.code, size: 18),
               label: const Text('Test reminder (debug)'),
             ),
           ),
@@ -1181,7 +1182,7 @@ class _AppLockSettingsState extends State<_AppLockSettings> {
           onChanged: _loading ? null : _toggle,
           activeThumbColor: AppColors.primary,
           secondary: const Icon(
-            Icons.lock_outline_rounded,
+            IconsaxPlusLinear.lock,
             color: AppColors.primary,
           ),
           title: Text(l10n.appLockTitle, style: AppTypography.labelLarge),
@@ -1231,7 +1232,7 @@ class _AppLockSettingsState extends State<_AppLockSettings> {
             },
             activeThumbColor: AppColors.primary,
             secondary: const Icon(
-              Icons.visibility_off_outlined,
+              IconsaxPlusLinear.eye_slash,
               color: AppColors.primary,
             ),
             title: Text(

@@ -15,6 +15,7 @@ import '../../shared/widgets/payment_source_toggle.dart';
 import '../../shared/widgets/funding_source_sheet.dart';
 import '../../shared/widgets/amount_progress_card.dart';
 import 'add_debt_page.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class DebtDetailPage extends StatelessWidget {
   final int debtId;
@@ -70,7 +71,7 @@ class _DebtDetailView extends StatelessWidget {
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.edit_outlined),
+                icon: const Icon(IconsaxPlusLinear.edit_2),
                 tooltip: context.l10n.edit,
                 onPressed: () async {
                   final cubit = context.read<DebtCubit>();
@@ -89,7 +90,7 @@ class _DebtDetailView extends StatelessWidget {
               ),
               IconButton(
                 icon: Icon(
-                  Icons.delete_outline,
+                  IconsaxPlusLinear.trash,
                   color: canDelete ? AppColors.negative : AppColors.textSecondary,
                 ),
                 tooltip: context.l10n.delete,
@@ -154,7 +155,7 @@ class _DebtDetailView extends StatelessWidget {
                           onPressed: () {
                             _showAddPaymentDialog(context, debt.id, debt.remainingAmount);
                           },
-                          icon: const Icon(Icons.add),
+                          icon: const Icon(IconsaxPlusLinear.add),
                           label: Text(context.l10n.addPayment),
                         ),
                       ),
@@ -171,7 +172,7 @@ class _DebtDetailView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.error_outline_rounded,
+                        IconsaxPlusLinear.danger,
                         size: 64,
                         color: AppColors.negative,
                       ),

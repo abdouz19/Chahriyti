@@ -11,6 +11,7 @@ import '../../shared/widgets/money_text.dart';
 import '../cubits/lending_cubit.dart';
 import '../cubits/lending_state.dart';
 import '../widgets/lending_card.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class LendingsListPage extends StatelessWidget {
   const LendingsListPage({super.key});
@@ -105,7 +106,7 @@ class _LendingsListViewState extends State<_LendingsListView>
           }
         },
         backgroundColor: AppColors.primary,
-        icon: const Icon(Icons.add, color: Colors.white),
+        icon: const Icon(IconsaxPlusLinear.add, color: Colors.white),
         label: Text(
           context.l10n.newLending,
           style: AppTypography.labelLarge.copyWith(color: Colors.white),
@@ -149,7 +150,7 @@ class _LendingTabContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.handshake_rounded,
+                        IconsaxPlusBold.money_change,
                         size: 64,
                         color: AppColors.primary.withValues(alpha: 0.5),
                       ),
@@ -272,7 +273,7 @@ class _LendingTabContent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.error_outline_rounded,
+                    IconsaxPlusLinear.danger,
                     size: 64,
                     color: AppColors.negative,
                   ),

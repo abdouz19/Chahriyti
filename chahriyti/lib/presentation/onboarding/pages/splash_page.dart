@@ -19,7 +19,6 @@ class _SplashPageState extends State<SplashPage>
   late final Animation<Offset> _titleSlide;
   late final Animation<double> _titleOpacity;
   late final Animation<double> _bodyOpacity;
-  late final Animation<double> _boldOpacity;
   late final Animation<double> _buttonOpacity;
 
   @override
@@ -61,12 +60,6 @@ class _SplashPageState extends State<SplashPage>
       ),
     );
 
-    _boldOpacity = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.6, 0.8, curve: Curves.easeIn),
-      ),
-    );
 
     _buttonOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
@@ -109,11 +102,13 @@ class _SplashPageState extends State<SplashPage>
                 child: FadeTransition(
                   opacity: _titleOpacity,
                   child: Text(
-                    context.l10n.splashWelcome,
+                    context.l10n.welcomeTitle,
                     textAlign: TextAlign.center,
                     style: AppTypography.headlineLarge.copyWith(
-                      color: AppColors.primary,
-                      fontSize: 30,
+                      color: AppColors.textPrimary,
+                      fontSize: 34,
+                      fontWeight: FontWeight.w800,
+                      height: 1.3,
                     ),
                   ),
                 ),
@@ -122,23 +117,11 @@ class _SplashPageState extends State<SplashPage>
               FadeTransition(
                 opacity: _bodyOpacity,
                 child: Text(
-                  context.l10n.splashBody,
-                  textAlign: TextAlign.center,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                    height: 1.8,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              FadeTransition(
-                opacity: _boldOpacity,
-                child: Text(
-                  context.l10n.splashBold,
+                  context.l10n.welcomeBody,
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyLarge.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary.withValues(alpha: 0.7),
+                    height: 1.8,
                   ),
                 ),
               ),
@@ -149,7 +132,7 @@ class _SplashPageState extends State<SplashPage>
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => context.go('/onboarding/mirror'),
-                    child: Text(context.l10n.startNow),
+                    child: Text(context.l10n.welcomeCta),
                   ),
                 ),
               ),

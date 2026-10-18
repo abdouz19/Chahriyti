@@ -22,6 +22,8 @@ import '../../../domain/entities/expense_entity.dart';
 import '../../expense/cubits/expense_cubit.dart';
 import '../../shared/widgets/confirmation_dialog.dart';
 import '../../shared/widgets/feature_tour.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../../core/theme/app_icons.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -113,27 +115,27 @@ class _HomeViewState extends State<_HomeView> {
       scrollController: _scroll,
       onClosed: _maybeAskNotifications,
       steps: [
-        TourStep(target: _balanceKey, icon: Icons.account_balance_wallet_rounded,
+        TourStep(target: _balanceKey, icon: IconsaxPlusBold.wallet,
             title: l.tourBalanceTitle, body: l.tourBalanceBody),
-        TourStep(target: _expensesKey, icon: Icons.trending_up_rounded,
+        TourStep(target: _expensesKey, icon: IconsaxPlusLinear.trend_up,
             title: l.tourSpendingTitle, body: l.tourSpendingBody),
-        TourStep(target: _incomeKey, icon: Icons.add_card_rounded,
+        TourStep(target: _incomeKey, icon: IconsaxPlusBold.card_add,
             title: l.tourIncomeTitle, body: l.tourIncomeBody, atTop: true),
-        TourStep(target: _addExpenseKey, icon: Icons.add_rounded,
+        TourStep(target: _addExpenseKey, icon: IconsaxPlusLinear.add,
             title: l.tourAddExpenseTitle, body: l.tourAddExpenseBody),
-        TourStep(target: _goalsKey, icon: Icons.flag_rounded,
+        TourStep(target: _goalsKey, icon: IconsaxPlusBold.flag,
             title: l.tourGoalsTitle, body: l.tourGoalsBody),
-        TourStep(target: _debtsKey, icon: Icons.paid_rounded,
+        TourStep(target: _debtsKey, icon: IconsaxPlusBold.dollar_circle,
             title: l.tourDebtsTitle, body: l.tourDebtsBody),
-        TourStep(target: _lendingsKey, icon: Icons.handshake_rounded,
+        TourStep(target: _lendingsKey, icon: IconsaxPlusBold.money_change,
             title: l.tourLendingsTitle, body: l.tourLendingsBody),
-        TourStep(target: _statsKey, icon: Icons.bar_chart_rounded,
+        TourStep(target: _statsKey, icon: IconsaxPlusBold.chart_2,
             title: l.tourStatsTitle, body: l.tourStatsBody),
-        TourStep(target: _settingsKey, icon: Icons.savings_rounded,
+        TourStep(target: _settingsKey, icon: IconsaxPlusBold.strongbox,
             title: l.tourSavingsTitle, body: l.tourSavingsBody, atTop: true),
-        TourStep(target: _settingsKey, icon: Icons.calendar_month_rounded,
+        TourStep(target: _settingsKey, icon: IconsaxPlusBold.calendar,
             title: l.tourCyclesTitle, body: l.tourCyclesBody, atTop: true),
-        TourStep(target: _settingsKey, icon: Icons.fingerprint_rounded,
+        TourStep(target: _settingsKey, icon: IconsaxPlusBold.finger_scan,
             title: l.tourLockTitle, body: l.tourLockBody, atTop: true),
       ],
     );
@@ -251,7 +253,7 @@ class _HomeViewState extends State<_HomeView> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.error_outline_rounded,
+                    IconsaxPlusLinear.danger,
                     size: 64,
                     color: AppColors.negative,
                   ),
@@ -268,7 +270,7 @@ class _HomeViewState extends State<_HomeView> {
                     onPressed: () {
                       context.read<DashboardCubit>().loadDashboard();
                     },
-                    icon: const Icon(Icons.refresh_rounded),
+                    icon: const Icon(IconsaxPlusLinear.refresh),
                     label: Text(context.l10n.retry),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
@@ -302,7 +304,7 @@ class _HomeViewState extends State<_HomeView> {
                 key: _incomeKey,
                 onPressed: () => _navigateAndRefresh(context, '/income/add'),
                 icon: Icon(
-                  Icons.add_card_rounded,
+                  IconsaxPlusBold.card_add,
                   color: AppColors.primary,
                 ),
                 tooltip: context.l10n.addIncomeTooltip,
@@ -311,7 +313,7 @@ class _HomeViewState extends State<_HomeView> {
                 key: _settingsKey,
                 onPressed: () => _navigateAndRefresh(context, '/settings'),
                 icon: Icon(
-                  Icons.settings_rounded,
+                  IconsaxPlusBold.setting_2,
                   color: AppColors.textSecondary,
                 ),
                 tooltip: context.l10n.settingsTitle,
@@ -370,7 +372,7 @@ class _HomeViewState extends State<_HomeView> {
                             child: _CycleAmountCard(
                               label: context.l10n.debtsLabel,
                               amount: state.activeDebts.fold(0, (sum, d) => sum + d.remainingAmount),
-                              icon: Icons.paid_rounded,
+                              icon: IconsaxPlusBold.dollar_circle,
                               color: AppColors.warning,
                               subtitleLabel: context.l10n.debtPaymentsThisCycle,
                               subtitleAmount: data.totalDebtPayments > 0 ? data.totalDebtPayments : null,
@@ -385,7 +387,7 @@ class _HomeViewState extends State<_HomeView> {
                             child: _CycleAmountCard(
                               label: context.l10n.lendingsLabel,
                               amount: state.activeLendings.fold(0, (sum, l) => sum + l.remainingAmount),
-                              icon: Icons.handshake_rounded,
+                              icon: IconsaxPlusBold.money_change,
                               color: AppColors.primary,
                               subtitleLabel: context.l10n.lendingsThisCycle,
                               subtitleAmount: data.totalLendingsFromBalance > 0 ? data.totalLendingsFromBalance : null,
@@ -416,7 +418,7 @@ class _HomeViewState extends State<_HomeView> {
                         );
                       }
                     },
-                    icon: const Icon(Icons.add, size: 24),
+                    icon: const Icon(IconsaxPlusLinear.add, size: 24),
                     label: Text(
                       context.l10n.recordExpense,
                       style: AppTypography.labelLarge
@@ -481,7 +483,7 @@ class _HomeViewState extends State<_HomeView> {
                             Row(
                               children: [
                                 Icon(
-                                  Icons.flag_rounded,
+                                  IconsaxPlusBold.flag,
                                   color: AppColors.primary,
                                   size: 20,
                                 ),
@@ -493,7 +495,7 @@ class _HomeViewState extends State<_HomeView> {
                               ],
                             ),
                             Icon(
-                              Icons.arrow_forward_rounded,
+                              AppIcons.forward,
                               color: AppColors.textSecondary,
                               size: 18,
                             ),
@@ -539,7 +541,7 @@ class _HomeViewState extends State<_HomeView> {
                             Row(
                               children: [
                                 Icon(
-                                  Icons.paid_rounded,
+                                  IconsaxPlusBold.dollar_circle,
                                   color: AppColors.primary,
                                   size: 20,
                                 ),
@@ -551,7 +553,7 @@ class _HomeViewState extends State<_HomeView> {
                               ],
                             ),
                             Icon(
-                              Icons.arrow_forward_rounded,
+                              AppIcons.forward,
                               color: AppColors.textSecondary,
                               size: 18,
                             ),
@@ -596,7 +598,7 @@ class _HomeViewState extends State<_HomeView> {
                             Row(
                               children: [
                                 Icon(
-                                  Icons.handshake_rounded,
+                                  IconsaxPlusBold.money_change,
                                   color: AppColors.primary,
                                   size: 20,
                                 ),
@@ -608,7 +610,7 @@ class _HomeViewState extends State<_HomeView> {
                               ],
                             ),
                             Icon(
-                              Icons.arrow_forward_rounded,
+                              AppIcons.forward,
                               color: AppColors.textSecondary,
                               size: 18,
                             ),
@@ -647,7 +649,7 @@ class _HomeViewState extends State<_HomeView> {
                   key: _statsKey,
                   onPressed: () => context.push('/statistics'),
                   icon: Icon(
-                    Icons.bar_chart_rounded,
+                    IconsaxPlusBold.chart_2,
                     color: AppColors.primary,
                   ),
                   label: Text(
@@ -758,9 +760,9 @@ class _NotificationsExplainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final points = [
-      (Icons.payments_rounded, l.notifAskPoint1),
-      (Icons.edit_note_rounded, l.notifAskPoint2),
-      (Icons.warning_amber_rounded, l.notifAskPoint3),
+      (IconsaxPlusBold.moneys, l.notifAskPoint1),
+      (IconsaxPlusBold.note_2, l.notifAskPoint2),
+      (IconsaxPlusLinear.warning_2, l.notifAskPoint3),
     ];
     return SafeArea(
       child: Padding(
@@ -775,7 +777,7 @@ class _NotificationsExplainer extends StatelessWidget {
                 color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.notifications_active_rounded,
+              child: const Icon(IconsaxPlusBold.notification_bing,
                   size: 34, color: AppColors.primary),
             ),
             const SizedBox(height: 16),

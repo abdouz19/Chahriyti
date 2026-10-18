@@ -1281,8 +1281,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get challengeMotivation => 'Try to achieve this goal this week!';
 
   @override
-  String get challengeCompletedMsg =>
-      'Amazing! You completed this challenge 🎉';
+  String get challengeCompletedMsg => 'Amazing! You completed this challenge';
 
   @override
   String get currencySymbol => 'DA';
@@ -2192,20 +2191,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifChannelDesc => 'Alerts about your budget and spending';
 
   @override
-  String get notifWelcomeTitle => 'Welcome to Chahriyti! 🎉';
+  String get notifWelcomeTitle => 'Welcome to Chahriyti!';
 
   @override
   String get notifWelcomeBody =>
-      'Alerts are on — we\'ll help you track spending and make it to payday 💪';
+      'Alerts are on — we\'ll help you track spending and make it to payday';
 
   @override
   String notifWeekTitle(int days) {
-    return '📅 $days days to payday';
+    return '$days days to payday';
   }
 
   @override
   String notifWeekBody(String amount) {
-    return 'Spend no more than $amount a day and you\'ll make it 💪';
+    return 'Spend no more than $amount a day and you\'ll make it';
   }
 
   @override
@@ -2213,7 +2212,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Last days — essentials only and you will make it!';
 
   @override
-  String get notifExcellentTitle => '🏆 Great month so far!';
+  String get notifExcellentTitle => 'Great month so far!';
 
   @override
   String notifExcellentBody(int percent, String balance) {
@@ -2221,7 +2220,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get notifCycleSavedTitle => '✅ Successful cycle!';
+  String get notifCycleSavedTitle => 'Successful cycle!';
 
   @override
   String notifCycleSavedBody(String amount) {
@@ -2229,20 +2228,20 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get notifCycleNewTitle => '🔄 New cycle started';
+  String get notifCycleNewTitle => 'New cycle started';
 
   @override
   String get notifCycleNewBody => 'A new month to save — plan from day one!';
 
   @override
-  String get notifDailyReminderTitle => 'Recorded today\'s spending? 📝';
+  String get notifDailyReminderTitle => 'Recorded today\'s spending?';
 
   @override
   String get notifDailyReminderBody =>
       'Nothing recorded today — one minute to keep track of your money.';
 
   @override
-  String get notifSalaryDayTitle => '💰 Payday!';
+  String get notifSalaryDayTitle => 'Payday!';
 
   @override
   String get notifSalaryDayBody =>
@@ -2266,7 +2265,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifOnTimeAction => 'Allow';
 
   @override
-  String get notifPaceTitle => '⚠️ At this pace, money runs out before payday';
+  String get notifPaceTitle => 'At this pace, money runs out before payday';
 
   @override
   String notifPaceBody(String date, int days) {
@@ -2275,7 +2274,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String notifGoalTitle(String name) {
-    return '🎉 You can buy \"$name\"';
+    return 'You can buy \"$name\"';
   }
 
   @override
@@ -2288,7 +2287,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get notifLendingTitle => '🤝 Lending reminder';
+  String get notifLendingTitle => 'Lending reminder';
 
   @override
   String notifLendingBodyOne(String name, String amount) {
@@ -2417,21 +2416,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourSavingsBody =>
-      'In Settings ⚙️: your savings, moves between balance and savings, and the full history.';
+      'In Settings: your savings, moves between balance and savings, and the full history.';
 
   @override
   String get tourCyclesTitle => 'Cycles';
 
   @override
   String get tourCyclesBody =>
-      'Each cycle starts on payday. In Settings ⚙️: salary, payday and past cycles.';
+      'Each cycle starts on payday. In Settings: salary, payday and past cycles.';
 
   @override
   String get tourLockTitle => 'App lock';
 
   @override
   String get tourLockBody =>
-      'Protect your money with Face ID or fingerprint: Settings ⚙️ → Security.';
+      'Protect your money with Face ID or fingerprint: Settings → Security.';
 
   @override
   String get offerLabel => 'Your order';
@@ -2473,7 +2472,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reassuranceKeepPhone =>
-      'Nothing to do for now, just keep your phone close 📞';
+      'Nothing to do for now, just keep your phone close';
 
   @override
   String get completeAllFieldsHint => 'Answer every question to continue';
@@ -2482,8 +2481,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifSpentNothingAction => 'I spent nothing today';
 
   @override
-  String get notifGoalTitleHidden =>
-      '🎉 Your savings reached one of your goals';
+  String get notifGoalTitleHidden => 'Your savings reached one of your goals';
 
   @override
   String get notifSalaryDayBodyWithDebtHidden =>
@@ -2494,7 +2492,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Some people still owe you money. A good time to remind them.';
 
   @override
-  String get notifInactiveTitle => 'Your budget is waiting for you 👋';
+  String get notifInactiveTitle => 'Your budget is waiting for you';
 
   @override
   String get notifInactiveBody =>
@@ -2573,7 +2571,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Credit, small expenses, occasions… and the month isn\'t over yet.';
 
   @override
-  String get salesMirrorFineTitle => 'And if you\'re doing fine today? 👏';
+  String get salesMirrorFineTitle => 'And if you\'re doing fine today?';
 
   @override
   String get salesMirrorFineBody =>
@@ -2622,7 +2620,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String salesOfferPerDay(String amount) {
-    return 'That\'s $amount a day over a year — less than a coffee ☕';
+    return 'That\'s $amount a day over a year, less than a coffee';
   }
 
   @override
@@ -2633,4 +2631,148 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get salesOfferCta => 'Order your copy';
+
+  @override
+  String get salesOfferHaveCode => 'I have the book, activate my copy';
+
+  @override
+  String get salesOfferOrderOnline => 'I want to order';
+
+  @override
+  String get quickSetupTitle => 'Let\'s set up your app';
+
+  @override
+  String get quickSetupSubtitle =>
+      'Just 3 details, then activate your copy with the code.';
+
+  @override
+  String get quickSetupContinue => 'Continue to activation';
+
+  @override
+  String get quickSetupFailed => 'Something went wrong, please try again';
+
+  @override
+  String get orderTitle => 'Order your copy';
+
+  @override
+  String get orderSubtitle => 'Pay on delivery, no bank card needed';
+
+  @override
+  String get orderDeliveryTitle => 'Delivery method';
+
+  @override
+  String get orderDeliveryDesk => 'To the office';
+
+  @override
+  String get orderDeliveryHome => 'To your home';
+
+  @override
+  String get orderDeliveryPickWilaya =>
+      'Choose your wilaya to see delivery prices';
+
+  @override
+  String get orderDeliveryUnavailable => 'Unavailable';
+
+  @override
+  String get orderDeliveryNone =>
+      'Delivery is not available for this wilaya yet';
+
+  @override
+  String get orderDeliveryRequired => 'Please choose a delivery method';
+
+  @override
+  String get orderBookLine => 'Chahriyti book + activation code';
+
+  @override
+  String get orderDeliveryLine => 'Delivery';
+
+  @override
+  String get orderTotalLine => 'Total, paid on delivery';
+
+  @override
+  String get orderSubmit => 'Confirm order';
+
+  @override
+  String get orderSendFailed =>
+      'Your order could not be sent. Check your internet connection and try again.';
+
+  @override
+  String thanksTitle(String name) {
+    return 'Thank you $name, we got your order!';
+  }
+
+  @override
+  String thanksCall(String phone) {
+    return 'We will call you on $phone to confirm the order.';
+  }
+
+  @override
+  String get thanksStep2 => 'The book arrives with your activation code';
+
+  @override
+  String get thanksStep3 =>
+      'You activate the app with the code and start with Chahriyti';
+
+  @override
+  String get thanksActivate => 'I got my copy, activate the app';
+
+  @override
+  String get welcomeTitle => 'Your salary can give you more';
+
+  @override
+  String get welcomeBody =>
+      'You don\'t need to earn more to live better. You need to know where every dinar goes, and decide before the month decides for you.';
+
+  @override
+  String get welcomeCta => 'Let\'s start';
+
+  @override
+  String get monthBarSalaryDay => 'Payday';
+
+  @override
+  String get monthBarNextSalary => 'Next payday';
+
+  @override
+  String get monthBarRunsOut => 'Money runs out here';
+
+  @override
+  String get monthBarLeftOver => 'Money left over';
+
+  @override
+  String get salesHowUrgency =>
+      'Every month you put it off is a whole salary spent without a plan. Whoever starts today gets ahead.';
+
+  @override
+  String get salesOfferHeadline =>
+      'Today\'s decision changes every month ahead';
+
+  @override
+  String get salesOfferOnce => 'Once, for life';
+
+  @override
+  String get activationHeadline => 'One last step, and your new month begins';
+
+  @override
+  String get activationSub =>
+      'The code comes with the book. Scan it or type it, and the app activates in seconds.';
+
+  @override
+  String salaryCheckTitle(String amount) {
+    return 'Did you mean $amount?';
+  }
+
+  @override
+  String salaryCheckBody(String typed) {
+    return '$typed looks very low for a monthly salary. Should we correct it?';
+  }
+
+  @override
+  String salaryCheckYes(String amount) {
+    return 'Yes, $amount';
+  }
+
+  @override
+  String salaryCheckNo(String typed) {
+    return 'No, keep $typed';
+  }
 }

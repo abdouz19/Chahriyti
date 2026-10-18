@@ -5,6 +5,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import 'stat_widgets.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class SavingsRateCard extends StatelessWidget {
   final SavingsRateResult result;
@@ -17,7 +18,7 @@ class SavingsRateCard extends StatelessWidget {
     final up = result.isDeltaPositive;
 
     return StatKpiCard(
-      icon: Icons.savings_rounded,
+      icon: IconsaxPlusBold.strongbox,
       color: AppColors.primary,
       label: context.l10n.savingsRateLabel,
       value: isEmpty ? '—' : '${result.rate.toStringAsFixed(1)}%',
@@ -26,7 +27,7 @@ class SavingsRateCard extends StatelessWidget {
           : result.savedAmount.toDZDString(symbol: context.l10n.currencySymbol),
       chip: !isEmpty && result.rateDelta != null
           ? StatChip(
-              icon: up ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
+              icon: up ? IconsaxPlusLinear.arrow_up : IconsaxPlusLinear.arrow_down,
               text: '${up ? '+' : ''}${result.rateDelta!.toStringAsFixed(1)}%',
               color: up ? AppColors.positive : AppColors.negative,
             )

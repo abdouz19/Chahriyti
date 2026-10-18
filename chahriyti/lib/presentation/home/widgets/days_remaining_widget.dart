@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class DaysRemainingWidget extends StatelessWidget {
   final int daysRemaining;
@@ -35,8 +36,8 @@ class DaysRemainingWidget extends StatelessWidget {
               children: [
                 Icon(
                   isSalaryDay
-                      ? Icons.celebration_rounded
-                      : Icons.calendar_today_rounded,
+                      ? IconsaxPlusBold.magic_star
+                      : IconsaxPlusBold.calendar_1,
                   color: isSalaryDay ? AppColors.positive : AppColors.primary,
                   size: 18,
                 ),

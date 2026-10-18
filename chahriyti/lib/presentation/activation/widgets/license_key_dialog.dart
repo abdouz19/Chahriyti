@@ -6,6 +6,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/activation_cubit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class LicenseKeyDialog extends StatefulWidget {
   const LicenseKeyDialog({super.key});
@@ -72,7 +73,7 @@ class _LicenseKeyDialogState extends State<LicenseKeyDialog> {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Icons.vpn_key_rounded,
+                        IconsaxPlusBold.key,
                         size: 22,
                         color: AppColors.primary,
                       ),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class ValuePropositionPage extends StatefulWidget {
   const ValuePropositionPage({super.key});
@@ -163,7 +164,7 @@ class _BenefitItem extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: const Icon(
-              Icons.check_rounded,
+              IconsaxPlusLinear.check,
               size: 18,
               color: AppColors.positive,
             ),

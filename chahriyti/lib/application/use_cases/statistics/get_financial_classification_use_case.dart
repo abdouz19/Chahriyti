@@ -26,22 +26,6 @@ enum FinancialTier {
     }
   }
 
-  String get emoji {
-    switch (this) {
-      case FinancialTier.legendary:
-        return '\u{1F3C6}'; // 🏆
-      case FinancialTier.smart:
-        return '\u{1F9E0}'; // 🧠
-      case FinancialTier.balanced:
-        return '\u2696\uFE0F'; // ⚖️
-      case FinancialTier.spender:
-        return '\u{1F4B8}'; // 💸
-      case FinancialTier.danger:
-        return '\u26A0\uFE0F'; // ⚠️
-      case FinancialTier.earlyBankrupt:
-        return '\u{1F6A8}'; // 🚨
-    }
-  }
 }
 
 class GetFinancialClassificationUseCase {

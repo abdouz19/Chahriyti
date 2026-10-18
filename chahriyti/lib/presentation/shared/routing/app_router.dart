@@ -27,6 +27,8 @@ import '../../history/pages/expense_history_page.dart';
 import '../../onboarding/cubits/onboarding_cubit.dart';
 import '../../onboarding/pages/splash_page.dart';
 import '../../onboarding/pages/sales_pages.dart';
+import '../../onboarding/pages/quick_setup_page.dart';
+import '../../onboarding/pages/order_pages.dart';
 import '../../onboarding/pages/profile_page.dart';
 import '../../onboarding/pages/age_group_page.dart';
 import '../../onboarding/pages/financial_profile_page.dart';
@@ -49,7 +51,13 @@ abstract final class AppRouter {
   /// once per session: a request sent later in the session navigates to the
   /// welcome screen by itself.
   static Future<bool>? _leadSent;
+  static Future<bool>? _orderSent;
   static String? _cycleCheckedOn;
+  static Future<bool> _orderAlreadySent() => _orderSent ??= () async {
+        final sent = await const LeadStorage().loadOrder() != null;
+        debugPrint('🧭 ROUTER: no account yet, order already sent = $sent');
+        return sent;
+      }();
   static Future<bool> _leadAlreadySent() => _leadSent ??= () async {
         final sent = await const LeadStorage().load() != null;
         debugPrint('🧭 ROUTER: no account yet, request already sent = $sent');
@@ -66,6 +74,11 @@ abstract final class AppRouter {
 
       // No user: check if profile was saved → skip to celebration, else normal onboarding
       if (user == null) {
+        // Ordered in the app: thank-you page until they start activating
+        if (await _orderAlreadySent()) {
+          const orderedPaths = ['/onboarding/thanks', '/onboarding/quick-setup'];
+          return orderedPaths.contains(path) ? null : '/onboarding/thanks';
+        }
         if (await _leadAlreadySent()) {
           return path == '/onboarding/welcome' ? null : '/onboarding/welcome';
         }
@@ -73,6 +86,9 @@ abstract final class AppRouter {
         const onboardingPaths = [
           '/',
           ...salesRoutes,
+          '/onboarding/quick-setup',
+          '/onboarding/order',
+          '/onboarding/thanks',
           '/onboarding/profile',
           '/onboarding/age',
           '/onboarding/financial',
@@ -135,6 +151,11 @@ abstract final class AppRouter {
       GoRoute(path: '/onboarding/change', builder: (context, state) => const SalesChangePage()),
       GoRoute(path: '/onboarding/how', builder: (context, state) => const SalesHowPage()),
       GoRoute(path: '/onboarding/offer', builder: (context, state) => const SalesOfferPage()),
+      // Already bought: name + salary on the phone only, then the code
+      GoRoute(path: '/onboarding/quick-setup', builder: (context, state) => const QuickSetupPage()),
+      // Order in the app (same form as the website), then thank you
+      GoRoute(path: '/onboarding/order', builder: (context, state) => const OrderPage()),
+      GoRoute(path: '/onboarding/thanks', builder: (context, state) => const OrderThanksPage()),
 
       // ── Onboarding (new flow) ───────────────────────────────────────
       ShellRoute(

@@ -10,6 +10,8 @@ import '../../shared/widgets/salary_day_picker.dart';
 import '../cubits/onboarding_cubit.dart';
 import '../widgets/onboarding_progress_dots.dart';
 import '../widgets/selection_card.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../../core/theme/app_icons.dart';
 
 class FinancialProfilePage extends StatefulWidget {
   const FinancialProfilePage({super.key});
@@ -114,7 +116,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                 alignment: AlignmentDirectional.centerStart,
                 child: IconButton(
                   onPressed: () => context.go('/onboarding/age'),
-                  icon: const Icon(Icons.arrow_back_ios_rounded),
+                  icon: const Icon(AppIcons.backChevron),
                   color: AppColors.textSecondary,
                 ),
               ),
@@ -196,7 +198,7 @@ class _FinancialProfilePageState extends State<FinancialProfilePage> {
                             child: Row(
                               children: [
                                 const Icon(
-                                  Icons.calendar_today_rounded,
+                                  IconsaxPlusBold.calendar_1,
                                   size: 18,
                                   color: AppColors.primary,
                                 ),

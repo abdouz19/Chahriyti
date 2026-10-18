@@ -6,6 +6,7 @@ import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 /// Covers the whole app with a lock screen when the app lock is on: at launch,
 /// and when coming back after the chosen delay. Also blurs the screen while
@@ -137,7 +138,7 @@ class _LockScreen extends StatelessWidget {
                   color: AppColors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.lock_rounded,
+                child: const Icon(IconsaxPlusBold.lock,
                     size: 40, color: AppColors.primary),
               ),
               const SizedBox(height: 24),
@@ -157,7 +158,7 @@ class _LockScreen extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton.icon(
                   onPressed: onUnlock,
-                  icon: const Icon(Icons.fingerprint_rounded),
+                  icon: const Icon(IconsaxPlusBold.finger_scan),
                   label: Text(l10n.appUnlock),
                 ),
               ),

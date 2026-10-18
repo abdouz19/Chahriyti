@@ -4,6 +4,7 @@ import '../../../core/constants/communes.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class CommunePickerSheet extends StatefulWidget {
   final int wilayaCode;
@@ -83,7 +84,7 @@ class _CommunePickerSheetState extends State<CommunePickerSheet> {
                   controller: _search,
                   decoration: InputDecoration(
                     hintText: context.l10n.searchCommune,
-                    prefixIcon: const Icon(Icons.search_rounded),
+                    prefixIcon: const Icon(IconsaxPlusLinear.search_normal_1),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 12,

@@ -10,6 +10,7 @@ import '../cubits/onboarding_cubit.dart';
 import '../widgets/commune_picker_sheet.dart';
 import '../widgets/onboarding_progress_dots.dart';
 import '../widgets/wilaya_picker_sheet.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -194,7 +195,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 const Icon(
-                                  Icons.keyboard_arrow_down_rounded,
+                                  IconsaxPlusLinear.arrow_down_1,
                                   color: AppColors.textSecondary,
                                 ),
                               ],
@@ -249,7 +250,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                   const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
+                                    IconsaxPlusLinear.arrow_down_1,
                                     color: AppColors.textSecondary,
                                   ),
                                 ],
@@ -279,7 +280,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Icon(
-                              Icons.lock_outline_rounded,
+                              IconsaxPlusLinear.lock,
                               size: 14,
                               color: AppColors.textSecondary,
                             ),

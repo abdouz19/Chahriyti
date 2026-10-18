@@ -6,6 +6,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class BalanceCard extends StatelessWidget {
   final int amount;
@@ -36,7 +37,7 @@ class BalanceCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.account_balance_wallet_rounded,
+                  IconsaxPlusBold.wallet,
                   color: AppColors.positive,
                   size: 18,
                 ),

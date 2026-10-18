@@ -9,6 +9,7 @@ import '../../../core/theme/app_typography.dart';
 import '../cubits/goal_cubit.dart';
 import '../cubits/goal_state.dart';
 import '../widgets/goal_card.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class GoalsListPage extends StatelessWidget {
   const GoalsListPage({super.key});
@@ -109,7 +110,7 @@ class _GoalsListViewState extends State<_GoalsListView>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _navigateAndRefresh('/goal/add'),
         backgroundColor: AppColors.primary,
-        icon: const Icon(Icons.add, color: Colors.white),
+        icon: const Icon(IconsaxPlusLinear.add, color: Colors.white),
         label: Text(
           context.l10n.newGoal,
           style: AppTypography.labelLarge.copyWith(color: Colors.white),
@@ -159,7 +160,7 @@ class _GoalTabContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.flag_rounded,
+                        IconsaxPlusBold.flag,
                         size: 64,
                         color: AppColors.primary.withValues(alpha: 0.5),
                       ),
@@ -242,7 +243,7 @@ class _GoalTabContent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.error_outline_rounded,
+                    IconsaxPlusLinear.danger,
                     size: 64,
                     color: AppColors.negative,
                   ),

@@ -22,6 +22,7 @@ import '../widgets/savings_rate_card.dart';
 import '../widgets/spending_trend_chart.dart';
 import '../widgets/cycle_overview_card.dart';
 import '../widgets/stat_widgets.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class StatisticsPage extends StatelessWidget {
   const StatisticsPage({super.key});
@@ -106,7 +107,7 @@ class StatisticsPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline_rounded,
+            const Icon(IconsaxPlusLinear.danger,
                 size: 64, color: AppColors.negative),
             const SizedBox(height: 16),
             Text(
@@ -147,7 +148,7 @@ class StatisticsPage extends StatelessWidget {
             // ── Spending ────────────────────────────────────────────────
             StatSection(
               title: l10n.statSectionThisCycle,
-              icon: Icons.calendar_month_rounded,
+              icon: IconsaxPlusBold.calendar,
               children: [
                 _KpiRow(
                   start: MonthForecastCard(result: state.spendingInsights),
@@ -162,7 +163,7 @@ class StatisticsPage extends StatelessWidget {
             // ── Income & savings ────────────────────────────────────────
             StatSection(
               title: l10n.statSectionIncome,
-              icon: Icons.account_balance_wallet_rounded,
+              icon: IconsaxPlusBold.wallet,
               children: [
                 _KpiRow(
                   start: IncomeGrowthCard(result: state.incomeGrowth),
@@ -176,7 +177,7 @@ class StatisticsPage extends StatelessWidget {
             const SizedBox(height: 24),
             OutlinedButton.icon(
               onPressed: () => context.push('/cycle-history'),
-              icon: const Icon(Icons.history_rounded),
+              icon: const Icon(IconsaxPlusBold.clock),
               label: Text(l10n.pastCyclesButton),
             ),
           ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class SelectionCard extends StatelessWidget {
   final String label;
@@ -40,11 +41,11 @@ class SelectionCard extends StatelessWidget {
             Icon(
               isCheckbox
                   ? (selected
-                      ? Icons.check_box_rounded
-                      : Icons.check_box_outline_blank_rounded)
+                      ? IconsaxPlusBold.tick_square
+                      : IconsaxPlusLinear.stop)
                   : (selected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked),
+                      ? IconsaxPlusBold.record_circle
+                      : IconsaxPlusLinear.record),
               color: selected ? AppColors.primary : AppColors.textSecondary,
               size: 20,
             ),

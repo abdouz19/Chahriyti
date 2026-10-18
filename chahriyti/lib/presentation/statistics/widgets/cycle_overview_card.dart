@@ -10,6 +10,7 @@ import '../../../core/theme/app_typography.dart';
 import '../cubits/statistics_cubit.dart';
 import 'classification_badge.dart';
 import 'stat_widgets.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 /// Top of the statistics screen: how this cycle is going at a glance.
 class CycleOverviewCard extends StatelessWidget {
@@ -52,7 +53,7 @@ class CycleOverviewCard extends StatelessWidget {
                     color: accent.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
-                  child: Text(tier!.emoji, style: const TextStyle(fontSize: 22)),
+                  child: Icon(tierIcon(tier!), color: accent, size: 22),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -186,7 +187,7 @@ class _FirstCycleNoteBox extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline_rounded,
+          const Icon(IconsaxPlusLinear.info_circle,
               size: 16, color: AppColors.primary),
           const SizedBox(width: 8),
           Expanded(

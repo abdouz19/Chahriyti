@@ -4,6 +4,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 /// Explains how an action changes the current balance:
 /// "X will be added/deducted", the calculation, and a block message when the
@@ -85,7 +86,7 @@ class BalanceImpactView extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.block_rounded,
+              const Icon(IconsaxPlusLinear.slash,
                   size: 16, color: AppColors.negative),
               const SizedBox(width: 6),
               Expanded(

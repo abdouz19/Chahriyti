@@ -7,6 +7,7 @@ import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import 'stat_widgets.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class IncomeBreakdownChart extends StatefulWidget {
   final IncomeBreakdownResult breakdown;
@@ -47,7 +48,7 @@ class _IncomeBreakdownChartState extends State<IncomeBreakdownChart> {
         children: [
           Row(
             children: [
-              Icon(Icons.trending_up_rounded, size: 18, color: AppColors.positive),
+              Icon(IconsaxPlusLinear.trend_up, size: 18, color: AppColors.positive),
               const SizedBox(width: 8),
               Text(context.l10n.incomeBreakdownTitle, style: statCardTitleStyle),
             ],

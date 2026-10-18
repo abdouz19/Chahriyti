@@ -4,6 +4,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class BalancePreviewCard extends StatelessWidget {
   final int salaryAmount;
@@ -65,7 +66,7 @@ class BalancePreviewCard extends StatelessWidget {
               child: Row(
                 children: [
                   const Icon(
-                    Icons.warning_amber_rounded,
+                    IconsaxPlusLinear.warning_2,
                     color: AppColors.warning,
                     size: 20,
                   ),

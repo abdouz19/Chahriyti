@@ -12,6 +12,7 @@ import '../../shared/widgets/money_text.dart';
 import '../cubits/savings_cubit.dart';
 import '../cubits/savings_state.dart';
 import '../widgets/savings_history_item.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class SavingsPage extends StatelessWidget {
   const SavingsPage({super.key});
@@ -184,7 +185,7 @@ class _SavingsView extends StatelessWidget {
             onPressed: () => _showWithdrawSheet(context),
             backgroundColor: AppColors.positive,
             foregroundColor: Colors.white,
-            icon: const Icon(Icons.arrow_upward_rounded),
+            icon: const Icon(IconsaxPlusLinear.arrow_up),
             label: Text(
               context.l10n.withdrawToBalance,
               style: AppTypography.labelSmall.copyWith(color: Colors.white),
@@ -196,7 +197,7 @@ class _SavingsView extends StatelessWidget {
             onPressed: () => _showDepositSheet(context),
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
-            icon: const Icon(Icons.arrow_downward_rounded),
+            icon: const Icon(IconsaxPlusLinear.arrow_down),
             label: Text(
               context.l10n.depositFromBalance,
               style: AppTypography.labelSmall.copyWith(color: Colors.white),
@@ -276,7 +277,7 @@ class _SavingsView extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  Icons.savings_rounded,
+                                  IconsaxPlusBold.strongbox,
                                   size: 64,
                                   color: AppColors.primary.withValues(alpha: 0.5),
                                 ),
@@ -349,7 +350,7 @@ class _SavingsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.error_outline_rounded,
+                      IconsaxPlusLinear.danger,
                       size: 64,
                       color: AppColors.negative,
                     ),

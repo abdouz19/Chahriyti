@@ -9,6 +9,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../shared/widgets/salary_day_picker.dart';
 import '../cubits/onboarding_cubit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../../core/theme/app_icons.dart';
 
 
 class SalarySetupPage extends StatefulWidget {
@@ -88,7 +90,7 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
         appBar: AppBar(
           title: Text(context.l10n.salarySetupTitle),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            icon: const Icon(AppIcons.backChevron),
             onPressed: () => context.go('/onboarding/value'),
           ),
         ),
@@ -217,7 +219,7 @@ class _SalarySetupPageState extends State<SalarySetupPage> {
                           child: Row(
                             children: [
                               const Icon(
-                                Icons.calendar_today_rounded,
+                                IconsaxPlusBold.calendar_1,
                                 size: 18,
                                 color: AppColors.primary,
                               ),

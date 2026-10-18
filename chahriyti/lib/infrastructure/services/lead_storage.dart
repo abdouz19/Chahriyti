@@ -49,4 +49,36 @@ class LeadStorage {
   }
 
   Future<void> clear() => _storage.delete(key: _profileKey);
+
+  static const _orderKey = 'onboarding_order';
+
+  /// The in-app order once the server has it: reopening the app shows the
+  /// thank-you page, and activation setup reuses the name, phone and wilaya.
+  Future<void> saveOrder({
+    required String name,
+    required String phone,
+    required int wilayaCode,
+    required String commune,
+    required String deliveryType,
+    required int total,
+  }) =>
+      _storage.write(
+        key: _orderKey,
+        value: jsonEncode({
+          'name': name,
+          'phone': phone,
+          'wilayaCode': wilayaCode,
+          'commune': commune,
+          'deliveryType': deliveryType,
+          'total': total,
+        }),
+      );
+
+  Future<Map<String, dynamic>?> loadOrder() async {
+    final raw = await _storage.read(key: _orderKey);
+    if (raw == null) return null;
+    return jsonDecode(raw) as Map<String, dynamic>;
+  }
+
+  Future<void> clearOrder() => _storage.delete(key: _orderKey);
 }

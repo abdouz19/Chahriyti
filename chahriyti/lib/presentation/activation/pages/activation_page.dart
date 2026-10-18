@@ -5,13 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '../../../core/constants/wilayas.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/activation_cubit.dart';
 import '../widgets/license_key_dialog.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../../core/theme/app_icons.dart';
 
 class ActivationPage extends StatefulWidget {
   const ActivationPage({super.key});
@@ -21,12 +22,10 @@ class ActivationPage extends StatefulWidget {
 }
 
 class _ActivationPageState extends State<ActivationPage> {
-  late final Future _userFuture;
 
   @override
   void initState() {
     super.initState();
-    _userFuture = Injection.userRepository.getUser();
   }
 
   @override
@@ -71,13 +70,17 @@ class _ActivationPageState extends State<ActivationPage> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text(context.l10n.activationTitle),
+          // The headline in the body carries the title
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          elevation: 0,
           automaticallyImplyLeading: false,
           leading: context.canPop()
               ? IconButton(
                   onPressed: () => context.pop(),
-                  icon: const Icon(Icons.arrow_back_ios_rounded),
+                  icon: const Icon(AppIcons.backChevron),
                   tooltip: context.l10n.editData,
                 )
               : null,
@@ -87,7 +90,7 @@ class _ActivationPageState extends State<ActivationPage> {
                 return IconButton(
                   onPressed: () => _showDeviceId(context, state),
                   icon: const Icon(
-                    Icons.fingerprint_rounded,
+                    IconsaxPlusBold.finger_scan,
                     color: AppColors.primary,
                   ),
                   tooltip: context.l10n.chahriytiNumber,
@@ -107,10 +110,25 @@ class _ActivationPageState extends State<ActivationPage> {
                 );
               }
               return ListView(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
                 children: [
-                  _buildUserInfoSection(context),
-                  const SizedBox(height: 16),
+                  Text(
+                    context.l10n.activationHeadline,
+                    style: AppTypography.headlineLarge.copyWith(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w800,
+                      height: 1.3,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    context.l10n.activationSub,
+                    style: AppTypography.bodyLarge.copyWith(
+                      color: AppColors.textPrimary.withValues(alpha: 0.7),
+                      height: 1.7,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   _buildLicenseSection(context, state),
                   // const SizedBox(height: 24),
                   // _buildBuyLink(context),
@@ -120,59 +138,6 @@ class _ActivationPageState extends State<ActivationPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildUserInfoSection(BuildContext context) {
-    return FutureBuilder(
-      future: _userFuture,
-      builder: (context, snapshot) {
-        final user = snapshot.data;
-        if (user == null) {
-          return const SizedBox.shrink();
-        }
-        final wilaya = Wilayas.all.firstWhere(
-          (w) => w.code == user.wilayaCode,
-          orElse: () => Wilaya(0, context.l10n.unknown),
-        );
-        return _SectionCard(
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.person_outline_rounded,
-                    size: 20,
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  context.l10n.yourData,
-                  style: AppTypography.labelLarge.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _InfoRow(label: context.l10n.name, value: user.fullName),
-            const SizedBox(height: 8),
-            _InfoRow(label: context.l10n.phone, value: user.phoneNumber),
-            const SizedBox(height: 8),
-            _InfoRow(
-              label: context.l10n.wilaya,
-              value: '${wilaya.code} - ${wilaya.arabicName}',
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -212,7 +177,7 @@ class _ActivationPageState extends State<ActivationPage> {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.fingerprint_rounded,
+                    IconsaxPlusBold.finger_scan,
                     size: 20,
                     color: AppColors.primary,
                   ),
@@ -269,7 +234,7 @@ class _ActivationPageState extends State<ActivationPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(
-                        Icons.copy_rounded,
+                        IconsaxPlusLinear.copy,
                         size: 18,
                         color: AppColors.primary,
                       ),
@@ -297,7 +262,7 @@ class _ActivationPageState extends State<ActivationPage> {
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Icons.vpn_key_rounded,
+                IconsaxPlusBold.key,
                 size: 20,
                 color: AppColors.warning,
               ),
@@ -322,7 +287,7 @@ class _ActivationPageState extends State<ActivationPage> {
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: () => _openQrScanner(context),
-            icon: const Icon(Icons.qr_code_scanner_rounded, size: 20),
+            icon: const Icon(IconsaxPlusLinear.scan_barcode, size: 20),
             label: Text(context.l10n.scanQrCode),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
@@ -344,7 +309,7 @@ class _ActivationPageState extends State<ActivationPage> {
                 ),
               );
             },
-            icon: const Icon(Icons.keyboard_rounded, size: 20),
+            icon: const Icon(IconsaxPlusBold.keyboard, size: 20),
             label: Text(context.l10n.enterKeyManually),
           ),
         ),
@@ -394,37 +359,6 @@ class _SectionCard extends StatelessWidget {
 // ---------------------------------------------------------------------------
 // Info Row
 // ---------------------------------------------------------------------------
-
-class _InfoRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _InfoRow({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 60,
-          child: Text(
-            label,
-            style: AppTypography.bodySmall,
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            value,
-            style: AppTypography.bodyMedium.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 // ---------------------------------------------------------------------------
 // QR Scanner Bottom Sheet
@@ -482,7 +416,7 @@ class _QrScannerSheetState extends State<_QrScannerSheet> {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Row(
               children: [
-                const Icon(Icons.qr_code_scanner_rounded,
+                const Icon(IconsaxPlusLinear.scan_barcode,
                     color: Colors.white, size: 24),
                 const SizedBox(width: 12),
                 Text(
@@ -492,7 +426,7 @@ class _QrScannerSheetState extends State<_QrScannerSheet> {
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close, color: Colors.white),
+                  icon: const Icon(IconsaxPlusLinear.close_circle, color: Colors.white),
                 ),
               ],
             ),

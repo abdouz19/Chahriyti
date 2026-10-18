@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/weekly_challenge_entity.dart';
 import '../cubits/challenge_cubit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class ChallengeDetailPage extends StatelessWidget {
   final int challengeId;
@@ -198,7 +199,7 @@ class _ChallengeDetailView extends StatelessWidget {
                       child: Column(
                         children: [
                           Icon(
-                            Icons.lightbulb_outline_rounded,
+                            IconsaxPlusLinear.lamp_on,
                             size: 32,
                             color: AppColors.primary,
                           ),
@@ -227,7 +228,7 @@ class _ChallengeDetailView extends StatelessWidget {
                       child: Column(
                         children: [
                           Icon(
-                            Icons.celebration_rounded,
+                            IconsaxPlusBold.magic_star,
                             size: 32,
                             color: AppColors.positive,
                           ),
@@ -255,7 +256,7 @@ class _ChallengeDetailView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.error_outline_rounded,
+                      IconsaxPlusLinear.danger,
                       size: 64,
                       color: AppColors.negative,
                     ),

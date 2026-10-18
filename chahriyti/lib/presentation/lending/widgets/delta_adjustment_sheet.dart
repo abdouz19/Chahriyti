@@ -5,6 +5,8 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/lending_money_place.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../../core/theme/app_icons.dart';
 
 class LendingDeltaAdjustmentSheet extends StatelessWidget {
   final int delta;
@@ -52,7 +54,7 @@ class LendingDeltaAdjustmentSheet extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             LendingSheetOption(
-              icon: Icons.account_balance_wallet_outlined,
+              icon: IconsaxPlusLinear.wallet,
               label:
                   isIncrease ? l10n.fromCurrentBalance : l10n.toCurrentBalance,
               subtitle: isIncrease
@@ -64,7 +66,7 @@ class LendingDeltaAdjustmentSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             LendingSheetOption(
-              icon: Icons.savings_outlined,
+              icon: IconsaxPlusLinear.strongbox,
               label: isIncrease ? l10n.fromSavings : l10n.toSavings,
               subtitle: isIncrease
                   ? '${l10n.available}: ${_fmt(savingsBalance)} ${l10n.currencySymbol}'
@@ -75,7 +77,7 @@ class LendingDeltaAdjustmentSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             LendingSheetOption(
-              icon: Icons.history_outlined,
+              icon: IconsaxPlusLinear.clock,
               label: l10n.forgottenAdjustment,
               color: AppColors.warning,
               onTap: () => Navigator.pop(context, LendingMoneyPlace.untracked),
@@ -146,9 +148,9 @@ class LendingSheetOption extends StatelessWidget {
               ),
             ),
             if (enabled)
-              Icon(Icons.arrow_forward_ios_rounded, color: effectiveColor, size: 14)
+              Icon(AppIcons.forwardChevron, color: effectiveColor, size: 14)
             else
-              Icon(Icons.block_rounded, color: effectiveColor, size: 16),
+              Icon(IconsaxPlusLinear.slash, color: effectiveColor, size: 16),
           ],
         ),
       ),

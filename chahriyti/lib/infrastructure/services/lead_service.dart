@@ -43,6 +43,37 @@ class LeadService {
     }
   }
 
+  /// Sends an order from the in-app order form and waits for the server.
+  /// A Cloud Function turns it into a WooCommerce order, like the website.
+  /// Throws when the server can't be reached in time, so the user can retry.
+  ///
+  /// Doc id `order_<phone>`: a retry overwrites instead of duplicating, and
+  /// it doesn't collide with an older app lead stored under the bare phone.
+  Future<void> submitOrder({
+    required String name,
+    required String phone,
+    required int wilayaCode,
+    required String commune,
+    required String deliveryType,
+    required int deliveryFee,
+    required int bookPrice,
+    required String? fcmToken,
+  }) async {
+    await _db.collection('leads').doc('order_$phone').set({
+      'name': name,
+      'phone': phone,
+      'wilayaCode': wilayaCode,
+      'commune': commune,
+      'deliveryType': deliveryType,
+      'deliveryFee': deliveryFee,
+      'bookPrice': bookPrice,
+      'total': bookPrice + deliveryFee,
+      'fcmToken': fcmToken,
+      'submittedAt': FieldValue.serverTimestamp(),
+      'status': 'pending',
+    }).timeout(const Duration(seconds: 15));
+  }
+
   /// Submits the lead and waits for the server's confirmation. Returns false
   /// if the phone was already registered. Throws when the server can't be
   /// reached in time, so the caller can show an error and let the user retry.

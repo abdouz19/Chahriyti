@@ -4,6 +4,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../models/weekly_challenge_data.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class WeeklyChallengeCard extends StatelessWidget {
   final WeeklyChallengeData? challenge;
@@ -35,8 +36,8 @@ class WeeklyChallengeCard extends StatelessWidget {
                   ),
                   child: Icon(
                     data.isCompleted
-                        ? Icons.check_circle_rounded
-                        : Icons.emoji_events_rounded,
+                        ? IconsaxPlusBold.tick_circle
+                        : IconsaxPlusBold.cup,
                     color: data.isCompleted ? AppColors.positive : AppColors.warning,
                     size: 20,
                   ),

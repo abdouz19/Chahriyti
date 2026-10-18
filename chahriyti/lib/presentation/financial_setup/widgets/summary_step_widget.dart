@@ -6,6 +6,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/debt_entity.dart';
 import '../../../domain/entities/lending_entity.dart';
 import 'setup_progress_bar.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class SummaryStepWidget extends StatelessWidget {
   final int balance;
@@ -49,7 +50,7 @@ class SummaryStepWidget extends StatelessWidget {
             child: ListView(
               children: [
                 _SummaryCard(
-                  icon: Icons.account_balance_wallet,
+                  icon: IconsaxPlusBold.wallet,
                   label: context.l10n.balanceSummaryLabel,
                   value: '$balance ${context.l10n.currencySymbol}',
                   valueColor: AppColors.primary,
@@ -57,7 +58,7 @@ class SummaryStepWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 _SummaryCard(
-                  icon: Icons.savings,
+                  icon: IconsaxPlusBold.strongbox,
                   label: context.l10n.savingsSummaryLabel,
                   value: '$savings ${context.l10n.currencySymbol}',
                   valueColor: AppColors.positive,
@@ -65,7 +66,7 @@ class SummaryStepWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 _SummaryListCard(
-                  icon: Icons.trending_down,
+                  icon: IconsaxPlusLinear.trend_down,
                   label: context.l10n.debtsSummaryLabel,
                   items: debts
                       .map((d) =>
@@ -77,7 +78,7 @@ class SummaryStepWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 _SummaryListCard(
-                  icon: Icons.trending_up,
+                  icon: IconsaxPlusLinear.trend_up,
                   label: context.l10n.lendingsSummaryLabel,
                   items: lendings
                       .map((l) => '${l.borrowerName}: ${l.totalAmount} ${context.l10n.currencySymbol}')
@@ -142,7 +143,7 @@ class _SummaryCard extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.edit_outlined, size: 20),
+              icon: const Icon(IconsaxPlusLinear.edit_2, size: 20),
               onPressed: onEdit,
               color: AppColors.textSecondary,
             ),
@@ -186,7 +187,7 @@ class _SummaryListCard extends StatelessWidget {
                   child: Text(label, style: AppTypography.labelMedium),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.edit_outlined, size: 20),
+                  icon: const Icon(IconsaxPlusLinear.edit_2, size: 20),
                   onPressed: onEdit,
                   color: AppColors.textSecondary,
                 ),

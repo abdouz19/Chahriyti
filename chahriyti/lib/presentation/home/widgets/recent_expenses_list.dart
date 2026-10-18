@@ -10,6 +10,7 @@ import '../../../domain/entities/expense_entity.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/empty_state_widget.dart';
 import '../../shared/widgets/money_text.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class RecentExpensesList extends StatelessWidget {
   final List<ExpenseEntity> expenses;
@@ -116,7 +117,7 @@ class _ExpenseRow extends StatelessWidget {
           children: [
             if (onEdit != null)
               ListTile(
-                leading: const Icon(Icons.edit_outlined),
+                leading: const Icon(IconsaxPlusLinear.edit_2),
                 title: Text(context.l10n.edit),
                 onTap: () {
                   Navigator.pop(context);
@@ -125,7 +126,7 @@ class _ExpenseRow extends StatelessWidget {
               ),
             if (onDelete != null)
               ListTile(
-                leading: Icon(Icons.delete_outline, color: AppColors.negative),
+                leading: Icon(IconsaxPlusLinear.trash, color: AppColors.negative),
                 title: Text(context.l10n.delete, style: TextStyle(color: AppColors.negative)),
                 onTap: () {
                   Navigator.pop(context);
@@ -160,7 +161,7 @@ class _ExpenseRow extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: _isCustomCategory
-                  ? const Icon(Icons.label_outline_rounded,
+                  ? const Icon(IconsaxPlusLinear.tag,
                       color: AppColors.primary, size: 20)
                   : Icon(
                       _categoryIcon(category!),
@@ -210,23 +211,23 @@ class _ExpenseRow extends StatelessWidget {
   static IconData _categoryIcon(ExpenseCategory category) {
     switch (category) {
       case ExpenseCategory.essentials:
-        return Icons.shopping_basket_rounded;
+        return IconsaxPlusBold.bag_2;
       case ExpenseCategory.homeFamily:
-        return Icons.home_rounded;
+        return IconsaxPlusBold.home_2;
       case ExpenseCategory.luxuries:
-        return Icons.diamond_rounded;
+        return IconsaxPlusBold.diamonds;
       case ExpenseCategory.health:
-        return Icons.local_hospital_rounded;
+        return IconsaxPlusBold.hospital;
       case ExpenseCategory.transport:
-        return Icons.directions_car_rounded;
+        return IconsaxPlusBold.car;
       case ExpenseCategory.clothing:
-        return Icons.checkroom_rounded;
+        return IconsaxPlusBold.bag_happy;
       case ExpenseCategory.restaurants:
-        return Icons.restaurant_rounded;
+        return IconsaxPlusBold.reserve;
       case ExpenseCategory.education:
-        return Icons.school_rounded;
+        return IconsaxPlusBold.teacher;
       case ExpenseCategory.other:
-        return Icons.more_horiz_rounded;
+        return IconsaxPlusLinear.more;
     }
   }
 

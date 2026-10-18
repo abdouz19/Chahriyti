@@ -11,6 +11,8 @@ import '../../../core/theme/app_typography.dart';
 import '../../statistics/widgets/stat_widgets.dart';
 import '../cubits/cycle_history_cubit.dart';
 import 'past_cycle_detail_page.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../../core/theme/app_icons.dart';
 
 /// Finished monthly cycles, newest first; each opens its own statistics.
 class CycleHistoryPage extends StatelessWidget {
@@ -78,7 +80,7 @@ class _CycleHistoryView extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.history_rounded,
+                    const Icon(IconsaxPlusBold.clock,
                         size: 56, color: AppColors.textSecondary),
                     const SizedBox(height: 12),
                     Text(l10n.noPreviousCycles,
@@ -168,7 +170,7 @@ class PastCycleCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Icon(Icons.chevron_right_rounded,
+                  const Icon(AppIcons.forwardChevron,
                       color: AppColors.textSecondary),
                 ],
               ),

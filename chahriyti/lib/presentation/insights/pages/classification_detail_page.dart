@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../shared/widgets/classification_badge.dart';
 import '../cubits/insights_cubit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class ClassificationDetailPage extends StatelessWidget {
   final int cycleId;
@@ -93,7 +94,7 @@ class _ClassificationDetailView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
-                      Icons.error_outline_rounded,
+                      IconsaxPlusLinear.danger,
                       size: 48,
                       color: AppColors.negative,
                     ),
@@ -210,7 +211,7 @@ class _ClassificationDetailView extends StatelessWidget {
               child: Row(
                 children: [
                   const Icon(
-                    Icons.check_circle_rounded,
+                    IconsaxPlusBold.tick_circle,
                     color: AppColors.positive,
                     size: 20,
                   ),

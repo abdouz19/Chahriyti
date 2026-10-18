@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../../application/use_cases/insights/calculate_financial_classification_use_case.dart';
 import '../../../core/extensions/l10n_extension.dart';
@@ -45,10 +46,7 @@ class ClassificationBadge extends StatelessWidget {
               borderRadius: BorderRadius.circular(32),
             ),
             child: Center(
-              child: Text(
-                _getIcon(),
-                style: const TextStyle(fontSize: 32),
-              ),
+              child: Icon(_getIcon(), size: 32, color: _getColor()),
             ),
           ),
           const SizedBox(height: 16),
@@ -115,20 +113,20 @@ class ClassificationBadge extends StatelessWidget {
     }
   }
 
-  String _getIcon() {
+  IconData _getIcon() {
     switch (classification) {
       case FinancialClassification.legendarySaver:
-        return '🌟';
+        return IconsaxPlusBold.cup;
       case FinancialClassification.smartSaver:
-        return '💡';
+        return IconsaxPlusBold.lamp_on;
       case FinancialClassification.balanced:
-        return '⚖️';
+        return IconsaxPlusBold.judge;
       case FinancialClassification.spendthrift:
-        return '💸';
+        return IconsaxPlusBold.money_remove;
       case FinancialClassification.danger:
-        return '⚠️';
+        return IconsaxPlusBold.warning_2;
       case FinancialClassification.earlyBankruptcy:
-        return '🚨';
+        return IconsaxPlusBold.danger;
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class CustomCategoryEntity {
   final int id;
@@ -20,32 +21,41 @@ class CustomCategoryEntity {
   /// Every icon available in the custom-category picker declared as const so
   /// the tree-shaker can enumerate them. The map is built once at startup.
   static const List<IconData> pickerIcons = [
-    Icons.label_outline_rounded,
-    Icons.shopping_basket_outlined,
-    Icons.restaurant_outlined,
-    Icons.local_cafe_outlined,
-    Icons.home_outlined,
-    Icons.directions_car_outlined,
-    Icons.local_hospital_outlined,
-    Icons.school_outlined,
-    Icons.checkroom_outlined,
-    Icons.fitness_center_outlined,
-    Icons.sports_soccer_outlined,
-    Icons.music_note_outlined,
-    Icons.flight_outlined,
-    Icons.card_giftcard_outlined,
-    Icons.computer_outlined,
-    Icons.pets_outlined,
-    Icons.build_outlined,
-    Icons.spa_outlined,
-    Icons.local_movies_outlined,
-    Icons.savings_outlined,
+    IconsaxPlusLinear.tag,
+    IconsaxPlusLinear.bag_2,
+    IconsaxPlusLinear.reserve,
+    IconsaxPlusLinear.coffee,
+    IconsaxPlusLinear.home_2,
+    IconsaxPlusLinear.car,
+    IconsaxPlusLinear.hospital,
+    IconsaxPlusLinear.teacher,
+    IconsaxPlusLinear.bag_happy,
+    IconsaxPlusLinear.weight_1,
+    IconsaxPlusLinear.activity,
+    IconsaxPlusLinear.music,
+    IconsaxPlusLinear.airplane,
+    IconsaxPlusLinear.gift,
+    IconsaxPlusLinear.monitor,
+    IconsaxPlusLinear.pet,
+    IconsaxPlusLinear.setting_3,
+    IconsaxPlusLinear.lovely,
+    IconsaxPlusLinear.video_play,
+    IconsaxPlusLinear.strongbox,
+  ];
+
+  /// Material code points saved before the switch to Iconsax, in the same
+  /// order as [pickerIcons], so existing custom categories keep their icon.
+  /// They don't overlap Iconsax's range (0xe9xx–0xecxx).
+  static const List<int> _legacyMaterialCodePoints = [
+    0xf83c, 0xf37e, 0xf316, 0xf175, 0xf107, 0xefc6, 0xf17e, 0xf33c, 0xef4c, 0xf07a,
+    0xf3d5, 0xf1fb, 0xf085, 0xef2d, 0xef74, 0xf285, 0xef06, 0xf3bb, 0xf183, 0xf336,
   ];
 
   static final Map<int, IconData> _iconByCodePoint = {
     for (final icon in pickerIcons) icon.codePoint: icon,
+    for (var i = 0; i < pickerIcons.length; i++) _legacyMaterialCodePoints[i]: pickerIcons[i],
   };
 
   IconData get icon =>
-      _iconByCodePoint[iconCodePoint] ?? Icons.label_outline_rounded;
+      _iconByCodePoint[iconCodePoint] ?? IconsaxPlusLinear.tag;
 }

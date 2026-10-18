@@ -15,6 +15,7 @@ import '../../shared/widgets/confirmation_dialog.dart';
 import '../../shared/widgets/empty_state_widget.dart';
 import '../../shared/widgets/money_text.dart';
 import '../cubits/history_cubit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class ExpenseHistoryPage extends StatelessWidget {
   const ExpenseHistoryPage({super.key});
@@ -108,7 +109,7 @@ class _ExpenseHistoryViewState extends State<_ExpenseHistoryView> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
-                      Icons.error_outline_rounded,
+                      IconsaxPlusLinear.danger,
                       size: 48,
                       color: AppColors.negative,
                     ),
@@ -267,16 +268,16 @@ class _ExpenseRow extends StatelessWidget {
   });
 
   IconData _categoryIcon(String category) {
-    if (category.startsWith('custom_')) return Icons.label_outline_rounded;
+    if (category.startsWith('custom_')) return IconsaxPlusLinear.tag;
     switch (category) {
       case 'essentials':
-        return Icons.shopping_basket_rounded;
+        return IconsaxPlusBold.bag_2;
       case 'homeFamily':
-        return Icons.home_rounded;
+        return IconsaxPlusBold.home_2;
       case 'luxuries':
-        return Icons.diamond_rounded;
+        return IconsaxPlusBold.diamonds;
       default:
-        return Icons.receipt_long_rounded;
+        return IconsaxPlusBold.receipt_2;
     }
   }
 
@@ -349,7 +350,7 @@ class _ExpenseRow extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    Icons.delete_outline_rounded,
+                    IconsaxPlusLinear.trash,
                     color: AppColors.negative,
                     size: 18,
                   ),
@@ -373,7 +374,7 @@ class _ExpenseRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
           ),
           child: const Icon(
-            Icons.delete_outline_rounded,
+            IconsaxPlusLinear.trash,
             color: Colors.white,
           ),
         ),

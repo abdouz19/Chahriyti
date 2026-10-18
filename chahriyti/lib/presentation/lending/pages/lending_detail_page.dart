@@ -18,6 +18,7 @@ import '../cubits/lending_cubit.dart';
 import '../cubits/lending_state.dart';
 import '../widgets/delta_adjustment_sheet.dart';
 import 'add_lending_page.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class LendingDetailPage extends StatelessWidget {
   final int lendingId;
@@ -89,7 +90,7 @@ class _LendingDetailView extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.edit_outlined),
+              icon: const Icon(IconsaxPlusLinear.edit_2),
               tooltip: context.l10n.edit,
               onPressed: () async {
                 final currentState = context.read<LendingCubit>().state;
@@ -112,7 +113,7 @@ class _LendingDetailView extends StatelessWidget {
             IconButton(
               onPressed: () => _handleDelete(context),
               icon: Icon(
-                Icons.delete_outline,
+                IconsaxPlusLinear.trash,
                 color: AppColors.negative,
               ),
               tooltip: context.l10n.deleteLendingTitle,
@@ -147,7 +148,7 @@ class _LendingDetailView extends StatelessWidget {
                         isCompleted: lending.isFullyCollected,
                         footer: Row(
                           children: [
-                            Icon(Icons.calendar_today_rounded,
+                            Icon(IconsaxPlusBold.calendar_1,
                                 size: 16, color: AppColors.textSecondary),
                             const SizedBox(width: 8),
                             Text(
@@ -161,10 +162,10 @@ class _LendingDetailView extends StatelessWidget {
                             const Spacer(),
                             Icon(
                               lending.isUntracked
-                                  ? Icons.history_rounded
+                                  ? IconsaxPlusBold.clock
                                   : lending.fromSavings
-                                      ? Icons.savings_rounded
-                                      : Icons.account_balance_wallet_rounded,
+                                      ? IconsaxPlusBold.strongbox
+                                      : IconsaxPlusBold.wallet,
                               size: 16,
                               color: AppColors.textSecondary,
                             ),
@@ -217,7 +218,7 @@ class _LendingDetailView extends StatelessWidget {
                               context,
                               lending.remainingAmount,
                             ),
-                            icon: const Icon(Icons.add),
+                            icon: const Icon(IconsaxPlusLinear.add),
                             label: Text(context.l10n.addCollection),
                           ),
                         ),
@@ -245,7 +246,7 @@ class _LendingDetailView extends StatelessWidget {
                                 Row(
                                   children: [
                                     Icon(
-                                      Icons.check_circle_outline_rounded,
+                                      IconsaxPlusLinear.tick_circle,
                                       size: 18,
                                       color: AppColors.positive,
                                     ),
@@ -268,7 +269,7 @@ class _LendingDetailView extends StatelessWidget {
                                           children: [
                                             Icon(
                                               collection.toSavings
-                                                  ? Icons.savings_rounded
+                                                  ? IconsaxPlusBold.strongbox
                                                   : Icons
                                                       .account_balance_wallet_rounded,
                                               size: 12,
@@ -313,7 +314,7 @@ class _LendingDetailView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.error_outline_rounded,
+                        IconsaxPlusLinear.danger,
                         size: 64,
                         color: AppColors.negative,
                       ),
@@ -541,7 +542,7 @@ class _CollectionDialogState extends State<_CollectionDialog> {
                     child: Column(
                       children: [
                         Icon(
-                          Icons.account_balance_wallet_rounded,
+                          IconsaxPlusBold.wallet,
                           color: !_toSavings
                               ? AppColors.primary
                               : AppColors.textSecondary,
@@ -598,7 +599,7 @@ class _CollectionDialogState extends State<_CollectionDialog> {
                     child: Column(
                       children: [
                         Icon(
-                          Icons.savings_rounded,
+                          IconsaxPlusBold.strongbox,
                           color: _toSavings
                               ? AppColors.primary
                               : AppColors.textSecondary,

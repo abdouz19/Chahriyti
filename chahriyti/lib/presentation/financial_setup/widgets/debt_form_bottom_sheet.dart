@@ -5,6 +5,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import 'amount_input_field.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class DebtFormResult {
   final String creditorName;
@@ -116,7 +117,7 @@ class _DebtFormBottomSheetState extends State<DebtFormBottomSheet> {
                 ),
                 if (widget.onDelete != null)
                   IconButton(
-                    icon: const Icon(Icons.delete_outline,
+                    icon: const Icon(IconsaxPlusLinear.trash,
                         color: AppColors.negative),
                     onPressed: () {
                       widget.onDelete!();

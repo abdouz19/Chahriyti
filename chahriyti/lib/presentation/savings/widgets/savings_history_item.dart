@@ -7,6 +7,7 @@ import '../../../domain/entities/savings_history_entity.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
 import 'savings_description.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class SavingsHistoryItem extends StatelessWidget {
   final SavingsHistoryEntity record;
@@ -25,8 +26,8 @@ class SavingsHistoryItem extends StatelessWidget {
     final isDeposit = record.type == SavingsTransactionType.deposit;
     final color = isDeposit ? AppColors.positive : AppColors.negative;
     final icon = isDeposit
-        ? Icons.arrow_downward_rounded
-        : Icons.arrow_upward_rounded;
+        ? IconsaxPlusLinear.arrow_down
+        : IconsaxPlusLinear.arrow_up;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       padding: const EdgeInsets.all(14),
@@ -76,7 +77,7 @@ class SavingsHistoryItem extends StatelessWidget {
           ),
           if (onEdit != null || onDelete != null)
             PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert_rounded,
+              icon: const Icon(IconsaxPlusLinear.more_2,
                   size: 20, color: AppColors.textSecondary),
               padding: EdgeInsets.zero,
               itemBuilder: (_) => [
@@ -85,7 +86,7 @@ class SavingsHistoryItem extends StatelessWidget {
                     value: 'edit',
                     child: Row(
                       children: [
-                        const Icon(Icons.edit_rounded, size: 18),
+                        const Icon(IconsaxPlusLinear.edit_2, size: 18),
                         const SizedBox(width: 8),
                         Text(context.l10n.edit),
                       ],
@@ -96,7 +97,7 @@ class SavingsHistoryItem extends StatelessWidget {
                     value: 'delete',
                     child: Row(
                       children: [
-                        const Icon(Icons.delete_outline_rounded,
+                        const Icon(IconsaxPlusLinear.trash,
                             size: 18, color: AppColors.negative),
                         const SizedBox(width: 8),
                         Text(context.l10n.delete,

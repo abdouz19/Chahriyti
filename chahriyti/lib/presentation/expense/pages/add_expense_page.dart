@@ -10,6 +10,7 @@ import '../widgets/expense_form.dart';
 import '../../shared/widgets/payment_source_toggle.dart';
 import '../../shared/widgets/funding_source_sheet.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import '../../../core/theme/app_icons.dart';
 
 class AddExpensePage extends StatelessWidget {
   final int cycleId;
@@ -68,7 +69,7 @@ class _AddExpenseView extends StatelessWidget {
             ),
             leading: _canGoBack(state)
                 ? IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    icon: const Icon(AppIcons.backChevron),
                     onPressed: cubit.goBack,
                   )
                 : const CloseButton(),

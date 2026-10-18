@@ -4,6 +4,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 /// Shows a bottom sheet that lets the user split a payment between
 /// their current balance and savings.
@@ -107,7 +108,7 @@ class _FundingSourceSheetState extends State<_FundingSourceSheet> {
 
           // Balance row
           _SourceRow(
-            icon: Icons.account_balance_wallet_rounded,
+            icon: IconsaxPlusBold.wallet,
             label: context.l10n.fromBalance,
             available: widget.availableBalance,
             amount: _balanceAmount,
@@ -117,7 +118,7 @@ class _FundingSourceSheetState extends State<_FundingSourceSheet> {
 
           // Savings row
           _SourceRow(
-            icon: Icons.savings_rounded,
+            icon: IconsaxPlusBold.strongbox,
             label: context.l10n.fromSavings,
             available: widget.availableSavings,
             amount: _savingsAmount,

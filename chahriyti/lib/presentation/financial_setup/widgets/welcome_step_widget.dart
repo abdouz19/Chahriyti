@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class WelcomeStepWidget extends StatelessWidget {
   final VoidCallback onStart;
@@ -18,7 +19,7 @@ class WelcomeStepWidget extends StatelessWidget {
         children: [
           const Spacer(),
           Icon(
-            Icons.account_balance_wallet_rounded,
+            IconsaxPlusBold.wallet,
             size: 80,
             color: AppColors.primary,
           ),

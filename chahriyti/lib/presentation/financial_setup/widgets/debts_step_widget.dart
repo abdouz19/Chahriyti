@@ -6,6 +6,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/debt_entity.dart';
 import 'debt_form_bottom_sheet.dart';
 import 'setup_progress_bar.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class DebtsStepWidget extends StatelessWidget {
   final List<DebtEntity> debts;
@@ -51,7 +52,7 @@ class DebtsStepWidget extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.check_circle_outline,
+                        Icon(IconsaxPlusLinear.tick_circle,
                             size: 48, color: AppColors.textSecondary),
                         const SizedBox(height: 12),
                         Text(
@@ -104,7 +105,7 @@ class DebtsStepWidget extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              icon: const Icon(Icons.add),
+              icon: const Icon(IconsaxPlusLinear.add),
               label: Text(debts.isEmpty ? context.l10n.addFirstDebt : context.l10n.addAnotherDebt),
               onPressed: () async {
                 final result = await DebtFormBottomSheet.show(context);

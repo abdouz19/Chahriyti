@@ -1266,7 +1266,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get challengeMotivation => 'حاول تحقيق هذا الهدف هذا الأسبوع!';
 
   @override
-  String get challengeCompletedMsg => 'رائع! لقد أكملت هذا التحدي 🎉';
+  String get challengeCompletedMsg => 'رائع! لقد أكملت هذا التحدي';
 
   @override
   String get currencySymbol => 'دج';
@@ -2166,20 +2166,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifChannelDesc => 'تنبيهات تتعلق بالميزانية والمصاريف';
 
   @override
-  String get notifWelcomeTitle => 'أهلاً بك في شهريتي! 🎉';
+  String get notifWelcomeTitle => 'أهلاً بك في شهريتي!';
 
   @override
   String get notifWelcomeBody =>
-      'التنبيهات مفعّلة — راح نذكّرك تسجّل مصاريفك ونعلمك قبل ما يكمل مالك 💪';
+      'التنبيهات مفعّلة — راح نذكّرك تسجّل مصاريفك ونعلمك قبل ما يكمل مالك';
 
   @override
   String notifWeekTitle(int days) {
-    return '📅 $days يوم للراتب';
+    return '$days يوم للراتب';
   }
 
   @override
   String notifWeekBody(String amount) {
-    return 'اصرف مش أكثر من $amount في اليوم وتوصل بسلام 💪';
+    return 'اصرف مش أكثر من $amount في اليوم وتوصل بسلام';
   }
 
   @override
@@ -2187,7 +2187,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'الأيام الأخيرة — اصرف على الضروري بصح وتعدّاها!';
 
   @override
-  String get notifExcellentTitle => '🏆 أداء ممتاز هذا الشهر!';
+  String get notifExcellentTitle => 'أداء ممتاز هذا الشهر!';
 
   @override
   String notifExcellentBody(int percent, String balance) {
@@ -2195,7 +2195,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get notifCycleSavedTitle => '✅ شهرية ناجحة!';
+  String get notifCycleSavedTitle => 'شهرية ناجحة!';
 
   @override
   String notifCycleSavedBody(String amount) {
@@ -2203,21 +2203,21 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get notifCycleNewTitle => '🔄 شهرية جديدة بدات';
+  String get notifCycleNewTitle => 'شهرية جديدة بدات';
 
   @override
   String get notifCycleNewBody =>
       'الشهر الجديد فرصة توفّر — ابدأ بالتخطيط من البداية!';
 
   @override
-  String get notifDailyReminderTitle => 'سجّلت مصاريف اليوم؟ 📝';
+  String get notifDailyReminderTitle => 'سجّلت مصاريف اليوم؟';
 
   @override
   String get notifDailyReminderBody =>
       'ما سجّلت حتى مصروف اليوم — دقيقة برك باش تعرف وين راه مالك.';
 
   @override
-  String get notifSalaryDayTitle => '💰 جاك الراتب!';
+  String get notifSalaryDayTitle => 'جاك الراتب!';
 
   @override
   String get notifSalaryDayBody => 'قبل ما تصرف: قرّر شحال تخبّي هذا الشهر.';
@@ -2239,7 +2239,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifOnTimeAction => 'تفعيل';
 
   @override
-  String get notifPaceTitle => '⚠️ بهذا الريتم، مالك يكمل قبل الراتب';
+  String get notifPaceTitle => 'بهذا الريتم، مالك يكمل قبل الراتب';
 
   @override
   String notifPaceBody(String date, int days) {
@@ -2248,7 +2248,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String notifGoalTitle(String name) {
-    return '🎉 تقدر تشري \"$name\"';
+    return 'تقدر تشري \"$name\"';
   }
 
   @override
@@ -2260,7 +2260,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get notifLendingTitle => '🤝 تذكير بالسلف';
+  String get notifLendingTitle => 'تذكير بالسلف';
 
   @override
   String notifLendingBodyOne(String name, String amount) {
@@ -2388,21 +2388,21 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tourSavingsBody =>
-      'من الإعدادات ⚙️ تلقى مدخراتك: حط ولا اسحب المال بين الرصيد والمدخرات، وشوف السجل كامل.';
+      'من الإعدادات تلقى مدخراتك: حط ولا اسحب المال بين الرصيد والمدخرات، وشوف السجل كامل.';
 
   @override
   String get tourCyclesTitle => 'الشهريات';
 
   @override
   String get tourCyclesBody =>
-      'كل شهرية تبدا يوم الراتب. من الإعدادات ⚙️ تبدّل الراتب ويومه، وتشوف الشهريات اللي فاتت.';
+      'كل شهرية تبدا يوم الراتب. من الإعدادات تبدّل الراتب ويومه، وتشوف الشهريات اللي فاتت.';
 
   @override
   String get tourLockTitle => 'قفل التطبيق';
 
   @override
   String get tourLockBody =>
-      'احمي مالك بـ Face ID ولا البصمة: الإعدادات ⚙️ ← الأمان.';
+      'احمي مالك بـ Face ID ولا البصمة: الإعدادات ← الأمان.';
 
   @override
   String get offerLabel => 'طلبك';
@@ -2442,7 +2442,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reassuranceKeepPhone =>
-      'لا شيء مطلوب منك الآن، فقط أبقِ هاتفك قريباً منك 📞';
+      'لا شيء مطلوب منك الآن، فقط أبقِ هاتفك قريباً منك';
 
   @override
   String get completeAllFieldsHint => 'أجب على كل الأسئلة للمتابعة';
@@ -2451,7 +2451,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifSpentNothingAction => 'ما صرفت والو اليوم';
 
   @override
-  String get notifGoalTitleHidden => '🎉 مدخراتك وصلت لواحد من أهدافك';
+  String get notifGoalTitleHidden => 'مدخراتك وصلت لواحد من أهدافك';
 
   @override
   String get notifSalaryDayBodyWithDebtHidden =>
@@ -2462,7 +2462,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'عندك سلف لازم ترجعلك. الراتب خلص — وقت مناسب تفكّرهم.';
 
   @override
-  String get notifInactiveTitle => 'شهريتك مازالت تستناك 👋';
+  String get notifInactiveTitle => 'شهريتك مازالت تستناك';
 
   @override
   String get notifInactiveBody =>
@@ -2538,7 +2538,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'الكريدي، المصاريف الصغيرة، المناسبات… والشهر ما زال ما كملش.';
 
   @override
-  String get salesMirrorFineTitle => 'وإذا راك مرتاح اليوم؟ 👏';
+  String get salesMirrorFineTitle => 'وإذا راك مرتاح اليوم؟';
 
   @override
   String get salesMirrorFineBody =>
@@ -2579,12 +2579,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String salesOfferPrice(String price) {
-    return 'بـ $price فقط — مرة واحدة';
+    return 'بـ $price فقط، مرة واحدة';
   }
 
   @override
   String salesOfferPerDay(String amount) {
-    return 'يعني $amount في اليوم خلال عام — أقل من ثمن قهوة ☕';
+    return 'يعني $amount في اليوم خلال عام، أقل من ثمن قهوة';
   }
 
   @override
@@ -2595,4 +2595,143 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get salesOfferCta => 'اطلب نسختك';
+
+  @override
+  String get salesOfferHaveCode => 'عندي الكتاب، فعّل نسختي';
+
+  @override
+  String get salesOfferOrderOnline => 'أريد الطلب';
+
+  @override
+  String get quickSetupTitle => 'خلّينا نجهّز تطبيقك';
+
+  @override
+  String get quickSetupSubtitle => '3 معلومات فقط، ثم تفعّل نسختك بالكود.';
+
+  @override
+  String get quickSetupContinue => 'متابعة للتفعيل';
+
+  @override
+  String get quickSetupFailed => 'حدث خطأ، حاول مرة أخرى';
+
+  @override
+  String get orderTitle => 'اطلب نسختك';
+
+  @override
+  String get orderSubtitle => 'تخلص عند الاستلام، بلا بطاقة بنكية';
+
+  @override
+  String get orderDeliveryTitle => 'طريقة التوصيل';
+
+  @override
+  String get orderDeliveryDesk => 'للمكتب';
+
+  @override
+  String get orderDeliveryHome => 'للمنزل';
+
+  @override
+  String get orderDeliveryPickWilaya => 'اختر الولاية لرؤية أسعار التوصيل';
+
+  @override
+  String get orderDeliveryUnavailable => 'غير متوفر';
+
+  @override
+  String get orderDeliveryNone => 'التوصيل غير متوفر لهذه الولاية حالياً';
+
+  @override
+  String get orderDeliveryRequired => 'يرجى اختيار طريقة التوصيل';
+
+  @override
+  String get orderBookLine => 'كتاب شهريتي + كود التفعيل';
+
+  @override
+  String get orderDeliveryLine => 'التوصيل';
+
+  @override
+  String get orderTotalLine => 'الإجمالي عند الاستلام';
+
+  @override
+  String get orderSubmit => 'تأكيد الطلب';
+
+  @override
+  String get orderSendFailed =>
+      'تعذّر إرسال طلبك. تحقق من اتصالك بالإنترنت ثم حاول مجدداً.';
+
+  @override
+  String thanksTitle(String name) {
+    return 'شكراً $name، طلبك وصلنا!';
+  }
+
+  @override
+  String thanksCall(String phone) {
+    return 'سنتصل بك على $phone لتأكيد الطلب.';
+  }
+
+  @override
+  String get thanksStep2 => 'يصلك الكتاب مع كود التفعيل';
+
+  @override
+  String get thanksStep3 => 'تفعّل التطبيق بالكود وتبدأ رحلتك مع شهريتي';
+
+  @override
+  String get thanksActivate => 'استلمت نسختي، فعّل التطبيق';
+
+  @override
+  String get welcomeTitle => 'راتبك يقدر يعطيك أكثر';
+
+  @override
+  String get welcomeBody =>
+      'ماشي لازم تربح أكثر باش تعيش أحسن. لازم تعرف وين يروح كل دينار، وتقرر قبل ما يقرر عليك الشهر.';
+
+  @override
+  String get welcomeCta => 'يلا نبداو';
+
+  @override
+  String get monthBarSalaryDay => 'يوم الراتب';
+
+  @override
+  String get monthBarNextSalary => 'الراتب الجاي';
+
+  @override
+  String get monthBarRunsOut => 'هنا كملت الدراهم';
+
+  @override
+  String get monthBarLeftOver => 'وبقاو دراهم';
+
+  @override
+  String get salesHowUrgency =>
+      'كل شهر تأجّل فيه، هو راتب كامل يروح بلا خطة. اللي يبدا اليوم، يسبق.';
+
+  @override
+  String get salesOfferHeadline => 'قرارك اليوم يبدّل كل شهر جاي';
+
+  @override
+  String get salesOfferOnce => 'مرة وحدة، ومدى الحياة';
+
+  @override
+  String get activationHeadline => 'آخر خطوة، وتبدا شهريتك الجديدة';
+
+  @override
+  String get activationSub =>
+      'الكود موجود مع الكتاب. امسحو ولا اكتبو، ويتفعّل التطبيق في ثواني.';
+
+  @override
+  String salaryCheckTitle(String amount) {
+    return 'تقصد $amount؟';
+  }
+
+  @override
+  String salaryCheckBody(String typed) {
+    return '$typed تبان قليلة بزاف كراتب شهري. نصلحوها؟';
+  }
+
+  @override
+  String salaryCheckYes(String amount) {
+    return 'نعم، $amount';
+  }
+
+  @override
+  String salaryCheckNo(String typed) {
+    return 'لا، أبقي $typed';
+  }
 }

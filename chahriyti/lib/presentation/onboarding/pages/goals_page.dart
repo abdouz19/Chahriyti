@@ -8,6 +8,7 @@ import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
 import '../widgets/onboarding_progress_dots.dart';
 import '../widgets/selection_card.dart';
+import '../../../core/theme/app_icons.dart';
 
 class GoalsPage extends StatefulWidget {
   const GoalsPage({super.key});
@@ -76,7 +77,7 @@ class _GoalsPageState extends State<GoalsPage> {
                 alignment: AlignmentDirectional.centerStart,
                 child: IconButton(
                   onPressed: () => context.go('/onboarding/financial'),
-                  icon: const Icon(Icons.arrow_back_ios_rounded),
+                  icon: const Icon(AppIcons.backChevron),
                   color: AppColors.textSecondary,
                 ),
               ),

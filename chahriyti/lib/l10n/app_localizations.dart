@@ -2503,7 +2503,7 @@ abstract class AppLocalizations {
   /// No description provided for @challengeCompletedMsg.
   ///
   /// In en, this message translates to:
-  /// **'Amazing! You completed this challenge 🎉'**
+  /// **'Amazing! You completed this challenge'**
   String get challengeCompletedMsg;
 
   /// Currency symbol for Algerian Dinar
@@ -4129,25 +4129,25 @@ abstract class AppLocalizations {
   /// No description provided for @notifWelcomeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Chahriyti! 🎉'**
+  /// **'Welcome to Chahriyti!'**
   String get notifWelcomeTitle;
 
   /// No description provided for @notifWelcomeBody.
   ///
   /// In en, this message translates to:
-  /// **'Alerts are on — we\'ll help you track spending and make it to payday 💪'**
+  /// **'Alerts are on — we\'ll help you track spending and make it to payday'**
   String get notifWelcomeBody;
 
   /// No description provided for @notifWeekTitle.
   ///
   /// In en, this message translates to:
-  /// **'📅 {days} days to payday'**
+  /// **'{days} days to payday'**
   String notifWeekTitle(int days);
 
   /// No description provided for @notifWeekBody.
   ///
   /// In en, this message translates to:
-  /// **'Spend no more than {amount} a day and you\'ll make it 💪'**
+  /// **'Spend no more than {amount} a day and you\'ll make it'**
   String notifWeekBody(String amount);
 
   /// No description provided for @notifWeekBodyTight.
@@ -4159,7 +4159,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifExcellentTitle.
   ///
   /// In en, this message translates to:
-  /// **'🏆 Great month so far!'**
+  /// **'Great month so far!'**
   String get notifExcellentTitle;
 
   /// No description provided for @notifExcellentBody.
@@ -4171,7 +4171,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifCycleSavedTitle.
   ///
   /// In en, this message translates to:
-  /// **'✅ Successful cycle!'**
+  /// **'Successful cycle!'**
   String get notifCycleSavedTitle;
 
   /// No description provided for @notifCycleSavedBody.
@@ -4183,7 +4183,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifCycleNewTitle.
   ///
   /// In en, this message translates to:
-  /// **'🔄 New cycle started'**
+  /// **'New cycle started'**
   String get notifCycleNewTitle;
 
   /// No description provided for @notifCycleNewBody.
@@ -4195,7 +4195,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifDailyReminderTitle.
   ///
   /// In en, this message translates to:
-  /// **'Recorded today\'s spending? 📝'**
+  /// **'Recorded today\'s spending?'**
   String get notifDailyReminderTitle;
 
   /// No description provided for @notifDailyReminderBody.
@@ -4207,7 +4207,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifSalaryDayTitle.
   ///
   /// In en, this message translates to:
-  /// **'💰 Payday!'**
+  /// **'Payday!'**
   String get notifSalaryDayTitle;
 
   /// No description provided for @notifSalaryDayBody.
@@ -4249,7 +4249,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifPaceTitle.
   ///
   /// In en, this message translates to:
-  /// **'⚠️ At this pace, money runs out before payday'**
+  /// **'At this pace, money runs out before payday'**
   String get notifPaceTitle;
 
   /// No description provided for @notifPaceBody.
@@ -4261,7 +4261,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifGoalTitle.
   ///
   /// In en, this message translates to:
-  /// **'🎉 You can buy \"{name}\"'**
+  /// **'You can buy \"{name}\"'**
   String notifGoalTitle(String name);
 
   /// No description provided for @notifGoalBody.
@@ -4279,7 +4279,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifLendingTitle.
   ///
   /// In en, this message translates to:
-  /// **'🤝 Lending reminder'**
+  /// **'Lending reminder'**
   String get notifLendingTitle;
 
   /// No description provided for @notifLendingBodyOne.
@@ -4501,7 +4501,7 @@ abstract class AppLocalizations {
   /// No description provided for @tourSavingsBody.
   ///
   /// In en, this message translates to:
-  /// **'In Settings ⚙️: your savings, moves between balance and savings, and the full history.'**
+  /// **'In Settings: your savings, moves between balance and savings, and the full history.'**
   String get tourSavingsBody;
 
   /// No description provided for @tourCyclesTitle.
@@ -4513,7 +4513,7 @@ abstract class AppLocalizations {
   /// No description provided for @tourCyclesBody.
   ///
   /// In en, this message translates to:
-  /// **'Each cycle starts on payday. In Settings ⚙️: salary, payday and past cycles.'**
+  /// **'Each cycle starts on payday. In Settings: salary, payday and past cycles.'**
   String get tourCyclesBody;
 
   /// No description provided for @tourLockTitle.
@@ -4525,7 +4525,7 @@ abstract class AppLocalizations {
   /// No description provided for @tourLockBody.
   ///
   /// In en, this message translates to:
-  /// **'Protect your money with Face ID or fingerprint: Settings ⚙️ → Security.'**
+  /// **'Protect your money with Face ID or fingerprint: Settings → Security.'**
   String get tourLockBody;
 
   /// No description provided for @offerLabel.
@@ -4597,7 +4597,7 @@ abstract class AppLocalizations {
   /// No description provided for @reassuranceKeepPhone.
   ///
   /// In en, this message translates to:
-  /// **'Nothing to do for now, just keep your phone close 📞'**
+  /// **'Nothing to do for now, just keep your phone close'**
   String get reassuranceKeepPhone;
 
   /// No description provided for @completeAllFieldsHint.
@@ -4615,7 +4615,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifGoalTitleHidden.
   ///
   /// In en, this message translates to:
-  /// **'🎉 Your savings reached one of your goals'**
+  /// **'Your savings reached one of your goals'**
   String get notifGoalTitleHidden;
 
   /// No description provided for @notifSalaryDayBodyWithDebtHidden.
@@ -4633,7 +4633,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifInactiveTitle.
   ///
   /// In en, this message translates to:
-  /// **'Your budget is waiting for you 👋'**
+  /// **'Your budget is waiting for you'**
   String get notifInactiveTitle;
 
   /// No description provided for @notifInactiveBody.
@@ -4765,7 +4765,7 @@ abstract class AppLocalizations {
   /// No description provided for @salesMirrorFineTitle.
   ///
   /// In en, this message translates to:
-  /// **'And if you\'re doing fine today? 👏'**
+  /// **'And if you\'re doing fine today?'**
   String get salesMirrorFineTitle;
 
   /// No description provided for @salesMirrorFineBody.
@@ -4849,7 +4849,7 @@ abstract class AppLocalizations {
   /// No description provided for @salesOfferPerDay.
   ///
   /// In en, this message translates to:
-  /// **'That\'s {amount} a day over a year — less than a coffee ☕'**
+  /// **'That\'s {amount} a day over a year, less than a coffee'**
   String salesOfferPerDay(String amount);
 
   /// No description provided for @salesOfferCod.
@@ -4869,6 +4869,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Order your copy'**
   String get salesOfferCta;
+
+  /// No description provided for @salesOfferHaveCode.
+  ///
+  /// In en, this message translates to:
+  /// **'I have the book, activate my copy'**
+  String get salesOfferHaveCode;
+
+  /// No description provided for @salesOfferOrderOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'I want to order'**
+  String get salesOfferOrderOnline;
+
+  /// No description provided for @quickSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s set up your app'**
+  String get quickSetupTitle;
+
+  /// No description provided for @quickSetupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Just 3 details, then activate your copy with the code.'**
+  String get quickSetupSubtitle;
+
+  /// No description provided for @quickSetupContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to activation'**
+  String get quickSetupContinue;
+
+  /// No description provided for @quickSetupFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong, please try again'**
+  String get quickSetupFailed;
+
+  /// No description provided for @orderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order your copy'**
+  String get orderTitle;
+
+  /// No description provided for @orderSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay on delivery, no bank card needed'**
+  String get orderSubtitle;
+
+  /// No description provided for @orderDeliveryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery method'**
+  String get orderDeliveryTitle;
+
+  /// No description provided for @orderDeliveryDesk.
+  ///
+  /// In en, this message translates to:
+  /// **'To the office'**
+  String get orderDeliveryDesk;
+
+  /// No description provided for @orderDeliveryHome.
+  ///
+  /// In en, this message translates to:
+  /// **'To your home'**
+  String get orderDeliveryHome;
+
+  /// No description provided for @orderDeliveryPickWilaya.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your wilaya to see delivery prices'**
+  String get orderDeliveryPickWilaya;
+
+  /// No description provided for @orderDeliveryUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable'**
+  String get orderDeliveryUnavailable;
+
+  /// No description provided for @orderDeliveryNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery is not available for this wilaya yet'**
+  String get orderDeliveryNone;
+
+  /// No description provided for @orderDeliveryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose a delivery method'**
+  String get orderDeliveryRequired;
+
+  /// No description provided for @orderBookLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Chahriyti book + activation code'**
+  String get orderBookLine;
+
+  /// No description provided for @orderDeliveryLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get orderDeliveryLine;
+
+  /// No description provided for @orderTotalLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Total, paid on delivery'**
+  String get orderTotalLine;
+
+  /// No description provided for @orderSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm order'**
+  String get orderSubmit;
+
+  /// No description provided for @orderSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order could not be sent. Check your internet connection and try again.'**
+  String get orderSendFailed;
+
+  /// No description provided for @thanksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you {name}, we got your order!'**
+  String thanksTitle(String name);
+
+  /// No description provided for @thanksCall.
+  ///
+  /// In en, this message translates to:
+  /// **'We will call you on {phone} to confirm the order.'**
+  String thanksCall(String phone);
+
+  /// No description provided for @thanksStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'The book arrives with your activation code'**
+  String get thanksStep2;
+
+  /// No description provided for @thanksStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'You activate the app with the code and start with Chahriyti'**
+  String get thanksStep3;
+
+  /// No description provided for @thanksActivate.
+  ///
+  /// In en, this message translates to:
+  /// **'I got my copy, activate the app'**
+  String get thanksActivate;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your salary can give you more'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t need to earn more to live better. You need to know where every dinar goes, and decide before the month decides for you.'**
+  String get welcomeBody;
+
+  /// No description provided for @welcomeCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s start'**
+  String get welcomeCta;
+
+  /// No description provided for @monthBarSalaryDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Payday'**
+  String get monthBarSalaryDay;
+
+  /// No description provided for @monthBarNextSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Next payday'**
+  String get monthBarNextSalary;
+
+  /// No description provided for @monthBarRunsOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Money runs out here'**
+  String get monthBarRunsOut;
+
+  /// No description provided for @monthBarLeftOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Money left over'**
+  String get monthBarLeftOver;
+
+  /// No description provided for @salesHowUrgency.
+  ///
+  /// In en, this message translates to:
+  /// **'Every month you put it off is a whole salary spent without a plan. Whoever starts today gets ahead.'**
+  String get salesHowUrgency;
+
+  /// No description provided for @salesOfferHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s decision changes every month ahead'**
+  String get salesOfferHeadline;
+
+  /// No description provided for @salesOfferOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'Once, for life'**
+  String get salesOfferOnce;
+
+  /// No description provided for @activationHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'One last step, and your new month begins'**
+  String get activationHeadline;
+
+  /// No description provided for @activationSub.
+  ///
+  /// In en, this message translates to:
+  /// **'The code comes with the book. Scan it or type it, and the app activates in seconds.'**
+  String get activationSub;
+
+  /// No description provided for @salaryCheckTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you mean {amount}?'**
+  String salaryCheckTitle(String amount);
+
+  /// No description provided for @salaryCheckBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{typed} looks very low for a monthly salary. Should we correct it?'**
+  String salaryCheckBody(String typed);
+
+  /// No description provided for @salaryCheckYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, {amount}'**
+  String salaryCheckYes(String amount);
+
+  /// No description provided for @salaryCheckNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No, keep {typed}'**
+  String salaryCheckNo(String typed);
 }
 
 class _AppLocalizationsDelegate

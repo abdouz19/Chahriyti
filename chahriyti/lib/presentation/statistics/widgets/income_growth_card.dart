@@ -5,6 +5,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import 'stat_widgets.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class IncomeGrowthCard extends StatelessWidget {
   final IncomeGrowthResult result;
@@ -18,7 +19,7 @@ class IncomeGrowthCard extends StatelessWidget {
     final color = isPositive ? AppColors.positive : AppColors.negative;
 
     return StatKpiCard(
-      icon: Icons.trending_up_rounded,
+      icon: IconsaxPlusLinear.trend_up,
       color: AppColors.positive,
       label: context.l10n.totalIncomeThisCycle,
       value: isEmpty
@@ -27,8 +28,8 @@ class IncomeGrowthCard extends StatelessWidget {
       chip: !isEmpty && result.hasComparison
           ? StatChip(
               icon: isPositive
-                  ? Icons.arrow_upward_rounded
-                  : Icons.arrow_downward_rounded,
+                  ? IconsaxPlusLinear.arrow_up
+                  : IconsaxPlusLinear.arrow_down,
               text:
                   '${isPositive ? '+' : ''}${result.growthPercent.toStringAsFixed(1)}%',
               color: color,

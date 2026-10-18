@@ -5,6 +5,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/value_objects/money.dart';
 import '../../shared/widgets/money_text.dart';
 import '../../../core/extensions/l10n_extension.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class SafeBalanceCard extends StatelessWidget {
   final int safeDaily;
@@ -30,7 +31,7 @@ class SafeBalanceCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.shield_rounded,
+                  IconsaxPlusBold.shield_tick,
                   color: AppColors.primary,
                   size: 18,
                 ),

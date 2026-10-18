@@ -7,6 +7,8 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../../core/theme/app_icons.dart';
 
 class _IncomeEntry {
   final TextEditingController descriptionController;
@@ -89,7 +91,7 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
         appBar: AppBar(
           title: Text(context.l10n.additionalIncomePageTitle),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            icon: const Icon(AppIcons.backChevron),
             onPressed: () => context.go('/onboarding/salary'),
           ),
         ),
@@ -132,7 +134,7 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
                                   IconButton(
                                     onPressed: () => _removeEntry(i),
                                     icon: const Icon(
-                                      Icons.remove_circle_outline_rounded,
+                                      IconsaxPlusLinear.minus_cirlce,
                                       color: AppColors.negative,
                                       size: 20,
                                     ),
@@ -180,7 +182,7 @@ class _AdditionalIncomePageState extends State<AdditionalIncomePage> {
                 }),
                 TextButton.icon(
                   onPressed: _addEntry,
-                  icon: const Icon(Icons.add_rounded),
+                  icon: const Icon(IconsaxPlusLinear.add),
                   label: Text(context.l10n.addAnotherIncome),
                 ),
                 const SizedBox(height: 24),

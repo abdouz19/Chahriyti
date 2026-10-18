@@ -11,6 +11,7 @@ import '../widgets/lendings_step_widget.dart';
 import '../widgets/savings_step_widget.dart';
 import '../widgets/summary_step_widget.dart';
 import '../widgets/welcome_step_widget.dart';
+import '../../../core/theme/app_icons.dart';
 
 class FinancialSetupPage extends StatelessWidget {
   const FinancialSetupPage({super.key});
@@ -39,7 +40,7 @@ class FinancialSetupPage extends StatelessWidget {
           appBar: showBack
               ? AppBar(
                   leading: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    icon: const Icon(AppIcons.backChevron),
                     onPressed: cubit.goBack,
                   ),
                 )

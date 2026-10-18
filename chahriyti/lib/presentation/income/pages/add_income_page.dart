@@ -11,6 +11,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/additional_income_entity.dart';
 import '../../debt/widgets/balance_impact_view.dart';
 import '../cubits/income_cubit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 // Shared options view for income source autocomplete (same style as expense form)
 Widget _buildOptionsView(
@@ -280,7 +281,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                           color: AppColors.textSecondary,
                         ),
                         prefixIcon: Icon(
-                          Icons.description_rounded,
+                          IconsaxPlusBold.document_text,
                           color: AppColors.textSecondary,
                         ),
                         border: OutlineInputBorder(
@@ -331,7 +332,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                       color: AppColors.textSecondary,
                     ),
                     prefixIcon: Icon(
-                      Icons.payments_rounded,
+                      IconsaxPlusBold.moneys,
                       color: AppColors.textSecondary,
                     ),
                     border: OutlineInputBorder(
@@ -398,7 +399,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.account_balance_wallet_rounded,
+                                IconsaxPlusBold.wallet,
                                 size: 18,
                                 color: !_toSavings
                                     ? AppColors.primary
@@ -444,7 +445,7 @@ class _AddIncomeViewState extends State<_AddIncomeView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.savings_rounded,
+                                IconsaxPlusBold.strongbox,
                                 size: 18,
                                 color: _toSavings
                                     ? AppColors.primary
@@ -751,8 +752,8 @@ class _IncomeItem extends StatelessWidget {
                 children: [
                   Icon(
                     income.toSavings
-                        ? Icons.savings_rounded
-                        : Icons.account_balance_wallet_rounded,
+                        ? IconsaxPlusBold.strongbox
+                        : IconsaxPlusBold.wallet,
                     size: 12,
                     color: AppColors.primary,
                   ),
@@ -773,13 +774,13 @@ class _IncomeItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: Icon(Icons.edit_outlined,
+              icon: Icon(IconsaxPlusLinear.edit_2,
                   size: 20, color: AppColors.textSecondary),
               onPressed: () => onEdit(income),
               tooltip: context.l10n.edit,
             ),
             IconButton(
-              icon: Icon(Icons.delete_outline,
+              icon: Icon(IconsaxPlusLinear.trash,
                   size: 20, color: AppColors.negative),
               onPressed: () => onDelete(income),
               tooltip: context.l10n.delete,

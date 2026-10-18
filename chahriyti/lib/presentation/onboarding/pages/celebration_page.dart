@@ -8,6 +8,7 @@ import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../cubits/onboarding_cubit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class CelebrationPage extends StatelessWidget {
   const CelebrationPage({super.key});
@@ -212,9 +213,9 @@ class _OfferCard extends StatelessWidget {
             child: Divider(height: 1, color: AppColors.divider),
           ),
           for (final item in [
-            (Icons.menu_book_rounded, l10n.offerInclude1),
-            (Icons.verified_rounded, l10n.offerInclude2),
-            (Icons.insights_rounded, l10n.offerInclude3),
+            (IconsaxPlusBold.book, l10n.offerInclude1),
+            (IconsaxPlusBold.verify, l10n.offerInclude2),
+            (IconsaxPlusBold.chart_square, l10n.offerInclude3),
           ])
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
@@ -243,9 +244,9 @@ class _NextSteps extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final steps = [
-      (Icons.phone_in_talk_rounded, l10n.nextStep1),
-      (Icons.local_shipping_rounded, l10n.nextStep2),
-      (Icons.rocket_launch_rounded, l10n.nextStep3),
+      (IconsaxPlusBold.call_calling, l10n.nextStep1),
+      (IconsaxPlusBold.truck, l10n.nextStep2),
+      (IconsaxPlusBold.flash, l10n.nextStep3),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +317,7 @@ class _Reassurance extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.smartphone_rounded, color: AppColors.primary),
+          const Icon(IconsaxPlusBold.mobile, color: AppColors.primary),
           const SizedBox(width: 10),
           Expanded(
             child: Text(

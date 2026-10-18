@@ -9,6 +9,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/expense_entity.dart';
 import '../widgets/expense_form.dart';
 import '../../shared/widgets/funding_source_sheet.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 // ---------------------------------------------------------------------------
 // Edit-specific states
@@ -312,7 +313,7 @@ class _EditExpenseView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(
-                Icons.error_outline_rounded,
+                IconsaxPlusLinear.danger,
                 size: 48,
                 color: AppColors.negative,
               ),

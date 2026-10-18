@@ -11,6 +11,7 @@ import '../../shared/widgets/amount_progress_card.dart';
 import '../cubits/goal_cubit.dart';
 import '../cubits/goal_state.dart';
 import 'add_goal_page.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class GoalDetailPage extends StatelessWidget {
   final int goalId;
@@ -113,7 +114,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit_outlined),
+            icon: const Icon(IconsaxPlusLinear.edit_2),
             tooltip: context.l10n.edit,
             onPressed: () async {
               final cubit = context.read<GoalCubit>();
@@ -131,7 +132,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.delete_outline, color: AppColors.negative),
+            icon: Icon(IconsaxPlusLinear.trash, color: AppColors.negative),
             tooltip: context.l10n.delete,
             onPressed: () => _showDeleteConfirmation(context),
           ),
@@ -201,7 +202,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.info_outline_rounded,
+                                Icon(IconsaxPlusLinear.info_circle,
                                     size: 16, color: AppColors.textSecondary),
                                 const SizedBox(width: 8),
                                 Expanded(
@@ -226,7 +227,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                         child: ElevatedButton.icon(
                           onPressed: () =>
                               _showPurchaseConfirmation(context, goal),
-                          icon: const Icon(Icons.shopping_cart_rounded,
+                          icon: const Icon(IconsaxPlusBold.shopping_cart,
                               size: 24),
                           label: Text(
                             context.l10n.purchase,
@@ -260,7 +261,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.check_circle_rounded,
+                              IconsaxPlusBold.tick_circle,
                               color: AppColors.positive,
                               size: 24,
                             ),
@@ -287,7 +288,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                         child: TextButton.icon(
                           onPressed: () =>
                               _showUndoPurchaseConfirmation(context, goal),
-                          icon: const Icon(Icons.undo_rounded, size: 18),
+                          icon: const Icon(IconsaxPlusLinear.undo, size: 18),
                           label: Text(context.l10n.undoPurchase),
                           style: TextButton.styleFrom(
                             foregroundColor: AppColors.textSecondary,
@@ -308,7 +309,7 @@ class _GoalDetailViewState extends State<_GoalDetailView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.error_outline_rounded,
+                        IconsaxPlusLinear.danger,
                         size: 64,
                         color: AppColors.negative,
                       ),

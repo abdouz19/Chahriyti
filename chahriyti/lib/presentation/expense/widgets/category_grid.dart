@@ -7,6 +7,7 @@ import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/custom_category_entity.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 class CategoryGrid extends StatefulWidget {
   /// Returns the category key: enum name for built-ins, `custom_<id>` for custom.
@@ -128,15 +129,15 @@ class _BuiltInCategoryCard extends StatelessWidget {
   const _BuiltInCategoryCard({required this.category, required this.onTap});
 
   IconData get _icon => switch (category) {
-        ExpenseCategory.essentials => Icons.shopping_basket_outlined,
-        ExpenseCategory.homeFamily => Icons.home_outlined,
-        ExpenseCategory.luxuries => Icons.local_cafe_outlined,
-        ExpenseCategory.health => Icons.local_hospital_outlined,
-        ExpenseCategory.transport => Icons.directions_car_outlined,
-        ExpenseCategory.clothing => Icons.checkroom_outlined,
-        ExpenseCategory.restaurants => Icons.restaurant_outlined,
-        ExpenseCategory.education => Icons.school_outlined,
-        ExpenseCategory.other => Icons.more_horiz,
+        ExpenseCategory.essentials => IconsaxPlusLinear.bag_2,
+        ExpenseCategory.homeFamily => IconsaxPlusLinear.home_2,
+        ExpenseCategory.luxuries => IconsaxPlusLinear.coffee,
+        ExpenseCategory.health => IconsaxPlusLinear.hospital,
+        ExpenseCategory.transport => IconsaxPlusLinear.car,
+        ExpenseCategory.clothing => IconsaxPlusLinear.bag_happy,
+        ExpenseCategory.restaurants => IconsaxPlusLinear.reserve,
+        ExpenseCategory.education => IconsaxPlusLinear.teacher,
+        ExpenseCategory.other => IconsaxPlusLinear.more,
       };
 
   @override
@@ -206,7 +207,7 @@ class _CustomCategoryCard extends StatelessWidget {
             Positioned(
               top: 6,
               left: 6,
-              child: Icon(Icons.delete_outline_rounded,
+              child: Icon(IconsaxPlusLinear.trash,
                   size: 16, color: AppColors.textSecondary.withValues(alpha: 0.5)),
             ),
           ],
@@ -242,7 +243,7 @@ class _AddCategoryCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.add_circle_outline_rounded,
+            Icon(IconsaxPlusLinear.add_circle,
                 size: 40, color: AppColors.primary.withValues(alpha: 0.6)),
             const SizedBox(height: 8),
             Text(

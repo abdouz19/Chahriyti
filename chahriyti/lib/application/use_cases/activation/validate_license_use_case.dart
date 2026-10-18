@@ -38,8 +38,9 @@ class ValidateLicenseUseCase {
       case LicenseAlreadyActivated():
         await _userRepo.setActivated(true);
         final user = await _userRepo.getUser();
-        if (user?.phoneNumber != null) {
-          unawaited(_leadService.convertLead(user!.phoneNumber));
+        // No phone on the "already bought" path: no lead to convert
+        if (user != null && user.phoneNumber.isNotEmpty) {
+          unawaited(_leadService.convertLead(user.phoneNumber));
         }
         return ValidationResult.success;
       case LicenseAlreadyUsed():
