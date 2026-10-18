@@ -16,7 +16,7 @@ const { markLicensesPrinted } = require('./markLicensesPrinted');
 const { getAppConfig } = require('./getAppConfig');
 const { checkLeadByPhone } = require('./checkLeadByPhone');
 const { convertLead } = require('./convertLead');
-const { syncLeadToWooCommerce } = require('./syncLeadToWooCommerce');
+const { sendLeadToWooCommerce } = require('./sendLeadToWooCommerce');
 const { wooCommerceWebhook } = require('./wooCommerceWebhook');
 
 exports.generateLicense = generateLicense;
@@ -35,5 +35,5 @@ exports.markLicensesPrinted = markLicensesPrinted;
 exports.getAppConfig = getAppConfig;
 exports.checkLeadByPhone = checkLeadByPhone;
 exports.convertLead = convertLead;
-exports.syncLeadToWooCommerce = syncLeadToWooCommerce;
+exports.sendLeadToWooCommerce = sendLeadToWooCommerce;
 exports.wooCommerceWebhook = wooCommerceWebhook;

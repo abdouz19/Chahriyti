@@ -4,6 +4,7 @@ import { Modal } from '../../../components/ui';
 import { formatLeadDate, formatSalary } from '../leadStatus';
 import { StatusSelect } from './StatusSelect';
 import { LeadAvatar, SourceTag } from './LeadBits';
+import { SendOrderButton } from './SendOrderButton';
 
 // 0665… / +213665… → 213665… for wa.me links
 function toWhatsAppNumber(phone) {
@@ -38,7 +39,7 @@ function ActionLink({ href, onClick, children, tone = 'neutral' }) {
     : <button type="button" onClick={onClick} className={className}>{children}</button>;
 }
 
-export function LeadDetailsModal({ lead, onClose, onStatusChange, saving }) {
+export function LeadDetailsModal({ lead, onClose, onStatusChange, saving, onSent }) {
   if (!lead) return null;
 
   const copyPhone = async () => {
@@ -74,6 +75,15 @@ export function LeadDetailsModal({ lead, onClose, onStatusChange, saving }) {
           </div>
         )}
 
+        {lead.source !== 'woocommerce' && (
+          <div className="flex items-center justify-between gap-3 rounded-xl bg-surface px-4 py-3">
+            <span className="text-sm text-text-secondary">
+              {lead.wcOrderId ? 'هذا الطلب في المتجر' : 'بعد التأكيد مع الزبون، أرسل الطلب إلى المتجر'}
+            </span>
+            <SendOrderButton lead={lead} onSent={onSent} size="md" />
+          </div>
+        )}
+
         {/* Profile */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <Field label="الولاية">{lead.wilayaCode ? `ولاية ${lead.wilayaCode}` : null}</Field>
@@ -88,6 +98,12 @@ export function LeadDetailsModal({ lead, onClose, onStatusChange, saving }) {
           {lead.email && <Field label="البريد الإلكتروني"><span dir="ltr">{lead.email}</span></Field>}
           {lead.wcOrderId && <Field label="رقم طلب المتجر">#{lead.wcOrderId}</Field>}
           {lead.wcTotal && <Field label="مبلغ الطلب">{lead.wcTotal} دج</Field>}
+          {lead.deliveryType && (
+            <Field label="التوصيل">
+              {lead.deliveryType === 'bureau' ? 'للمكتب' : 'للمنزل'} · {formatSalary(lead.deliveryFee)}
+            </Field>
+          )}
+          {lead.total && <Field label="المبلغ الإجمالي">{formatSalary(lead.total)}</Field>}
         </div>
 
         {/* Goals */}

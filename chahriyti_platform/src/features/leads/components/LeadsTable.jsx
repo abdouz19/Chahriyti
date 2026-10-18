@@ -5,6 +5,7 @@ import { formatLeadDate, formatSalary, formatPlace } from '../leadStatus';
 import { StatusSelect } from './StatusSelect';
 import { LeadDetailsModal } from './LeadDetailsModal';
 import { LeadAvatar, SourceTag } from './LeadBits';
+import { SendOrderButton } from './SendOrderButton';
 
 const HEADERS = ['المسجل', 'الولاية · البلدية', 'الراتب', 'المصدر', 'تاريخ التسجيل', 'الحالة', ''];
 
@@ -66,6 +67,8 @@ export function LeadsTable({ leads, onRefresh }) {
                     />
                   </td>
                   <td className="px-5 py-3 text-left">
+                    <div className="inline-flex items-center gap-2">
+                    <SendOrderButton lead={lead} onSent={onRefresh} />
                     <button
                       onClick={(e) => { e.stopPropagation(); setSelectedId(lead.id); }}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-primary hover:bg-primary/10 transition-colors"
@@ -76,6 +79,7 @@ export function LeadsTable({ leads, onRefresh }) {
                       </svg>
                       عرض
                     </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -89,6 +93,7 @@ export function LeadsTable({ leads, onRefresh }) {
         onClose={() => setSelectedId(null)}
         onStatusChange={(s) => selected && handleStatusChange(selected.id, s)}
         saving={selected && savingId === selected.id}
+        onSent={onRefresh}
       />
     </>
   );

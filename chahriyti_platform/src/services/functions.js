@@ -59,6 +59,15 @@ export function callSetLeadsAgentStatus({ uid, status }) {
 }
 
 /**
+ * Send an app lead to WooCommerce as an order (once; the server refuses a second time).
+ * @param {string} leadId
+ * @returns {Promise<{ success: boolean, wcOrderId: number }>}
+ */
+export function callSendLeadToWooCommerce(leadId) {
+  return callFunction(FUNCTIONS.SEND_LEAD_TO_WOOCOMMERCE, { leadId });
+}
+
+/**
  * Enable or disable a user account.
  * @param {{ uid: string, status: string }} data — status should be 'active' or 'inactive'.
  * @returns {Promise<object>} Confirmation from the backend.

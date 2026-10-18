@@ -26,6 +26,7 @@ export const FUNCTIONS = {
   CREATE_MANAGER: 'createManager',
   CREATE_LEADS_AGENT: 'createLeadsAgent',
   SET_LEADS_AGENT_STATUS: 'setLeadsAgentStatus',
+  SEND_LEAD_TO_WOOCOMMERCE: 'sendLeadToWooCommerce',
   UPDATE_USER_STATUS: 'updateUserStatus',
   GET_DASHBOARD_STATS: 'getDashboardStats',
   SEND_TO_DELIVERY: 'sendToDelivery',
