@@ -4737,6 +4737,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your first cycle started with a balance of {balance} when you signed up. From {date}, it is based on your salary of {salary}.'**
   String statFirstCycleNote(String balance, String date, String salary);
+
+  /// No description provided for @salesNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get salesNext;
+
+  /// No description provided for @salesMirrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The 20th and your salary is already gone?'**
+  String get salesMirrorTitle;
+
+  /// No description provided for @salesMirrorBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re not alone. Most people don\'t know where their money went.'**
+  String get salesMirrorBody;
+
+  /// No description provided for @salesMirrorBody2.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit, small expenses, occasions… and the month isn\'t over yet.'**
+  String get salesMirrorBody2;
+
+  /// No description provided for @salesMirrorFineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'And if you\'re doing fine today? 👏'**
+  String get salesMirrorFineTitle;
+
+  /// No description provided for @salesMirrorFineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A wedding, children, a house, a sudden illness… expenses grow before your salary does.'**
+  String get salesMirrorFineBody;
+
+  /// No description provided for @salesMirrorFineBold.
+  ///
+  /// In en, this message translates to:
+  /// **'Whoever organises their money today won\'t be caught off guard tomorrow.'**
+  String get salesMirrorFineBold;
+
+  /// No description provided for @salesChangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Imagine the end of the month with money still in your pocket'**
+  String get salesChangeTitle;
+
+  /// No description provided for @salesChange1.
+  ///
+  /// In en, this message translates to:
+  /// **'You know where every dinar goes'**
+  String get salesChange1;
+
+  /// No description provided for @salesChange2.
+  ///
+  /// In en, this message translates to:
+  /// **'You pay off your debts step by step'**
+  String get salesChange2;
+
+  /// No description provided for @salesChange3.
+  ///
+  /// In en, this message translates to:
+  /// **'You save for your goal: a house, a car, a wedding, Hajj'**
+  String get salesChange3;
+
+  /// No description provided for @salesChange4.
+  ///
+  /// In en, this message translates to:
+  /// **'And you sleep with peace of mind'**
+  String get salesChange4;
+
+  /// No description provided for @salesHowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A complete system, not just an app'**
+  String get salesHowTitle;
+
+  /// No description provided for @salesHowBook.
+  ///
+  /// In en, this message translates to:
+  /// **'The book teaches you the rules'**
+  String get salesHowBook;
+
+  /// No description provided for @salesHowApp.
+  ///
+  /// In en, this message translates to:
+  /// **'The app applies them with you every day'**
+  String get salesHowApp;
+
+  /// No description provided for @salesHowCode.
+  ///
+  /// In en, this message translates to:
+  /// **'A lifetime code: no subscription, no surprises'**
+  String get salesHowCode;
+
+  /// No description provided for @salesOfferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change your relationship with money'**
+  String get salesOfferTitle;
+
+  /// No description provided for @salesOfferPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'For only {price}, once'**
+  String salesOfferPrice(String price);
+
+  /// No description provided for @salesOfferPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s {amount} a day over a year — less than a coffee ☕'**
+  String salesOfferPerDay(String amount);
+
+  /// No description provided for @salesOfferCod.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash on delivery'**
+  String get salesOfferCod;
+
+  /// No description provided for @salesOfferDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery to all 58 wilayas'**
+  String get salesOfferDelivery;
+
+  /// No description provided for @salesOfferCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Order your copy'**
+  String get salesOfferCta;
 }
 
 class _AppLocalizationsDelegate

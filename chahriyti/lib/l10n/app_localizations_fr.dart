@@ -2571,4 +2571,80 @@ class AppLocalizationsFr extends AppLocalizations {
   String statFirstCycleNote(String balance, String date, String salary) {
     return 'Votre premier cycle a commencé avec un solde de $balance à l\'inscription. À partir du $date, le calcul se base sur votre salaire de $salary.';
   }
+
+  @override
+  String get salesNext => 'Suivant';
+
+  @override
+  String get salesMirrorTitle => 'Le 20 du mois et le salaire est déjà parti ?';
+
+  @override
+  String get salesMirrorBody =>
+      'Vous n\'êtes pas seul. La plupart des gens ne savent pas où est passé leur argent.';
+
+  @override
+  String get salesMirrorBody2 =>
+      'Le crédit, les petites dépenses, les occasions… et le mois n\'est pas encore fini.';
+
+  @override
+  String get salesMirrorFineTitle => 'Et si tout va bien aujourd\'hui ? 👏';
+
+  @override
+  String get salesMirrorFineBody =>
+      'Un mariage, des enfants, une maison, une maladie soudaine… les dépenses grandissent avant le salaire.';
+
+  @override
+  String get salesMirrorFineBold =>
+      'Qui organise son argent aujourd\'hui n\'est pas pris au dépourvu demain.';
+
+  @override
+  String get salesChangeTitle =>
+      'Imaginez la fin du mois avec de l\'argent en poche';
+
+  @override
+  String get salesChange1 => 'Vous savez où va chaque dinar';
+
+  @override
+  String get salesChange2 => 'Vous remboursez vos dettes pas à pas';
+
+  @override
+  String get salesChange3 =>
+      'Vous épargnez pour votre objectif : maison, voiture, mariage, Hajj';
+
+  @override
+  String get salesChange4 => 'Et vous dormez l\'esprit tranquille';
+
+  @override
+  String get salesHowTitle => 'Un système complet, pas seulement une appli';
+
+  @override
+  String get salesHowBook => 'Le livre vous apprend les règles';
+
+  @override
+  String get salesHowApp => 'L\'appli les applique avec vous chaque jour';
+
+  @override
+  String get salesHowCode => 'Un code à vie : sans abonnement, sans surprise';
+
+  @override
+  String get salesOfferTitle => 'Changez votre rapport à l\'argent';
+
+  @override
+  String salesOfferPrice(String price) {
+    return 'Pour seulement $price, une seule fois';
+  }
+
+  @override
+  String salesOfferPerDay(String amount) {
+    return 'Soit $amount par jour sur un an — moins qu\'un café ☕';
+  }
+
+  @override
+  String get salesOfferCod => 'Paiement à la livraison';
+
+  @override
+  String get salesOfferDelivery => 'Livraison dans les 58 wilayas';
+
+  @override
+  String get salesOfferCta => 'Commandez votre exemplaire';
 }

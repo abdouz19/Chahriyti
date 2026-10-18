@@ -26,6 +26,7 @@ import '../../goal/pages/goals_list_page.dart';
 import '../../history/pages/expense_history_page.dart';
 import '../../onboarding/cubits/onboarding_cubit.dart';
 import '../../onboarding/pages/splash_page.dart';
+import '../../onboarding/pages/sales_pages.dart';
 import '../../onboarding/pages/profile_page.dart';
 import '../../onboarding/pages/age_group_page.dart';
 import '../../onboarding/pages/financial_profile_page.dart';
@@ -71,6 +72,7 @@ abstract final class AppRouter {
 
         const onboardingPaths = [
           '/',
+          ...salesRoutes,
           '/onboarding/profile',
           '/onboarding/age',
           '/onboarding/financial',
@@ -127,6 +129,12 @@ abstract final class AppRouter {
         path: '/',
         builder: (context, state) => const SplashPage(),
       ),
+
+      // ── Sales screens: the offer before any question ────────────────
+      GoRoute(path: '/onboarding/mirror', builder: (context, state) => const SalesMirrorPage()),
+      GoRoute(path: '/onboarding/change', builder: (context, state) => const SalesChangePage()),
+      GoRoute(path: '/onboarding/how', builder: (context, state) => const SalesHowPage()),
+      GoRoute(path: '/onboarding/offer', builder: (context, state) => const SalesOfferPage()),
 
       // ── Onboarding (new flow) ───────────────────────────────────────
       ShellRoute(

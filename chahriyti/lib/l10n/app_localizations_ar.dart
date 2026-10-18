@@ -2522,4 +2522,77 @@ class AppLocalizationsAr extends AppLocalizations {
   String statFirstCycleNote(String balance, String date, String salary) {
     return 'شهريتك الأولى بدأت برصيد $balance يوم التسجيل. ابتداءً من $date، الحساب على راتبك $salary.';
   }
+
+  @override
+  String get salesNext => 'التالي';
+
+  @override
+  String get salesMirrorTitle => 'يوم 20 والراتب خلاص؟';
+
+  @override
+  String get salesMirrorBody =>
+      'ما راكش وحدك. أغلب الناس ما يعرفوش وين راحت دراهمهم.';
+
+  @override
+  String get salesMirrorBody2 =>
+      'الكريدي، المصاريف الصغيرة، المناسبات… والشهر ما زال ما كملش.';
+
+  @override
+  String get salesMirrorFineTitle => 'وإذا راك مرتاح اليوم؟ 👏';
+
+  @override
+  String get salesMirrorFineBody =>
+      'العرس، الأولاد، الدار، مرض مفاجئ… المصاريف تكبر قبل ما يكبر الراتب.';
+
+  @override
+  String get salesMirrorFineBold => 'اللي ينظّم دراهمو اليوم، ما يتفاجأش غدوة.';
+
+  @override
+  String get salesChangeTitle => 'تخيّل نهاية الشهر وفي جيبك دراهم';
+
+  @override
+  String get salesChange1 => 'تعرف وين يروح كل دينار';
+
+  @override
+  String get salesChange2 => 'تخلّص ديونك خطوة بخطوة';
+
+  @override
+  String get salesChange3 => 'تجمع لهدفك: دار، سيارة، عرس، حج';
+
+  @override
+  String get salesChange4 => 'وتنام مرتاح البال';
+
+  @override
+  String get salesHowTitle => 'نظام كامل، ماشي غير تطبيق';
+
+  @override
+  String get salesHowBook => 'الكتاب يعلّمك القواعد';
+
+  @override
+  String get salesHowApp => 'التطبيق يطبّقها معك كل يوم';
+
+  @override
+  String get salesHowCode => 'كود مدى الحياة: بلا اشتراك، بلا مفاجآت';
+
+  @override
+  String get salesOfferTitle => 'غيّر علاقتك بالمال';
+
+  @override
+  String salesOfferPrice(String price) {
+    return 'بـ $price فقط — مرة واحدة';
+  }
+
+  @override
+  String salesOfferPerDay(String amount) {
+    return 'يعني $amount في اليوم خلال عام — أقل من ثمن قهوة ☕';
+  }
+
+  @override
+  String get salesOfferCod => 'الدفع عند الاستلام';
+
+  @override
+  String get salesOfferDelivery => 'توصيل لـ 58 ولاية';
+
+  @override
+  String get salesOfferCta => 'اطلب نسختك';
 }

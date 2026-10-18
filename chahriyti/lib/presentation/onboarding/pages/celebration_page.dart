@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/constants/offer.dart';
 import '../../../core/extensions/l10n_extension.dart';
 import '../../../core/extensions/money_extensions.dart';
 import '../../../core/theme/app_colors.dart';
@@ -132,9 +133,6 @@ class CelebrationPage extends StatelessWidget {
   }
 }
 
-/// Book + lifetime licence, one payment.
-const _offerPrice = 2700;
-
 class _OfferCard extends StatelessWidget {
   const _OfferCard();
 
@@ -143,7 +141,7 @@ class _OfferCard extends StatelessWidget {
     final l10n = context.l10n;
     final symbol = l10n.currencySymbol;
     // Honest framing: the price spread over a single year
-    final perDay = (_offerPrice / 365).ceil();
+    final perDay = offerPricePerDay;
 
     return Container(
       width: double.infinity,
@@ -186,7 +184,7 @@ class _OfferCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                _offerPrice.toDZDString(symbol: symbol),
+                offerPrice.toDZDString(symbol: symbol),
                 style: AppTypography.amountLarge
                     .copyWith(color: AppColors.primary, fontSize: 30),
               ),

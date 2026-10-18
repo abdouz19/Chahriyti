@@ -148,7 +148,7 @@ class _SplashPageState extends State<SplashPage>
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => context.go('/onboarding/profile'),
+                    onPressed: () => context.go('/onboarding/mirror'),
                     child: Text(context.l10n.startNow),
                   ),
                 ),
