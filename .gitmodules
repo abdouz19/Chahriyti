@@ -1,3 +1,6 @@
 [submodule "chahriyti-personas"]
 	path = chahriyti-personas
 	url = https://github.com/abdouz19/chahriyti-personas.git
+[submodule "landing_pages"]
+	path = landing_pages
+	url = https://github.com/abdouz19/chahriyti.github.io.git
