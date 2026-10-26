@@ -11,9 +11,12 @@ import {
   doc,
   onSnapshot,
   getCountFromServer,
+  writeBatch,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { COLLECTIONS, PAGE_SIZE } from '../config/constants';
+import { LEAD_STATUSES } from '../features/leads/leadStatus';
 
 // ---------------------------------------------------------------------------
 // License pool
@@ -203,14 +206,12 @@ export async function getLeadsStats({ from, to } = {}) {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
-  const [total, today, store, pending, contacted, converted, rejected] = await Promise.all([
+  const statuses = Object.keys(LEAD_STATUSES);
+  const [total, today, store, ...statusCounts] = await Promise.all([
     count(),
     countRaw(where('submittedAt', '>=', startOfToday)),
     count(where('source', '==', 'woocommerce')),
-    count(where('status', '==', 'pending')),
-    count(where('status', '==', 'contacted')),
-    count(where('status', '==', 'converted')),
-    count(where('status', '==', 'rejected')),
+    ...statuses.map((s) => count(where('status', '==', s))),
   ]);
 
   return {
@@ -218,7 +219,7 @@ export async function getLeadsStats({ from, to } = {}) {
     today,
     store,
     app: total - store,
-    byStatus: { pending, contacted, converted, rejected },
+    byStatus: Object.fromEntries(statuses.map((s, i) => [s, statusCounts[i]])),
   };
 }
 
@@ -274,6 +275,41 @@ export async function getLeadsAgents() {
  */
 export async function updateLeadStatus(leadId, status) {
   await updateDoc(doc(db, COLLECTIONS.LEADS, leadId), { status });
+}
+
+/**
+ * Change a lead's status and record it in the lead's history, with an
+ * optional comment and who made the change. Both writes succeed or neither.
+ */
+export async function changeLeadStatus(leadId, { from, to, comment, user }) {
+  const leadRef = doc(db, COLLECTIONS.LEADS, leadId);
+  const entryRef = doc(collection(leadRef, 'history'));
+  const batch = writeBatch(db);
+  batch.update(leadRef, {
+    status: to,
+    statusUpdatedAt: serverTimestamp(),
+    lastComment: comment || null,
+  });
+  batch.set(entryRef, {
+    from: from ?? 'pending',
+    to,
+    comment: comment || null,
+    byUid: user?.uid ?? null,
+    byName: user?.displayName || user?.email || null,
+    createdAt: serverTimestamp(),
+  });
+  await batch.commit();
+}
+
+/**
+ * A lead's status history, newest first.
+ */
+export async function getLeadHistory(leadId) {
+  const snap = await getDocs(query(
+    collection(db, COLLECTIONS.LEADS, leadId, 'history'),
+    orderBy('createdAt', 'desc'),
+  ));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
 /**

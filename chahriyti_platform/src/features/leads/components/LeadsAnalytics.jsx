@@ -3,6 +3,8 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
@@ -131,6 +133,70 @@ function Timeline({ points, unit }) {
   );
 }
 
+function HoursTooltip({ active, payload, label }) {
+  if (!active || !payload?.length) return null;
+  const row = payload[0].payload;
+  return (
+    <div dir="rtl" className="bg-white rounded-xl shadow-elevated border border-border/60 px-4 py-3 text-sm min-w-[150px]">
+      <p className="text-xs text-text-secondary mb-2">{label} – {String((row.key + 1) % 24).padStart(2, '0')}:00</p>
+      {[['app', 'التطبيق', row.app], ['store', 'المتجر', row.store]].map(([key, name, value]) => (
+        <div key={key} className="flex items-center justify-between gap-4">
+          <span className="flex items-center gap-2 text-text-primary">
+            <span className="w-2.5 h-0.5 rounded-full" style={{ backgroundColor: SOURCE_COLORS[key] }} />
+            {name}
+          </span>
+          <span className="font-semibold tabular-nums">{value}</span>
+        </div>
+      ))}
+      <div className="flex justify-between gap-4 border-t border-border mt-2 pt-2 font-semibold">
+        <span>المجموع</span>
+        <span className="tabular-nums">{row.total}</span>
+      </div>
+    </div>
+  );
+}
+
+const HOUR_SERIES = [
+  ['total', 'المجموع', BAR_COLOR],
+  ['app', 'التطبيق', SOURCE_COLORS.app],
+  ['store', 'المتجر', SOURCE_COLORS.store],
+];
+
+function HoursChart({ hours }) {
+  if (!hours.some((h) => h.total)) return <Empty />;
+  return (
+    <>
+      <div className="flex items-center gap-4 text-xs text-text-secondary mb-3">
+        {HOUR_SERIES.map(([key, name, color]) => (
+          <span key={key} className="flex items-center gap-1.5">
+            <span className={`w-3 rounded-full ${key === 'total' ? 'h-1' : 'h-0.5'}`} style={{ backgroundColor: color }} />
+            {name}
+          </span>
+        ))}
+      </div>
+      <div dir="ltr" className="h-64">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={hours} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
+            <CartesianGrid vertical={false} stroke="#F1F5F9" />
+            <XAxis
+              dataKey="label"
+              tickLine={false}
+              axisLine={{ stroke: '#E2E8F0' }}
+              tick={{ fontSize: 11, fill: '#94A3B8' }}
+              interval={2}
+            />
+            <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#94A3B8' }} />
+            <Tooltip content={<HoursTooltip />} cursor={{ stroke: '#CBD5E1', strokeDasharray: '3 3' }} />
+            <Line dataKey="app" type="monotone" stroke={SOURCE_COLORS.app} strokeWidth={1.5} dot={false} activeDot={{ r: 3 }} />
+            <Line dataKey="store" type="monotone" stroke={SOURCE_COLORS.store} strokeWidth={1.5} dot={false} activeDot={{ r: 3 }} />
+            <Line dataKey="total" type="monotone" stroke={BAR_COLOR} strokeWidth={2.5} dot={false} activeDot={{ r: 4 }} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </>
+  );
+}
+
 /**
  * Charts and insights for the leads in the selected period.
  */
@@ -191,6 +257,10 @@ export function LeadsAnalytics({ range, reloadKey }) {
           <BarList rows={a.status} total={a.total} dotOf={(r) => r.dot} color="#94A3B8" />
         </Card>
       </div>
+
+      <Card title="أوقات التسجيل" subtitle="عدد المسجلين حسب ساعة اليوم — لمعرفة أفضل الأوقات">
+        <HoursChart hours={a.hours} />
+      </Card>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card title="أكثر الولايات" subtitle="كل المصادر">

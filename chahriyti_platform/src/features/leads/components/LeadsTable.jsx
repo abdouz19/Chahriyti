@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { updateLeadStatus } from '../../../services/firestore';
+import { changeLeadStatus } from '../../../services/firestore';
+import { useAuth } from '../../../hooks/useAuth';
+import { StatusChangeModal } from './StatusChangeModal';
 import { formatLeadDate, formatSalary, formatPlace } from '../leadStatus';
 import { StatusSelect } from './StatusSelect';
 import { LeadDetailsModal } from './LeadDetailsModal';
@@ -14,11 +16,23 @@ export function LeadsTable({ leads, onRefresh }) {
   const [savingId, setSavingId] = useState(null);
   const selected = leads.find((l) => l.id === selectedId) ?? null;
 
-  const handleStatusChange = async (leadId, newStatus) => {
-    setSavingId(leadId);
+  const { user } = useAuth();
+  // A status picked in a dropdown waits here until its comment is confirmed
+  const [pendingChange, setPendingChange] = useState(null);
+
+  const handleStatusChange = (leadId, newStatus) => {
+    const lead = leads.find((l) => l.id === leadId);
+    if (!lead || (lead.status ?? 'pending') === newStatus) return;
+    setPendingChange({ lead, to: newStatus });
+  };
+
+  const confirmStatusChange = async (comment) => {
+    const { lead, to } = pendingChange;
+    setSavingId(lead.id);
     try {
-      await updateLeadStatus(leadId, newStatus);
+      await changeLeadStatus(lead.id, { from: lead.status, to, comment, user });
       toast.success('تم تحديث الحالة');
+      setPendingChange(null);
       onRefresh();
     } catch {
       toast.error('فشل تحديث الحالة');
@@ -65,6 +79,11 @@ export function LeadsTable({ leads, onRefresh }) {
                       disabled={savingId === lead.id}
                       onChange={(s) => handleStatusChange(lead.id, s)}
                     />
+                    {lead.lastComment && (
+                      <div className="mt-1 max-w-[180px] truncate text-xs text-text-secondary" title={lead.lastComment}>
+                        {lead.lastComment}
+                      </div>
+                    )}
                   </td>
                   <td className="px-5 py-3 text-left">
                     <div className="inline-flex items-center gap-2">
@@ -94,6 +113,13 @@ export function LeadsTable({ leads, onRefresh }) {
         onStatusChange={(s) => selected && handleStatusChange(selected.id, s)}
         saving={selected && savingId === selected.id}
         onSent={onRefresh}
+      />
+
+      <StatusChangeModal
+        change={pendingChange}
+        onConfirm={confirmStatusChange}
+        onCancel={() => setPendingChange(null)}
+        saving={!!pendingChange && savingId === pendingChange.lead.id}
       />
     </>
   );

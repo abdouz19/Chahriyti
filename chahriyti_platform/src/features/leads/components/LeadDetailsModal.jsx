@@ -1,10 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Modal } from '../../../components/ui';
 import { formatLeadDate, formatSalary } from '../leadStatus';
 import { StatusSelect } from './StatusSelect';
 import { LeadAvatar, SourceTag } from './LeadBits';
 import { SendOrderButton } from './SendOrderButton';
+import { StatusChip } from './StatusChangeModal';
+import { getLeadHistory } from '../../../services/firestore';
+
+function formatDateTime(ts) {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleString('ar-DZ', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+
+/**
+ * Every status change on this lead, newest first, with its comment.
+ */
+function LeadHistory({ leadId, version }) {
+  const [entries, setEntries] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getLeadHistory(leadId)
+      .then((list) => !cancelled && setEntries(list))
+      .catch(() => !cancelled && setEntries([]));
+    return () => { cancelled = true; };
+  }, [leadId, version]);
+
+  return (
+    <div>
+      <div className="text-sm font-semibold text-text-primary mb-3">سجل الحالات</div>
+      {entries === null ? (
+        <div className="text-sm text-text-secondary">...</div>
+      ) : entries.length === 0 ? (
+        <div className="text-sm text-text-secondary">لم تتغير الحالة بعد</div>
+      ) : (
+        <ol className="relative border-s border-border ms-2 space-y-4">
+          {entries.map((e) => (
+            <li key={e.id} className="ms-4">
+              <span className="absolute -start-1.5 mt-1.5 w-3 h-3 rounded-full bg-white ring-2 ring-primary/40" />
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <StatusChip status={e.from} />
+                <span className="text-text-secondary">إلى</span>
+                <StatusChip status={e.to} />
+              </div>
+              {e.comment && (
+                <p className="mt-1.5 text-sm text-text-primary bg-surface rounded-lg px-3 py-2 whitespace-pre-wrap">{e.comment}</p>
+              )}
+              <div className="mt-1 text-xs text-text-secondary">
+                {[e.byName, formatDateTime(e.createdAt)].filter(Boolean).join('، ')}
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+}
 
 // 0665… / +213665… → 213665… for wa.me links
 function toWhatsAppNumber(phone) {
@@ -105,6 +158,8 @@ export function LeadDetailsModal({ lead, onClose, onStatusChange, saving, onSent
           )}
           {lead.total && <Field label="المبلغ الإجمالي">{formatSalary(lead.total)}</Field>}
         </div>
+
+        <LeadHistory leadId={lead.id} version={lead.statusUpdatedAt?.toMillis?.() ?? lead.status} />
 
         {/* Goals */}
         <div>

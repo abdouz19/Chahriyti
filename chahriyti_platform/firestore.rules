@@ -79,6 +79,12 @@ service cloud.firestore {
       allow read: if isAdmin() || isManager() || isAgent();
       allow update: if isAdmin() || isManager() || isAgent();
       allow delete: if false;
+
+      // Status changes with their comment: added, never edited or removed
+      match /history/{entryId} {
+        allow read, create: if isAdmin() || isManager() || isAgent();
+        allow update, delete: if false;
+      }
     }
 
     // Deny all other access

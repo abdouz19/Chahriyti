@@ -81,6 +81,23 @@ function timeline(leads, range, now) {
   return { points: [...buckets.values()], unit, spanDays };
 }
 
+const hourLabel = (h) => `${String(h).padStart(2, '0')}:00`;
+
+/**
+ * Leads per hour of day (0–23, local time), split by source.
+ */
+function hourly(leads) {
+  const hours = Array.from({ length: 24 }, (_, h) => ({ key: h, label: hourLabel(h), app: 0, store: 0, total: 0 }));
+  for (const lead of leads) {
+    const d = toDate(lead.submittedAt);
+    if (!d) continue;
+    const bucket = hours[d.getHours()];
+    bucket[lead.source === 'woocommerce' ? 'store' : 'app'] += 1;
+    bucket.total += 1;
+  }
+  return hours;
+}
+
 /**
  * Everything the analytics section shows, computed from the period's leads.
  */
@@ -91,6 +108,7 @@ export function analyzeLeads(leads, range, now = new Date()) {
   const statusOf = (l) => l.status ?? 'pending';
 
   const { points, unit, spanDays } = timeline(leads, range, now);
+  const hours = hourly(leads);
 
   const status = Object.entries(LEAD_STATUSES).map(([key, s]) => ({
     key,
@@ -138,6 +156,21 @@ export function analyzeLeads(leads, range, now = new Date()) {
     }
   }
 
+  // Busiest 3-hour window (wraps past midnight)
+  const timed = hours.reduce((sum, h) => sum + h.total, 0);
+  if (timed >= 10) {
+    let best = 0;
+    let bestCount = -1;
+    for (let h = 0; h < 24; h++) {
+      const c = hours[h].total + hours[(h + 1) % 24].total + hours[(h + 2) % 24].total;
+      if (c > bestCount) { best = h; bestCount = c; }
+    }
+    insights.push({
+      tone: 'info',
+      text: `أفضل وقت: بين ${hourLabel(best)} و${hourLabel((best + 3) % 24)} — ${pct(bestCount, timed)}% من التسجيلات.`,
+    });
+  }
+
   if (wilayas.length && wilayas[0].key !== 'other') {
     insights.push({ tone: 'info', text: `${wilayas[0].label} في المقدمة بـ ${fmt(wilayas[0].count)} مسجلاً (${pct(wilayas[0].count, total)}% من الإجمالي).` });
   }
@@ -166,6 +199,7 @@ export function analyzeLeads(leads, range, now = new Date()) {
     storeCount: store.length,
     points,
     unit,
+    hours,
     status,
     wilayas,
     salary,
