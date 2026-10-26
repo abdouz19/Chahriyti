@@ -29,7 +29,8 @@ class SpendingTrendChart extends StatelessWidget {
                 AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: 20),
-          if (trend.points.isEmpty)
+          // A zero budget gives fl_chart a zero interval / Y range and crashes
+          if (trend.points.isEmpty || trend.budget <= 0)
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),
